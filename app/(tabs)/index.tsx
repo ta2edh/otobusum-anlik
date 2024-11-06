@@ -6,7 +6,7 @@ import MapView, { Details, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TheSearch } from "@/components/TheSearch";
-import { BusMarkers } from "@/components/RouteMarkers";
+import { BusMarkers } from "@/components/BusMarkers";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { useRoutes } from "@/stores/routes";
 import { SplashScreen } from "expo-router";
