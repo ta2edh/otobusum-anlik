@@ -21,19 +21,19 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
   const addRoute = useRoutes((state) => state.addRoute);
   const routeColors = useRoutes((state) => state.routeColors);
 
-  const backgroundColor = routeColors[props.item.Code] || colors.primary
-  const isInRoutes = routeColors[props.item.Code] !== undefined
+  const backgroundColor = routeColors[props.item.Code] || colors.primary;
+  const isInRoutes = routeColors[props.item.Code] !== undefined;
 
-  const handlePress = useCallback(async () => {
+  const handlePress = async () => {
     props.onPress?.();
-    setIsPending(true)
-    
+    setIsPending(true);
+
     try {
-      await addRoute(props.item.Code)
+      await addRoute(props.item.Code);
     } finally {
-      setIsPending(false)
+      setIsPending(false);
     }
-  }, []);
+  };
 
   return (
     <TouchableOpacity
@@ -47,7 +47,7 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
       <UiText>{props.item.Name}</UiText>
     </TouchableOpacity>
   );
-})
+});
 
 const styles = StyleSheet.create({
   container: {
