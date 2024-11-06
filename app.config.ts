@@ -15,6 +15,10 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
   },
+  androidStatusBar: {
+    barStyle: "light-content",
+    translucent: true,
+  },
   android: {
     config: {
       googleMaps: {

@@ -7,8 +7,8 @@ import { LatLng } from "react-native-maps";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface RoutesStore {
-  initialMapLocation: LatLng;
+export interface RoutesStore {
+  initialMapLocation?: LatLng;
   routes: Record<string, Location[]>;
   routeColors: Record<string, string>;
   updateInitialMapLocation: (newLocation: LatLng) => void;
@@ -21,10 +21,7 @@ export const useRoutes = create(
   subscribeWithSelector(
     persist<RoutesStore>(
       (set, get) => ({
-        initialMapLocation: {
-          latitude: 41.0082,
-          longitude: 28.9784,
-        },
+        initialMapLocation: undefined,
         routes: {},
         routeColors: {},
         updateInitialMapLocation: (newLocation: LatLng) =>
