@@ -9,7 +9,7 @@ interface Props {
   onSearch: (query: string) => void;
 }
 
-export function QueryInput(props: Props) {
+export function TheSearchInput(props: Props) {
   const queryValue = useRef("");
   const [queryDisabled, setQueryDisabled] = useState(() => true);
 

@@ -8,11 +8,11 @@ import { getSearchResults, SearchResult } from "@/api/getSearchResults";
 import BottomSheet, { BottomSheetFlashList, BottomSheetView } from "@gorhom/bottom-sheet";
 
 import { useTheme } from "@/hooks/useTheme";
-import { SearchItem } from "./SearchItem";
-import { QueryInput } from "./QueryInput";
+import { TheSearchItem } from "./TheSearchItem";
+import { TheSearchInput } from "./TheSearchInput";
 import { SelectedRoutes } from "./SelectedRoutes";
 
-export function TheSearch() {
+export function TheSearchSheet() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetIndex = useRef(0)
   const insets = useSafeAreaInsets();
@@ -52,7 +52,7 @@ export function TheSearch() {
   }, []);
 
   const renderItem = ({ item }: { item: SearchResult }) => {
-    return <SearchItem item={item} onPress={collapseSheet} />;
+    return <TheSearchItem item={item} onPress={collapseSheet} />;
   };
 
   return (
@@ -71,7 +71,7 @@ export function TheSearch() {
       <BottomSheetView>
         <Animated.View layout={LinearTransition} style={styles.query}>
           <SelectedRoutes />
-          <QueryInput onSearch={onSearch} isLoading={mutation.isPending} />
+          <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
         </Animated.View>
       </BottomSheetView>
 

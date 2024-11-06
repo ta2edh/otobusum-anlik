@@ -7,7 +7,6 @@ import {
 import { UiText } from "./ui/UiText";
 import { colors } from "@/constants/colors";
 import { SearchResult } from "@/api/getSearchResults";
-import { getRouteBusLocations } from "@/api/getRouteBusLocations";
 import { useCallback, useState, memo } from "react";
 import { useRoutes } from "@/stores/routes";
 
@@ -16,7 +15,7 @@ interface Props extends TouchableOpacityProps {
   onPress?: () => void;
 }
 
-export const SearchItem = memo(function SearchItem(props: Props) {
+export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false);
 
   const addRoute = useRoutes((state) => state.addRoute);

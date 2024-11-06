@@ -5,7 +5,7 @@ import { colors } from "@/constants/colors";
 import MapView, { Details, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { TheSearch } from "@/components/TheSearch";
+import { TheSearchSheet } from "@/components/TheSearchSheet";
 import { BusMarkers } from "@/components/BusMarkers";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { useRoutes } from "@/stores/routes";
@@ -61,7 +61,7 @@ export default function HomeScreen() {
         <BusMarkers />
       </MapView>
 
-      <TheSearch />
+      <TheSearchSheet />
     </View>
   );
 }
