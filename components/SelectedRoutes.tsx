@@ -4,6 +4,7 @@ import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
 import { StyleSheet, ViewProps } from "react-native";
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import { i18n } from "@/translations/i18n";
 
 interface Props {
   item: string;
@@ -49,7 +50,7 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
           marginBottom: 8,
         }}
       >
-        Selected Routes
+        {i18n.t("selectedRoutes")}
       </UiText>
 
       <Animated.View style={styles.codes}>

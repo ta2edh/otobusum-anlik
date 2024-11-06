@@ -3,12 +3,14 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { useState } from "react";
 
 import { UiText } from "./ui/UiText";
-import { useQuery } from "@tanstack/react-query";
+import { SelectedRoute } from "./SelectedRoutes";
 import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
+
 import { DayType, Direction } from "@/types/departure";
+import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
-import { SelectedRoute } from "./SelectedRoute";
+import { i18n } from "@/translations/i18n";
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {};
@@ -49,7 +51,7 @@ export function RouteTimetable(props: Props) {
   const hours = Object.keys(groupedByHour).sort();
 
   if (!query.data) {
-    return <UiText>Loading..</UiText>;
+    return <UiText>{i18n.t("loading")}</UiText>;
   }
 
   const title = query.data.at(0)?.HATADI;
@@ -68,11 +70,11 @@ export function RouteTimetable(props: Props) {
           buttons={[
             {
               value: "D",
-              label: "Departure",
+              label: i18n.t("departure"),
             },
             {
               value: "G",
-              label: "Return",
+              label: i18n.t("return"),
             },
           ]}
         />
@@ -84,15 +86,15 @@ export function RouteTimetable(props: Props) {
           buttons={[
             {
               value: "I",
-              label: "Workday",
+              label: i18n.t("workday"),
             },
             {
               value: "C",
-              label: "Saturday",
+              label: i18n.t("saturday"),
             },
             {
               value: "P",
-              label: "Sunday",
+              label: i18n.t("sunday"),
             },
           ]}
         />

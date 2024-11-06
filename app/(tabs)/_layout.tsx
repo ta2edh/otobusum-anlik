@@ -2,6 +2,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { colors } from "@/constants/colors";
+import { i18n } from "@/translations/i18n";
 
 export default function TabLayout() {
   const theme = useTheme();
@@ -24,7 +25,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: "Map",
+          tabBarLabel: i18n.t("map"),
           tabBarIcon: ({ focused }) => (
             <Ionicons name={getName("map", focused)} size={24} color={theme.color} />
           ),
@@ -33,7 +34,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="timetable"
         options={{
-          tabBarLabel: "Timetable",
+          tabBarLabel: i18n.t("timetable"),
           tabBarIcon: ({ focused }) => (
             <Ionicons name={getName("time", focused)} size={24} color={theme.color} />
           ),

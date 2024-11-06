@@ -32,7 +32,7 @@ const config: ExpoConfig = {
     },
     package: "com.anonymous.otobusumburada",
   },
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "expo-localization"],
   experiments: {
     typedRoutes: true,
   },

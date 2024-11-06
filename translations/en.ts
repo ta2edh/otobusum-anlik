@@ -1,0 +1,15 @@
+export default {
+  search: "Search",
+  loading: "Loading",
+  timetableEmpty: "Timetables of selected routes will be shown here",
+  direction: "Direction",
+  lastUpdate: "Last Update",
+  selectedRoutes: "Selected Lines",
+  map: "Map",
+  timetable: "Timetable",
+  departure: "Departure",
+  return: "Return",
+  workday: "Workday",
+  saturday: "Saturday",
+  sunday: "Sunday",
+}

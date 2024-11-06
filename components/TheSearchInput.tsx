@@ -3,6 +3,7 @@ import { UiTextInput } from "./ui/UiTextInput";
 import { UiButton } from "./ui/UiButton";
 import { NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
+import { i18n } from "@/translations/i18n";
 
 interface Props {
   isLoading?: boolean;
@@ -30,12 +31,12 @@ export function TheSearchInput(props: Props) {
   return (
     <Animated.View layout={LinearTransition} style={styles.container}>
       <UiTextInput
-        placeholder="Search"
+        placeholder="KM-12, KM-12..."
         onChange={handleQueryChange}
         style={styles.input}
       />
       <UiButton
-        title="Search.."
+        title={i18n.t("search")}
         isLoading={props.isLoading}
         disabled={queryDisabled}
         onPress={handleSearch}

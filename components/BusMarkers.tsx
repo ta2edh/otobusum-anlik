@@ -3,6 +3,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Marker, Callout } from "react-native-maps";
 import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
 import { UiText } from "./ui/UiText";
+import { i18n } from "@/translations/i18n";
 
 export function BusMarkers() {
   const theme = useTheme()
@@ -39,8 +40,8 @@ export function BusMarkers() {
                 <UiText>
                   {loc.hatkodu} - {loc.hatad}
                 </UiText>
-                <UiText>Direction: {loc.yon}</UiText>
-                <UiText>Last Update: {loc.son_konum_zamani}</UiText>
+                <UiText>{i18n.t("direction")}: {loc.yon}</UiText>
+                <UiText>{i18n.t("lastUpdate")}: {loc.son_konum_zamani}</UiText>
               </View>
             </View>
           </Callout>

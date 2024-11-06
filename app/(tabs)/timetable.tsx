@@ -5,6 +5,7 @@ import { UiText } from "@/components/ui/UiText";
 import { colors } from "@/constants/colors";
 import { useTheme } from "@/hooks/useTheme";
 import { useRoutes } from "@/stores/routes";
+import { i18n } from "@/translations/i18n";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   interpolate,
@@ -47,7 +48,7 @@ export default function TimetableScreen() {
         <TheFocusAwareStatusBar />
 
         <UiText info style={{ textAlign: "center", textAlignVertical: "center", flex: 1 }}>
-          Selected Timetables of routes will appear here.
+          {i18n.t('timetableEmpty')}
         </UiText>
       </View>
     );
