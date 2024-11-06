@@ -4,7 +4,7 @@ import { Marker, Callout } from "react-native-maps";
 import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
 import { UiText } from "./ui/UiText";
 
-export function RouteMarkers() {
+export function BusMarkers() {
   const theme = useTheme()
   const routes = useRoutes((state) => state.routes);
   const routeColors = useRoutes((state) => state.routeColors);

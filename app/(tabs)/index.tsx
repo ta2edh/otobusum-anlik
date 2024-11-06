@@ -6,7 +6,7 @@ import MapView, { Details, PROVIDER_GOOGLE, Region } from "react-native-maps";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TheSearch } from "@/components/TheSearch";
-import { RouteMarkers } from "@/components/RouteMarkers";
+import { BusMarkers } from "@/components/RouteMarkers";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { useRoutes } from "@/stores/routes";
 import { SplashScreen } from "expo-router";
@@ -58,7 +58,7 @@ export default function HomeScreen() {
         onMapLoaded={handleMapLoaded}
         onMapReady={handleReady}
       >
-        <RouteMarkers />
+        <BusMarkers />
       </MapView>
 
       <TheSearch />
