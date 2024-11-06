@@ -1,0 +1,163 @@
+import { getPlannedDepartures, PlannedDeparture } from "@/api/getPlannedDepartures";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+
+import { UiText } from "./ui/UiText";
+import { useQuery } from "@tanstack/react-query";
+import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
+import { DayType, Direction } from "@/types/departure";
+import { useTheme } from "@/hooks/useTheme";
+import { colors } from "@/constants/colors";
+import { SelectedRoute } from "./SelectedRoute";
+
+function groupDeparturesByHour(obj: PlannedDeparture[]) {
+  const res: Record<string, PlannedDeparture[]> = {};
+
+  for (let index = 0; index < obj.length; index++) {
+    const element = obj[index];
+    const hour = element["DT"].split(":").at(0);
+
+    if (!hour) continue;
+
+    if (!res[hour]) {
+      res[hour] = [element];
+    } else {
+      res[hour].push(element);
+    }
+  }
+
+  return res;
+}
+
+interface Props {
+  code: string;
+}
+
+export function RouteTimetable(props: Props) {
+  const theme = useTheme();
+  const [direction, setDirection] = useState<Direction>(() => "D");
+  const [dayType, setDayType] = useState<DayType>(() => "I");
+
+  const query = useQuery({
+    queryKey: [`timetable-${props.code}`],
+    queryFn: () => getPlannedDepartures(props.code),
+  });
+
+  const filteredData =
+    query.data?.filter((it) => it.SYON === direction && it.SGUNTIPI === dayType) || [];
+  const groupedByHour = groupDeparturesByHour(filteredData || []);
+  const hours = Object.keys(groupedByHour).sort();
+
+  if (!query.data) {
+    return <UiText>Loading..</UiText>;
+  }
+
+  const title = query.data.at(0)?.HATADI;
+
+  return (
+    <View style={[styles.wrapper, { backgroundColor: theme.surfaceContainer }]}>
+      <SelectedRoute item={props.code} />
+
+      <UiText style={styles.title}>{title}</UiText>
+
+      <View style={styles.filters}>
+        <UiSegmentedButtons
+          value={direction}
+          onValueChange={setDirection}
+          style={{flexGrow: 1}}
+          buttons={[
+            {
+              value: "D",
+              label: "Departure",
+            },
+            {
+              value: "G",
+              label: "Return",
+            },
+          ]}
+        />
+
+        <UiSegmentedButtons
+          value={dayType}
+          onValueChange={setDayType}
+          style={{flexGrow: 1}}
+          buttons={[
+            {
+              value: "I",
+              label: "Workday",
+            },
+            {
+              value: "C",
+              label: "Saturday",
+            },
+            {
+              value: "P",
+              label: "Sunday",
+            },
+          ]}
+        />
+      </View>
+
+      <View style={styles.container}>
+        {/* Fixed column this will be */}
+        <View style={styles.fixed}>
+          {hours.map((hour) => (
+            <UiText key={hour} style={[styles.cell, , { backgroundColor: colors.primary }]}>
+              {hour}
+            </UiText>
+          ))}
+        </View>
+
+        <ScrollView contentContainerStyle={{ flexDirection: "column", gap: 4 }} horizontal>
+          {hours.map((hour) => {
+            return (
+              <View key={hour} style={styles.row}>
+                {groupedByHour[hour].map((departure) => (
+                  <UiText
+                    key={`${props.code}-${departure.SSERVISTIPI}-${departure.SGUZERAH}-${hour}-${departure.DT.split(":").at(-1)}`}
+                    style={styles.cell}
+                  >
+                    {departure.DT.split(":").at(-1)}
+                  </UiText>
+                ))}
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  wrapper: {
+    padding: 8,
+    borderRadius: 8,
+    gap: 8,
+  },
+  container: {
+    flexDirection: "row",
+  },
+  cell: {
+    width: 30,
+    height: 30,
+    textAlign: "center",
+    textAlignVertical: "center",
+    borderRadius: 4,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  filters: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 4,
+  },
+  fixed: {
+    gap: 4,
+  },
+  row: {
+    flexDirection: "row",
+  },
+});
