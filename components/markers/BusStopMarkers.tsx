@@ -37,6 +37,7 @@ function BusStopMarkersItem(props: Props) {
             longitude: parseFloat(bus.xKoordinati),
           }}
           pinColor={routeColors[bus.hatKodu]}
+          tracksViewChanges={false}
         >
           <View
             style={[styles.busStop, busStopStyle, { backgroundColor: routeColors[bus.hatKodu] }]}
