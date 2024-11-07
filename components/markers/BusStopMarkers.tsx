@@ -38,6 +38,7 @@ function BusStopMarkersItem(props: Props) {
           }}
           pinColor={routeColors[bus.hatKodu]}
           tracksViewChanges={false}
+          tracksInfoWindowChanges={false}
         >
           <View
             style={[styles.busStop, busStopStyle, { backgroundColor: routeColors[bus.hatKodu] }]}

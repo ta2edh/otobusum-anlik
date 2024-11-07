@@ -58,6 +58,7 @@ export default function HomeScreen() {
         onRegionChangeComplete={handleRegionChangeComplete}
         onMapLoaded={handleMapLoaded}
         onMapReady={handleReady}
+        showsIndoors={false}
       >
         <BusMarkers />
         <BusStopMarkers />

@@ -29,6 +29,7 @@ export function BusMarkers() {
             longitude: parseFloat(loc.boylam),
           }}
           pinColor={routeColors[loc.hatkodu]}
+          tracksInfoWindowChanges={false}
         >
           <View style={[styles.iconContainer, { backgroundColor: routeColors[loc.hatkodu] }]}>
             <Image source={require("@/assets/bus.png")} style={styles.icon} />
