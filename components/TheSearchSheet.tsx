@@ -1,6 +1,6 @@
 import { BackHandler, StyleSheet } from "react-native";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import Animated, { LinearTransition } from "react-native-reanimated";
+import Animated, { LinearTransition, SharedValue, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMutation } from "@tanstack/react-query";
@@ -11,27 +11,30 @@ import { useTheme } from "@/hooks/useTheme";
 import { TheSearchItem } from "./TheSearchItem";
 import { TheSearchInput } from "./TheSearchInput";
 import { SelectedRoutes } from "./SelectedRoutes";
+import { TheFilters } from "./TheFilters";
 
 export function TheSearchSheet() {
+  const animatedPosition = useSharedValue(0);
+  const animatedIndex = useSharedValue(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const bottomSheetIndex = useRef(0)
+  const bottomSheetIndex = useRef(0);
   const insets = useSafeAreaInsets();
   const theme = useTheme();
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
       if (bottomSheetIndex.current !== 0) {
-        bottomSheetRef.current?.snapToIndex(0)
-        return true
+        bottomSheetRef.current?.snapToIndex(0);
+        return true;
       }
 
-      return false
-    })
+      return false;
+    });
 
     return () => {
-      backHandler.remove()
-    }
-  }, [])
+      backHandler.remove();
+    };
+  }, []);
 
   const mutation = useMutation({
     mutationFn: getSearchResults,
@@ -56,34 +59,39 @@ export function TheSearchSheet() {
   };
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
-      handleIndicatorStyle={{ backgroundColor: theme.surfaceContainerHighest }}
-      backgroundStyle={{ backgroundColor: theme.surfaceContainerLow }}
-      topInset={insets.top + 20}
-      enableDynamicSizing={false}
-      android_keyboardInputMode="adjustResize"
-      keyboardBehavior="fillParent"
-      snapPoints={snapPoints}
-      onChange={(index) => bottomSheetIndex.current = index}
-    >
-      <BottomSheetView>
-        <Animated.View layout={LinearTransition} style={styles.query}>
-          <SelectedRoutes />
-          <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
-        </Animated.View>
-      </BottomSheetView>
+    <>
+      <TheFilters animatedPosition={animatedPosition} animatedIndex={animatedIndex} />
+      <BottomSheet
+        ref={bottomSheetRef}
+        handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
+        handleIndicatorStyle={{ backgroundColor: theme.surfaceContainerHighest }}
+        backgroundStyle={{ backgroundColor: theme.surfaceContainerLow }}
+        topInset={insets.top + 20}
+        enableDynamicSizing={false}
+        android_keyboardInputMode="adjustResize"
+        keyboardBehavior="fillParent"
+        snapPoints={snapPoints}
+        onChange={(index) => (bottomSheetIndex.current = index)}
+        animatedPosition={animatedPosition}
+        animatedIndex={animatedIndex}
+      >
+        <BottomSheetView>
+          <Animated.View layout={LinearTransition} style={styles.query}>
+            <SelectedRoutes />
+            <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
+          </Animated.View>
+        </BottomSheetView>
 
-      <BottomSheetFlashList
-        data={data}
-        renderItem={renderItem}
-        estimatedItemSize={45}
-        fadingEdgeLength={20}
-        contentContainerStyle={{ padding: 8 }}
-        keyboardDismissMode="on-drag"
-      />
-    </BottomSheet>
+        <BottomSheetFlashList
+          data={data}
+          renderItem={renderItem}
+          estimatedItemSize={45}
+          fadingEdgeLength={20}
+          contentContainerStyle={{ padding: 8 }}
+          keyboardDismissMode="on-drag"
+        />
+      </BottomSheet>
+    </>
   );
 }
 

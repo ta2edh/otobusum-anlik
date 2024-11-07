@@ -4,13 +4,15 @@ import { Marker, Callout } from "react-native-maps";
 import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
 import { UiText } from "@/components/ui/UiText";
 import { i18n } from "@/translations/i18n";
+import { useFilters } from "@/stores/filters";
 
 export function BusMarkers() {
   const theme = useTheme()
   const routes = useRoutes((state) => state.routes);
   const routeColors = useRoutes((state) => state.routeColors);
+  const direction = useFilters((state) => state.direction);
 
-  const locationsFlat = Object.values(routes).flat();
+  const locationsFlat = Object.values(routes).flat().filter(item => item.yon === direction);
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,

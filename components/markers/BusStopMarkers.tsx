@@ -1,7 +1,9 @@
 import { getRouteBusStopLocations } from "@/api/getRouteBusStopLocations";
 import { useTheme } from "@/hooks/useTheme";
+import { useFilters } from "@/stores/filters";
 import { useRoutes } from "@/stores/routes";
 import { useQuery } from "@tanstack/react-query";
+
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Marker } from "react-native-maps";
 
@@ -11,7 +13,9 @@ interface Props {
 
 function BusStopMarkersItem(props: Props) {
   const routeColors = useRoutes((state) => state.routeColors);
+  const direction = useFilters((state) => state.direction);
   const theme = useTheme();
+
   const query = useQuery({
     queryKey: [`${props.code}-stop-locations`],
     queryFn: () => getRouteBusStopLocations(props.code),
@@ -27,9 +31,10 @@ function BusStopMarkersItem(props: Props) {
     return null;
   }
 
+  const filteredBusStops = query.data.filter((item) => item.yon === direction);
   return (
     <>
-      {query.data.map((bus) => (
+      {filteredBusStops.map((bus) => (
         <Marker
           key={`${bus.xKoordinati}-${bus.yKoordinati}-${bus.yon}`}
           coordinate={{
