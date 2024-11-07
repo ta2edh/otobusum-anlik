@@ -2,7 +2,7 @@ import { useRoutes } from "@/stores/routes";
 import { useTheme } from "@/hooks/useTheme";
 import { Marker, Callout } from "react-native-maps";
 import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
-import { UiText } from "./ui/UiText";
+import { UiText } from "@/components/ui/UiText";
 import { i18n } from "@/translations/i18n";
 
 export function BusMarkers() {
@@ -31,7 +31,7 @@ export function BusMarkers() {
           pinColor={routeColors[loc.hatkodu]}
         >
           <View style={[styles.iconContainer, { backgroundColor: routeColors[loc.hatkodu] }]}>
-            <Image source={require("../assets/bus.png")} style={styles.icon} />
+            <Image source={require("@/assets/bus.png")} style={styles.icon} />
           </View>
 
           <Callout alphaHitTest tooltip>
