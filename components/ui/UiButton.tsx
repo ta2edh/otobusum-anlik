@@ -33,6 +33,7 @@ export function UiButton({ style, ...rest }: Props) {
         {...rest}
       >
         {rest.isLoading && <ActivityIndicator color="#FFFFFF" />}
+
         {!!rest.title && (
           <UiText style={{ color: "white", fontSize }} numberOfLines={1}>
             {rest.title}
@@ -47,8 +48,6 @@ export function UiButton({ style, ...rest }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 999,
-    overflow: "hidden",
     flexShrink: 1,
   },
   button: {
@@ -56,6 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    borderRadius: 999,
     flexGrow: 1,
     flexShrink: 1,
     gap: 4,

@@ -29,6 +29,7 @@ export function SelectedRoute(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: routeColors[props.code],
+    opacity: 0.7,
     padding: 14,
     borderRadius: 8,
     gap: 8,
@@ -51,10 +52,13 @@ export function SelectedRoute(props: Props) {
       </View>
 
       <View style={styles.routeButtonsContainer}>
-        <UiButton title={allDirections[otherDirectionIndex]} style={styles.routeButton} size="sm" />
         <UiButton onPress={handleSwiftDirection}>
           <Ionicons name="refresh" size={20} color="white" />
         </UiButton>
+
+        <UiButton title={allDirections[otherDirectionIndex]} style={styles.routeButton} size="sm" />
+        <Ionicons name="arrow-forward" size={20} color="rgba(0, 0, 0, 0.5)" />
+
         <UiButton title={currentDirection} style={styles.routeButton} size="sm" />
       </View>
     </Animated.View>
