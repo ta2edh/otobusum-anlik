@@ -1,6 +1,6 @@
 import { BackHandler, StyleSheet } from "react-native";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import Animated, { LinearTransition, SharedValue, useSharedValue } from "react-native-reanimated";
+import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useMutation } from "@tanstack/react-query";
@@ -10,7 +10,6 @@ import BottomSheet, { BottomSheetFlashList, BottomSheetView } from "@gorhom/bott
 import { useTheme } from "@/hooks/useTheme";
 import { TheSearchItem } from "./TheSearchItem";
 import { TheSearchInput } from "./TheSearchInput";
-import { SelectedRoutes } from "./SelectedRoutes";
 import { TheFilters } from "./TheFilters";
 
 export function TheSearchSheet() {
@@ -44,7 +43,7 @@ export function TheSearchSheet() {
     mutation.mutate(q);
   }, []);
 
-  const snapPoints = useMemo(() => ["25%", "90%"], []);
+  const snapPoints = useMemo(() => ["6%", "90%"], []);
   const data = useMemo(
     () => mutation.data?.list.filter((i) => i.Stationcode === 0),
     [mutation.data]
@@ -61,6 +60,7 @@ export function TheSearchSheet() {
   return (
     <>
       <TheFilters animatedPosition={animatedPosition} animatedIndex={animatedIndex} />
+      
       <BottomSheet
         ref={bottomSheetRef}
         handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
@@ -77,7 +77,7 @@ export function TheSearchSheet() {
       >
         <BottomSheetView>
           <Animated.View layout={LinearTransition} style={styles.query}>
-            <SelectedRoutes />
+            {/* <SelectedRoutes /> */}
             <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
           </Animated.View>
         </BottomSheetView>

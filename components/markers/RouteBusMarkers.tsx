@@ -5,14 +5,19 @@ import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
 import { UiText } from "@/components/ui/UiText";
 import { i18n } from "@/translations/i18n";
 import { useFilters } from "@/stores/filters";
+import { Location } from "@/api/getRouteBusLocations";
 
-export function BusMarkers() {
+interface Props {
+  code: string,
+  locations: Location[]
+}
+
+export function RouteBusMarkers(props: Props) {
   const theme = useTheme()
-  const routes = useRoutes((state) => state.routes);
   const routeColors = useRoutes((state) => state.routeColors);
-  const direction = useFilters((state) => state.direction);
+  const selectedDirections = useFilters((state) => state.selectedDirections);
 
-  const locationsFlat = Object.values(routes).flat().filter(item => item.yon === direction);
+  const filtered = props.locations.filter(loc => loc.yon  === selectedDirections[props.code])
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,
@@ -23,7 +28,7 @@ export function BusMarkers() {
 
   return (
     <>
-      {locationsFlat?.map((loc) => (
+      {filtered.map((loc) => (
         <Marker
           key={loc.kapino}
           coordinate={{

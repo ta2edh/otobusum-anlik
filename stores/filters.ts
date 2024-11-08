@@ -1,19 +1,21 @@
 import { create } from "zustand";
 import { createJSONStorage, persist, subscribeWithSelector } from "zustand/middleware";
-import { Direction } from "@/types/departure";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface FiltersStore {
-  direction: Direction;
-  setDirection: (newDirection: Direction) => void;
+  selectedDirections: Record<string, string>;
+  setDirection: (code: string, direction: string) => void;
 }
 
 export const useFilters = create(
   subscribeWithSelector(
     persist<FiltersStore>(
-      (set, get) => ({
-        direction: "D",
-        setDirection: (newDirection) => set(() => ({ direction: newDirection })),
+      (set, _get) => ({
+        selectedDirections: {},
+        setDirection: (code, direction) =>
+          set((state) => ({
+            selectedDirections: { ...state.selectedDirections, [code]: direction },
+          })),
       }),
       {
         name: "filter-storage",

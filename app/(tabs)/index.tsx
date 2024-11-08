@@ -8,11 +8,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { TheSearchSheet } from "@/components/TheSearchSheet";
 import { BusStopMarkers } from "@/components/markers/BusStopMarkers";
-import { BusMarkers } from "@/components/markers/BusMarkers";
 import { useRoutes } from "@/stores/routes";
 
 import { SplashScreen } from "expo-router";
 import { useCallback, useRef } from "react";
+import { RouteMarkers } from "@/components/markers/RouteMarkers";
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null);
@@ -62,7 +62,7 @@ export default function HomeScreen() {
         onMapReady={handleReady}
         showsIndoors={false}
       >
-        <BusMarkers />
+        <RouteMarkers />
         <BusStopMarkers />
       </MapView>
 

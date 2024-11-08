@@ -8,20 +8,38 @@ import {
   ViewStyle,
 } from "react-native";
 import { UiText } from "./UiText";
-import { colors } from "@/constants/colors";
 
 interface Props extends TouchableOpacityProps {
-  title: string;
+  title?: string;
   isLoading?: boolean;
-  containerStyle?: StyleProp<ViewStyle>
+  containerStyle?: StyleProp<ViewStyle>;
+  size?: "sm" | "md";
+  primary?: string;
 }
 
 export function UiButton({ style, ...rest }: Props) {
+  const fontSize = rest.size === "sm" ? 10 : 14;
+
   return (
     <View style={[styles.container, rest.containerStyle]}>
-      <TouchableOpacity style={[styles.button, style, { opacity: rest.disabled ? 0.4 : 1 }]} {...rest}>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          style,
+          {
+            opacity: rest.disabled ? 0.4 : 1,
+          },
+        ]}
+        {...rest}
+      >
         {rest.isLoading && <ActivityIndicator color="#FFFFFF" />}
-        <UiText style={{color: 'white'}}>{rest.title}</UiText>
+        {!!rest.title && (
+          <UiText style={{ color: "white", fontSize }} numberOfLines={1}>
+            {rest.title}
+          </UiText>
+        )}
+
+        <View>{rest.children}</View>
       </TouchableOpacity>
     </View>
   );
@@ -31,6 +49,7 @@ const styles = StyleSheet.create({
   container: {
     borderRadius: 999,
     overflow: "hidden",
+    flexShrink: 1,
   },
   button: {
     display: "flex",
@@ -38,9 +57,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexGrow: 1,
+    flexShrink: 1,
     gap: 4,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    backgroundColor: colors.primary,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
   },
 });

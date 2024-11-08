@@ -6,6 +6,7 @@ import { ToastAndroid } from "react-native";
 import { LatLng } from "react-native-maps";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFilters } from "./filters";
 
 export interface RoutesStore {
   initialMapLocation?: LatLng;
@@ -21,7 +22,7 @@ export const useRoutes = create(
   subscribeWithSelector(
     persist<RoutesStore>(
       (set, get) => ({
-        initialMapLocation: undefined,
+        initialMapLocation: undefined, // TODO: move this to different store. (Maybe something called settings)
         routes: {},
         routeColors: {},
         updateInitialMapLocation: (newLocation: LatLng) =>
@@ -35,6 +36,10 @@ export const useRoutes = create(
 
           const response = await getRouteBusLocations(code);
           if (!response) return;
+
+          if (response.at(0)?.yon) {
+            useFilters.getState().setDirection(code, response.at(0)!.yon)
+          }
 
           return set((state) => {
             const newColor = createColor();
@@ -85,16 +90,18 @@ export const useRoutes = create(
   )
 );
 
-setInterval(async () => {
-  const keys = Object.keys(useRoutes.getState().routes);
-  const results = await Promise.all(keys.map((k) => getRouteBusLocations(k)));
+if (!__DEV__) {
+  setInterval(async () => {
+    const keys = Object.keys(useRoutes.getState().routes);
+    const results = await Promise.all(keys.map((k) => getRouteBusLocations(k)));
 
-  for (let index = 0; index < keys.length; index++) {
-    const key = keys[index];
-    const result = results[index];
+    for (let index = 0; index < keys.length; index++) {
+      const key = keys[index];
+      const result = results[index];
 
-    if (result) {
-      useRoutes.getState().updateRoute(key, result);
+      if (result) {
+        useRoutes.getState().updateRoute(key, result);
+      }
     }
-  }
-}, 50_000);
+  }, 50_000);
+}

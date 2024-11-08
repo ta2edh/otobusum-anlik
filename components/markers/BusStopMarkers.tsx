@@ -12,8 +12,9 @@ interface Props {
 }
 
 function BusStopMarkersItem(props: Props) {
+  const routes = useRoutes((state) => state.routes);
   const routeColors = useRoutes((state) => state.routeColors);
-  const direction = useFilters((state) => state.direction);
+  const selectedDirections = useFilters((state) => state.selectedDirections);
   const theme = useTheme();
 
   const query = useQuery({
@@ -31,7 +32,12 @@ function BusStopMarkersItem(props: Props) {
     return null;
   }
 
-  const filteredBusStops = query.data.filter((item) => item.yon === direction);
+  // TODO: This should be changed but there is not much to do because of the api. It returns the direction as G or D
+  const shownBusses = routes[props.code].filter(loc => loc.yon === selectedDirections[props.code])
+  const randomBusStop = query.data.find(busStop => shownBusses.find(bus => bus.yakinDurakKodu === busStop.durakKodu))
+
+  const filteredBusStops = query.data.filter((item) => item.yon === randomBusStop?.yon);
+
   return (
     <>
       {filteredBusStops.map((bus) => (
