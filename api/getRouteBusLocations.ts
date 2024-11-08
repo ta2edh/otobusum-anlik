@@ -29,7 +29,7 @@ export async function getRouteBusLocations(code: string) {
   const content = await response.text()
 
   const innerContent = extractInnerContentXml(key, content);
-  if (!innerContent) return;
+  if (!innerContent) return [];
 
   const responseParsed: Location[] = JSON.parse(innerContent);
   return responseParsed;

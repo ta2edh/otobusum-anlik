@@ -50,23 +50,25 @@ export function SelectedRoute(props: Props) {
         </UiButton>
       </View>
 
-      <View style={styles.routeButtonsContainer}>
-        {allDirections.length > 1 && (
-          <>
-            <UiButton onPress={handleSwiftDirection}>
-              <Ionicons name="refresh" size={20} color="white" />
-            </UiButton>
-            <UiButton
-              title={allDirections[otherDirectionIndex]}
-              style={styles.routeButton}
-              size="sm"
-            />
-          </>
-        )}
+      {allDirections.length > 0 && (
+        <View style={styles.routeButtonsContainer}>
+          {allDirections.length > 1 && (
+            <>
+              <UiButton onPress={handleSwiftDirection}>
+                <Ionicons name="refresh" size={20} color="white" />
+              </UiButton>
+              <UiButton
+                title={allDirections[otherDirectionIndex]}
+                style={styles.routeButton}
+                size="sm"
+              />
+            </>
+          )}
 
-        <Ionicons name="arrow-forward" size={20} color="rgba(0, 0, 0, 0.5)" />
-        <UiButton title={currentDirection} style={styles.routeButton} size="sm" />
-      </View>
+          <Ionicons name="arrow-forward" size={20} color="rgba(0, 0, 0, 0.5)" />
+          <UiButton title={currentDirection} style={styles.routeButton} size="sm" />
+        </View>
+      )}
     </Animated.View>
   );
 }
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    gap: 8,
   },
   routeButtonsContainer: {
     flexDirection: "row",
