@@ -1,6 +1,8 @@
 import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
-import { StyleSheet } from "react-native";
+import { LayoutChangeEvent, StyleSheet } from "react-native";
 import { SelectedRoutes } from "./SelectedRoutes";
+import { useCallback, useState } from "react";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function TheFilters({
   animatedPosition,
@@ -9,19 +11,26 @@ export function TheFilters({
   animatedPosition: SharedValue<number>;
   animatedIndex: SharedValue<number>;
 }) {
+  const [height, setHeight] = useState(0);
+  const insets = useSafeAreaInsets()
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: animatedPosition.value - 84 - (8 * 2) - 14 // 8 padding, 93 content itself, 8 extra padding
-        }
+          translateY: animatedPosition.value - height + (__DEV__ ? 0 : insets.top),
+        },
       ],
-      opacity: 1 - animatedIndex.value
+      opacity: 1 - animatedIndex.value,
     };
   });
 
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    setHeight(event.nativeEvent.layout.height);
+  }, []);
+
   return (
-    <Animated.View style={[animatedStyle, styles.filters]}>
+    <Animated.View onLayout={onLayout} style={[animatedStyle, styles.filters]}>
       <SelectedRoutes />
     </Animated.View>
   );
@@ -33,5 +42,6 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     zIndex: 50,
+    marginTop: 0,
   },
 });
