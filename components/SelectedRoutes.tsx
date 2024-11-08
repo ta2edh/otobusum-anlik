@@ -37,13 +37,7 @@ export function SelectedRoute(props: Props) {
   };
 
   return (
-    <Animated.View
-      style={containerStyle}
-      key={props.code}
-      layout={LinearTransition}
-      entering={FadeIn}
-      exiting={FadeOut}
-    >
+    <View style={containerStyle} key={props.code}>
       <View style={styles.titleContainer}>
         <UiText style={{ fontWeight: "bold" }}>{props.code}</UiText>
         <UiButton onPress={() => deleteRoute(props.code)} style={styles.routeButton}>
@@ -52,16 +46,23 @@ export function SelectedRoute(props: Props) {
       </View>
 
       <View style={styles.routeButtonsContainer}>
-        <UiButton onPress={handleSwiftDirection}>
-          <Ionicons name="refresh" size={20} color="white" />
-        </UiButton>
+        {allDirections.length > 1 && (
+          <>
+            <UiButton onPress={handleSwiftDirection}>
+              <Ionicons name="refresh" size={20} color="white" />
+            </UiButton>
+            <UiButton
+              title={allDirections[otherDirectionIndex]}
+              style={styles.routeButton}
+              size="sm"
+            />
+          </>
+        )}
 
-        <UiButton title={allDirections[otherDirectionIndex]} style={styles.routeButton} size="sm" />
         <Ionicons name="arrow-forward" size={20} color="rgba(0, 0, 0, 0.5)" />
-
         <UiButton title={currentDirection} style={styles.routeButton} size="sm" />
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
