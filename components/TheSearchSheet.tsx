@@ -3,11 +3,11 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useTheme } from "@/hooks/useTheme";
 import { useMutation } from "@tanstack/react-query";
 import { getSearchResults, SearchResult } from "@/api/getSearchResults";
 import BottomSheet, { BottomSheetFlashList, BottomSheetView } from "@gorhom/bottom-sheet";
 
-import { useTheme } from "@/hooks/useTheme";
 import { TheSearchItem } from "./TheSearchItem";
 import { TheSearchInput } from "./TheSearchInput";
 import { TheFilters } from "./TheFilters";

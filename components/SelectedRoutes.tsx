@@ -18,7 +18,7 @@ export function SelectedRoute(props: Props) {
   const routeColors = useRoutes((state) => state.routeColors);
   const routes = useRoutes((state) => state.routes);
 
-  const allDirections = [...new Set(routes[props.code].map((it) => it.yon))];
+  const allDirections = [...new Set(routes[props.code]?.map((it) => it.yon))];
 
   const currentDirection = selectedDirections[props.code] ?? allDirections[0];
   const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
@@ -81,7 +81,7 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
   }
 
   return (
-    <Animated.View entering={FadeIn} exiting={FadeOut} style={[styles.container, style]} {...rest}>
+    <Animated.View entering={FadeIn} exiting={FadeOut} style={style} {...rest}>
       <ScrollView contentContainerStyle={styles.codes} horizontal>
         {routeKeys.map((code) => (
           <SelectedRoute key={code} code={code} />
@@ -101,13 +101,6 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderRadius: 8,
-  },
-  empty: {
-    textAlign: "center",
-    fontWeight: "bold",
-  },
   codes: {
     flexDirection: "row",
     gap: 8,

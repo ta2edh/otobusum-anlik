@@ -58,7 +58,7 @@ export function RouteTimetable(props: Props) {
 
   return (
     <View style={[styles.wrapper, { backgroundColor: theme.surfaceContainer }]}>
-      <SelectedRoute item={props.code} />
+      {/* <SelectedRoute item={props.code} /> */}
 
       <UiText style={styles.title}>{title}</UiText>
 

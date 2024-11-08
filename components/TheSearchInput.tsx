@@ -4,6 +4,7 @@ import { UiButton } from "./ui/UiButton";
 import { NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View } from "react-native";
 import Animated, { LinearTransition } from "react-native-reanimated";
 import { i18n } from "@/translations/i18n";
+import { colors } from "@/constants/colors";
 
 interface Props {
   isLoading?: boolean;
@@ -40,6 +41,7 @@ export function TheSearchInput(props: Props) {
         isLoading={props.isLoading}
         disabled={queryDisabled}
         onPress={handleSearch}
+        style={{ backgroundColor: colors.primary }}
       />
     </Animated.View>
   );

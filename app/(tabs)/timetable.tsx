@@ -2,45 +2,37 @@ import { RouteTimetable } from "@/components/RouteTimetable";
 import { SelectedRoutes } from "@/components/SelectedRoutes";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { UiText } from "@/components/ui/UiText";
-import { colors } from "@/constants/colors";
 import { useTheme } from "@/hooks/useTheme";
 import { useRoutes } from "@/stores/routes";
 import { i18n } from "@/translations/i18n";
-import { StyleSheet, View } from "react-native";
-import Animated, {
-  interpolate,
-  interpolateColor,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import { useCallback, useState } from "react";
+import { LayoutChangeEvent, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TimetableScreen() {
   const theme = useTheme()
   const insets = useSafeAreaInsets();
-  const offsetY = useSharedValue(0);
+  const [routesHeight, setRoutesHeight] = useState(0)
 
   const routes = useRoutes((state) => state.routes);
   const keys = Object.keys(routes);
 
-  const animatedScrollHandler = useAnimatedScrollHandler(({ contentOffset }) => {
-    offsetY.value = contentOffset.y;
-  });
+  const onLayout = useCallback((event: LayoutChangeEvent) => {
+    setRoutesHeight(event.nativeEvent.layout.height)
+  }, [])
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    paddingTop: interpolate(offsetY.value, [0, 50], [8, insets.top + 8], "clamp"),
-    borderRadius: interpolate(offsetY.value, [0, 50], [8, 0], "clamp"),
-    right: interpolate(offsetY.value, [0, 50], [8, 0], "clamp"),
-    left: interpolate(offsetY.value, [0, 50], [8, 0], "clamp"),
-    marginTop: interpolate(offsetY.value, [0, 50], [insets.top + 8, 0], "clamp"),
+  const contentStyle: StyleProp<ViewStyle> = {
+    paddingTop: routesHeight,
+  }
+
+  const timetableRouteStyle: StyleProp<ViewStyle> = {
     position: "absolute",
+    paddingTop: insets.top - 4,
     zIndex: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: colors.primary,
-    elevation: 5,
-    backgroundColor: interpolateColor(offsetY.value, [0, 50], [theme.surfaceContainer, theme.surfaceContainerLow]),
-  }));
+    left: 0,
+    right: 0,
+    backgroundColor: theme.surfaceContainerLow
+  };
 
   if (keys.length < 1) {
     return (
@@ -56,18 +48,15 @@ export default function TimetableScreen() {
 
   return (
     <View>
-      <SelectedRoutes style={animatedStyle} />
+      <SelectedRoutes style={timetableRouteStyle} onLayout={onLayout} />
 
-      <Animated.ScrollView
-        onScroll={animatedScrollHandler}
-        contentContainerStyle={[styles.content]}
-      >
+      <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
         <View style={{ flex: 1, flexDirection: "column", gap: 8 }}>
           {keys.map((cd) => (
             <RouteTimetable key={cd} code={cd} />
           ))}
         </View>
-      </Animated.ScrollView>
+      </ScrollView>
     </View>
   );
 }
@@ -76,6 +65,5 @@ const styles = StyleSheet.create({
   content: {
     gap: 8,
     padding: 8,
-    paddingTop: 140,
   },
 });
