@@ -30,13 +30,13 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     backgroundColor: theme.color,
     borderColor: theme.surfaceContainer,
   };
-
+  
   if (!query.data) {
     return null;
   }
 
   const dir = getDirectionFromBusStopLocations(props.code, selectedDirection, query.data)
-  const filteredBusStops = query.data.filter((item) => item.yon === dir);
+  const filteredBusStops =dir ? query.data.filter((item) => item.yon === dir) : query.data;
 
   return (
     <>
