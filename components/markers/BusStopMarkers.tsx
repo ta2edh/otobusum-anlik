@@ -36,7 +36,7 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   }
 
   const dir = getDirectionFromBusStopLocations(props.code, selectedDirection, query.data)
-  const filteredBusStops =dir ? query.data.filter((item) => item.yon === dir) : query.data;
+  const filteredBusStops = dir ? query.data.filter((item) => item.yon === dir) : query.data;
 
   return (
     <>
