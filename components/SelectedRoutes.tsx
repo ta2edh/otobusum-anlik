@@ -5,9 +5,6 @@ import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
 import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ScrollView } from "react-native";
 import Animated, {
-  FadeIn,
-  FadeOut,
-  LinearTransition,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
@@ -25,10 +22,10 @@ export function SelectedRoute(props: Props) {
   const setDirection = useFilters((state) => state.setDirection);
   const deleteRoute = useRoutes((state) => state.deleteRoute);
 
-  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
   const selectedDirections = useFilters(
     useShallow((state) => state.selectedDirections[props.code])
   );
+  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
   const routes = useRoutes(useShallow((state) => state.routes[props.code]));
 
   const allDirections = [...new Set(routes?.map((it) => it.yon))];
@@ -38,7 +35,7 @@ export function SelectedRoute(props: Props) {
 
   const handleSwiftDirection = () => {
     rotation.value = withTiming(rotation.value + 180, { duration: 500 }, () => {
-      runOnJS(setDirection)(props.code, allDirections[otherDirectionIndex])
+      runOnJS(setDirection)(props.code, allDirections[otherDirectionIndex]);
     });
   };
 
@@ -59,17 +56,11 @@ export function SelectedRoute(props: Props) {
   };
 
   return (
-    <Animated.View
-      layout={LinearTransition}
-      exiting={FadeOut}
-      entering={FadeIn}
-      style={containerStyle}
-      key={props.code}
-    >
+    <View style={containerStyle} key={props.code}>
       <View style={styles.titleContainer}>
         <UiText style={{ fontWeight: "bold" }}>{props.code}</UiText>
         <UiButton onPress={() => deleteRoute(props.code)} style={styles.routeButton}>
-          <Ionicons name="trash-outline" size={10} color="white" />
+          <Ionicons name="trash-outline" size={16} color="white" />
         </UiButton>
       </View>
 
@@ -77,25 +68,29 @@ export function SelectedRoute(props: Props) {
         <View style={styles.routeButtonsContainer}>
           {allDirections.length > 1 && (
             <>
-              <Animated.View style={switchAnimatedStyle}>
-                <UiButton onPress={handleSwiftDirection}>
+              <UiButton onPress={handleSwiftDirection} style={styles.routeButton}>
+                <Animated.View style={switchAnimatedStyle}>
                   <Ionicons name="refresh" size={20} color="white" />
-                </UiButton>
-              </Animated.View>
+                </Animated.View>
+              </UiButton>
 
               <UiButton
                 title={allDirections[otherDirectionIndex]}
                 style={styles.routeButton}
-                size="sm"
+                containerStyle={{ flexShrink: 1 }}
               />
             </>
           )}
 
-          <Ionicons name="arrow-forward" size={20} color="rgba(0, 0, 0, 0.5)" />
-          <UiButton title={currentDirection} style={styles.routeButton} size="sm" />
+          <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
+          <UiButton
+            title={currentDirection}
+            style={styles.routeButton}
+            containerStyle={{ flexShrink: 1 }}
+          />
         </View>
       )}
-    </Animated.View>
+    </View>
   );
 }
 
@@ -108,13 +103,13 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
   }
 
   return (
-    <Animated.View entering={FadeIn} exiting={FadeOut} style={style} {...rest}>
+    <View style={style} {...rest}>
       <ScrollView contentContainerStyle={styles.codes} horizontal>
         {routeKeys.map((code) => (
           <SelectedRoute key={code} code={code} />
         ))}
       </ScrollView>
-    </Animated.View>
+    </View>
   );
 }
 
@@ -139,6 +134,5 @@ const styles = StyleSheet.create({
   },
   routeButton: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    flex: 1,
   },
 });
