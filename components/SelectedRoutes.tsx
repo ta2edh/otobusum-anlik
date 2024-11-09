@@ -4,7 +4,15 @@ import { useFilters } from "@/stores/filters";
 import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
 import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ScrollView } from "react-native";
-import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOut,
+  LinearTransition,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useShallow } from "zustand/react/shallow";
 
@@ -13,6 +21,7 @@ interface Props {
 }
 
 export function SelectedRoute(props: Props) {
+  const rotation = useSharedValue(0);
   const setDirection = useFilters((state) => state.setDirection);
   const deleteRoute = useRoutes((state) => state.deleteRoute);
 
@@ -28,8 +37,18 @@ export function SelectedRoute(props: Props) {
   const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
 
   const handleSwiftDirection = () => {
-    setDirection(props.code, allDirections[otherDirectionIndex]);
+    rotation.value = withTiming(rotation.value + 180, { duration: 500 }, () => {
+      runOnJS(setDirection)(props.code, allDirections[otherDirectionIndex])
+    });
   };
+
+  const switchAnimatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        rotateZ: `${rotation.value}deg`,
+      },
+    ],
+  }));
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: routeColor,
@@ -58,9 +77,12 @@ export function SelectedRoute(props: Props) {
         <View style={styles.routeButtonsContainer}>
           {allDirections.length > 1 && (
             <>
-              <UiButton onPress={handleSwiftDirection}>
-                <Ionicons name="refresh" size={20} color="white" />
-              </UiButton>
+              <Animated.View style={switchAnimatedStyle}>
+                <UiButton onPress={handleSwiftDirection}>
+                  <Ionicons name="refresh" size={20} color="white" />
+                </UiButton>
+              </Animated.View>
+
               <UiButton
                 title={allDirections[otherDirectionIndex]}
                 style={styles.routeButton}
