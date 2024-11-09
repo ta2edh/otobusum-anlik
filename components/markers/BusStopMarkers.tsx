@@ -37,12 +37,12 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
 
   const dir = getDirectionFromBusStopLocations(props.code, selectedDirection, query.data)
   const filteredBusStops = dir ? query.data.filter((item) => item.yon === dir) : query.data;
-
+  
   return (
     <>
       {filteredBusStops.map((bus) => (
         <Marker
-          key={`${bus.xKoordinati}-${bus.yKoordinati}-${bus.yon}`}
+          key={`${bus.xKoordinati}-${bus.yKoordinati}-${bus.yon}-${bus.siraNo}`}
           coordinate={{
             latitude: parseFloat(bus.yKoordinati),
             longitude: parseFloat(bus.xKoordinati),
