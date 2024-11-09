@@ -55,7 +55,7 @@ export function RouteTimetable(props: Props) {
   const dir = getDirectionFromBusStopLocations(props.code, currentDirection, queryStopLocations.data || [])
   
   const filteredData =
-    query.data?.filter((it) => it.SYON === dir && it.SGUNTIPI === dayType) || [];
+    query.data?.filter((it) => (dir ? it.SYON === dir : true) && it.SGUNTIPI === dayType) || [];
 
   const groupedByHour = groupDeparturesByHour(filteredData || []);
   const hours = Object.keys(groupedByHour).sort();
