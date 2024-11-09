@@ -6,21 +6,23 @@ import { UiButton } from "./ui/UiButton";
 import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ScrollView } from "react-native";
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useShallow } from "zustand/react/shallow"
 
 interface Props {
   code: string;
 }
 
 export function SelectedRoute(props: Props) {
-  const selectedDirections = useFilters((state) => state.selectedDirections);
   const setDirection = useFilters((state) => state.setDirection);
   const deleteRoute = useRoutes((state) => state.deleteRoute);
   const routeColors = useRoutes((state) => state.routeColors);
-  const routes = useRoutes((state) => state.routes);
 
-  const allDirections = [...new Set(routes[props.code]?.map((it) => it.yon))];
+  const selectedDirections = useFilters(useShallow((state) => state.selectedDirections[props.code]));
+  const routes = useRoutes(useShallow(state => state.routes[props.code]));
 
-  const currentDirection = selectedDirections[props.code] ?? allDirections[0];
+  const allDirections = [...new Set(routes?.map((it) => it.yon))];
+
+  const currentDirection = selectedDirections ?? allDirections[0];
   const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
 
   const handleSwiftDirection = () => {
