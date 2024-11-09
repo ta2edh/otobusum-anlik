@@ -1,14 +1,14 @@
 import { useRoutes } from "@/stores/routes";
 import { RouteBusMarkers } from "./RouteBusMarkers";
+import { useShallow } from "zustand/react/shallow";
 
 export function RouteMarkers() {
-  const routes = useRoutes((state) => state.routes);
-  const entries = Object.entries(routes);
+  const keys = useRoutes(useShallow(state => Object.keys(state.routes)))
 
   return (
     <>
-      {entries.map(([key, value]) => (
-        <RouteBusMarkers key={key} code={key} locations={value} />
+      {keys.map((key) => (
+        <RouteBusMarkers key={key} code={key} />
       ))}
     </>
   );

@@ -3,7 +3,6 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { useState } from "react";
 
 import { UiText } from "./ui/UiText";
-import { SelectedRoute } from "./SelectedRoutes";
 import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
 
 import { DayType, Direction } from "@/types/departure";
@@ -58,8 +57,6 @@ export function RouteTimetable(props: Props) {
 
   return (
     <View style={[styles.wrapper, { backgroundColor: theme.surfaceContainer }]}>
-      {/* <SelectedRoute item={props.code} /> */}
-
       <UiText style={styles.title}>{title}</UiText>
 
       <View style={styles.filters}>

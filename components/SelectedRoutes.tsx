@@ -6,7 +6,7 @@ import { UiButton } from "./ui/UiButton";
 import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ScrollView } from "react-native";
 import Animated, { FadeIn, FadeOut, LinearTransition } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useShallow } from "zustand/react/shallow"
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
   code: string;
@@ -15,10 +15,12 @@ interface Props {
 export function SelectedRoute(props: Props) {
   const setDirection = useFilters((state) => state.setDirection);
   const deleteRoute = useRoutes((state) => state.deleteRoute);
-  const routeColors = useRoutes((state) => state.routeColors);
 
-  const selectedDirections = useFilters(useShallow((state) => state.selectedDirections[props.code]));
-  const routes = useRoutes(useShallow(state => state.routes[props.code]));
+  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
+  const selectedDirections = useFilters(
+    useShallow((state) => state.selectedDirections[props.code])
+  );
+  const routes = useRoutes(useShallow((state) => state.routes[props.code]));
 
   const allDirections = [...new Set(routes?.map((it) => it.yon))];
 
@@ -30,7 +32,7 @@ export function SelectedRoute(props: Props) {
   };
 
   const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: routeColors[props.code],
+    backgroundColor: routeColor,
     padding: 14,
     borderRadius: 8,
     gap: 8,
@@ -76,9 +78,8 @@ export function SelectedRoute(props: Props) {
 }
 
 export function SelectedRoutes({ style, ...rest }: ViewProps) {
-  const routes = useRoutes((state) => state.routes);
-
-  const routeKeys = Object.keys(routes) || [];
+  const keys = useRoutes(useShallow((state) => Object.keys(state.routes)));
+  const routeKeys = keys || [];
 
   if (routeKeys.length < 1) {
     return null;

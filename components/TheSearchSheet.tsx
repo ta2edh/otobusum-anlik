@@ -76,10 +76,7 @@ export function TheSearchSheet() {
         animatedIndex={animatedIndex}
       >
         <BottomSheetView>
-          <Animated.View layout={LinearTransition} style={styles.query}>
-            {/* <SelectedRoutes /> */}
-            <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
-          </Animated.View>
+          <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
         </BottomSheetView>
 
         <BottomSheetFlashList

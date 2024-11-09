@@ -5,19 +5,21 @@ import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
 import { UiText } from "@/components/ui/UiText";
 import { i18n } from "@/translations/i18n";
 import { useFilters } from "@/stores/filters";
-import { Location } from "@/api/getRouteBusLocations";
+import { useShallow } from "zustand/react/shallow";
+import { memo } from "react";
 
 interface Props {
   code: string,
-  locations: Location[]
 }
 
-export function RouteBusMarkers(props: Props) {
+export const RouteBusMarkers = memo(function RouteBusMarkers(props: Props) {
   const theme = useTheme()
-  const routeColors = useRoutes((state) => state.routeColors);
-  const selectedDirections = useFilters((state) => state.selectedDirections);
 
-  const filtered = props.locations.filter(loc => loc.yon  === selectedDirections[props.code])
+  const route = useRoutes(useShallow(state => state.routes[props.code]))
+  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
+  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
+
+  const filtered = route.filter(loc => loc.yon  === selectedDirection)
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,
@@ -35,10 +37,10 @@ export function RouteBusMarkers(props: Props) {
             latitude: parseFloat(loc.enlem),
             longitude: parseFloat(loc.boylam),
           }}
-          pinColor={routeColors[loc.hatkodu]}
+          pinColor={routeColor}
           tracksInfoWindowChanges={false}
         >
-          <View style={[styles.iconContainer, { backgroundColor: routeColors[loc.hatkodu] }]}>
+          <View style={[styles.iconContainer, { backgroundColor: routeColor }]}>
             <Image source={require("@/assets/bus.png")} style={styles.icon} />
           </View>
 
@@ -57,7 +59,7 @@ export function RouteBusMarkers(props: Props) {
       ))}
     </>
   );
-}
+})
 
 const styles = StyleSheet.create({
   iconContainer: {

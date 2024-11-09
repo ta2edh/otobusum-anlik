@@ -7,8 +7,9 @@ import {
 import { UiText } from "./ui/UiText";
 import { colors } from "@/constants/colors";
 import { SearchResult } from "@/api/getSearchResults";
-import { useCallback, useState, memo } from "react";
+import { useState, memo } from "react";
 import { useRoutes } from "@/stores/routes";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult;
@@ -18,11 +19,11 @@ interface Props extends TouchableOpacityProps {
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false);
 
+  const routeColor = useRoutes(useShallow(state => state.routeColors[props.item.Code]))
   const addRoute = useRoutes((state) => state.addRoute);
-  const routeColors = useRoutes((state) => state.routeColors);
 
-  const backgroundColor = routeColors[props.item.Code] || colors.primary;
-  const isInRoutes = routeColors[props.item.Code] !== undefined;
+  const backgroundColor = routeColor || colors.primary;
+  const isInRoutes = routeColor !== undefined;
 
   const handlePress = async () => {
     props.onPress?.();

@@ -3,18 +3,21 @@ import { useTheme } from "@/hooks/useTheme";
 import { useFilters } from "@/stores/filters";
 import { useRoutes } from "@/stores/routes";
 import { useQuery } from "@tanstack/react-query";
+import { memo } from "react";
 
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Marker } from "react-native-maps";
+import { useShallow } from "zustand/react/shallow";
 
 interface Props {
   code: string;
 }
 
-function BusStopMarkersItem(props: Props) {
-  const routes = useRoutes((state) => state.routes);
-  const routeColors = useRoutes((state) => state.routeColors);
-  const selectedDirections = useFilters((state) => state.selectedDirections);
+// Rerenders when routes are updated, should be optimized later.
+export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props) {
+  const route = useRoutes(useShallow(state => state.routes[props.code]))
+  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
+  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
   const theme = useTheme();
 
   const query = useQuery({
@@ -33,7 +36,7 @@ function BusStopMarkersItem(props: Props) {
   }
 
   // TODO: This should be changed but there is not much to do because of the api. It returns the direction as G or D
-  const shownBusses = routes[props.code].filter(loc => loc.yon === selectedDirections[props.code])
+  const shownBusses = route.filter(loc => loc.yon === selectedDirection)
   const randomBusStop = query.data.find(busStop => shownBusses.find(bus => bus.yakinDurakKodu === busStop.durakKodu))
 
   const filteredBusStops = query.data.filter((item) => item.yon === randomBusStop?.yon);
@@ -47,22 +50,21 @@ function BusStopMarkersItem(props: Props) {
             latitude: parseFloat(bus.yKoordinati),
             longitude: parseFloat(bus.xKoordinati),
           }}
-          pinColor={routeColors[bus.hatKodu]}
+          pinColor={routeColor}
           tracksViewChanges={false}
           tracksInfoWindowChanges={false}
         >
           <View
-            style={[styles.busStop, busStopStyle, { backgroundColor: routeColors[bus.hatKodu] }]}
+            style={[styles.busStop, busStopStyle, { backgroundColor: routeColor }]}
           />
         </Marker>
       ))}
     </>
   );
-}
+})
 
 export function BusStopMarkers() {
-  const routes = useRoutes((state) => state.routes);
-  const routeKeys = Object.keys(routes);
+  const routeKeys = useRoutes(useShallow(state => Object.keys(state.routes)))
 
   return (
     <>
