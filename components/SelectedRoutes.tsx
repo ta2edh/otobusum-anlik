@@ -92,15 +92,6 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
           <SelectedRoute key={code} code={code} />
         ))}
       </ScrollView>
-
-      {/* https://github.com/gorhom/react-native-bottom-sheet/issues/1939 */}
-      {/* <BottomSheetFlashList
-        data={routeKeys}
-        renderItem={renderItem}
-        estimatedItemSize={60}
-        horizontal
-        directionalLockEnabled
-      /> */}
     </Animated.View>
   );
 }

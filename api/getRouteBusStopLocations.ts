@@ -1,8 +1,9 @@
+import { Direction } from "@/types/departure";
 import { getBody } from "./body";
 
 export interface BusStopLocation {
   hatKodu: string;
-  yon: string;
+  yon: Direction;
   siraNo: string;
   durakKodu: string;
   durakAdi: string;
@@ -43,7 +44,7 @@ export async function getRouteBusStopLocations(code: string) {
 
     results.push({
       hatKodu: itemInnerContent.split(`<HATKODU>`).at(-1)?.split(`</HATKODU>`).at(0)!,
-      yon: itemInnerContent.split(`<YON>`).at(-1)?.split(`</YON>`).at(0)!,
+      yon: itemInnerContent.split(`<YON>`).at(-1)?.split(`</YON>`).at(0) as Direction,
       siraNo: itemInnerContent.split(`<SIRANO>`).at(-1)?.split(`</SIRANO>`).at(0)!,
       durakKodu: itemInnerContent.split(`<DURAKKODU>`).at(-1)?.split(`</DURAKKODU>`).at(0)!,
       durakAdi: itemInnerContent.split(`<DURAKADI>`).at(-1)?.split(`</DURAKADI>`).at(0)!,

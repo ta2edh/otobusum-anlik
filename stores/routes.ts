@@ -106,4 +106,6 @@ const updateRoutes = async () => {
   setTimeout(updateRoutes, 50_000);
 };
 
-useRoutes.persist.onFinishHydration(updateRoutes)
+if (!__DEV__) {
+  useRoutes.persist.onFinishHydration(updateRoutes)
+}

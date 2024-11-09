@@ -5,11 +5,15 @@ import { useState } from "react";
 import { UiText } from "./ui/UiText";
 import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
 
-import { DayType, Direction } from "@/types/departure";
+import { DayType } from "@/types/departure";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
+import { getDirectionFromBusStopLocations } from "@/utils/getDirectionFromBusLocations";
+import { getRouteBusStopLocations } from "@/api/getRouteBusStopLocations";
+import { useFilters } from "@/stores/filters";
+import { useShallow } from "zustand/react/shallow";
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {};
@@ -36,7 +40,7 @@ interface Props {
 
 export function RouteTimetable(props: Props) {
   const theme = useTheme();
-  const [direction, setDirection] = useState<Direction>(() => "D");
+  const currentDirection = useFilters(useShallow(state => state.selectedDirections[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
 
   const query = useQuery({
@@ -44,8 +48,15 @@ export function RouteTimetable(props: Props) {
     queryFn: () => getPlannedDepartures(props.code),
   });
 
+  const queryStopLocations = useQuery<Awaited<ReturnType<typeof getRouteBusStopLocations>>>({
+    queryKey: [`${props.code}-stop-locations`],
+  });
+
+  const dir = getDirectionFromBusStopLocations(props.code, currentDirection, queryStopLocations.data || [])
+  
   const filteredData =
-    query.data?.filter((it) => it.SYON === direction && it.SGUNTIPI === dayType) || [];
+    query.data?.filter((it) => it.SYON === dir && it.SGUNTIPI === dayType) || [];
+
   const groupedByHour = groupDeparturesByHour(filteredData || []);
   const hours = Object.keys(groupedByHour).sort();
 
@@ -60,8 +71,8 @@ export function RouteTimetable(props: Props) {
       <UiText style={styles.title}>{title}</UiText>
 
       <View style={styles.filters}>
-        <UiSegmentedButtons
-          value={direction}
+        {/* <UiSegmentedButtons
+          value={dir}
           onValueChange={setDirection}
           style={{flexGrow: 1}}
           buttons={[
@@ -74,7 +85,7 @@ export function RouteTimetable(props: Props) {
               label: i18n.t("return"),
             },
           ]}
-        />
+        /> */}
 
         <UiSegmentedButtons
           value={dayType}
