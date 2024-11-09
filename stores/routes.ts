@@ -73,6 +73,30 @@ export const useRoutes = create(
           }),
         updateRoute: (code, newLocations) =>
           set((state) => {
+            // Filter update stuff
+            const currentDirection = useFilters.getState().selectedDirections[code];
+            if (currentDirection) {
+              const foundIndex = newLocations.findIndex((it) => it.yon === currentDirection);
+              if (foundIndex === -1) {
+                if (newLocations.length > 0) {
+                  useFilters.setState((state) => {
+                    return {
+                      selectedDirections: {
+                        ...state.selectedDirections,
+                        [code]: newLocations[0].yon,
+                      }
+                    }
+                  })
+                } else {
+                  useFilters.setState((state) => {
+                    delete state.selectedDirections[code];
+                    return state;
+                  });
+                }
+              }
+            }
+            //
+
             return {
               ...state,
               routes: {
@@ -107,5 +131,5 @@ const updateRoutes = async () => {
 };
 
 if (!__DEV__) {
-  useRoutes.persist.onFinishHydration(updateRoutes)
+  useRoutes.persist.onFinishHydration(updateRoutes);
 }

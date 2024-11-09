@@ -22,15 +22,13 @@ export function SelectedRoute(props: Props) {
   const setDirection = useFilters((state) => state.setDirection);
   const deleteRoute = useRoutes((state) => state.deleteRoute);
 
-  const selectedDirections = useFilters(
-    useShallow((state) => state.selectedDirections[props.code])
-  );
+  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
   const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
   const routes = useRoutes(useShallow((state) => state.routes[props.code]));
 
   const allDirections = [...new Set(routes?.map((it) => it.yon))];
 
-  const currentDirection = selectedDirections ?? allDirections[0];
+  const currentDirection = selectedDirection ?? allDirections.at(0);
   const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
 
   const handleSwiftDirection = () => {
