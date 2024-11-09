@@ -38,7 +38,7 @@ export const useRoutes = create(
           if (!response) return;
 
           if (response.at(0)?.yon) {
-            useFilters.getState().setDirection(code, response.at(0)!.yon)
+            useFilters.getState().setDirection(code, response.at(0)!.yon);
           }
 
           return set((state) => {
@@ -90,18 +90,20 @@ export const useRoutes = create(
   )
 );
 
-if (!__DEV__) {
-  setInterval(async () => {
-    const keys = Object.keys(useRoutes.getState().routes);
-    const results = await Promise.all(keys.map((k) => getRouteBusLocations(k)));
+const updateRoutes = async () => {
+  const keys = Object.keys(useRoutes.getState().routes);
+  const results = await Promise.all(keys.map((k) => getRouteBusLocations(k)));
 
-    for (let index = 0; index < keys.length; index++) {
-      const key = keys[index];
-      const result = results[index];
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index];
+    const result = results[index];
 
-      if (result) {
-        useRoutes.getState().updateRoute(key, result);
-      }
+    if (result) {
+      useRoutes.getState().updateRoute(key, result);
     }
-  }, 50_000);
-}
+  }
+
+  setTimeout(updateRoutes, 50_000);
+};
+
+useRoutes.persist.onFinishHydration(updateRoutes)
