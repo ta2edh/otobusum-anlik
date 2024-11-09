@@ -75,7 +75,7 @@ export function TheSearchSheet() {
         animatedPosition={animatedPosition}
         animatedIndex={animatedIndex}
       >
-        <BottomSheetView>
+        <BottomSheetView style={styles.container}>
           <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
         </BottomSheetView>
 
