@@ -116,6 +116,7 @@ export function SelectedRoutes({ style, ...rest }: ViewProps) {
 const styles = StyleSheet.create({
   codes: {
     flexDirection: "row",
+    alignItems: "flex-end",
     gap: 8,
     padding: 14,
   },
