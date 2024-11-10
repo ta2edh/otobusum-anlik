@@ -10,7 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
-import { getDirectionFromBusStopLocations } from "@/utils/getDirectionFromBusLocations";
+import { getRouteFromBusStopLocations } from "@/utils/getRouteFromBusLocations";
 import { getLineBusStopLocations } from "@/api/getLineBusStopLocations";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
@@ -40,7 +40,7 @@ interface Props {
 
 export function LineTimetable(props: Props) {
   const { theme } = useTheme();
-  const currentDirection = useFilters(useShallow(state => state.selectedDirections[props.code]))
+  const currentRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
 
   const query = useQuery({
@@ -52,7 +52,7 @@ export function LineTimetable(props: Props) {
     queryKey: [`${props.code}-stop-locations`],
   });
 
-  const dir = getDirectionFromBusStopLocations(props.code, currentDirection, queryStopLocations.data || [])
+  const dir = getRouteFromBusStopLocations(props.code, currentRoute, queryStopLocations.data || [])
   
   const filteredData =
     query.data?.filter((it) => (dir ? it.SYON === dir : true) && it.SGUNTIPI === dayType) || [];
@@ -73,7 +73,7 @@ export function LineTimetable(props: Props) {
       <View style={styles.filters}>
         {/* <UiSegmentedButtons
           value={dir}
-          onValueChange={setDirection}
+          onValueChange={setRoute}
           style={{flexGrow: 1}}
           buttons={[
             {

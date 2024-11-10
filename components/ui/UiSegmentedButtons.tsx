@@ -16,7 +16,7 @@ interface Props<T> extends TouchableOpacityProps {
 }
 
 export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange }: Props<T>) {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const baseStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainerHigh,

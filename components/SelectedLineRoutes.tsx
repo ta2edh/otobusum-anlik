@@ -1,5 +1,4 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import { UiText } from "./ui/UiText";
 
 import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAllRoutes, RouteTrack } from "@/api/getAllRoutes";
@@ -18,7 +17,7 @@ interface Props {
 
 export function SelectedLineRoutes(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null);
-  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
+  const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const { bottomSheetStyle } = useTheme();
 
   const lineRoutes = useQuery({
@@ -31,7 +30,7 @@ export function SelectedLineRoutes(props: Props) {
   };
 
   const renderItem = useCallback(({ item }: { item: RouteTrack }) => {
-    const isSelected = selectedDirection === item.route_code;
+    const isSelected = selectedRoute === item.route_code;
 
     return (
       <View style={[styles.item, isSelected ? selectedStyle : undefined]}>

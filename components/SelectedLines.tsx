@@ -22,21 +22,21 @@ interface Props {
 export function SelectedLine(props: Props) {
   const rotation = useSharedValue(0);
 
-  const setDirection = useFilters((state) => state.setDirection);
+  const setRoute = useFilters((state) => state.setRoute);
   const deleteLine = useLines((state) => state.deleteLine);
 
-  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
+  const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const lines = useLines(useShallow((state) => state.lines[props.code]));
 
-  const allDirections = [...new Set(lines?.map((it) => it.yon))];
+  const allRoutes = [...new Set(lines?.map((it) => it.yon))];
 
-  const currentDirection = selectedDirection ?? allDirections.at(0);
-  const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
+  const currentRoute = selectedRoute ?? allRoutes.at(0);
+  const otherRouteIndex = allRoutes.length - allRoutes.indexOf(currentRoute) - 1;
 
-  const handleSwiftDirection = () => {
+  const handleSwiftRoute = () => {
     rotation.value = withTiming(rotation.value + 180, { duration: 500 }, () => {
-      runOnJS(setDirection)(props.code, allDirections[otherDirectionIndex]);
+      runOnJS(setRoute)(props.code, allRoutes[otherRouteIndex]);
     });
   };
 
@@ -72,18 +72,18 @@ export function SelectedLine(props: Props) {
 
       <SelectedLineRoutes code={props.code} />
 
-      {allDirections.length > 0 && (
+      {allRoutes.length > 0 && (
         <View style={styles.lineButtonsContainer}>
-          {allDirections.length > 1 && (
+          {allRoutes.length > 1 && (
             <>
-              <UiButton onPress={handleSwiftDirection} style={styles.lineButton}>
+              <UiButton onPress={handleSwiftRoute} style={styles.lineButton}>
                 <Animated.View style={switchAnimatedStyle}>
                   <Ionicons name="refresh" size={20} color="white" />
                 </Animated.View>
               </UiButton>
 
               <UiButton
-                title={allDirections[otherDirectionIndex]}
+                title={allRoutes[otherRouteIndex]}
                 style={styles.lineButton}
                 containerStyle={{ flexShrink: 1 }}
               />
@@ -92,7 +92,7 @@ export function SelectedLine(props: Props) {
 
           <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
           <UiButton
-            title={currentDirection}
+            title={currentRoute}
             style={styles.lineButton}
             containerStyle={{ flexShrink: 1 }}
           />

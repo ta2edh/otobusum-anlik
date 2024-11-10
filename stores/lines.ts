@@ -38,7 +38,7 @@ export const useLines = create(
           if (!response) return;
 
           if (response.at(0)?.guzergahkodu) {
-            useFilters.getState().setDirection(code, response.at(0)!.guzergahkodu);
+            useFilters.getState().setRoute(code, response.at(0)!.guzergahkodu);
           }
 
           return set((state) => {
@@ -74,22 +74,22 @@ export const useLines = create(
         updateLine: (code, newLocations) =>
           set((state) => {
             // Filter update stuff
-            const currentDirection = useFilters.getState().selectedDirections[code];
-            if (currentDirection) {
-              const foundIndex = newLocations.findIndex((it) => it.yon === currentDirection);
+            const currentRoute = useFilters.getState().selectedRoutes[code];
+            if (currentRoute) {
+              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute);
               if (foundIndex === -1) {
                 if (newLocations.length > 0) {
                   useFilters.setState((state) => {
                     return {
-                      selectedDirections: {
-                        ...state.selectedDirections,
+                      selectedRoutes: {
+                        ...state.selectedRoutes,
                         [code]: newLocations[0].guzergahkodu,
                       }
                     }
                   })
                 } else {
                   useFilters.setState((state) => {
-                    delete state.selectedDirections[code];
+                    delete state.selectedRoutes[code];
                     return state;
                   });
                 }

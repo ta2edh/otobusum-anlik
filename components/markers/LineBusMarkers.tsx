@@ -17,9 +17,9 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
 
   const line = useLines(useShallow(state => state.lines[props.code]))
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
-  const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
+  const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
 
-  const filtered = line.filter(loc => loc.yon  === selectedDirection)
+  const filtered = line.filter(loc => loc.yon  === selectedRoute)
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,

@@ -39,9 +39,6 @@ export function SelectedLineAnnouncements(props: Props) {
       {!!lineAnnouncement && (
         <BottomSheetModal
           ref={bottomSheetModal}
-          // handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
-          // handleIndicatorStyle={{ backgroundColor: theme.surfaceContainerHighest }}
-          // backgroundStyle={{ backgroundColor: theme.surfaceContainerLow }}
           snapPoints={["50%"]}
           enableDynamicSizing={false}
           {...bottomSheetStyle}

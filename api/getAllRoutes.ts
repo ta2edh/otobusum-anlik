@@ -1,3 +1,5 @@
+import { Direction } from "@/types/departure"
+
 export interface RouteTrack {
   _id: number
   route_id: string
@@ -6,7 +8,7 @@ export interface RouteTrack {
   route_long_name: string
   route_type: string
   route_desc: string
-  route_code: string
+  route_code: `${string}_${Direction}_${string}`
   rank: number
 }
 

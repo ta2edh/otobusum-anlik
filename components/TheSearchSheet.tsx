@@ -18,7 +18,7 @@ export function TheSearchSheet() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetIndex = useRef(0);
   const insets = useSafeAreaInsets();
-  const { theme } = useTheme();
+  const { bottomSheetStyle } = useTheme();
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
@@ -63,9 +63,6 @@ export function TheSearchSheet() {
       
       <BottomSheet
         ref={bottomSheetRef}
-        handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
-        handleIndicatorStyle={{ backgroundColor: theme.surfaceContainerHighest }}
-        backgroundStyle={{ backgroundColor: theme.surfaceContainerLow }}
         topInset={insets.top + 20}
         enableDynamicSizing={false}
         android_keyboardInputMode="adjustResize"
@@ -74,6 +71,7 @@ export function TheSearchSheet() {
         onChange={(index) => (bottomSheetIndex.current = index)}
         animatedPosition={animatedPosition}
         animatedIndex={animatedIndex}
+        {...bottomSheetStyle}
       >
         <BottomSheetView style={styles.container}>
           <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
