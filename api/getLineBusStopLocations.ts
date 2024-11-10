@@ -15,7 +15,7 @@ export interface BusStopLocation {
   ilceAdi: string;
 }
 
-export async function getRouteBusStopLocations(code: string) {
+export async function getLineBusStopLocations(code: string) {
   const body = getBody("hat_kodu", "DurakDetay_GYY", code);
 
   const response = await fetch("https://api.ibb.gov.tr/iett/ibb/ibb.asmx?wsdl", {

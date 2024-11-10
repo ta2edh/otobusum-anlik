@@ -8,22 +8,22 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { TheSearchSheet } from "@/components/TheSearchSheet";
 import { BusStopMarkers } from "@/components/markers/BusStopMarkers";
-import { useRoutes } from "@/stores/routes";
+import { useLines } from "@/stores/lines";
 
 import { SplashScreen } from "expo-router";
 import { useCallback, useRef } from "react";
-import { RouteMarkers } from "@/components/markers/RouteMarkers";
+import { LineMarkers } from "@/components/markers/LineMarkers";
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null);
 
   const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
-  const updateInitialMapLocation = useRoutes((state) => state.updateInitialMapLocation);
+  const updateInitialMapLocation = useLines((state) => state.updateInitialMapLocation);
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
-      center: useRoutes.getState().initialMapLocation,
+      center: useLines.getState().initialMapLocation,
       zoom: 13,
       heading: 0,
       pitch: 0,
@@ -62,7 +62,7 @@ export default function HomeScreen() {
         onMapReady={handleReady}
         showsIndoors={false}
       >
-        <RouteMarkers />
+        <LineMarkers />
         <BusStopMarkers />
       </MapView>
 

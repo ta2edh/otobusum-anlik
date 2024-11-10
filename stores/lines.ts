@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector, persist, createJSONStorage } from "zustand/middleware";
-import { getRouteBusLocations, Location } from "@/api/getRouteBusLocations";
+import { getLineBusLocations, Location } from "@/api/getLineBusLocations";
 import { createColor } from "@/utils/createColor";
 import { ToastAndroid } from "react-native";
 import { LatLng } from "react-native-maps";
@@ -8,33 +8,33 @@ import { LatLng } from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFilters } from "./filters";
 
-export interface RoutesStore {
+export interface LinesStore {
   initialMapLocation?: LatLng;
-  routes: Record<string, Location[]>;
-  routeColors: Record<string, string>;
+  lines: Record<string, Location[]>;
+  lineColors: Record<string, string>;
   updateInitialMapLocation: (newLocation: LatLng) => void;
-  addRoute: (code: string) => Promise<void>;
-  deleteRoute: (code: string) => void;
-  updateRoute: (code: string, newRoute: Location[]) => void;
+  addLine: (code: string) => Promise<void>;
+  deleteLine: (code: string) => void;
+  updateLine: (code: string, newLine: Location[]) => void;
 }
 
-export const useRoutes = create(
+export const useLines = create(
   subscribeWithSelector(
-    persist<RoutesStore>(
+    persist<LinesStore>(
       (set, get) => ({
         initialMapLocation: undefined, // TODO: move this to different store. (Maybe something called settings)
-        routes: {},
-        routeColors: {},
+        lines: {},
+        lineColors: {},
         updateInitialMapLocation: (newLocation: LatLng) =>
           set((state) => ({ ...state, initialMapLocation: newLocation })),
-        addRoute: async (code) => {
-          if (Object.keys(get().routes).length > 3) {
+        addLine: async (code) => {
+          if (Object.keys(get().lines).length > 3) {
             ToastAndroid.show("Only 4 selections are allowed", ToastAndroid.SHORT);
 
             return;
           }
 
-          const response = await getRouteBusLocations(code);
+          const response = await getLineBusLocations(code);
           if (!response) return;
 
           if (response.at(0)?.yon) {
@@ -46,32 +46,32 @@ export const useRoutes = create(
 
             return {
               ...state,
-              routes: {
-                ...state.routes,
+              lines: {
+                ...state.lines,
                 [code]: response,
               },
-              routeColors: {
-                ...state.routeColors,
+              lineColors: {
+                ...state.lineColors,
                 [code]: newColor,
               },
             };
           });
         },
-        deleteRoute: (code) =>
+        deleteLine: (code) =>
           set((state) => {
-            delete state.routes[code];
-            delete state.routeColors[code];
+            delete state.lines[code];
+            delete state.lineColors[code];
 
             return {
-              routes: {
-                ...state.routes,
+              lines: {
+                ...state.lines,
               },
-              routeColors: {
-                ...state.routeColors,
+              lineColors: {
+                ...state.lineColors,
               },
             };
           }),
-        updateRoute: (code, newLocations) =>
+        updateLine: (code, newLocations) =>
           set((state) => {
             // Filter update stuff
             const currentDirection = useFilters.getState().selectedDirections[code];
@@ -99,37 +99,37 @@ export const useRoutes = create(
 
             return {
               ...state,
-              routes: {
-                ...state.routes,
+              lines: {
+                ...state.lines,
                 [code]: newLocations,
               },
             };
           }),
       }),
       {
-        name: "route-storage",
+        name: "line-storage",
         storage: createJSONStorage(() => AsyncStorage),
       }
     )
   )
 );
 
-const updateRoutes = async () => {
-  const keys = Object.keys(useRoutes.getState().routes);
-  const results = await Promise.all(keys.map((k) => getRouteBusLocations(k)));
+const updateLines = async () => {
+  const keys = Object.keys(useLines.getState().lines);
+  const results = await Promise.all(keys.map((k) => getLineBusLocations(k)));
 
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index];
     const result = results[index];
 
     if (result) {
-      useRoutes.getState().updateRoute(key, result);
+      useLines.getState().updateLine(key, result);
     }
   }
 
-  setTimeout(updateRoutes, 50_000);
+  setTimeout(updateLines, 50_000);
 };
 
 // if (!__DEV__) {
-  useRoutes.persist.onFinishHydration(updateRoutes);
+  useLines.persist.onFinishHydration(updateLines);
 // }

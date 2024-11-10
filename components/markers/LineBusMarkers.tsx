@@ -1,4 +1,4 @@
-import { useRoutes } from "@/stores/routes";
+import { useLines } from "@/stores/lines";
 import { useTheme } from "@/hooks/useTheme";
 import { Marker, Callout } from "react-native-maps";
 import { StyleProp, ViewStyle, View, Image, StyleSheet } from "react-native";
@@ -12,14 +12,14 @@ interface Props {
   code: string,
 }
 
-export const RouteBusMarkers = memo(function RouteBusMarkers(props: Props) {
+export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const theme = useTheme()
 
-  const route = useRoutes(useShallow(state => state.routes[props.code]))
-  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
+  const line = useLines(useShallow(state => state.lines[props.code]))
+  const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
 
-  const filtered = route.filter(loc => loc.yon  === selectedDirection)
+  const filtered = line.filter(loc => loc.yon  === selectedDirection)
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,
@@ -37,10 +37,10 @@ export const RouteBusMarkers = memo(function RouteBusMarkers(props: Props) {
             latitude: parseFloat(loc.enlem),
             longitude: parseFloat(loc.boylam),
           }}
-          pinColor={routeColor}
+          pinColor={lineColor}
           tracksInfoWindowChanges={false}
         >
-          <View style={[styles.iconContainer, { backgroundColor: routeColor }]}>
+          <View style={[styles.iconContainer, { backgroundColor: lineColor }]}>
             <Image source={require("@/assets/bus.png")} style={styles.icon} />
           </View>
 

@@ -11,7 +11,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
 import { getDirectionFromBusStopLocations } from "@/utils/getDirectionFromBusLocations";
-import { getRouteBusStopLocations } from "@/api/getRouteBusStopLocations";
+import { getLineBusStopLocations } from "@/api/getLineBusStopLocations";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
 
@@ -38,7 +38,7 @@ interface Props {
   code: string;
 }
 
-export function RouteTimetable(props: Props) {
+export function LineTimetable(props: Props) {
   const theme = useTheme();
   const currentDirection = useFilters(useShallow(state => state.selectedDirections[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
@@ -48,7 +48,7 @@ export function RouteTimetable(props: Props) {
     queryFn: () => getPlannedDepartures(props.code),
   });
 
-  const queryStopLocations = useQuery<Awaited<ReturnType<typeof getRouteBusStopLocations>>>({
+  const queryStopLocations = useQuery<Awaited<ReturnType<typeof getLineBusStopLocations>>>({
     queryKey: [`${props.code}-stop-locations`],
   });
 

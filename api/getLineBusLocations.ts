@@ -13,7 +13,7 @@ export interface Location {
   yakinDurakKodu: string;
 }
 
-export async function getRouteBusLocations(code: string) {
+export async function getLineBusLocations(code: string) {
   const body = getBody("HatKodu", "GetHatOtoKonum_json", code);
 
   const response = await fetch("https://api.ibb.gov.tr/iett/FiloDurum/SeferGerceklesme.asmx", {

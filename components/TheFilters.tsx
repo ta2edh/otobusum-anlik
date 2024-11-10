@@ -1,6 +1,6 @@
 import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated";
 import { LayoutChangeEvent, StyleSheet } from "react-native";
-import { SelectedRoutes } from "./SelectedRoutes";
+import { SelectedLines } from "./SelectedLines";
 import { useCallback, useState } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -31,7 +31,7 @@ export function TheFilters({
 
   return (
     <Animated.View onLayout={onLayout} style={[animatedStyle, styles.filters]}>
-      <SelectedRoutes />
+      <SelectedLines />
     </Animated.View>
   );
 }

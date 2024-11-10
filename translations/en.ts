@@ -1,10 +1,10 @@
 export default {
   search: "Search",
   loading: "Loading",
-  timetableEmpty: "Timetables of selected routes will be shown here",
+  timetableEmpty: "Timetables of selected lines will be shown here",
   direction: "Direction",
   lastUpdate: "Last Update",
-  selectedRoutes: "Selected Lines",
+  selectedLines: "Selected Lines",
   map: "Map",
   timetable: "Timetable",
   departure: "Departure",

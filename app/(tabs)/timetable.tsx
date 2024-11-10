@@ -1,9 +1,9 @@
-import { RouteTimetable } from "@/components/RouteTimetable";
-import { SelectedRoutes } from "@/components/SelectedRoutes";
+import { LineTimetable } from "@/components/LineTimetable";
+import { SelectedLines } from "@/components/SelectedLines";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { UiText } from "@/components/ui/UiText";
 import { useTheme } from "@/hooks/useTheme";
-import { useRoutes } from "@/stores/routes";
+import { useLines } from "@/stores/lines";
 import { i18n } from "@/translations/i18n";
 import { useCallback, useState } from "react";
 import { LayoutChangeEvent, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
@@ -12,20 +12,20 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 export default function TimetableScreen() {
   const theme = useTheme()
   const insets = useSafeAreaInsets();
-  const [routesHeight, setRoutesHeight] = useState(0)
+  const [linesHeight, setLinesHeight] = useState(0)
 
-  const routes = useRoutes((state) => state.routes);
-  const keys = Object.keys(routes);
+  const lines = useLines((state) => state.lines);
+  const keys = Object.keys(lines);
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
-    setRoutesHeight(event.nativeEvent.layout.height)
+    setLinesHeight(event.nativeEvent.layout.height)
   }, [])
 
   const contentStyle: StyleProp<ViewStyle> = {
-    paddingTop: routesHeight,
+    paddingTop: linesHeight,
   }
 
-  const timetableRouteStyle: StyleProp<ViewStyle> = {
+  const timetableLineStyle: StyleProp<ViewStyle> = {
     position: "absolute",
     paddingTop: insets.top - 4,
     zIndex: 10,
@@ -48,12 +48,12 @@ export default function TimetableScreen() {
 
   return (
     <View>
-      <SelectedRoutes style={timetableRouteStyle} onLayout={onLayout} />
+      <SelectedLines style={timetableLineStyle} onLayout={onLayout} />
 
       <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
         <View style={{ flex: 1, flexDirection: "column", gap: 8 }}>
           {keys.map((cd) => (
-            <RouteTimetable key={cd} code={cd} />
+            <LineTimetable key={cd} code={cd} />
           ))}
         </View>
       </ScrollView>

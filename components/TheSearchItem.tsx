@@ -8,7 +8,7 @@ import { UiText } from "./ui/UiText";
 import { colors } from "@/constants/colors";
 import { SearchResult } from "@/api/getSearchResults";
 import { useState, memo } from "react";
-import { useRoutes } from "@/stores/routes";
+import { useLines } from "@/stores/lines";
 import { useShallow } from "zustand/react/shallow";
 
 interface Props extends TouchableOpacityProps {
@@ -19,18 +19,18 @@ interface Props extends TouchableOpacityProps {
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false);
 
-  const routeColor = useRoutes(useShallow(state => state.routeColors[props.item.Code]))
-  const addRoute = useRoutes((state) => state.addRoute);
+  const lineColor = useLines(useShallow(state => state.lineColors[props.item.Code]))
+  const addLine = useLines((state) => state.addLine);
 
-  const backgroundColor = routeColor || colors.primary;
-  const isInRoutes = routeColor !== undefined;
+  const backgroundColor = lineColor || colors.primary;
+  const isInLines = lineColor !== undefined;
 
   const handlePress = async () => {
     props.onPress?.();
     setIsPending(true);
 
     try {
-      await addRoute(props.item.Code);
+      await addLine(props.item.Code);
     } finally {
       setIsPending(false);
     }
@@ -38,8 +38,8 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
 
   return (
     <TouchableOpacity
-      style={[styles.container, { opacity: isInRoutes ? 0.4 : 1 }]}
-      disabled={isInRoutes}
+      style={[styles.container, { opacity: isInLines ? 0.4 : 1 }]}
+      disabled={isInLines}
       onPress={handlePress}
     >
       <UiText style={[styles.renderCode, { backgroundColor }]}>

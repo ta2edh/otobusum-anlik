@@ -1,7 +1,7 @@
-import { getRouteBusStopLocations } from "@/api/getRouteBusStopLocations";
+import { getLineBusStopLocations } from "@/api/getLineBusStopLocations";
 import { useTheme } from "@/hooks/useTheme";
 import { useFilters } from "@/stores/filters";
-import { useRoutes } from "@/stores/routes";
+import { useLines } from "@/stores/lines";
 import { getDirectionFromBusStopLocations } from "@/utils/getDirectionFromBusLocations";
 import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
@@ -14,15 +14,15 @@ interface Props {
   code: string;
 }
 
-// Rerenders when routes are updated, should be optimized later.
+// Rerenders when lines are updated, should be optimized later.
 export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props) {
-  const routeColor = useRoutes(useShallow((state) => state.routeColors[props.code]));
+  const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
   const theme = useTheme();
 
   const query = useQuery({
     queryKey: [`${props.code}-stop-locations`],
-    queryFn: () => getRouteBusStopLocations(props.code),
+    queryFn: () => getLineBusStopLocations(props.code),
     staleTime: 60_000 * 5, // 5 Minutes
   });
 
@@ -47,12 +47,12 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
             latitude: parseFloat(bus.yKoordinati),
             longitude: parseFloat(bus.xKoordinati),
           }}
-          pinColor={routeColor}
+          pinColor={lineColor}
           tracksViewChanges={false}
           tracksInfoWindowChanges={false}
         >
           <View
-            style={[styles.busStop, busStopStyle, { backgroundColor: routeColor }]}
+            style={[styles.busStop, busStopStyle, { backgroundColor: lineColor }]}
           />
         </Marker>
       ))}
@@ -61,11 +61,11 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
 })
 
 export function BusStopMarkers() {
-  const routeKeys = useRoutes(useShallow(state => Object.keys(state.routes)))
+  const lineKeys = useLines(useShallow(state => Object.keys(state.lines)))
 
   return (
     <>
-      {routeKeys.map((code) => (
+      {lineKeys.map((code) => (
         <BusStopMarkersItem key={code} code={code} />
       ))}
     </>
