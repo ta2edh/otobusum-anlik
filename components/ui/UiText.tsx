@@ -6,7 +6,7 @@ interface Props extends TextProps {
 }
 
 export function UiText({ style, info, ...rest }: Props) {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const baseStyle: StyleProp<TextStyle> = {
     color: theme.color,

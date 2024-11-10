@@ -5,7 +5,7 @@ import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
 
 export default function TabLayout() {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const getName = (n: string, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`);
 

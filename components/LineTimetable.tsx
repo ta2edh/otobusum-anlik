@@ -39,7 +39,7 @@ interface Props {
 }
 
 export function LineTimetable(props: Props) {
-  const theme = useTheme();
+  const { theme } = useTheme();
   const currentDirection = useFilters(useShallow(state => state.selectedDirections[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
 

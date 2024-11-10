@@ -10,7 +10,7 @@ import { LayoutChangeEvent, ScrollView, StyleProp, StyleSheet, View, ViewStyle }
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function TimetableScreen() {
-  const theme = useTheme()
+  const { theme } = useTheme()
   const insets = useSafeAreaInsets();
   const [linesHeight, setLinesHeight] = useState(0)
 

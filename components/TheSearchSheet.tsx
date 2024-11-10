@@ -1,6 +1,6 @@
 import { BackHandler, StyleSheet } from "react-native";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import Animated, { LinearTransition, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useTheme } from "@/hooks/useTheme";
@@ -18,7 +18,7 @@ export function TheSearchSheet() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const bottomSheetIndex = useRef(0);
   const insets = useSafeAreaInsets();
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {

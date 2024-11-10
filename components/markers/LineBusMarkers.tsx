@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
-  const theme = useTheme()
+  const { theme } = useTheme()
 
   const line = useLines(useShallow(state => state.lines[props.code]))
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));

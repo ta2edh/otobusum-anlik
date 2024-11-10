@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   return (
     <QueryClientProvider client={queryClient}>

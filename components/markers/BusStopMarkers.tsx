@@ -18,7 +18,7 @@ interface Props {
 export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props) {
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const selectedDirection = useFilters(useShallow((state) => state.selectedDirections[props.code]));
-  const theme = useTheme();
+  const { theme } = useTheme();
 
   const query = useQuery({
     queryKey: [`${props.code}-stop-locations`],

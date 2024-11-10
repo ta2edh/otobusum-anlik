@@ -37,8 +37,8 @@ export const useLines = create(
           const response = await getLineBusLocations(code);
           if (!response) return;
 
-          if (response.at(0)?.yon) {
-            useFilters.getState().setDirection(code, response.at(0)!.yon);
+          if (response.at(0)?.guzergahkodu) {
+            useFilters.getState().setDirection(code, response.at(0)!.guzergahkodu);
           }
 
           return set((state) => {
@@ -83,7 +83,7 @@ export const useLines = create(
                     return {
                       selectedDirections: {
                         ...state.selectedDirections,
-                        [code]: newLocations[0].yon,
+                        [code]: newLocations[0].guzergahkodu,
                       }
                     }
                   })
@@ -130,6 +130,6 @@ const updateLines = async () => {
   setTimeout(updateLines, 50_000);
 };
 
-// if (!__DEV__) {
+if (!__DEV__) {
   useLines.persist.onFinishHydration(updateLines);
-// }
+}

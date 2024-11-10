@@ -12,20 +12,15 @@ import Animated, {
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useShallow } from "zustand/react/shallow";
-import { useQuery } from "@tanstack/react-query";
-import { getAnnouncements } from "@/api/getAnnouncements";
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { useTheme } from "@/hooks/useTheme";
-import { useRef } from "react";
+import { SelectedLineAnnouncements } from "./SelectedLineAnnouncements";
+import { SelectedLineRoutes } from "./SelectedLineRoutes";
 
 interface Props {
   code: string;
 }
 
 export function SelectedLine(props: Props) {
-  const bottomSheetModal = useRef<BottomSheetModal>(null);
   const rotation = useSharedValue(0);
-  const theme = useTheme();
 
   const setDirection = useFilters((state) => state.setDirection);
   const deleteLine = useLines((state) => state.deleteLine);
@@ -34,18 +29,10 @@ export function SelectedLine(props: Props) {
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const lines = useLines(useShallow((state) => state.lines[props.code]));
 
-  const announcements = useQuery({
-    queryKey: ["announcements"],
-    queryFn: getAnnouncements,
-    staleTime: 60_000 * 30,
-  });
-
   const allDirections = [...new Set(lines?.map((it) => it.yon))];
 
   const currentDirection = selectedDirection ?? allDirections.at(0);
   const otherDirectionIndex = allDirections.length - allDirections.indexOf(currentDirection) - 1;
-
-  const lineAnnouncement = announcements.data?.find((ann) => ann.HATKODU === props.code);
 
   const handleSwiftDirection = () => {
     rotation.value = withTiming(rotation.value + 180, { duration: 500 }, () => {
@@ -71,38 +58,19 @@ export function SelectedLine(props: Props) {
 
   return (
     <View style={containerStyle} key={props.code}>
-      {!!lineAnnouncement && (
-        <BottomSheetModal
-          ref={bottomSheetModal}
-          handleStyle={{ backgroundColor: theme.surfaceContainerLow }}
-          handleIndicatorStyle={{ backgroundColor: theme.surfaceContainerHighest }}
-          backgroundStyle={{ backgroundColor: theme.surfaceContainerLow }}
-          snapPoints={["50%"]}
-          enableDynamicSizing={false}
-        >
-          <BottomSheetView style={styles.announcementsContainer}>
-            <UiText>{lineAnnouncement.GUNCELLEME_SAATI}</UiText>
-            <UiText>{lineAnnouncement.MESAJ}</UiText>
-          </BottomSheetView>
-        </BottomSheetModal>
-      )}
-
       <View style={styles.titleContainer}>
         <UiText style={{ fontWeight: "bold" }}>{props.code}</UiText>
 
         <View style={styles.titleContainer}>
-          <UiButton
-            onPress={() => bottomSheetModal.current?.present()}
-            style={styles.lineButton}
-            disabled={!lineAnnouncement}
-          >
-            <Ionicons name="megaphone-outline" size={16} color="white" />
-          </UiButton>
+          <SelectedLineAnnouncements code={props.code} />
+
           <UiButton onPress={() => deleteLine(props.code)} style={styles.lineButton}>
             <Ionicons name="trash-outline" size={16} color="white" />
           </UiButton>
         </View>
       </View>
+
+      <SelectedLineRoutes code={props.code} />
 
       {allDirections.length > 0 && (
         <View style={styles.lineButtonsContainer}>
@@ -159,10 +127,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: 8,
     padding: 14,
-  },
-  announcementsContainer: {
-    padding: 8,
-    flex: 1,
   },
   titleContainer: {
     flexDirection: "row",
