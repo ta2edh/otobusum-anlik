@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useShallow } from "zustand/react/shallow";
 import { SelectedLineAnnouncements } from "./SelectedLineAnnouncements";
 import { SelectedLineRoutes } from "./SelectedLineRoutes";
+import { useCallback } from "react";
 
 interface Props {
   code: string;
@@ -22,8 +23,8 @@ interface Props {
 export function SelectedLine(props: Props) {
   const rotation = useSharedValue(0);
 
-  const setRoute = useFilters((state) => state.setRoute);
-  const deleteLine = useLines((state) => state.deleteLine);
+  const setRoute = useFilters(useShallow((state) => state.setRoute));
+  const deleteLine = useLines(useShallow((state) => state.deleteLine));
 
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
@@ -34,11 +35,11 @@ export function SelectedLine(props: Props) {
   const currentRoute = selectedRoute ?? allRoutes.at(0);
   const otherRouteIndex = allRoutes.length - allRoutes.indexOf(currentRoute) - 1;
 
-  const handleSwiftRoute = () => {
+  const handleSwiftRoute = useCallback(() => {
     rotation.value = withTiming(rotation.value + 180, { duration: 500 }, () => {
       runOnJS(setRoute)(props.code, allRoutes[otherRouteIndex]);
     });
-  };
+  }, []);
 
   const switchAnimatedStyle = useAnimatedStyle(() => ({
     transform: [

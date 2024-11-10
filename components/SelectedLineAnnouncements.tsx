@@ -7,14 +7,14 @@ import { getAnnouncements } from "@/api/getAnnouncements";
 import { UiButton } from "./ui/UiButton";
 import { UiText } from "./ui/UiText";
 
-import { useRef } from "react";
+import { memo, useRef } from "react";
 import { StyleSheet } from "react-native";
 
 interface Props {
   code: string;
 }
 
-export function SelectedLineAnnouncements(props: Props) {
+export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null);
   const { bottomSheetStyle } = useTheme()
 
@@ -51,7 +51,7 @@ export function SelectedLineAnnouncements(props: Props) {
       )}
     </>
   );
-}
+})
 
 const styles = StyleSheet.create({
   announcementsContainer: {

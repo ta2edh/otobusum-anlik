@@ -1,23 +1,47 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, ViewStyle } from "react-native";
 
 import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAllRoutes, RouteTrack } from "@/api/getAllRoutes";
 import { useTheme } from "@/hooks/useTheme";
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useRef } from "react";
+import { memo, useCallback, useRef } from "react";
 import { UiButton } from "./ui/UiButton";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
-import { Ionicons } from "@expo/vector-icons";
 import { colors } from "@/constants/colors";
 
 interface Props {
   code: string;
 }
 
-export function SelectedLineRoutes(props: Props) {
-  const bottomSheetModal = useRef<BottomSheetModal>(null);
+interface Item extends Props {
+  item: RouteTrack;
+}
+
+const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
+  const setRoute = useFilters(useShallow((state) => state.setRoute));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+  const isSelected = selectedRoute === props.item.route_code;
+
+  const selectedStyle: StyleProp<ViewStyle> = {
+    backgroundColor: colors.primary,
+  };
+
+  const handlePress = () => {
+    setRoute(props.code, props.item.route_code);
+  };
+
+  return (
+    <UiButton
+      onPress={handlePress}
+      title={props.item.route_long_name}
+      containerStyle={[styles.item, isSelected ? selectedStyle : undefined]}
+    />
+  );
+};
+
+export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
+  const bottomSheetModal = useRef<BottomSheetModal>(null);
   const { bottomSheetStyle } = useTheme();
 
   const lineRoutes = useQuery({
@@ -25,20 +49,8 @@ export function SelectedLineRoutes(props: Props) {
     queryFn: () => getAllRoutes(props.code),
   });
 
-  const selectedStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primary,
-  };
-
   const renderItem = useCallback(({ item }: { item: RouteTrack }) => {
-    const isSelected = selectedRoute === item.route_code;
-
-    return (
-      <View style={[styles.item, isSelected ? selectedStyle : undefined]}>
-        <UiButton title={item.route_long_name}>
-          {isSelected && <Ionicons name="checkmark-outline" size={20} color="white" />}
-        </UiButton>
-      </View>
-    );
+    return <SelectedLineRoutesItem code={props.code} item={item} />;
   }, []);
 
   return (
@@ -63,7 +75,7 @@ export function SelectedLineRoutes(props: Props) {
       </BottomSheetModal>
     </>
   );
-}
+});
 
 const styles = StyleSheet.create({
   button: {
