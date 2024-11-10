@@ -30,16 +30,11 @@ export const useLines = create(
         addLine: async (code) => {
           if (Object.keys(get().lines).length > 3) {
             ToastAndroid.show("Only 4 selections are allowed", ToastAndroid.SHORT);
-
             return;
           }
 
           const response = await getLineBusLocations(code);
           if (!response) return;
-
-          if (response.at(0)?.guzergahkodu) {
-            useFilters.getState().setRoute(code, response.at(0)!.guzergahkodu);
-          }
 
           return set((state) => {
             const newColor = createColor();
@@ -76,14 +71,14 @@ export const useLines = create(
             // Filter update stuff
             const currentRoute = useFilters.getState().selectedRoutes[code];
             if (currentRoute) {
-              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute);
+              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute.route_code); //TODO
               if (foundIndex === -1) {
                 if (newLocations.length > 0) {
                   useFilters.setState((state) => {
                     return {
                       selectedRoutes: {
                         ...state.selectedRoutes,
-                        [code]: newLocations[0].guzergahkodu,
+                        // [code]: newLocations[0].guzergahkodu,
                       }
                     }
                   })

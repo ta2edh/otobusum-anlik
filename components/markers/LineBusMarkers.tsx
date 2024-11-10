@@ -7,6 +7,7 @@ import { i18n } from "@/translations/i18n";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
 import { memo } from "react";
+import { useRouteFilter } from "@/hooks/useRouteFilter";
 
 interface Props {
   code: string,
@@ -18,8 +19,10 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const line = useLines(useShallow(state => state.lines[props.code]))
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+  const { getDefaultRoute } = useRouteFilter(props.code)
 
-  const filtered = line.filter(loc => loc.yon  === selectedRoute)
+  const route = selectedRoute ?? getDefaultRoute()
+  const filtered = line?.filter(loc => loc.guzergahkodu  === route?.route_code)
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,
@@ -30,7 +33,7 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
 
   return (
     <>
-      {filtered.map((loc) => (
+      {filtered?.map((loc) => (
         <Marker
           key={loc.kapino}
           coordinate={{

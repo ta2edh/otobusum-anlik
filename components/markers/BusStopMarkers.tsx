@@ -1,4 +1,5 @@
 import { getLineBusStopLocations } from "@/api/getLineBusStopLocations";
+import { useRouteFilter } from "@/hooks/useRouteFilter";
 import { useTheme } from "@/hooks/useTheme";
 import { useFilters } from "@/stores/filters";
 import { useLines } from "@/stores/lines";
@@ -19,6 +20,7 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const { theme } = useTheme();
+  const { getRouteDirection, getDefaultRoute } = useRouteFilter(props.code);
 
   const query = useQuery({
     queryKey: [`${props.code}-stop-locations`],
@@ -35,17 +37,18 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     return null;
   }
 
-  const dir = getRouteFromBusStopLocations(props.code, selectedRoute, query.data)
-  const filteredBusStops = dir ? query.data.filter((item) => item.yon === dir) : query.data;
+  const route = selectedRoute || getDefaultRoute()
+  const direction = route ? getRouteDirection(route) : undefined
+  const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data;
   
   return (
     <>
-      {filteredBusStops.map((bus) => (
+      {busStops.map((stop) => (
         <Marker
-          key={`${bus.xKoordinati}-${bus.yKoordinati}-${bus.yon}-${bus.siraNo}`}
+          key={`${stop.xKoordinati}-${stop.yKoordinati}-${stop.yon}-${stop.siraNo}`}
           coordinate={{
-            latitude: parseFloat(bus.yKoordinati),
-            longitude: parseFloat(bus.xKoordinati),
+            latitude: parseFloat(stop.yKoordinati),
+            longitude: parseFloat(stop.xKoordinati),
           }}
           pinColor={lineColor}
           tracksViewChanges={false}

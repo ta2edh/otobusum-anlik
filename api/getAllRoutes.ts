@@ -1,6 +1,6 @@
 import { Direction } from "@/types/departure"
 
-export interface RouteTrack {
+export interface LineRoute {
   _id: number
   route_id: string
   agency_id: string
@@ -14,7 +14,7 @@ export interface RouteTrack {
 
 interface Response {
   result: {
-    records: RouteTrack[]
+    records: LineRoute[]
   }
 }
 
@@ -22,5 +22,9 @@ export async function getAllRoutes(routeShortCode: string) {
   const response = await fetch(`https://data.ibb.gov.tr/api/3/action/datastore_search?q=${routeShortCode}&resource_id=46dbe388-c8c2-45c4-ac72-c06953de56a2`)
   const parsed: Response = await response.json()
 
-  return parsed
+  return {
+    result: {
+      records: parsed.result.records.filter(route => !route.route_code.endsWith("0"))
+    }
+  }
 }

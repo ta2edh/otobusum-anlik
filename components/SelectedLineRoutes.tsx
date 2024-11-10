@@ -1,62 +1,66 @@
-import { StyleProp, StyleSheet, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
 
 import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { getAllRoutes, RouteTrack } from "@/api/getAllRoutes";
+import { LineRoute } from "@/api/getAllRoutes";
 import { useTheme } from "@/hooks/useTheme";
-import { useQuery } from "@tanstack/react-query";
 import { memo, useCallback, useRef } from "react";
 import { UiButton } from "./ui/UiButton";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
 import { colors } from "@/constants/colors";
+import { useRouteFilter } from "@/hooks/useRouteFilter";
+import { UiText } from "./ui/UiText";
 
 interface Props {
   code: string;
 }
 
 interface Item extends Props {
-  item: RouteTrack;
+  item: LineRoute;
 }
 
 const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
-  const isSelected = selectedRoute === props.item.route_code;
+  const isSelected = selectedRoute?.route_code === props.item.route_code;
 
   const selectedStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primary,
   };
 
   const handlePress = () => {
-    setRoute(props.code, props.item.route_code);
+    setRoute(props.code, props.item);
   };
 
   return (
-    <UiButton
-      onPress={handlePress}
-      title={props.item.route_long_name}
-      containerStyle={[styles.item, isSelected ? selectedStyle : undefined]}
-    />
+    <TouchableOpacity style={[styles.item, isSelected ? selectedStyle : undefined]} onPress={handlePress}>
+      <UiText>{`${props.item.route_code} ${props.item.route_long_name}`}</UiText>
+    </TouchableOpacity>
   );
 };
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
-  const bottomSheetModal = useRef<BottomSheetModal>(null);
   const { bottomSheetStyle } = useTheme();
+  const { routes, getDefaultRoute } = useRouteFilter(props.code);
 
-  const lineRoutes = useQuery({
-    queryKey: [`${props.code}-line-routes`],
-    queryFn: () => getAllRoutes(props.code),
-  });
+  const bottomSheetModal = useRef<BottomSheetModal>(null);
+  const selectedRoute =
+    useFilters(useShallow((state) => state.selectedRoutes[props.code])) ?? getDefaultRoute();
 
-  const renderItem = useCallback(({ item }: { item: RouteTrack }) => {
+  const filteredRoutes =
+    routes.data?.result.records.filter((route) => !route.route_code.endsWith("0")) || [];
+
+  const renderItem = useCallback(({ item }: { item: LineRoute }) => {
     return <SelectedLineRoutesItem code={props.code} item={item} />;
   }, []);
 
   return (
     <>
+      {/* <TouchableOpacity onPress={() => bottomSheetModal.current?.present()} style={styles.button}>
+        <UiText>{selectedRoute?.route_long_name}</UiText>
+      </TouchableOpacity> */}
       <UiButton
-        title="Obaley"
+        title={selectedRoute?.route_long_name}
         style={styles.button}
         onPress={() => bottomSheetModal.current?.present()}
       />
@@ -68,7 +72,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         {...bottomSheetStyle}
       >
         <BottomSheetFlashList
-          data={lineRoutes.data?.result.records || []}
+          data={filteredRoutes}
           renderItem={renderItem}
           estimatedItemSize={35}
         />

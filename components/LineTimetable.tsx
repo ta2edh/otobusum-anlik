@@ -20,9 +20,9 @@ function groupDeparturesByHour(obj: PlannedDeparture[]) {
 
   for (let index = 0; index < obj.length; index++) {
     const element = obj[index];
-    const hour = element["DT"].split(":").at(0);
+    const hour = element?.["DT"].split(":").at(0);
 
-    if (!hour) continue;
+    if (!hour || !element) continue;
 
     if (!res[hour]) {
       res[hour] = [element];
@@ -52,7 +52,8 @@ export function LineTimetable(props: Props) {
     queryKey: [`${props.code}-stop-locations`],
   });
 
-  const dir = getRouteFromBusStopLocations(props.code, currentRoute, queryStopLocations.data || [])
+  const dir = undefined
+  // const dir = getRouteFromBusStopLocations(props.code, currentRoute, queryStopLocations.data || [])
   
   const filteredData =
     query.data?.filter((it) => (dir ? it.SYON === dir : true) && it.SGUNTIPI === dayType) || [];
@@ -122,7 +123,7 @@ export function LineTimetable(props: Props) {
           {hours.map((hour) => {
             return (
               <View key={hour} style={styles.row}>
-                {groupedByHour[hour].map((departure) => (
+                {groupedByHour[hour]?.map((departure) => (
                   <UiText
                     key={`${props.code}-${departure.SSERVISTIPI}-${departure.SGUZERAH}-${hour}-${departure.DT.split(":").at(-1)}`}
                     style={styles.cell}
