@@ -42,6 +42,7 @@ export function UiButton({ style, ...rest }: Props) {
               textAlign: "center",
               textAlignVertical: "center",
               flexShrink: 1,
+              flexGrow: 1,
             }}
             numberOfLines={1}
           >
@@ -70,5 +71,6 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingVertical: 4,
     paddingHorizontal: 8,
+    minWidth: 50,
   },
 });

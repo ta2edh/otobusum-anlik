@@ -41,7 +41,7 @@ export function TheSearchInput(props: Props) {
         isLoading={props.isLoading}
         disabled={queryDisabled}
         onPress={handleSearch}
-        style={{ backgroundColor: colors.primary }}
+        style={{ backgroundColor: colors.primary, minWidth: 80 }}
       />
     </Animated.View>
   );

@@ -2,7 +2,6 @@ import Animated, { SharedValue, useAnimatedStyle } from "react-native-reanimated
 import { LayoutChangeEvent, StyleSheet } from "react-native";
 import { SelectedLines } from "./SelectedLines";
 import { useCallback, useState } from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export function TheFilters({
   animatedPosition,
@@ -12,13 +11,12 @@ export function TheFilters({
   animatedIndex: SharedValue<number>;
 }) {
   const [height, setHeight] = useState(0);
-  const insets = useSafeAreaInsets()
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: animatedPosition.value - height - insets.top,
+          translateY: animatedPosition.value - height - 6,
         },
       ],
       opacity: 1 - animatedIndex.value,
