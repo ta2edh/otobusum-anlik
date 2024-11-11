@@ -5,11 +5,14 @@ import { useState } from "react";
 import { UiText } from "./ui/UiText";
 import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
 
-import { DayType } from "@/types/departure";
+import { DayType, Direction } from "@/types/departure";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
+import { useFilters } from "@/stores/filters";
+import { useShallow } from "zustand/react/shallow";
+import { useRouteFilter } from "@/hooks/useRouteFilter";
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {};
@@ -36,23 +39,21 @@ interface Props {
 
 export function LineTimetable(props: Props) {
   const { theme } = useTheme();
-  // const currentRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
+  const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+  const { getRouteDirection } = useRouteFilter(props.code);
 
   const query = useQuery({
     queryKey: [`timetable-${props.code}`],
     queryFn: () => getPlannedDepartures(props.code),
   });
 
-  // const queryStopLocations = useQuery<Awaited<ReturnType<typeof getLineBusStopLocations>>>({
-  //   queryKey: [`${props.code}-stop-locations`],
-  // });
+  const direction: Direction = selectedRouteCode
+    ? getRouteDirection(selectedRouteCode) ?? "G"
+    : "G";
 
-  const dir = undefined
-  // const dir = getRouteFromBusStopLocations(props.code, currentRoute, queryStopLocations.data || [])
-  
   const filteredData =
-    query.data?.filter((it) => (dir ? it.SYON === dir : true) && it.SGUNTIPI === dayType) || [];
+    query.data?.filter((it) => (direction ? it.SYON === direction : true) && it.SGUNTIPI === dayType) || [];
 
   const groupedByHour = groupDeparturesByHour(filteredData || []);
   const hours = Object.keys(groupedByHour).sort();
@@ -68,26 +69,10 @@ export function LineTimetable(props: Props) {
       <UiText style={styles.title}>{title}</UiText>
 
       <View style={styles.filters}>
-        {/* <UiSegmentedButtons
-          value={dir}
-          onValueChange={setRoute}
-          style={{flexGrow: 1}}
-          buttons={[
-            {
-              value: "D",
-              label: i18n.t("departure"),
-            },
-            {
-              value: "G",
-              label: i18n.t("return"),
-            },
-          ]}
-        /> */}
-
         <UiSegmentedButtons
           value={dayType}
           onValueChange={setDayType}
-          style={{flexGrow: 1}}
+          style={{ flexGrow: 1 }}
           buttons={[
             {
               value: "I",
@@ -121,7 +106,9 @@ export function LineTimetable(props: Props) {
               <View key={hour} style={styles.row}>
                 {groupedByHour[hour]?.map((departure) => (
                   <UiText
-                    key={`${props.code}-${departure.SSERVISTIPI}-${departure.SGUZERAH}-${hour}-${departure.DT.split(":").at(-1)}`}
+                    key={`${props.code}-${departure.SSERVISTIPI}-${
+                      departure.SGUZERAH
+                    }-${hour}-${departure.DT.split(":").at(-1)}`}
                     style={styles.cell}
                   >
                     {departure.DT.split(":").at(-1)}
