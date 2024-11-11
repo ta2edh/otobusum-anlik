@@ -21,15 +21,16 @@ interface Item extends Props {
 
 const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
   const setRoute = useFilters(useShallow((state) => state.setRoute));
-  const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
-  const isSelected = selectedRoute?.route_code === props.item.route_code;
+  const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+
+  const isSelected = selectedRouteCode === props.item.route_code;
 
   const selectedStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primary,
   };
 
   const handlePress = () => {
-    setRoute(props.code, props.item);
+    setRoute(props.code, props.item.route_code);
   };
 
   return (
@@ -41,11 +42,12 @@ const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme();
-  const { routes, getDefaultRoute } = useRouteFilter(props.code);
+  const { routes, findRouteFromCode } = useRouteFilter(props.code);
 
   const bottomSheetModal = useRef<BottomSheetModal>(null);
-  const selectedRoute =
-    useFilters(useShallow((state) => state.selectedRoutes[props.code])) ?? getDefaultRoute();
+  const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
 
   const filteredRoutes =
     routes.data?.result.records.filter((route) => !route.route_code.endsWith("0")) || [];
@@ -56,11 +58,8 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
 
   return (
     <>
-      {/* <TouchableOpacity onPress={() => bottomSheetModal.current?.present()} style={styles.button}>
-        <UiText>{selectedRoute?.route_long_name}</UiText>
-      </TouchableOpacity> */}
       <UiButton
-        title={selectedRoute?.route_long_name}
+        title={route?.route_long_name}
         style={styles.button}
         onPress={() => bottomSheetModal.current?.present()}
       />

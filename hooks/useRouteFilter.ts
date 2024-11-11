@@ -15,12 +15,16 @@ export function useRouteFilter(code: string) {
     );
   };
 
-  const getRouteDirection = (route: LineRoute) => {
-    return route.route_code.split("_").at(1) as Direction | undefined;
+  const findRouteFromCode = (code: string) => {
+    return routes.data?.result.records.find((item) => item.route_code === code);
   };
 
-  const findOtherRouteDirection = (route: LineRoute) => {
-    const [left, dir, right] = route.route_code.split("_");
+  const getRouteDirection = (routeCode: string) => {
+    return routeCode.split("_").at(1) as Direction | undefined;
+  };
+
+  const findOtherRouteDirection = (routeCode: string) => {
+    const [left, dir, right] = routeCode.split("_");
     if (!right || !dir) return;
 
     const dCode = parseInt(right.substring(1));
@@ -29,10 +33,11 @@ export function useRouteFilter(code: string) {
     const otherDirection = direction === "D" ? "G" : "D";
 
     const oneLess = `${left}_${otherDirection}_D${dCode - 1}`;
+    const equal = `${left}_${otherDirection}_D${dCode}`;
     const oneMore = `${left}_${otherDirection}_D${dCode + 1}`;
 
     return routes.data?.result.records.find(
-      (route) => route.route_code === oneLess || route.route_code === oneMore
+      (route) => route.route_code === oneLess || route.route_code === oneMore || route.route_code === equal
     );
   };
 
@@ -41,5 +46,6 @@ export function useRouteFilter(code: string) {
     getDefaultRoute,
     findOtherRouteDirection,
     getRouteDirection,
+    findRouteFromCode,
   };
 }

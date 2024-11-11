@@ -37,7 +37,7 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     return null;
   }
 
-  const route = selectedRoute || getDefaultRoute()
+  const route = selectedRoute || getDefaultRoute()?.route_code
   const direction = route ? getRouteDirection(route) : undefined
   const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data;
   

@@ -7,13 +7,14 @@ import { LatLng } from "react-native-maps";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFilters } from "./filters";
+import { SearchResult } from "@/api/getSearchResults";
 
 export interface LinesStore {
   initialMapLocation?: LatLng;
   lines: Record<string, Location[]>;
   lineColors: Record<string, string>;
   updateInitialMapLocation: (newLocation: LatLng) => void;
-  addLine: (code: string) => Promise<void>;
+  addLine: (code: SearchResult) => Promise<void>;
   deleteLine: (code: string) => void;
   updateLine: (code: string, newLine: Location[]) => void;
 }
@@ -27,14 +28,22 @@ export const useLines = create(
         lineColors: {},
         updateInitialMapLocation: (newLocation: LatLng) =>
           set((state) => ({ ...state, initialMapLocation: newLocation })),
-        addLine: async (code) => {
+        addLine: async (searchResult) => {
           if (Object.keys(get().lines).length > 3) {
             ToastAndroid.show("Only 4 selections are allowed", ToastAndroid.SHORT);
             return;
           }
 
-          const response = await getLineBusLocations(code);
+          const response = await getLineBusLocations(searchResult.Code);
           if (!response) return;
+
+          // Route codes that ends with D0 It's the default. Find if there is a bus with route code ends with D0
+          useFilters.setState((state) => ({
+            selectedRoutes: {
+              ...state.selectedRoutes,
+              [searchResult.Code]: `${searchResult.Code}_G_D0`,
+            },
+          }));
 
           return set((state) => {
             const newColor = createColor();
@@ -43,11 +52,11 @@ export const useLines = create(
               ...state,
               lines: {
                 ...state.lines,
-                [code]: response,
+                [searchResult.Code]: response,
               },
               lineColors: {
                 ...state.lineColors,
-                [code]: newColor,
+                [searchResult.Code]: newColor,
               },
             };
           });
@@ -71,7 +80,7 @@ export const useLines = create(
             // Filter update stuff
             const currentRoute = useFilters.getState().selectedRoutes[code];
             if (currentRoute) {
-              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute.route_code); //TODO
+              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute); //TODO
               if (foundIndex === -1) {
                 if (newLocations.length > 0) {
                   useFilters.setState((state) => {
@@ -79,9 +88,9 @@ export const useLines = create(
                       selectedRoutes: {
                         ...state.selectedRoutes,
                         // [code]: newLocations[0].guzergahkodu,
-                      }
-                    }
-                  })
+                      },
+                    };
+                  });
                 } else {
                   useFilters.setState((state) => {
                     delete state.selectedRoutes[code];
@@ -117,7 +126,7 @@ const updateLines = async () => {
     const key = keys[index];
     const result = results[index];
 
-    if (result) {
+    if (result && key) {
       useLines.getState().updateLine(key, result);
     }
   }

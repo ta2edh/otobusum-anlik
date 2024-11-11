@@ -22,7 +22,7 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const { getDefaultRoute } = useRouteFilter(props.code)
 
   const route = selectedRoute ?? getDefaultRoute()
-  const filtered = line?.filter(loc => loc.guzergahkodu  === route?.route_code)
+  const filtered = line?.filter(loc => loc.guzergahkodu  === route)
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,

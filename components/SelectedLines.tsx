@@ -23,21 +23,22 @@ export function SelectedLine(props: Props) {
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
-  const { getDefaultRoute, findOtherRouteDirection } = useRouteFilter(props.code);
+  const { getDefaultRoute, findOtherRouteDirection, findRouteFromCode } = useRouteFilter(props.code);
 
-  const selectedRoute =
-    useFilters(useShallow((state) => state.selectedRoutes[props.code])) ?? getDefaultRoute();
+  const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
 
-  const [leftTitle, rightTitle] = selectedRoute?.route_long_name.trim().split("-") || ["", ""];
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
+  const [leftTitle, rightTitle] = route?.route_long_name.trim().split("-") ?? ["", ""] ?? ["", ""]
+  // const [leftTitle, rightTitle] = selectedRoute?.route_long_name.trim().split("-") || ["", ""];
 
   const handleSwitchRoute = () => {
-    if (!selectedRoute) return
+    if (!selectedRouteCode) return
 
-    const otherDirection = findOtherRouteDirection(selectedRoute);
+    const otherDirection = findOtherRouteDirection(selectedRouteCode);
     if (!otherDirection) return
 
-    setRoute(props.code, otherDirection);
+    setRoute(props.code, otherDirection.route_code);
   };
 
   const switchAnimatedStyle = useAnimatedStyle(() => ({
@@ -83,7 +84,6 @@ export function SelectedLine(props: Props) {
         <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
         <UiButton title={rightTitle} style={styles.lineButton} containerStyle={{ flexShrink: 1 }} />
       </View>
-      {/* )} */}
     </View>
   );
 }

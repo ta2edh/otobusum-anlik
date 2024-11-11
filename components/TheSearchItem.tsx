@@ -30,7 +30,7 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
     setIsPending(true);
 
     try {
-      await addLine(props.item.Code);
+      await addLine(props.item);
     } finally {
       setIsPending(false);
     }

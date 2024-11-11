@@ -22,9 +22,5 @@ export async function getAllRoutes(routeShortCode: string) {
   const response = await fetch(`https://data.ibb.gov.tr/api/3/action/datastore_search?q=${routeShortCode}&resource_id=46dbe388-c8c2-45c4-ac72-c06953de56a2`)
   const parsed: Response = await response.json()
 
-  return {
-    result: {
-      records: parsed.result.records.filter(route => !route.route_code.endsWith("0"))
-    }
-  }
+  return parsed
 }
