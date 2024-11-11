@@ -1,12 +1,12 @@
 import { ExpoConfig } from "expo/config";
 
 const config: ExpoConfig = {
-  name: "Otobüsüm Burada",
-  slug: "otobusum-burada",
+  name: "Otobüsüm Anlık",
+  slug: "otobusum-anlik",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
-  scheme: "otobusum-burada",
+  scheme: "otobusum-anlik",
   splash: {
     image: "./assets/splash.png",
     resizeMode: "cover",
@@ -30,7 +30,7 @@ const config: ExpoConfig = {
       foregroundImage: "./assets/adaptive-icon.png",
       backgroundColor: "#0a0a0a",
     },
-    package: "com.anonymous.otobusumburada",
+    package: "com.anonymous.otobusumanlik",
   },
   plugins: ["expo-router", "expo-localization"],
   experiments: {
