@@ -8,18 +8,41 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { TheFocusAwareStatusBar } from "@/components/TheFocusAwareStatusbar";
 import { TheSearchSheet } from "@/components/TheSearchSheet";
 import { BusStopMarkers } from "@/components/markers/BusStopMarkers";
+import { LineMarkers } from "@/components/markers/LineMarkers";
 import { useLines } from "@/stores/lines";
 
 import { SplashScreen } from "expo-router";
-import { useCallback, useRef } from "react";
-import { LineMarkers } from "@/components/markers/LineMarkers";
+import { useCallback, useEffect, useRef } from "react";
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null);
 
-  const colorScheme = useColorScheme();
   const insets = useSafeAreaInsets();
+  const colorScheme = useColorScheme();
   const updateInitialMapLocation = useLines((state) => state.updateInitialMapLocation);
+
+  useEffect(() => {
+    const unsub = useLines.subscribe(
+      (state) => state.lines,
+      (newLines, oldLines) => {
+        const newKeys = Object.keys(newLines);
+        const oldKeys = Object.keys(oldLines);
+
+        const newLineKey = newKeys.filter((item) => !oldKeys.includes(item)).at(0);
+        if (!newLineKey) return;
+        const locations = newLines[newLineKey]?.map((item) => ({
+          latitude: parseFloat(item.enlem),
+          longitude: parseFloat(item.boylam),
+        }));
+
+        map.current?.fitToCoordinates(locations, {
+          edgePadding: { bottom: 100, top: 10, right: 50, left: 50 },
+        });
+      }
+    );
+
+    return unsub;
+  }, []);
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -32,7 +55,6 @@ export default function HomeScreen() {
 
   const handleRegionChangeComplete = (props: Region, details: Details) => {
     if (!details.isGesture) return;
-
     updateInitialMapLocation({ latitude: props.latitude, longitude: props.longitude });
   };
 
