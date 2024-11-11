@@ -39,7 +39,7 @@ export async function getLineBusStopLocations(code: string) {
 
   const results: BusStopLocation[] = [];
   for (let index = 1; index < tableInnerContent.length; index++) {
-    const itemInnerContent = tableInnerContent[index].slice(0, -8);
+    const itemInnerContent = tableInnerContent[index]?.slice(0, -8);
     if (!itemInnerContent) continue;
 
     results.push({

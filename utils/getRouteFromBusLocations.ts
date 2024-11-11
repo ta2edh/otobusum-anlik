@@ -7,10 +7,10 @@ export const getRouteFromBusStopLocations = (
   route: string,
   busStops: BusStopLocation[]
 ) => {
-  const shownBusses = useLines.getState().lines[code].filter((bus) => bus.yon === route);
+  const shownBusses = useLines.getState().lines[code]?.filter((bus) => bus.yon === route);
 
   const foundStop = busStops.find((stop) =>
-    shownBusses.find((bus) => bus.yakinDurakKodu === stop.durakKodu)
+    shownBusses?.find((bus) => bus.yakinDurakKodu === stop.durakKodu)
   );
 
   return foundStop?.yon;
