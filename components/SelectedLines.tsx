@@ -3,10 +3,13 @@ import { useFilters } from "@/stores/filters";
 
 import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
-import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ScrollView } from "react-native";
+import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ActivityIndicator } from "react-native";
 import Animated, {
+  FadeInLeft,
+  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
+  ZoomIn,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useShallow } from "zustand/react/shallow";
@@ -23,19 +26,23 @@ export function SelectedLine(props: Props) {
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
-  const { findOtherRouteDirection, findRouteFromCode } = useRouteFilter(props.code);
+  const {
+    findOtherRouteDirection,
+    findRouteFromCode,
+    query: { isPending },
+  } = useRouteFilter(props.code);
 
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
 
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
-  const [leftTitle, rightTitle] = route?.route_long_name.trim().split("-") ?? ["", ""] ?? ["", ""]
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined;
+  const [leftTitle, rightTitle] = route?.route_long_name.trim().split("-") ?? ["", ""] ?? ["", ""];
 
   const handleSwitchRoute = () => {
-    if (!selectedRouteCode) return
+    if (!selectedRouteCode) return;
 
     const otherDirection = findOtherRouteDirection(selectedRouteCode);
-    if (!otherDirection) return
+    if (!otherDirection) return;
 
     setRoute(props.code, otherDirection.route_code);
   };
@@ -57,7 +64,12 @@ export function SelectedLine(props: Props) {
   };
 
   return (
-    <View style={containerStyle} key={props.code}>
+    <Animated.View
+      layout={LinearTransition}
+      entering={ZoomIn}
+      style={containerStyle}
+      key={props.code}
+    >
       <View style={styles.titleContainer}>
         <UiText style={{ fontWeight: "bold" }}>{props.code}</UiText>
 
@@ -70,20 +82,34 @@ export function SelectedLine(props: Props) {
         </View>
       </View>
 
-      <SelectedLineRoutes code={props.code} />
+      {isPending ? (
+        <ActivityIndicator size={24} color="#FFFFFF" />
+      ) : (
+        <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
+          <SelectedLineRoutes code={props.code} />
 
-      <View style={styles.lineButtonsContainer}>
-        <UiButton onPress={handleSwitchRoute} style={styles.lineButton}>
-          <Animated.View style={switchAnimatedStyle}>
-            <Ionicons name="refresh" size={20} color="white" />
-          </Animated.View>
-        </UiButton>
+          <View style={styles.lineButtonsContainer}>
+            <UiButton onPress={handleSwitchRoute} style={styles.lineButton}>
+              <Animated.View style={switchAnimatedStyle}>
+                <Ionicons name="refresh" size={20} color="white" />
+              </Animated.View>
+            </UiButton>
 
-        <UiButton title={leftTitle} style={styles.lineButton} containerStyle={{ flexShrink: 1 }} />
-        <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
-        <UiButton title={rightTitle} style={styles.lineButton} containerStyle={{ flexShrink: 1 }} />
-      </View>
-    </View>
+            <UiButton
+              title={leftTitle}
+              style={styles.lineButton}
+              containerStyle={{ flexShrink: 1 }}
+            />
+            <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
+            <UiButton
+              title={rightTitle}
+              style={styles.lineButton}
+              containerStyle={{ flexShrink: 1 }}
+            />
+          </View>
+        </Animated.View>
+      )}
+    </Animated.View>
   );
 }
 
@@ -97,11 +123,15 @@ export function SelectedLines({ style, ...rest }: ViewProps) {
 
   return (
     <View style={style} {...rest}>
-      <ScrollView contentContainerStyle={styles.codes} horizontal>
+      <Animated.ScrollView
+        layout={LinearTransition}
+        contentContainerStyle={styles.codes}
+        horizontal
+      >
         {lineKeys.map((code) => (
           <SelectedLine key={code} code={code} />
         ))}
-      </ScrollView>
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -128,5 +158,8 @@ const styles = StyleSheet.create({
   },
   lineButton: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  routeContainer: {
+    gap: 8,
   },
 });

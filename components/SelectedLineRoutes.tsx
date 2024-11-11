@@ -52,7 +52,7 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme();
-  const { routes, findRouteFromCode } = useRouteFilter(props.code);
+  const { query: routes, findRouteFromCode } = useRouteFilter(props.code);
 
   const bottomSheetModal = useRef<BottomSheetModal>(null);
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
