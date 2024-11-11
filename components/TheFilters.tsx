@@ -18,7 +18,7 @@ export function TheFilters({
     return {
       transform: [
         {
-          translateY: animatedPosition.value - height + insets.top,
+          translateY: animatedPosition.value - height - insets.top,
         },
       ],
       opacity: 1 - animatedIndex.value,
