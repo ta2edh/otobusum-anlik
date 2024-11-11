@@ -49,7 +49,6 @@ export const useLines = create(
             const newColor = createColor();
 
             return {
-              ...state,
               lines: {
                 ...state.lines,
                 [searchResult.Code]: response,
@@ -77,32 +76,7 @@ export const useLines = create(
           }),
         updateLine: (code, newLocations) =>
           set((state) => {
-            // Filter update stuff
-            const currentRoute = useFilters.getState().selectedRoutes[code];
-            if (currentRoute) {
-              const foundIndex = newLocations.findIndex((it) => it.yon === currentRoute); //TODO
-              if (foundIndex === -1) {
-                if (newLocations.length > 0) {
-                  useFilters.setState((state) => {
-                    return {
-                      selectedRoutes: {
-                        ...state.selectedRoutes,
-                        // [code]: newLocations[0].guzergahkodu,
-                      },
-                    };
-                  });
-                } else {
-                  useFilters.setState((state) => {
-                    delete state.selectedRoutes[code];
-                    return state;
-                  });
-                }
-              }
-            }
-            //
-
             return {
-              ...state,
               lines: {
                 ...state.lines,
                 [code]: newLocations,
