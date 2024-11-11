@@ -3,7 +3,7 @@ import { useFilters } from "@/stores/filters";
 
 import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
-import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ActivityIndicator } from "react-native";
+import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ActivityIndicator, useWindowDimensions } from "react-native";
 import Animated, {
   FadeInLeft,
   LinearTransition,
@@ -23,6 +23,7 @@ interface Props {
 
 export function SelectedLine(props: Props) {
   const rotation = useSharedValue(0);
+  const { width } = useWindowDimensions()
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
@@ -57,7 +58,7 @@ export function SelectedLine(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: lineColor,
-
+    maxWidth: width * 0.8
   };
 
   return (
@@ -96,13 +97,13 @@ export function SelectedLine(props: Props) {
               <UiButton
                 title={leftTitle}
                 style={styles.lineButton}
-                containerStyle={{ flexShrink: 1 }}
+                containerStyle={{ flexBasis: 0, flexGrow: 1 }}
               />
               <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
               <UiButton
                 title={rightTitle}
                 style={styles.lineButton}
-                containerStyle={{ flexShrink: 1 }}
+                containerStyle={{ flexBasis: 0, flexGrow: 1 }}
               />
             </View>
           </View>
@@ -114,6 +115,7 @@ export function SelectedLine(props: Props) {
 
 export function SelectedLines({ style, ...rest }: ViewProps) {
   const keys = useLines(useShallow((state) => Object.keys(state.lines)));
+  const { width } = useWindowDimensions()
   const lineKeys = keys || [];
 
   if (lineKeys.length < 1) {
@@ -126,6 +128,8 @@ export function SelectedLines({ style, ...rest }: ViewProps) {
         layout={LinearTransition}
         contentContainerStyle={styles.codes}
         horizontal
+        snapToInterval={width * 0.8 + 8 + 8}
+        snapToAlignment="center"
       >
         {lineKeys.map((code) => (
           <SelectedLine key={code} code={code} />
@@ -140,7 +144,6 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     gap: 8,
-    maxWidth: 300,
   },
   codes: {
     flexDirection: "row",
@@ -171,5 +174,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexShrink: 1,
+    gap: 4,
   },
 });
