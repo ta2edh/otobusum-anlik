@@ -57,17 +57,14 @@ export function SelectedLine(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: lineColor,
-    padding: 14,
-    borderRadius: 8,
-    gap: 8,
-    maxWidth: 300,
+
   };
 
   return (
     <Animated.View
       layout={LinearTransition}
       entering={ZoomIn}
-      style={containerStyle}
+      style={[containerStyle, styles.container]}
       key={props.code}
     >
       <View style={styles.titleContainer}>
@@ -95,17 +92,19 @@ export function SelectedLine(props: Props) {
               </Animated.View>
             </UiButton>
 
-            <UiButton
-              title={leftTitle}
-              style={styles.lineButton}
-              containerStyle={{ flexShrink: 1 }}
-            />
-            <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
-            <UiButton
-              title={rightTitle}
-              style={styles.lineButton}
-              containerStyle={{ flexShrink: 1 }}
-            />
+            <View style={styles.routeContainerBottom}>
+              <UiButton
+                title={leftTitle}
+                style={styles.lineButton}
+                containerStyle={{ flexShrink: 1 }}
+              />
+              <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
+              <UiButton
+                title={rightTitle}
+                style={styles.lineButton}
+                containerStyle={{ flexShrink: 1 }}
+              />
+            </View>
           </View>
         </Animated.View>
       )}
@@ -137,6 +136,12 @@ export function SelectedLines({ style, ...rest }: ViewProps) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    padding: 14,
+    borderRadius: 8,
+    gap: 8,
+    maxWidth: 300,
+  },
   codes: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -161,5 +166,10 @@ const styles = StyleSheet.create({
   },
   routeContainer: {
     gap: 8,
+  },
+  routeContainerBottom: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexShrink: 1,
   },
 });
