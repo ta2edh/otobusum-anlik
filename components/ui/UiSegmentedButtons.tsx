@@ -27,13 +27,13 @@ export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange }: 
   };
 
   const leftEdge: StyleProp<ViewStyle> = {
-    borderTopLeftRadius: 999,
-    borderBottomLeftRadius: 999,
+    borderTopLeftRadius: 4,
+    borderBottomLeftRadius: 4,
   };
 
   const rightEdge: StyleProp<ViewStyle> = {
-    borderTopRightRadius: 999,
-    borderBottomRightRadius: 999,
+    borderTopRightRadius: 4,
+    borderBottomRightRadius: 4,
   };
 
   const selectedStyle: StyleProp<ViewStyle> = {

@@ -6,24 +6,31 @@ import { useTheme } from "@/hooks/useTheme";
 import { useLines } from "@/stores/lines";
 import { i18n } from "@/translations/i18n";
 import { useCallback, useState } from "react";
-import { LayoutChangeEvent, ScrollView, StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import {
+  LayoutChangeEvent,
+  ScrollView,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useShallow } from "zustand/react/shallow";
 
 export default function TimetableScreen() {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
   const insets = useSafeAreaInsets();
-  const [linesHeight, setLinesHeight] = useState(0)
-
-  const lines = useLines((state) => state.lines);
-  const keys = Object.keys(lines);
+  const [linesHeight, setLinesHeight] = useState(0);
+  const keys = useLines(useShallow((state) => Object.keys(state.lines)));
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
-    setLinesHeight(event.nativeEvent.layout.height)
-  }, [])
+    setLinesHeight(event.nativeEvent.layout.height);
+  }, []);
 
   const contentStyle: StyleProp<ViewStyle> = {
     paddingTop: linesHeight,
-  }
+    gap: 8,
+  };
 
   const timetableLineStyle: StyleProp<ViewStyle> = {
     position: "absolute",
@@ -31,7 +38,7 @@ export default function TimetableScreen() {
     zIndex: 10,
     left: 0,
     right: 0,
-    backgroundColor: theme.surfaceContainerLow
+    backgroundColor: theme.surfaceContainerLow,
   };
 
   if (keys.length < 1) {
@@ -40,7 +47,7 @@ export default function TimetableScreen() {
         <TheFocusAwareStatusBar />
 
         <UiText info style={{ textAlign: "center", textAlignVertical: "center", flex: 1 }}>
-          {i18n.t('timetableEmpty')}
+          {i18n.t("timetableEmpty")}
         </UiText>
       </View>
     );
@@ -48,7 +55,10 @@ export default function TimetableScreen() {
 
   return (
     <View>
-      <SelectedLines style={timetableLineStyle} onLayout={onLayout} />
+      <SelectedLines
+        style={timetableLineStyle}
+        onLayout={onLayout}
+      />
 
       <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
         <View style={{ flex: 1, flexDirection: "column", gap: 8 }}>
@@ -64,6 +74,5 @@ export default function TimetableScreen() {
 const styles = StyleSheet.create({
   content: {
     gap: 8,
-    padding: 8,
   },
 });

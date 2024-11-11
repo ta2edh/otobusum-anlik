@@ -7,9 +7,9 @@ import { UiSegmentedButtons } from "./ui/UiSegmentedButtons";
 
 import { DayType, Direction } from "@/types/departure";
 import { useQuery } from "@tanstack/react-query";
-import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
+import { useLines } from "@/stores/lines";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
 import { useRouteFilter } from "@/hooks/useRouteFilter";
@@ -38,9 +38,9 @@ interface Props {
 }
 
 export function LineTimetable(props: Props) {
-  const { theme } = useTheme();
   const [dayType, setDayType] = useState<DayType>(() => "I");
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+  const routeColor = useLines(useShallow((state) => state.lineColors[props.code]));
   const { getRouteDirection } = useRouteFilter(props.code);
 
   const query = useQuery({
@@ -65,8 +65,11 @@ export function LineTimetable(props: Props) {
   const title = query.data.at(0)?.HATADI;
 
   return (
-    <View style={[styles.wrapper, { backgroundColor: theme.surfaceContainer }]}>
-      <UiText style={styles.title}>{title}</UiText>
+    <View style={[styles.wrapper, { borderColor: routeColor }]}>
+      <View>
+        <UiText>{selectedRouteCode} - {props.code}</UiText>
+        <UiText style={styles.title}>{title}</UiText>
+      </View>
 
       <View style={styles.filters}>
         <UiSegmentedButtons
@@ -125,9 +128,11 @@ export function LineTimetable(props: Props) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 8,
-    borderRadius: 8,
+    padding: 14,
     gap: 8,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    elevation: 5
   },
   container: {
     flexDirection: "row",
@@ -147,6 +152,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 4,
+    marginTop: 8,
   },
   fixed: {
     gap: 4,

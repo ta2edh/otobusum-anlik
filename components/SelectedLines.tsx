@@ -3,12 +3,18 @@ import { useFilters } from "@/stores/filters";
 
 import { UiText } from "./ui/UiText";
 import { UiButton } from "./ui/UiButton";
-import { StyleProp, StyleSheet, ViewProps, ViewStyle, View, ActivityIndicator, useWindowDimensions } from "react-native";
+import {
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+  View,
+  ActivityIndicator,
+  useWindowDimensions,
+} from "react-native";
 import Animated, {
   FadeInLeft,
+  FlatListPropsWithLayout,
   LinearTransition,
-  useAnimatedStyle,
-  useSharedValue,
   ZoomIn,
 } from "react-native-reanimated";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -22,8 +28,7 @@ interface Props {
 }
 
 export function SelectedLine(props: Props) {
-  const rotation = useSharedValue(0);
-  const { width } = useWindowDimensions()
+  const { width } = useWindowDimensions();
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
@@ -48,17 +53,9 @@ export function SelectedLine(props: Props) {
     setRoute(props.code, otherDirection.route_code);
   };
 
-  const switchAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        rotateZ: `${rotation.value}deg`,
-      },
-    ],
-  }));
-
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: lineColor,
-    maxWidth: width * 0.8
+    maxWidth: width * 0.8,
   };
 
   return (
@@ -88,9 +85,7 @@ export function SelectedLine(props: Props) {
 
           <View style={styles.lineButtonsContainer}>
             <UiButton onPress={handleSwitchRoute} style={styles.lineButton}>
-              <Animated.View style={switchAnimatedStyle}>
-                <Ionicons name="refresh" size={20} color="white" />
-              </Animated.View>
+              <Ionicons name="refresh" size={20} color="white" />
             </UiButton>
 
             <View style={styles.routeContainerBottom}>
@@ -113,9 +108,9 @@ export function SelectedLine(props: Props) {
   );
 }
 
-export function SelectedLines({ style, ...rest }: ViewProps) {
+export function SelectedLines({ style, ...rest }: Omit<FlatListPropsWithLayout<string>, "data" | "renderItem">) {
   const keys = useLines(useShallow((state) => Object.keys(state.lines)));
-  const { width } = useWindowDimensions()
+  const { width } = useWindowDimensions();
   const lineKeys = keys || [];
 
   if (lineKeys.length < 1) {
@@ -123,19 +118,17 @@ export function SelectedLines({ style, ...rest }: ViewProps) {
   }
 
   return (
-    <View style={style} {...rest}>
-      <Animated.ScrollView
-        layout={LinearTransition}
-        contentContainerStyle={styles.codes}
-        horizontal
-        snapToInterval={width * 0.8 + 8 + 8}
-        snapToAlignment="center"
-      >
-        {lineKeys.map((code) => (
-          <SelectedLine key={code} code={code} />
-        ))}
-      </Animated.ScrollView>
-    </View>
+    <Animated.FlatList
+      {...rest}
+      layout={LinearTransition}
+      contentContainerStyle={styles.codes}
+      data={lineKeys}
+      renderItem={({ item: code }) => <SelectedLine key={code} code={code} />}
+      horizontal
+      snapToInterval={width * 0.8 + 8 + 8}
+      snapToAlignment="center"
+      style={style}
+    />
   );
 }
 
