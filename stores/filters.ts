@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>;
-  setRoute: (code: string, route: string) => void;
+  setRoute: (code: string, routeCode: string) => void;
 }
 
 export const useFilters = create(
@@ -12,9 +12,9 @@ export const useFilters = create(
     persist<FiltersStore>(
       (set, _get) => ({
         selectedRoutes: {},
-        setRoute: (code, route) =>
+        setRoute: (code, routeCode) =>
           set((state) => ({
-            selectedRoutes: { ...state.selectedRoutes, [code]: route },
+            selectedRoutes: { ...state.selectedRoutes, [code]: routeCode },
           })),
       }),
       {
