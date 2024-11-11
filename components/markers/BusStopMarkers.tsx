@@ -3,7 +3,6 @@ import { useRouteFilter } from "@/hooks/useRouteFilter";
 import { useTheme } from "@/hooks/useTheme";
 import { useFilters } from "@/stores/filters";
 import { useLines } from "@/stores/lines";
-import { getRouteFromBusStopLocations } from "@/utils/getRouteFromBusLocations";
 import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
 

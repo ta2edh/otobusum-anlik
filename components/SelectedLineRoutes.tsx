@@ -54,7 +54,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
 
   const renderItem = useCallback(({ item }: { item: LineRoute }) => {
     return <SelectedLineRoutesItem code={props.code} item={item} />;
-  }, []);
+  }, [props.code]);
 
   return (
     <>

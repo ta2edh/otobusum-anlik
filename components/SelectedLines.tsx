@@ -23,14 +23,13 @@ export function SelectedLine(props: Props) {
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
-  const { getDefaultRoute, findOtherRouteDirection, findRouteFromCode } = useRouteFilter(props.code);
+  const { findOtherRouteDirection, findRouteFromCode } = useRouteFilter(props.code);
 
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
   const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
 
   const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split("-") ?? ["", ""] ?? ["", ""]
-  // const [leftTitle, rightTitle] = selectedRoute?.route_long_name.trim().split("-") || ["", ""];
 
   const handleSwitchRoute = () => {
     if (!selectedRouteCode) return

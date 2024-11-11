@@ -1,4 +1,4 @@
-import { getAllRoutes, LineRoute } from "@/api/getAllRoutes";
+import { getAllRoutes } from "@/api/getAllRoutes";
 import { Direction } from "@/types/departure";
 import { useQuery } from "@tanstack/react-query";
 

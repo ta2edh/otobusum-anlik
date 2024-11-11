@@ -27,18 +27,18 @@ export default function HomeScreen() {
       zoom: 13,
       heading: 0,
       pitch: 0,
-    })
-  }, [])
+    });
+  }, []);
 
-  const handleRegionChangeComplete = useCallback((props: Region, details: Details) => {
-    if (!details.isGesture) return
+  const handleRegionChangeComplete = (props: Region, details: Details) => {
+    if (!details.isGesture) return;
 
     updateInitialMapLocation({ latitude: props.latitude, longitude: props.longitude });
-  }, []);
+  };
 
-  const handleMapLoaded = useCallback(() => {
+  const handleMapLoaded = () => {
     SplashScreen.hideAsync();
-  }, []);
+  };
 
   return (
     <View style={styles.container}>

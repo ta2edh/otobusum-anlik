@@ -41,7 +41,7 @@ export function TheSearchSheet() {
 
   const onSearch = useCallback((q: string) => {
     mutation.mutate(q);
-  }, []);
+  }, [mutation]);
 
   const snapPoints = useMemo(() => [60 + 24 + 8, "90%"], []);
   const data = useMemo(

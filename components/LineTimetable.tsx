@@ -10,10 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
-import { getRouteFromBusStopLocations } from "@/utils/getRouteFromBusLocations";
-import { getLineBusStopLocations } from "@/api/getLineBusStopLocations";
-import { useFilters } from "@/stores/filters";
-import { useShallow } from "zustand/react/shallow";
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {};
@@ -40,7 +36,7 @@ interface Props {
 
 export function LineTimetable(props: Props) {
   const { theme } = useTheme();
-  const currentRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+  // const currentRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const [dayType, setDayType] = useState<DayType>(() => "I");
 
   const query = useQuery({
@@ -48,9 +44,9 @@ export function LineTimetable(props: Props) {
     queryFn: () => getPlannedDepartures(props.code),
   });
 
-  const queryStopLocations = useQuery<Awaited<ReturnType<typeof getLineBusStopLocations>>>({
-    queryKey: [`${props.code}-stop-locations`],
-  });
+  // const queryStopLocations = useQuery<Awaited<ReturnType<typeof getLineBusStopLocations>>>({
+  //   queryKey: [`${props.code}-stop-locations`],
+  // });
 
   const dir = undefined
   // const dir = getRouteFromBusStopLocations(props.code, currentRoute, queryStopLocations.data || [])
