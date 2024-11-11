@@ -12,4 +12,5 @@ export default {
   workday: "Workday",
   saturday: "Saturday",
   sunday: "Sunday",
+  routes: "Routes",
 }

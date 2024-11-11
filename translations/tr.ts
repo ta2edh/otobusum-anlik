@@ -12,4 +12,5 @@ export default {
   workday: "Haftaiçi",
   saturday: "Cumartesi",
   sunday: "Pazar",
+  routes: "Güzergahlar",
 }

@@ -17,6 +17,7 @@ import { useFilters } from "@/stores/filters";
 import { LineRoute } from "@/api/getAllRoutes";
 import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
+import { i18n } from "@/translations/i18n";
 
 interface Props extends TouchableOpacityProps {
   code: string;
@@ -83,7 +84,10 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
   const defaultRoutes = () => {
     return (
       <View>
-        {routesDefaults.map((item) => SelectedLineRoutesItem({ code: props.code, item }))}
+        {routesDefaults.map((item) => (
+          <SelectedLineRoutesItem key={item._id} code={props.code} item={item} />
+        ))}
+        {/* {routesDefaults.map((item) => SelectedLineRoutesItem({ code: props.code, item }))} */}
       </View>
     );
   };
@@ -103,7 +107,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         {...bottomSheetStyle}
       >
         <UiText info style={styles.title}>
-          Routes
+          {i18n.t("routes")}
         </UiText>
 
         <BottomSheetFlashList
