@@ -1,25 +1,32 @@
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from "react-native";
-
-import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
-import { LineRoute } from "@/api/getAllRoutes";
-import { useTheme } from "@/hooks/useTheme";
+import {
+  StyleProp,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
+} from "react-native";
 import { memo, useCallback, useRef } from "react";
-import { UiButton } from "./ui/UiButton";
-import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
-import { colors } from "@/constants/colors";
-import { useRouteFilter } from "@/hooks/useRouteFilter";
+import { UiButton } from "./ui/UiButton";
 import { UiText } from "./ui/UiText";
 
-interface Props {
+import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useRouteFilter } from "@/hooks/useRouteFilter";
+import { useFilters } from "@/stores/filters";
+import { LineRoute } from "@/api/getAllRoutes";
+import { useTheme } from "@/hooks/useTheme";
+import { colors } from "@/constants/colors";
+
+interface Props extends TouchableOpacityProps {
   code: string;
 }
 
-interface Item extends Props {
+interface ItemProps extends Props {
   item: LineRoute;
 }
 
-const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
+function SelectedLineRoutesItem(props: ItemProps) {
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
 
@@ -34,11 +41,14 @@ const SelectedLineRoutesItem = function SelectedLineRoutesItem(props: Item) {
   };
 
   return (
-    <TouchableOpacity style={[styles.item, isSelected ? selectedStyle : undefined]} onPress={handlePress}>
+    <TouchableOpacity
+      style={[styles.item, props.style, isSelected ? selectedStyle : undefined]}
+      onPress={handlePress}
+    >
       <UiText>{`${props.item.route_code} ${props.item.route_long_name}`}</UiText>
     </TouchableOpacity>
   );
-};
+}
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme();
@@ -47,14 +57,36 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
   const bottomSheetModal = useRef<BottomSheetModal>(null);
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
 
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined;
 
-  const filteredRoutes =
-    routes.data?.result.records.filter((route) => !route.route_code.endsWith("0")) || [];
+  const routesfiltered: LineRoute[] = [];
+  const routesDefaults: LineRoute[] = [];
 
-  const renderItem = useCallback(({ item }: { item: LineRoute }) => {
-    return <SelectedLineRoutesItem code={props.code} item={item} />;
-  }, [props.code]);
+  for (let index = 0; index < (routes.data?.result.records.length || 0); index++) {
+    const element = routes.data?.result.records[index];
+    if (!element) continue;
+
+    if (element.route_code.endsWith("D0")) {
+      routesDefaults.push(element);
+    } else {
+      routesfiltered.push(element);
+    }
+  }
+
+  const renderItem = useCallback(
+    ({ item }: { item: LineRoute }) => {
+      return <SelectedLineRoutesItem code={props.code} item={item} />;
+    },
+    [props.code]
+  );
+
+  const defaultRoutes = () => {
+    return (
+      <View>
+        {routesDefaults.map((item) => SelectedLineRoutesItem({ code: props.code, item }))}
+      </View>
+    );
+  };
 
   return (
     <>
@@ -70,10 +102,15 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         enableDynamicSizing={false}
         {...bottomSheetStyle}
       >
+        <UiText info style={styles.title}>
+          Routes
+        </UiText>
+
         <BottomSheetFlashList
-          data={filteredRoutes}
+          data={routesfiltered}
           renderItem={renderItem}
           estimatedItemSize={35}
+          ListHeaderComponent={defaultRoutes}
         />
       </BottomSheetModal>
     </>
@@ -88,6 +125,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    padding: 8,
+  },
+  title: {
+    fontSize: 24,
     padding: 8,
   },
 });
