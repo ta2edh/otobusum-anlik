@@ -87,7 +87,6 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         {routesDefaults.map((item) => (
           <SelectedLineRoutesItem key={item._id} code={props.code} item={item} />
         ))}
-        {/* {routesDefaults.map((item) => SelectedLineRoutesItem({ code: props.code, item }))} */}
       </View>
     );
   };
