@@ -12,6 +12,11 @@ const config: ExpoConfig = {
     resizeMode: "cover",
     backgroundColor: "#0a0a0a",
   },
+  extra: {
+    eas: {
+      projectId: "2c43cbc3-221c-4ca7-ac8c-ebfcc102426c"
+    }
+  },
   ios: {
     supportsTablet: true,
   },
