@@ -7,8 +7,9 @@ import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
 
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
-import { Marker } from "react-native-maps";
+import { Callout, Marker } from "react-native-maps";
 import { useShallow } from "zustand/react/shallow";
+import { UiText } from "../ui/UiText";
 
 interface Props {
   code: string;
@@ -31,15 +32,19 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     backgroundColor: theme.color,
     borderColor: theme.surfaceContainer,
   };
-  
+
+  const calloutContainerBackground: StyleProp<ViewStyle> = {
+    backgroundColor: theme.surfaceContainerLow,
+  };
+
   if (!query.data) {
     return null;
   }
 
-  const route = selectedRoute || getDefaultRoute()?.route_code
-  const direction = route ? getRouteDirection(route) : undefined
-  const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data;
-  
+  const route = selectedRoute || getDefaultRoute()?.route_code;
+  const direction = route ? getRouteDirection(route) : undefined;
+  const busStops = direction ? query.data.filter((stop) => stop.yon === direction) : query.data;
+
   return (
     <>
       {busStops.map((stop) => (
@@ -53,17 +58,23 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
           tracksViewChanges={false}
           tracksInfoWindowChanges={false}
         >
-          <View
-            style={[styles.busStop, busStopStyle, { backgroundColor: lineColor }]}
-          />
+          <View style={[styles.busStop, busStopStyle, { backgroundColor: lineColor }]} />
+
+          <Callout tooltip>
+            <View style={[styles.calloutContainer, calloutContainerBackground]}>
+              <UiText style={{ textAlign: "center", }}>
+                {stop.durakKodu} - {stop.durakAdi}
+              </UiText>
+            </View>
+          </Callout>
         </Marker>
       ))}
     </>
   );
-})
+});
 
 export function BusStopMarkers() {
-  const lineKeys = useLines(useShallow(state => Object.keys(state.lines)))
+  const lineKeys = useLines(useShallow((state) => Object.keys(state.lines)));
 
   return (
     <>
@@ -80,5 +91,10 @@ const styles = StyleSheet.create({
     height: 16,
     borderWidth: 2,
     borderRadius: 1000,
+  },
+  calloutContainer: {
+    width: 250,
+    padding: 8,
+    borderRadius: 8,
   },
 });
