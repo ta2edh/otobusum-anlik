@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTheme } from "@/hooks/useTheme";
 import { useMutation } from "@tanstack/react-query";
 import { getSearchResults, SearchResult } from "@/api/getSearchResults";
-import BottomSheet, { BottomSheetFlashList, BottomSheetView } from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetFlashList } from "@gorhom/bottom-sheet";
 
 import { TheSearchItem } from "./TheSearchItem";
 import { TheSearchInput } from "./TheSearchInput";
@@ -42,11 +42,14 @@ export function TheSearchSheet() {
     mutationFn: getSearchResults,
   });
 
-  const onSearch = useCallback((q: string) => {
-    mutation.mutate(q);
-  }, [mutation]);
+  const onSearch = useCallback(
+    (q: string) => {
+      mutation.mutate(q);
+    },
+    [mutation]
+  );
 
-  const snapPoints = useMemo(() => [68 + 24 + 8, "90%"], []);
+  const snapPoints = useMemo(() => [56 + 24 + 8, "90%"], []);
   const data = useMemo(
     () => mutation.data?.list.filter((i) => i.Stationcode === 0),
     [mutation.data]
@@ -58,15 +61,15 @@ export function TheSearchSheet() {
 
   const emptyItem = useCallback(() => {
     if (mutation.data) {
-      return <UiText style={styles.empty}>{i18n.t("emptySearch")}</UiText>
+      return <UiText style={styles.empty}>{i18n.t("emptySearch")}</UiText>;
     }
 
     if (mutation.isPending) {
-      return <UiActivityIndicator size={34} />
+      return <UiActivityIndicator size={34} />;
     }
-    
-    return <UiText style={styles.empty}>{i18n.t("searchSomething")}</UiText>
-  }, [mutation.data, mutation.isPending])
+
+    return <UiText style={styles.empty}>{i18n.t("searchSomething")}</UiText>;
+  }, [mutation.data, mutation.isPending]);
 
   const renderItem = ({ item }: { item: SearchResult }) => {
     return <TheSearchItem item={item} onPress={collapseSheet} />;
@@ -75,7 +78,7 @@ export function TheSearchSheet() {
   return (
     <>
       <TheFilters animatedPosition={animatedPosition} animatedIndex={animatedIndex} />
-      
+
       <BottomSheet
         ref={bottomSheetRef}
         topInset={insets.top + 20}
@@ -88,9 +91,11 @@ export function TheSearchSheet() {
         animatedIndex={animatedIndex}
         {...bottomSheetStyle}
       >
-        <BottomSheetView style={styles.container}>
-          <TheSearchInput onSearch={onSearch} isLoading={mutation.isPending} />
-        </BottomSheetView>
+        <TheSearchInput
+          onSearch={onSearch}
+          isLoading={mutation.isPending}
+          style={{ marginBottom: 8 }}
+        />
 
         <BottomSheetFlashList
           data={data}
@@ -107,18 +112,9 @@ export function TheSearchSheet() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    gap: 18,
-    padding: 8,
-  },
-  query: {
-    gap: 8,
-    padding: 8,
-  },
   empty: {
     flex: 1,
     textAlign: "center",
     textAlignVertical: "center",
-  }
+  },
 });

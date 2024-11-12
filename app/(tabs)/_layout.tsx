@@ -18,6 +18,10 @@ export default function TabLayout() {
           borderColor: theme.surfaceContainer,
         },
         tabBarActiveTintColor: colors.primary,
+        tabBarLabelStyle: {
+          fontWeight: "bold",
+        },
+        tabBarShowLabel: false
         // unmountOnBlur: true,
       }}
       sceneContainerStyle={{ backgroundColor: theme.surfaceContainerLow }}

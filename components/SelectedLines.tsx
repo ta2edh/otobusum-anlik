@@ -124,7 +124,7 @@ export function SelectedLines({
       data={lineKeys}
       renderItem={({ item: code }) => <SelectedLine key={code} code={code} />}
       horizontal
-      snapToInterval={width * 0.8 + 8 + 8}
+      snapToInterval={width * 0.8 + 8}
       snapToAlignment="center"
       style={style}
     />
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     gap: 8,
-    padding: 14,
+    padding: 8,
   },
   titleContainer: {
     flexDirection: "row",
