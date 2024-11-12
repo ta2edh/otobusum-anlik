@@ -50,7 +50,7 @@ export function TheSearchInput(props: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "stretch",
+    alignItems: "flex-start",
     gap: 4
   },
   input: {

@@ -43,7 +43,7 @@ export function TheSearchSheet() {
     mutation.mutate(q);
   }, [mutation]);
 
-  const snapPoints = useMemo(() => [60 + 24 + 8, "90%"], []);
+  const snapPoints = useMemo(() => [68 + 24 + 8, "90%"], []);
   const data = useMemo(
     () => mutation.data?.list.filter((i) => i.Stationcode === 0),
     [mutation.data]

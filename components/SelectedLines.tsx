@@ -81,26 +81,22 @@ export function SelectedLine(props: Props) {
         <ActivityIndicator size={24} color="#FFFFFF" />
       ) : (
         <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
-          <SelectedLineRoutes code={props.code} />
-
           <View style={styles.lineButtonsContainer}>
             <UiButton onPress={handleSwitchRoute} style={styles.lineButton}>
-              <Ionicons name="refresh" size={20} color="white" />
+              <Ionicons name="refresh" size={16} color="white" />
             </UiButton>
 
-            <View style={styles.routeContainerBottom}>
-              <UiButton
-                title={leftTitle}
-                style={styles.lineButton}
-                containerStyle={{ flexBasis: 0, flexGrow: 1 }}
-              />
-              <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
-              <UiButton
-                title={rightTitle}
-                style={styles.lineButton}
-                containerStyle={{ flexBasis: 0, flexGrow: 1 }}
-              />
-            </View>
+            <SelectedLineRoutes code={props.code} />
+          </View>
+
+          <View style={styles.lineButtonsContainer}>
+            <UiText style={styles.directionText} numberOfLines={1}>
+              {leftTitle}
+            </UiText>
+            <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
+            <UiText style={styles.directionText} numberOfLines={1}>
+              {rightTitle}
+            </UiText>
           </View>
         </Animated.View>
       )}
@@ -108,7 +104,10 @@ export function SelectedLine(props: Props) {
   );
 }
 
-export function SelectedLines({ style, ...rest }: Omit<FlatListPropsWithLayout<string>, "data" | "renderItem">) {
+export function SelectedLines({
+  style,
+  ...rest
+}: Omit<FlatListPropsWithLayout<string>, "data" | "renderItem">) {
   const keys = useLines(useShallow((state) => Object.keys(state.lines)));
   const { width } = useWindowDimensions();
   const lineKeys = keys || [];
@@ -157,16 +156,17 @@ const styles = StyleSheet.create({
     flex: 1,
     overflow: "hidden",
   },
+  directionText: {
+    flexBasis: 0,
+    flexGrow: 1,
+    fontWeight: "bold",
+    opacity: 0.4,
+    color: "black",
+  },
   lineButton: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   routeContainer: {
     gap: 8,
-  },
-  routeContainerBottom: {
-    flexDirection: "row",
-    alignItems: "center",
-    flexShrink: 1,
-    gap: 4,
   },
 });

@@ -97,6 +97,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         title={route?.route_long_name}
         style={styles.button}
         onPress={() => bottomSheetModal.current?.present()}
+        containerStyle={{ flexShrink: 1 }}
       />
 
       <BottomSheetModal
@@ -128,7 +129,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 8,
+    padding: 12,
   },
   title: {
     fontSize: 24,

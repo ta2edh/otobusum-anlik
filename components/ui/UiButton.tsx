@@ -69,8 +69,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 0,
     gap: 4,
-    paddingVertical: 4,
-    paddingHorizontal: 8,
+    padding: 10,
     minWidth: 50,
   },
 });

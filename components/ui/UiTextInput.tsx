@@ -28,6 +28,6 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 999,
     paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingVertical: 10,
   },
 });
