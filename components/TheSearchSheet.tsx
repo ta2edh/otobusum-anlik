@@ -11,6 +11,9 @@ import BottomSheet, { BottomSheetFlashList, BottomSheetView } from "@gorhom/bott
 import { TheSearchItem } from "./TheSearchItem";
 import { TheSearchInput } from "./TheSearchInput";
 import { TheFilters } from "./TheFilters";
+import { UiText } from "./ui/UiText";
+import { UiActivityIndicator } from "./ui/UiActivityIndicator";
+import { i18n } from "@/translations/i18n";
 
 export function TheSearchSheet() {
   const animatedPosition = useSharedValue(0);
@@ -53,6 +56,18 @@ export function TheSearchSheet() {
     bottomSheetRef.current?.collapse();
   }, []);
 
+  const emptyItem = useCallback(() => {
+    if (mutation.data) {
+      return <UiText style={styles.empty}>{i18n.t("emptySearch")}</UiText>
+    }
+
+    if (mutation.isPending) {
+      return <UiActivityIndicator size={34} />
+    }
+    
+    return <UiText style={styles.empty}>{i18n.t("searchSomething")}</UiText>
+  }, [mutation.data, mutation.isPending])
+
   const renderItem = ({ item }: { item: SearchResult }) => {
     return <TheSearchItem item={item} onPress={collapseSheet} />;
   };
@@ -84,6 +99,7 @@ export function TheSearchSheet() {
           fadingEdgeLength={20}
           contentContainerStyle={{ padding: 8 }}
           keyboardDismissMode="on-drag"
+          ListEmptyComponent={emptyItem}
         />
       </BottomSheet>
     </>
@@ -100,4 +116,9 @@ const styles = StyleSheet.create({
     gap: 8,
     padding: 8,
   },
+  empty: {
+    flex: 1,
+    textAlign: "center",
+    textAlignVertical: "center",
+  }
 });

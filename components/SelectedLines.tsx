@@ -8,7 +8,6 @@ import {
   StyleSheet,
   ViewStyle,
   View,
-  ActivityIndicator,
   useWindowDimensions,
 } from "react-native";
 import Animated, {
@@ -22,6 +21,7 @@ import { useShallow } from "zustand/react/shallow";
 import { SelectedLineAnnouncements } from "./SelectedLineAnnouncements";
 import { SelectedLineRoutes } from "./SelectedLineRoutes";
 import { useRouteFilter } from "@/hooks/useRouteFilter";
+import { UiActivityIndicator } from "./ui/UiActivityIndicator";
 
 interface Props {
   code: string;
@@ -78,7 +78,7 @@ export function SelectedLine(props: Props) {
       </View>
 
       {isPending ? (
-        <ActivityIndicator size={24} color="#FFFFFF" />
+        <UiActivityIndicator size={24} />
       ) : (
         <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
           <View style={styles.lineButtonsContainer}>

@@ -13,4 +13,6 @@ export default {
   saturday: "Saturday",
   sunday: "Sunday",
   routes: "Routes",
+  emptySearch: "No results found",
+  searchSomething: "Search something",
 }

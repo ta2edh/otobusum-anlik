@@ -13,4 +13,6 @@ export default {
   saturday: "Cumartesi",
   sunday: "Pazar",
   routes: "Güzergahlar",
+  emptySearch: "Herhangi bir sonuç bulunamadı",
+  searchSomething: "Bir şey arayın",
 }

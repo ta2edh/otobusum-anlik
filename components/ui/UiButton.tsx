@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   StyleProp,
   StyleSheet,
   TouchableOpacity,
@@ -8,6 +7,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { UiText } from "./UiText";
+import { UiActivityIndicator } from "./UiActivityIndicator";
 
 interface Props extends TouchableOpacityProps {
   title?: string;
@@ -32,7 +32,7 @@ export function UiButton({ style, ...rest }: Props) {
         ]}
         {...rest}
       >
-        {rest.isLoading && <ActivityIndicator color="#FFFFFF" />}
+        {rest.isLoading && <UiActivityIndicator />}
 
         {!!rest.title && (
           <UiText

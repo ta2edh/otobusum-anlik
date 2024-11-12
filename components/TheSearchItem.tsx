@@ -1,5 +1,4 @@
 import {
-  ActivityIndicator,
   StyleSheet,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -10,6 +9,7 @@ import { SearchResult } from "@/api/getSearchResults";
 import { useState, memo } from "react";
 import { useLines } from "@/stores/lines";
 import { useShallow } from "zustand/react/shallow";
+import { UiActivityIndicator } from "./ui/UiActivityIndicator";
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult;
@@ -43,7 +43,7 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
       onPress={handlePress}
     >
       <UiText style={[styles.renderCode, { backgroundColor }]}>
-        {isPending ? <ActivityIndicator color="#FFFFFF" /> : props.item.Code}
+        {isPending ? <UiActivityIndicator /> : props.item.Code}
       </UiText>
       <UiText>{props.item.Name}</UiText>
     </TouchableOpacity>
