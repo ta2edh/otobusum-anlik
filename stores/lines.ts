@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { subscribeWithSelector, persist, createJSONStorage } from "zustand/middleware";
 import { getLineBusLocations, Location } from "@/api/getLineBusLocations";
-import { createColor } from "@/utils/createColor";
+import { createTheme } from "@/utils/createTheme";
 import { ToastAndroid } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -41,7 +41,7 @@ export const useLines = create(
           }));
 
           return set((state) => {
-            const newColor = createColor();
+            const newColor = createTheme();
 
             return {
               lines: {
