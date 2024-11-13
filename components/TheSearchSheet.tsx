@@ -1,79 +1,79 @@
-import { BackHandler, StyleSheet } from "react-native";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import { useSharedValue } from "react-native-reanimated";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { BackHandler, StyleSheet } from 'react-native'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useSharedValue } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-import { useTheme } from "@/hooks/useTheme";
-import { useMutation } from "@tanstack/react-query";
-import { getSearchResults, SearchResult } from "@/api/getSearchResults";
-import BottomSheet, { BottomSheetFlashList } from "@gorhom/bottom-sheet";
+import { useTheme } from '@/hooks/useTheme'
+import { useMutation } from '@tanstack/react-query'
+import { getSearchResults, SearchResult } from '@/api/getSearchResults'
+import BottomSheet, { BottomSheetFlashList } from '@gorhom/bottom-sheet'
 
-import { TheSearchItem } from "./TheSearchItem";
-import { TheSearchInput } from "./TheSearchInput";
-import { TheFilters } from "./TheFilters";
-import { UiText } from "./ui/UiText";
-import { UiActivityIndicator } from "./ui/UiActivityIndicator";
-import { i18n } from "@/translations/i18n";
+import { TheSearchItem } from './TheSearchItem'
+import { TheSearchInput } from './TheSearchInput'
+import { TheFilters } from './TheFilters'
+import { UiText } from './ui/UiText'
+import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { i18n } from '@/translations/i18n'
 
 export function TheSearchSheet() {
-  const animatedPosition = useSharedValue(0);
-  const animatedIndex = useSharedValue(0);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const bottomSheetIndex = useRef(0);
-  const insets = useSafeAreaInsets();
-  const { bottomSheetStyle } = useTheme();
+  const animatedPosition = useSharedValue(0)
+  const animatedIndex = useSharedValue(0)
+  const bottomSheetRef = useRef<BottomSheet>(null)
+  const bottomSheetIndex = useRef(0)
+  const insets = useSafeAreaInsets()
+  const { bottomSheetStyle } = useTheme()
 
   useEffect(() => {
-    const backHandler = BackHandler.addEventListener("hardwareBackPress", () => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (bottomSheetIndex.current !== 0) {
-        bottomSheetRef.current?.snapToIndex(0);
-        return true;
+        bottomSheetRef.current?.snapToIndex(0)
+        return true
       }
 
-      return false;
-    });
+      return false
+    })
 
     return () => {
-      backHandler.remove();
-    };
-  }, []);
+      backHandler.remove()
+    }
+  }, [])
 
   const mutation = useMutation({
     mutationFn: getSearchResults,
-  });
+  })
 
   const onSearch = useCallback(
     (q: string) => {
-      mutation.mutate(q);
+      mutation.mutate(q)
     },
-    [mutation]
-  );
+    [mutation],
+  )
 
-  const snapPoints = useMemo(() => [56 + 24 + 8, "90%"], []);
+  const snapPoints = useMemo(() => [56 + 24 + 8, '90%'], [])
   const data = useMemo(
-    () => mutation.data?.list.filter((i) => i.Stationcode === 0),
-    [mutation.data]
-  );
+    () => mutation.data?.list.filter(i => i.Stationcode === 0),
+    [mutation.data],
+  )
 
   const collapseSheet = useCallback(() => {
-    bottomSheetRef.current?.collapse();
-  }, []);
+    bottomSheetRef.current?.collapse()
+  }, [])
 
   const emptyItem = useCallback(() => {
     if (mutation.data) {
-      return <UiText style={styles.empty}>{i18n.t("emptySearch")}</UiText>;
+      return <UiText style={styles.empty}>{i18n.t('emptySearch')}</UiText>
     }
 
     if (mutation.isPending) {
-      return <UiActivityIndicator size={34} />;
+      return <UiActivityIndicator size={34} />
     }
 
-    return <UiText style={styles.empty}>{i18n.t("searchSomething")}</UiText>;
-  }, [mutation.data, mutation.isPending]);
+    return <UiText style={styles.empty}>{i18n.t('searchSomething')}</UiText>
+  }, [mutation.data, mutation.isPending])
 
   const renderItem = ({ item }: { item: SearchResult }) => {
-    return <TheSearchItem item={item} onPress={collapseSheet} />;
-  };
+    return <TheSearchItem item={item} onPress={collapseSheet} />
+  }
 
   return (
     <>
@@ -86,7 +86,7 @@ export function TheSearchSheet() {
         android_keyboardInputMode="adjustResize"
         keyboardBehavior="fillParent"
         snapPoints={snapPoints}
-        onChange={(index) => (bottomSheetIndex.current = index)}
+        onChange={index => (bottomSheetIndex.current = index)}
         animatedPosition={animatedPosition}
         animatedIndex={animatedIndex}
         {...bottomSheetStyle}
@@ -108,13 +108,13 @@ export function TheSearchSheet() {
         />
       </BottomSheet>
     </>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   empty: {
     flex: 1,
-    textAlign: "center",
-    textAlignVertical: "center",
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
-});
+})

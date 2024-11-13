@@ -1,41 +1,42 @@
-import { useCallback, useRef, useState } from "react";
-import { UiTextInput } from "./ui/UiTextInput";
-import { UiButton } from "./ui/UiButton";
+import { useCallback, useRef, useState } from 'react'
+import { UiTextInput } from './ui/UiTextInput'
+import { UiButton } from './ui/UiButton'
 import {
   NativeSyntheticEvent,
   StyleSheet,
   TextInputChangeEventData,
   ViewProps,
-} from "react-native";
-import Animated, { LinearTransition } from "react-native-reanimated";
-import { i18n } from "@/translations/i18n";
-import { colors } from "@/constants/colors";
+} from 'react-native'
+import Animated, { LinearTransition } from 'react-native-reanimated'
+import { i18n } from '@/translations/i18n'
+import { colors } from '@/constants/colors'
 
 interface Props extends ViewProps {
-  isLoading?: boolean;
-  onSearch: (query: string) => void;
+  isLoading?: boolean
+  onSearch: (query: string) => void
 }
 
 export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
-  const queryValue = useRef("");
-  const [queryDisabled, setQueryDisabled] = useState(() => true);
+  const queryValue = useRef('')
+  const [queryDisabled, setQueryDisabled] = useState(() => true)
 
   const handleQueryChange = useCallback(
     (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
-      queryValue.current = event.nativeEvent.text;
+      queryValue.current = event.nativeEvent.text
 
       if (queryValue.current && queryDisabled === true) {
-        setQueryDisabled(false);
-      } else if (!queryValue.current && queryDisabled === false) {
-        setQueryDisabled(true);
+        setQueryDisabled(false)
+      }
+      else if (!queryValue.current && queryDisabled === false) {
+        setQueryDisabled(true)
       }
     },
-    [queryDisabled]
-  );
+    [queryDisabled],
+  )
 
   const handleSearch = useCallback(() => {
-    onSearch(queryValue.current);
-  }, [onSearch]);
+    onSearch(queryValue.current)
+  }, [onSearch])
 
   return (
     <Animated.View layout={LinearTransition} style={[styles.container, style]} {...rest}>
@@ -45,7 +46,7 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         style={styles.input}
       />
       <UiButton
-        title={i18n.t("search")}
+        title={i18n.t('search')}
         isLoading={isLoading}
         disabled={queryDisabled}
         onPress={handleSearch}
@@ -53,17 +54,17 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         icon="search"
       />
     </Animated.View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    alignItems: "stretch",
+    flexDirection: 'row',
+    alignItems: 'stretch',
     gap: 4,
     paddingHorizontal: 8,
   },
   input: {
     flexGrow: 1,
   },
-});
+})

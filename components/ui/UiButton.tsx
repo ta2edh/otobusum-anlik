@@ -6,30 +6,34 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
   ViewStyle,
-} from "react-native";
-import { UiActivityIndicator } from "./UiActivityIndicator";
-import { Ionicons } from "@expo/vector-icons";
+} from 'react-native'
+import { UiActivityIndicator } from './UiActivityIndicator'
+import { Ionicons } from '@expo/vector-icons'
 
 export interface UiButtonProps extends TouchableOpacityProps {
-  title?: string;
-  isLoading?: boolean;
-  icon?: keyof typeof Ionicons.glyphMap;
-  disabled?: boolean;
-  textStyle?: StyleProp<TextStyle>;
+  title?: string
+  isLoading?: boolean
+  icon?: keyof typeof Ionicons.glyphMap
+  disabled?: boolean
+  textStyle?: StyleProp<TextStyle>
 }
 
 export function UiButton({ style, ...props }: UiButtonProps) {
   const dynamicStyle: StyleProp<ViewStyle> = {
     opacity: props.disabled ? 0.4 : 1,
-  };
+  }
 
   return (
     <TouchableOpacity style={[styles.button, dynamicStyle, style]} {...props}>
-      {props.isLoading ? (
-        <UiActivityIndicator size={18} />
-      ) : props.icon ? (
-        <Ionicons name={props.icon} size={18} color="white" style={props.textStyle} />
-      ) : null}
+      {props.isLoading
+        ? (
+            <UiActivityIndicator size={18} />
+          )
+        : props.icon
+          ? (
+              <Ionicons name={props.icon} size={18} color="white" style={props.textStyle} />
+            )
+          : null}
 
       {props.title && (
         <Text style={[styles.title, props.textStyle]} numberOfLines={1}>
@@ -37,15 +41,15 @@ export function UiButton({ style, ...props }: UiButtonProps) {
         </Text>
       )}
     </TouchableOpacity>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   button: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     borderRadius: 999,
     gap: 4,
     minWidth: 48,
@@ -54,8 +58,8 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   title: {
-    color: "white",
-    textAlign: "center",
-    textAlignVertical: "center",
+    color: 'white',
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
-});
+})

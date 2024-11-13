@@ -1,6 +1,6 @@
-import { colors } from "@/constants/colors";
-import { hexFromArgb, Scheme, Theme } from "@material/material-color-utilities";
-import { useColorScheme } from "react-native";
+import { colors } from '@/constants/colors'
+import { hexFromArgb, Scheme, Theme } from '@material/material-color-utilities'
+import { useColorScheme } from 'react-native'
 
 type SchemeKeys = {
   [K in keyof Scheme]: Scheme[K] extends number ? K : never
@@ -8,7 +8,7 @@ type SchemeKeys = {
 
 export function useTheme(theme?: Theme) {
   const mode = useColorScheme() ?? 'dark'
-  const scheme = mode === "dark" ? theme?.schemes.dark : theme?.schemes.light
+  const scheme = mode === 'dark' ? theme?.schemes.dark : theme?.schemes.light
   const colorsTheme = colors[mode]
 
   const bottomSheetStyle = {

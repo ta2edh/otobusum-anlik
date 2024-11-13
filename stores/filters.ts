@@ -1,10 +1,10 @@
-import { create } from "zustand";
-import { createJSONStorage, persist, subscribeWithSelector } from "zustand/middleware";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { create } from 'zustand'
+import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface FiltersStore {
-  selectedRoutes: Record<string, string>;
-  setRoute: (code: string, routeCode: string) => void;
+  selectedRoutes: Record<string, string>
+  setRoute: (code: string, routeCode: string) => void
 }
 
 export const useFilters = create(
@@ -13,14 +13,14 @@ export const useFilters = create(
       (set, _get) => ({
         selectedRoutes: {},
         setRoute: (code, routeCode) =>
-          set((state) => ({
+          set(state => ({
             selectedRoutes: { ...state.selectedRoutes, [code]: routeCode },
           })),
       }),
       {
-        name: "filter-storage",
+        name: 'filter-storage',
         storage: createJSONStorage(() => AsyncStorage),
-      }
-    )
-  )
-);
+      },
+    ),
+  ),
+)

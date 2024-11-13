@@ -1,4 +1,4 @@
-import { extractInnerContentXml } from "@/utils/extractInnerContentXml"
+import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
 
 interface Announcement {
   HAT: string
@@ -9,11 +9,11 @@ interface Announcement {
 }
 
 export async function getAnnouncements() {
-  const response = await fetch("https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl", {
-    method: "POST",
+  const response = await fetch('https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl', {
+    method: 'POST',
     headers: {
-      "Content-Type": "text/xml",
-      SOAPAction: '"http://tempuri.org/GetDuyurular_json"',
+      'Content-Type': 'text/xml',
+      'SOAPAction': '"http://tempuri.org/GetDuyurular_json"',
     },
     body: `
       <soap:Envelope
@@ -21,12 +21,12 @@ export async function getAnnouncements() {
         <soap:Body>
         </soap:Body>
       </soap:Envelope>
-    `
+    `,
   })
 
-  const key = "GetDuyurular_jsonResult"
+  const key = 'GetDuyurular_jsonResult'
   const content = await response.text()
-  
+
   const innerContent = extractInnerContentXml(key, content)
   if (!innerContent) return []
 

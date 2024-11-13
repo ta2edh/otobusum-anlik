@@ -1,7 +1,7 @@
 export interface SearchResult {
-  Path: string,
-  Code: string,
-  Name: string,
+  Path: string
+  Code: string
+  Name: string
   Stationcode: number
 }
 

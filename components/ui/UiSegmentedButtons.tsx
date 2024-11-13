@@ -5,25 +5,25 @@ import {
   ViewStyle,
   TouchableOpacityProps,
   TouchableOpacity,
-} from "react-native";
+} from 'react-native'
 
-import { UiText } from "./UiText";
-import { useTheme } from "@/hooks/useTheme";
-import { colors } from "@/constants/colors";
+import { UiText } from './UiText'
+import { useTheme } from '@/hooks/useTheme'
+import { colors } from '@/constants/colors'
 
 interface Button<T> {
-  label: string;
-  value: T;
+  label: string
+  value: T
 }
 
 interface Props<T> extends TouchableOpacityProps {
-  buttons: Button<T>[];
-  value?: T;
-  onValueChange?: (value: T) => void;
+  buttons: Button<T>[]
+  value?: T
+  onValueChange?: (value: T) => void
 }
 
 export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange }: Props<T>) {
-  const { colorsTheme } = useTheme();
+  const { colorsTheme } = useTheme()
 
   const baseStyle: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainerHigh,
@@ -31,28 +31,28 @@ export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange }: 
     paddingHorizontal: 14,
     flexGrow: 1,
     flexBasis: 100,
-  };
+  }
 
   const leftEdge: StyleProp<ViewStyle> = {
     borderTopLeftRadius: 4,
     borderBottomLeftRadius: 4,
-  };
+  }
 
   const rightEdge: StyleProp<ViewStyle> = {
     borderTopRightRadius: 4,
     borderBottomRightRadius: 4,
-  };
+  }
 
   const selectedStyle: StyleProp<ViewStyle> = {
     backgroundColor: colors.primary,
-  };
+  }
 
   return (
     <View style={[styles.container, style]}>
       {buttons.map((button, index) => {
-        const edgeStyle =
-          index === 0 ? leftEdge : index === buttons.length - 1 ? rightEdge : undefined;
-        const selected = button.value === value;
+        const edgeStyle
+          = index === 0 ? leftEdge : index === buttons.length - 1 ? rightEdge : undefined
+        const selected = button.value === value
 
         return (
           <TouchableOpacity
@@ -62,17 +62,17 @@ export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange }: 
           >
             <UiText style={styles.label}>{button.label}</UiText>
           </TouchableOpacity>
-        );
+        )
       })}
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   label: {
-    textAlign: "center",
+    textAlign: 'center',
   },
-});
+})

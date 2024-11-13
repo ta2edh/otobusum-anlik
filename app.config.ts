@@ -1,27 +1,27 @@
-import { ExpoConfig } from "expo/config";
+import { ExpoConfig } from 'expo/config'
 
 const config: ExpoConfig = {
-  name: "Otobüsüm Anlık",
-  slug: "otobusum-anlik",
-  version: "1.0.0",
-  orientation: "portrait",
-  icon: "./assets/icon.png",
-  scheme: "otobusum-anlik",
+  name: 'Otobüsüm Anlık',
+  slug: 'otobusum-anlik',
+  version: '1.0.0',
+  orientation: 'portrait',
+  icon: './assets/icon.png',
+  scheme: 'otobusum-anlik',
   splash: {
-    image: "./assets/splash.png",
-    resizeMode: "cover",
-    backgroundColor: "#0a0a0a",
+    image: './assets/splash.png',
+    resizeMode: 'cover',
+    backgroundColor: '#0a0a0a',
   },
   extra: {
     eas: {
-      projectId: "2c43cbc3-221c-4ca7-ac8c-ebfcc102426c"
-    }
+      projectId: '2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
+    },
   },
   ios: {
     supportsTablet: true,
   },
   androidStatusBar: {
-    barStyle: "light-content",
+    barStyle: 'light-content',
     translucent: true,
   },
   android: {
@@ -30,17 +30,17 @@ const config: ExpoConfig = {
         apiKey: process.env.EXPO_PUBLIC_MAP_API,
       },
     },
-    softwareKeyboardLayoutMode: "pan",
+    softwareKeyboardLayoutMode: 'pan',
     adaptiveIcon: {
-      foregroundImage: "./assets/adaptive-icon.png",
-      backgroundColor: "#0a0a0a",
+      foregroundImage: './assets/adaptive-icon.png',
+      backgroundColor: '#0a0a0a',
     },
-    package: "com.anonymous.otobusumanlik",
+    package: 'com.anonymous.otobusumanlik',
   },
-  plugins: ["expo-router", "expo-localization"],
+  plugins: ['expo-router', 'expo-localization'],
   experiments: {
     typedRoutes: true,
   },
-};
+}
 
-export default config;
+export default config

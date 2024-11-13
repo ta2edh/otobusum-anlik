@@ -1,15 +1,15 @@
-import { useTheme } from "@/hooks/useTheme";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useTheme } from '@/hooks/useTheme'
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { Stack, SplashScreen } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Stack, SplashScreen } from 'expo-router'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-const queryClient = new QueryClient();
-SplashScreen.preventAutoHideAsync();
+const queryClient = new QueryClient()
+SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -26,5 +26,5 @@ export default function RootLayout() {
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
-  );
+  )
 }

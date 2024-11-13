@@ -1,29 +1,29 @@
-import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { useQuery } from "@tanstack/react-query";
-import { useTheme } from "@/hooks/useTheme";
-import { getAnnouncements } from "@/api/getAnnouncements";
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { useQuery } from '@tanstack/react-query'
+import { useTheme } from '@/hooks/useTheme'
+import { getAnnouncements } from '@/api/getAnnouncements'
 
-import { UiButton } from "./ui/UiButton";
-import { UiText } from "./ui/UiText";
+import { UiButton } from './ui/UiButton'
+import { UiText } from './ui/UiText'
 
-import { memo, useRef } from "react";
-import { StyleSheet, ViewProps } from "react-native";
+import { memo, useRef } from 'react'
+import { StyleSheet, ViewProps } from 'react-native'
 
 interface Props extends ViewProps {
-  code: string;
+  code: string
 }
 
 export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
-  const bottomSheetModal = useRef<BottomSheetModal>(null);
+  const bottomSheetModal = useRef<BottomSheetModal>(null)
   const { bottomSheetStyle } = useTheme()
 
   const announcements = useQuery({
-    queryKey: ["announcements"],
+    queryKey: ['announcements'],
     queryFn: getAnnouncements,
     staleTime: 60_000 * 30,
-  });
+  })
 
-  const lineAnnouncement = announcements.data?.find((ann) => ann.HATKODU === props.code);
+  const lineAnnouncement = announcements.data?.find(ann => ann.HATKODU === props.code)
 
   return (
     <>
@@ -37,7 +37,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
       {!!lineAnnouncement && (
         <BottomSheetModal
           ref={bottomSheetModal}
-          snapPoints={["50%"]}
+          snapPoints={['50%']}
           enableDynamicSizing={false}
           {...bottomSheetStyle}
         >
@@ -48,7 +48,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
         </BottomSheetModal>
       )}
     </>
-  );
+  )
 })
 
 const styles = StyleSheet.create({

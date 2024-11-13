@@ -1,4 +1,4 @@
-import { Direction } from "@/types/departure"
+import { Direction } from '@/types/departure'
 
 export interface LineRoute {
   _id: number

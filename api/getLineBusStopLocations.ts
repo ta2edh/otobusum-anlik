@@ -1,46 +1,46 @@
-import { Direction } from "@/types/departure";
-import { getBody } from "./body";
+import { Direction } from '@/types/departure'
+import { getBody } from './body'
 
 export interface BusStopLocation {
-  hatKodu: string;
-  yon: Direction;
-  siraNo: string;
-  durakKodu: string;
-  durakAdi: string;
-  xKoordinati: string;
-  yKoordinati: string;
-  durakTipi: string;
-  isletmeBolge: string;
-  isletmeAltBolge: string;
-  ilceAdi: string;
+  hatKodu: string
+  yon: Direction
+  siraNo: string
+  durakKodu: string
+  durakAdi: string
+  xKoordinati: string
+  yKoordinati: string
+  durakTipi: string
+  isletmeBolge: string
+  isletmeAltBolge: string
+  ilceAdi: string
 }
 
 export async function getLineBusStopLocations(code: string) {
-  const body = getBody("hat_kodu", "DurakDetay_GYY", code);
+  const body = getBody('hat_kodu', 'DurakDetay_GYY', code)
 
-  const response = await fetch("https://api.ibb.gov.tr/iett/ibb/ibb.asmx?wsdl", {
-    method: "POST",
+  const response = await fetch('https://api.ibb.gov.tr/iett/ibb/ibb.asmx?wsdl', {
+    method: 'POST',
     headers: {
-      "Content-Type": "text/xml",
-      SOAPAction: '"http://tempuri.org/DurakDetay_GYY"',
+      'Content-Type': 'text/xml',
+      'SOAPAction': '"http://tempuri.org/DurakDetay_GYY"',
     },
     body,
-  });
+  })
 
-  const text = await response.text();
+  const text = await response.text()
   const datasetInnerContent = text
     .split(`<NewDataSet xmlns="">`)
     .at(-1)
     ?.split(`</NewDataSet>`)
-    .at(0);
+    .at(0)
 
-  const tableInnerContent = datasetInnerContent?.split(`<Table>`);
-  if (!tableInnerContent) return;
+  const tableInnerContent = datasetInnerContent?.split(`<Table>`)
+  if (!tableInnerContent) return
 
-  const results: BusStopLocation[] = [];
+  const results: BusStopLocation[] = []
   for (let index = 1; index < tableInnerContent.length; index++) {
-    const itemInnerContent = tableInnerContent[index]?.slice(0, -8);
-    if (!itemInnerContent) continue;
+    const itemInnerContent = tableInnerContent[index]?.slice(0, -8)
+    if (!itemInnerContent) continue
 
     results.push({
       hatKodu: itemInnerContent.split(`<HATKODU>`).at(-1)?.split(`</HATKODU>`).at(0)!,
@@ -62,8 +62,8 @@ export async function getLineBusStopLocations(code: string) {
         ?.split(`</ISLETMEALTBOLGE>`)
         .at(0)!,
       ilceAdi: itemInnerContent.split(`<ILCEADI>`).at(-1)?.split(`</ILCEADI>`).at(0)!,
-    });
+    })
   }
 
-  return results;
+  return results
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @stylistic/no-tabs */
 export const getBody = (key: string, outerKey: string, content: string) => `
 <soap:Envelope
 	xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -8,4 +9,4 @@ export const getBody = (key: string, outerKey: string, content: string) => `
 		</${outerKey}>
 	</soap:Body>
 </soap:Envelope>
-`;
+`
