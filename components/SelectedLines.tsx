@@ -9,7 +9,6 @@ import {
   ViewStyle,
   View,
   useWindowDimensions,
-  useColorScheme,
   ListRenderItem,
   TextStyle,
 } from 'react-native'
@@ -25,8 +24,8 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
-import { hexFromArgb } from '@material/material-color-utilities'
 import { useCallback } from 'react'
+import { useTheme } from '@/hooks/useTheme'
 
 interface Props {
   code: string
@@ -34,8 +33,6 @@ interface Props {
 
 export function SelectedLine(props: Props) {
   const { width } = useWindowDimensions()
-  const isDark = useColorScheme() === 'dark'
-
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const deleteLine = useLines(useShallow(state => state.deleteLine))
   const {
@@ -46,11 +43,10 @@ export function SelectedLine(props: Props) {
 
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const route = selectedRoute ? findRouteFromCode(selectedRoute) : undefined
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
-
-  const scheme = isDark ? lineTheme!.schemes.dark : lineTheme!.schemes.light
 
   const handleSwitchRoute = () => {
     if (!selectedRoute) return
@@ -62,20 +58,20 @@ export function SelectedLine(props: Props) {
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: hexFromArgb(scheme.primary),
+    backgroundColor: getSchemeColorHex('primary'),
     maxWidth: width * 0.8,
   }
 
   const buttonContainerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: hexFromArgb(scheme.secondaryContainer),
+    backgroundColor: getSchemeColorHex('secondaryContainer'),
   }
 
   const textContainerStyle: StyleProp<TextStyle> = {
-    color: hexFromArgb(scheme.onSecondaryContainer),
+    color: getSchemeColorHex('onSecondaryContainer'),
   }
 
   const textStyle: StyleProp<TextStyle> = {
-    color: hexFromArgb(scheme.onPrimary),
+    color: getSchemeColorHex('onPrimary'),
   }
 
   return (
@@ -86,7 +82,7 @@ export function SelectedLine(props: Props) {
       key={props.code}
     >
       <View style={styles.titleContainer}>
-        <UiText style={{ fontWeight: 'bold', color: hexFromArgb(scheme.onPrimary) }}>
+        <UiText style={{ fontWeight: 'bold', color: getSchemeColorHex('onPrimary') }}>
           {props.code}
         </UiText>
 

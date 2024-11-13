@@ -5,7 +5,7 @@ import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
 
 export default function TabLayout() {
-  const { theme } = useTheme()
+  const { colorsTheme } = useTheme()
 
   const getName = (n: string, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
 
@@ -14,8 +14,8 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.surfaceContainerLow,
-          borderColor: theme.surfaceContainer,
+          backgroundColor: colorsTheme.surfaceContainerLow,
+          borderColor: colorsTheme.surfaceContainer,
         },
         tabBarActiveTintColor: colors.primary,
         tabBarLabelStyle: {
@@ -24,14 +24,14 @@ export default function TabLayout() {
         tabBarShowLabel: false,
         // unmountOnBlur: true,
       }}
-      sceneContainerStyle={{ backgroundColor: theme.surfaceContainerLow }}
+      sceneContainerStyle={{ backgroundColor: colorsTheme.surfaceContainerLow }}
     >
       <Tabs.Screen
         name="index"
         options={{
           tabBarLabel: i18n.t('map'),
           tabBarIcon: ({ focused }) => (
-            <Ionicons name={getName('map', focused)} size={24} color={theme.color} />
+            <Ionicons name={getName('map', focused)} size={24} color={colorsTheme.color} />
           ),
         }}
       />
@@ -40,7 +40,7 @@ export default function TabLayout() {
         options={{
           tabBarLabel: i18n.t('timetable'),
           tabBarIcon: ({ focused }) => (
-            <Ionicons name={getName('time', focused)} size={24} color={theme.color} />
+            <Ionicons name={getName('time', focused)} size={24} color={colorsTheme.color} />
           ),
         }}
       />

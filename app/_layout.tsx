@@ -9,7 +9,7 @@ const queryClient = new QueryClient()
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const { theme } = useTheme()
+  const { colorsTheme } = useTheme()
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -18,7 +18,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
-              navigationBarColor: theme.surfaceContainerLow,
+              navigationBarColor: colorsTheme.surfaceContainerLow,
             }}
           >
             <Stack.Screen name="(tabs)" />

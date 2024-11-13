@@ -18,9 +18,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 export default function TimetableScreen() {
-  const { theme } = useTheme()
+  const { colorsTheme } = useTheme()
   const insets = useSafeAreaInsets()
   const [linesHeight, setLinesHeight] = useState(0)
+
   const keys = useLines(useShallow(state => Object.keys(state.lines)))
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
@@ -38,7 +39,7 @@ export default function TimetableScreen() {
     zIndex: 10,
     left: 0,
     right: 0,
-    backgroundColor: theme.surfaceContainerLow,
+    backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
   if (keys.length < 1) {
