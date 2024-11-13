@@ -9,6 +9,7 @@ import { useState, memo } from 'react'
 import { useLines } from '@/stores/lines'
 import { useShallow } from 'zustand/react/shallow'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { colors } from '@/constants/colors'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
@@ -61,5 +62,6 @@ const styles = StyleSheet.create({
     padding: 9,
     minWidth: 70,
     textAlign: 'center',
+    backgroundColor: colors.primary,
   },
 })
