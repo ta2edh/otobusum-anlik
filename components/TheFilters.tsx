@@ -24,8 +24,11 @@ export function TheFilters({
   })
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
-    setHeight(event.nativeEvent.layout.height)
-  }, [])
+    // Idk if this is a good idea.
+    if (height <= event.nativeEvent.layout.height) {
+      setHeight(event.nativeEvent.layout.height)
+    }
+  }, [height])
 
   return (
     <Animated.View onLayout={onLayout} style={[animatedStyle, styles.filters]}>
