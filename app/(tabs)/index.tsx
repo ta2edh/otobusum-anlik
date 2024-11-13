@@ -13,13 +13,12 @@ import { useLines } from "@/stores/lines";
 
 import { SplashScreen } from "expo-router";
 import { useCallback, useEffect, useRef } from "react";
+import { useSettings } from "@/stores/settings";
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null);
-
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
-  const updateInitialMapLocation = useLines((state) => state.updateInitialMapLocation);
 
   useEffect(() => {
     const unsub = useLines.subscribe(
@@ -46,16 +45,16 @@ export default function HomeScreen() {
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
-      center: useLines.getState().initialMapLocation,
+      center: useSettings.getState().initialMapLocation,
       zoom: 13,
       heading: 0,
       pitch: 0,
     });
   }, []);
 
-  const handleRegionChangeComplete = (props: Region, details: Details) => {
+  const handleRegionChangeComplete = (region: Region, details: Details) => {
     if (!details.isGesture) return;
-    updateInitialMapLocation({ latitude: props.latitude, longitude: props.longitude });
+    useSettings.setState(() => ({ initialMapLocation: { ...region } }));
   };
 
   const handleMapLoaded = () => {

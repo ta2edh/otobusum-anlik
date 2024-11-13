@@ -3,7 +3,6 @@ import { subscribeWithSelector, persist, createJSONStorage } from "zustand/middl
 import { getLineBusLocations, Location } from "@/api/getLineBusLocations";
 import { createColor } from "@/utils/createColor";
 import { ToastAndroid } from "react-native";
-import { LatLng } from "react-native-maps";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFilters } from "./filters";
@@ -11,10 +10,8 @@ import { SearchResult } from "@/api/getSearchResults";
 import { Theme } from "@material/material-color-utilities";
 
 export interface LinesStore {
-  initialMapLocation?: LatLng;
   lines: Record<string, Location[]>;
   lineTheme: Record<string, Theme>;
-  updateInitialMapLocation: (newLocation: LatLng) => void;
   addLine: (code: SearchResult) => Promise<void>;
   deleteLine: (code: string) => void;
   updateLine: (code: string, newLine: Location[]) => void;
@@ -24,11 +21,8 @@ export const useLines = create(
   subscribeWithSelector(
     persist<LinesStore>(
       (set, get) => ({
-        initialMapLocation: undefined, // TODO: move this to different store. (Maybe something called settings)
         lines: {},
         lineTheme: {},
-        updateInitialMapLocation: (newLocation: LatLng) =>
-          set((state) => ({ ...state, initialMapLocation: newLocation })),
         addLine: async (searchResult) => {
           if (Object.keys(get().lines).length > 3) {
             ToastAndroid.show("Only 4 selections are allowed", ToastAndroid.SHORT);
