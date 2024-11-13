@@ -9,6 +9,9 @@ import {
   ViewStyle,
   View,
   useWindowDimensions,
+  useColorScheme,
+  ListRenderItem,
+  TextStyle,
 } from "react-native";
 import Animated, {
   FadeInLeft,
@@ -22,6 +25,8 @@ import { SelectedLineAnnouncements } from "./SelectedLineAnnouncements";
 import { SelectedLineRoutes } from "./SelectedLineRoutes";
 import { useRouteFilter } from "@/hooks/useRouteFilter";
 import { UiActivityIndicator } from "./ui/UiActivityIndicator";
+import { hexFromArgb } from "@material/material-color-utilities";
+import { useCallback } from "react";
 
 interface Props {
   code: string;
@@ -29,6 +34,7 @@ interface Props {
 
 export function SelectedLine(props: Props) {
   const { width } = useWindowDimensions();
+  const isDark = useColorScheme() === "dark";
 
   const setRoute = useFilters(useShallow((state) => state.setRoute));
   const deleteLine = useLines(useShallow((state) => state.deleteLine));
@@ -38,24 +44,38 @@ export function SelectedLine(props: Props) {
     query: { isPending },
   } = useRouteFilter(props.code);
 
-  const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
-  const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
+  const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+  const lineTheme = useLines(useShallow((state) => state.lineTheme[props.code]));
 
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined;
+  const route = selectedRoute ? findRouteFromCode(selectedRoute) : undefined;
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split("-") ?? ["", ""] ?? ["", ""];
 
-  const handleSwitchRoute = () => {
-    if (!selectedRouteCode) return;
+  const scheme = isDark ? lineTheme!.schemes.dark : lineTheme!.schemes.light;
 
-    const otherDirection = findOtherRouteDirection(selectedRouteCode);
+  const handleSwitchRoute = () => {
+    if (!selectedRoute) return;
+
+    const otherDirection = findOtherRouteDirection(selectedRoute);
     if (!otherDirection) return;
 
     setRoute(props.code, otherDirection.route_code);
   };
 
   const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: lineColor,
+    backgroundColor: hexFromArgb(scheme.primary),
     maxWidth: width * 0.8,
+  };
+
+  const buttonContainerStyle: StyleProp<ViewStyle> = {
+    backgroundColor: hexFromArgb(scheme.secondaryContainer),
+  };
+
+  const textContainerStyle: StyleProp<TextStyle> = {
+    color: hexFromArgb(scheme.onSecondaryContainer),
+  };
+
+  const textStyle: StyleProp<TextStyle> = {
+    color: hexFromArgb(scheme.onPrimary),
   };
 
   return (
@@ -66,14 +86,19 @@ export function SelectedLine(props: Props) {
       key={props.code}
     >
       <View style={styles.titleContainer}>
-        <UiText style={{ fontWeight: "bold" }}>{props.code}</UiText>
+        <UiText style={{ fontWeight: "bold", color: hexFromArgb(scheme.onPrimary) }}>
+          {props.code}
+        </UiText>
 
         <View style={styles.titleContainer}>
-          <SelectedLineAnnouncements code={props.code} />
+          <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
-          <UiButton onPress={() => deleteLine(props.code)} style={styles.lineButton}>
-            <Ionicons name="trash-outline" size={16} color="white" />
-          </UiButton>
+          <UiButton
+            onPress={() => deleteLine(props.code)}
+            style={buttonContainerStyle}
+            icon="trash-outline"
+            textStyle={textContainerStyle}
+          />
         </View>
       </View>
 
@@ -82,19 +107,26 @@ export function SelectedLine(props: Props) {
       ) : (
         <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
           <View style={styles.lineButtonsContainer}>
-            <UiButton onPress={handleSwitchRoute} style={styles.lineButton}>
-              <Ionicons name="refresh" size={16} color="white" />
-            </UiButton>
+            <UiButton
+              onPress={handleSwitchRoute}
+              icon="refresh"
+              style={buttonContainerStyle}
+              textStyle={textContainerStyle}
+            />
 
-            <SelectedLineRoutes code={props.code} />
+            <SelectedLineRoutes
+              code={props.code}
+              style={buttonContainerStyle}
+              textStyle={textContainerStyle}
+            />
           </View>
 
           <View style={styles.lineButtonsContainer}>
-            <UiText style={styles.directionText} numberOfLines={1}>
+            <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
               {leftTitle}
             </UiText>
-            <Ionicons name="arrow-forward" size={18} color="rgba(0, 0, 0, 0.5)" />
-            <UiText style={styles.directionText} numberOfLines={1}>
+            <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
+            <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
               {rightTitle}
             </UiText>
           </View>
@@ -108,11 +140,14 @@ export function SelectedLines({
   style,
   ...rest
 }: Omit<FlatListPropsWithLayout<string>, "data" | "renderItem">) {
-  const keys = useLines(useShallow((state) => Object.keys(state.lines)));
+  const keys = useLines(useShallow((state) => Object.keys(state.lines))) || [];
   const { width } = useWindowDimensions();
-  const lineKeys = keys || [];
 
-  if (lineKeys.length < 1) {
+  const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
+    return <SelectedLine key={code} code={code} />;
+  }, []);
+
+  if (keys.length < 1) {
     return null;
   }
 
@@ -121,12 +156,12 @@ export function SelectedLines({
       {...rest}
       layout={LinearTransition}
       contentContainerStyle={styles.codes}
-      data={lineKeys}
-      renderItem={({ item: code }) => <SelectedLine key={code} code={code} />}
-      horizontal
+      data={keys}
+      renderItem={renderItem}
       snapToInterval={width * 0.8 + 8}
       snapToAlignment="center"
       style={style}
+      horizontal
     />
   );
 }
@@ -160,11 +195,6 @@ const styles = StyleSheet.create({
     flexBasis: 0,
     flexGrow: 1,
     fontWeight: "bold",
-    opacity: 0.4,
-    color: "black",
-  },
-  lineButton: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   routeContainer: {
     gap: 8,

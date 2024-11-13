@@ -8,11 +8,12 @@ import { LatLng } from "react-native-maps";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFilters } from "./filters";
 import { SearchResult } from "@/api/getSearchResults";
+import { Theme } from "@material/material-color-utilities";
 
 export interface LinesStore {
   initialMapLocation?: LatLng;
   lines: Record<string, Location[]>;
-  lineColors: Record<string, string>;
+  lineTheme: Record<string, Theme>;
   updateInitialMapLocation: (newLocation: LatLng) => void;
   addLine: (code: SearchResult) => Promise<void>;
   deleteLine: (code: string) => void;
@@ -25,7 +26,7 @@ export const useLines = create(
       (set, get) => ({
         initialMapLocation: undefined, // TODO: move this to different store. (Maybe something called settings)
         lines: {},
-        lineColors: {},
+        lineTheme: {},
         updateInitialMapLocation: (newLocation: LatLng) =>
           set((state) => ({ ...state, initialMapLocation: newLocation })),
         addLine: async (searchResult) => {
@@ -53,8 +54,8 @@ export const useLines = create(
                 ...state.lines,
                 [searchResult.Code]: response,
               },
-              lineColors: {
-                ...state.lineColors,
+              lineTheme: {
+                ...state.lineTheme,
                 [searchResult.Code]: newColor,
               },
             };
@@ -63,14 +64,14 @@ export const useLines = create(
         deleteLine: (code) =>
           set((state) => {
             delete state.lines[code];
-            delete state.lineColors[code];
+            delete state.lineTheme[code];
 
             return {
               lines: {
                 ...state.lines,
               },
-              lineColors: {
-                ...state.lineColors,
+              lineTheme: {
+                ...state.lineTheme,
               },
             };
           }),

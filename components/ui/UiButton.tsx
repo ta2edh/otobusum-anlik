@@ -1,75 +1,61 @@
 import {
   StyleProp,
   StyleSheet,
+  Text,
+  TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
-  View,
   ViewStyle,
 } from "react-native";
-import { UiText } from "./UiText";
 import { UiActivityIndicator } from "./UiActivityIndicator";
+import { Ionicons } from "@expo/vector-icons";
 
-interface Props extends TouchableOpacityProps {
+export interface UiButtonProps extends TouchableOpacityProps {
   title?: string;
   isLoading?: boolean;
-  containerStyle?: StyleProp<ViewStyle>;
-  size?: "sm" | "md";
-  primary?: string;
+  icon?: keyof typeof Ionicons.glyphMap;
+  disabled?: boolean;
+  textStyle?: StyleProp<TextStyle>;
 }
 
-export function UiButton({ style, ...rest }: Props) {
-  const fontSize = rest.size === "sm" ? 10 : 14;
+export function UiButton({ style, ...props }: UiButtonProps) {
+  const dynamicStyle: StyleProp<ViewStyle> = {
+    opacity: props.disabled ? 0.4 : 1,
+  };
 
   return (
-    <View style={[styles.container, rest.containerStyle]}>
-      <TouchableOpacity
-        style={[
-          styles.button,
-          style,
-          {
-            opacity: rest.disabled ? 0.4 : 1,
-          },
-        ]}
-        {...rest}
-      >
-        {rest.isLoading && <UiActivityIndicator />}
+    <TouchableOpacity style={[styles.button, dynamicStyle, style]} {...props}>
+      {props.isLoading ? (
+        <UiActivityIndicator size={18} />
+      ) : props.icon ? (
+        <Ionicons name={props.icon} size={18} color="white" style={props.textStyle} />
+      ) : null}
 
-        {!!rest.title && (
-          <UiText
-            style={{
-              color: "white",
-              fontSize,
-              textAlign: "center",
-              textAlignVertical: "center",
-              flexShrink: 1,
-              flexGrow: 1,
-            }}
-            numberOfLines={1}
-          >
-            {rest.title}
-          </UiText>
-        )}
-
-        <View>{rest.children}</View>
-      </TouchableOpacity>
-    </View>
+      {props.title && (
+        <Text style={[styles.title, props.textStyle]} numberOfLines={1}>
+          {props.title}
+        </Text>
+      )}
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexShrink: 0,
-  },
   button: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 999,
-    flexGrow: 1,
-    flexShrink: 0,
     gap: 4,
-    padding: 10,
-    minWidth: 50,
+    minWidth: 48,
+    padding: 8,
+    paddingHorizontal: 12,
+    flexShrink: 1,
+  },
+  title: {
+    color: "white",
+    textAlign: "center",
+    textAlignVertical: "center",
   },
 });

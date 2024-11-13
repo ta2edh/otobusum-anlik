@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { memo, useCallback, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { UiButton } from "./ui/UiButton";
+import { UiButton, UiButtonProps } from "./ui/UiButton";
 import { UiText } from "./ui/UiText";
 
 import { BottomSheetFlashList, BottomSheetModal } from "@gorhom/bottom-sheet";
@@ -19,7 +19,8 @@ import { useTheme } from "@/hooks/useTheme";
 import { colors } from "@/constants/colors";
 import { i18n } from "@/translations/i18n";
 
-interface Props extends TouchableOpacityProps {
+type MergedProps = TouchableOpacityProps & UiButtonProps
+interface Props extends MergedProps {
   code: string;
 }
 
@@ -95,9 +96,9 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
     <>
       <UiButton
         title={route?.route_long_name}
-        style={styles.button}
+        style={props.style}
         onPress={() => bottomSheetModal.current?.present()}
-        containerStyle={{ flexShrink: 1 }}
+        {...props}
       />
 
       <BottomSheetModal
@@ -122,9 +123,6 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
 });
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
   item: {
     flexDirection: "row",
     alignItems: "center",

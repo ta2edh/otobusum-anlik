@@ -1,5 +1,4 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useTheme } from "@/hooks/useTheme";
 import { getAnnouncements } from "@/api/getAnnouncements";
@@ -8,9 +7,9 @@ import { UiButton } from "./ui/UiButton";
 import { UiText } from "./ui/UiText";
 
 import { memo, useRef } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, ViewProps } from "react-native";
 
-interface Props {
+interface Props extends ViewProps {
   code: string;
 }
 
@@ -30,11 +29,10 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
     <>
       <UiButton
         onPress={() => bottomSheetModal.current?.present()}
-        style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
         disabled={!lineAnnouncement}
-      >
-        <Ionicons name="megaphone-outline" size={16} color="white" />
-      </UiButton>
+        style={props.style}
+        icon="megaphone-outline"
+      />
 
       {!!lineAnnouncement && (
         <BottomSheetModal

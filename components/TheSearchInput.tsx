@@ -49,7 +49,8 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         isLoading={isLoading}
         disabled={queryDisabled}
         onPress={handleSearch}
-        style={{ backgroundColor: colors.primary, minWidth: 80 }}
+        style={{ backgroundColor: colors.primary }}
+        icon="search"
       />
     </Animated.View>
   );
@@ -58,7 +59,7 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "stretch",
     gap: 4,
     paddingHorizontal: 8,
   },

@@ -6,19 +6,21 @@ import { useLines } from "@/stores/lines";
 import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
 
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import { useShallow } from "zustand/react/shallow";
 import { UiText } from "../ui/UiText";
+import { hexFromArgb } from "@material/material-color-utilities";
 
 interface Props {
   code: string;
 }
 
-// Rerenders when lines are updated, should be optimized later.
 export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props) {
-  const lineColor = useLines(useShallow((state) => state.lineColors[props.code]));
+  const lineTheme = useLines(useShallow((state) => state.lineTheme[props.code]));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
+
+  const isDark = useColorScheme() === 'dark';
   const { theme } = useTheme();
   const { getRouteDirection, getDefaultRoute } = useRouteFilter(props.code);
 
@@ -27,11 +29,6 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     queryFn: () => getLineBusStopLocations(props.code),
     staleTime: 60_000 * 5, // 5 Minutes
   });
-
-  const busStopStyle: StyleProp<ViewStyle> = {
-    backgroundColor: theme.color,
-    borderColor: theme.surfaceContainer,
-  };
 
   const calloutContainerBackground: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainerLow,
@@ -44,6 +41,13 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   const route = selectedRoute || getDefaultRoute()?.route_code;
   const direction = route ? getRouteDirection(route) : undefined;
   const busStops = direction ? query.data.filter((stop) => stop.yon === direction) : query.data;
+  
+  const scheme = isDark ? lineTheme?.schemes.dark : lineTheme?.schemes.light
+  const backgroundColor = scheme ? hexFromArgb(scheme.primary) : undefined
+
+  const busStopStyle: StyleProp<ViewStyle> = {
+    borderColor: hexFromArgb(scheme?.outlineVariant!),
+  };
 
   return (
     <>
@@ -54,11 +58,10 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
             latitude: parseFloat(stop.yKoordinati),
             longitude: parseFloat(stop.xKoordinati),
           }}
-          pinColor={lineColor}
-          tracksViewChanges={false}
           tracksInfoWindowChanges={false}
+          tracksViewChanges={false}
         >
-          <View style={[styles.busStop, busStopStyle, { backgroundColor: lineColor }]} />
+          <View style={[styles.busStop, busStopStyle, { backgroundColor }]} />
 
           <Callout tooltip>
             <View style={[styles.calloutContainer, calloutContainerBackground]}>
@@ -87,9 +90,9 @@ export function BusStopMarkers() {
 
 const styles = StyleSheet.create({
   busStop: {
-    width: 16,
-    height: 16,
-    borderWidth: 2,
+    width: 12,
+    height: 12,
+    borderWidth: 1,
     borderRadius: 1000,
   },
   calloutContainer: {

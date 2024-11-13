@@ -4,7 +4,6 @@ import {
   TouchableOpacityProps,
 } from "react-native";
 import { UiText } from "./ui/UiText";
-import { colors } from "@/constants/colors";
 import { SearchResult } from "@/api/getSearchResults";
 import { useState, memo } from "react";
 import { useLines } from "@/stores/lines";
@@ -19,10 +18,9 @@ interface Props extends TouchableOpacityProps {
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false);
 
-  const lineColor = useLines(useShallow(state => state.lineColors[props.item.Code]))
+  const lineColor = useLines(useShallow(state => state.lineTheme[props.item.Code]))
   const addLine = useLines((state) => state.addLine);
 
-  const backgroundColor = lineColor || colors.primary;
   const isInLines = lineColor !== undefined;
 
   const handlePress = async () => {
@@ -42,7 +40,7 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
       disabled={isInLines}
       onPress={handlePress}
     >
-      <UiText style={[styles.renderCode, { backgroundColor }]}>
+      <UiText style={[styles.renderCode]}>
         {isPending ? <UiActivityIndicator /> : props.item.Code}
       </UiText>
       <UiText>{props.item.Name}</UiText>

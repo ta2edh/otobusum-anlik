@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, View, StyleProp, ViewStyle, useColorScheme } from "react-native";
 import { Callout, MapMarker, Marker } from "react-native-maps";
 import { useShallow } from "zustand/react/shallow";
 import { useRef } from "react";
@@ -8,11 +8,18 @@ import { UiText } from "@/components/ui/UiText";
 import { useLines } from "@/stores/lines";
 import { Location } from "@/api/getLineBusLocations";
 import { useTheme } from "@/hooks/useTheme";
+import { hexFromArgb } from "@material/material-color-utilities";
+import { Ionicons } from "@expo/vector-icons";
 
 export function LineBusMarker({ location, lineCode }: { lineCode: string; location: Location }) {
   const markerRef = useRef<MapMarker>(null);
-  const lineColor = useLines(useShallow((state) => state.lineColors[lineCode]));
+  const lineTheme = useLines(useShallow((state) => state.lineTheme[lineCode]));
+  const isDark = useColorScheme() === 'dark';
   const { theme } = useTheme();
+
+  const scheme = isDark ? lineTheme?.schemes.dark : lineTheme?.schemes.light
+  const backgroundColor = scheme ? hexFromArgb(scheme.primaryContainer) : undefined
+  const textColor = scheme ? hexFromArgb(scheme.onPrimaryContainer) : undefined
 
   const calloutStyle: StyleProp<ViewStyle> = {
     backgroundColor: theme.surfaceContainer,
@@ -29,19 +36,11 @@ export function LineBusMarker({ location, lineCode }: { lineCode: string; locati
         latitude: parseFloat(location.enlem),
         longitude: parseFloat(location.boylam),
       }}
-      pinColor={lineColor}
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
     >
-      <View style={[styles.iconContainer, { backgroundColor: lineColor }]}>
-        <Image
-          fadeDuration={0}
-          source={require("@/assets/bus.png")}
-          onLoad={() => {
-            markerRef.current?.redraw();
-          }}
-          style={styles.icon}
-        />
+      <View style={[styles.iconContainer, { backgroundColor }]}>
+        <Ionicons name="bus" color={textColor} />
       </View>
 
       <Callout alphaHitTest tooltip>
