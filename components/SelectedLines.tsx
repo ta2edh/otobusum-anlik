@@ -24,15 +24,16 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
-import { useCallback } from 'react'
+import { useCallback, memo } from 'react'
 import { useTheme } from '@/hooks/useTheme'
 
 interface Props {
   code: string
 }
 
-export function SelectedLine(props: Props) {
+export const SelectedLine = memo(function SelectedLine(props: Props) {
   const { width } = useWindowDimensions()
+
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const deleteLine = useLines(useShallow(state => state.deleteLine))
   const {
@@ -139,7 +140,7 @@ export function SelectedLine(props: Props) {
           )}
     </Animated.View>
   )
-}
+})
 
 export function SelectedLines({
   style,

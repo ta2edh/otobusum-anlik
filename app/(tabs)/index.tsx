@@ -9,39 +9,16 @@ import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { TheSearchSheet } from '@/components/TheSearchSheet'
 import { BusStopMarkers } from '@/components/markers/BusStopMarkers'
 import { LineMarkers } from '@/components/markers/LineMarkers'
-import { useLines } from '@/stores/lines'
 
 import { SplashScreen } from 'expo-router'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { useSettings } from '@/stores/settings'
+import { MapContext } from '@/hooks/useMap'
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null)
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme()
-
-  useEffect(() => {
-    const unsub = useLines.subscribe(
-      state => state.lines,
-      (newLines, oldLines) => {
-        const newKeys = Object.keys(newLines)
-        const oldKeys = Object.keys(oldLines)
-
-        const newLineKey = newKeys.filter(item => !oldKeys.includes(item)).at(0)
-        if (!newLineKey) return
-        const locations = newLines[newLineKey]?.map(item => ({
-          latitude: parseFloat(item.enlem),
-          longitude: parseFloat(item.boylam),
-        }))
-
-        map.current?.fitToCoordinates(locations, {
-          edgePadding: { bottom: 100, top: 10, right: 50, left: 50 },
-        })
-      },
-    )
-
-    return unsub
-  }, [])
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -83,8 +60,10 @@ export default function HomeScreen() {
         onMapReady={handleReady}
         showsIndoors={false}
       >
-        <LineMarkers />
-        <BusStopMarkers />
+        <MapContext.Provider value={map}>
+          <LineMarkers />
+          <BusStopMarkers />
+        </MapContext.Provider>
       </MapView>
 
       <TheSearchSheet />

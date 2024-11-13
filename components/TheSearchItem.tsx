@@ -10,14 +10,15 @@ import { useLines } from '@/stores/lines'
 import { useShallow } from 'zustand/react/shallow'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { colors } from '@/constants/colors'
+import { useBottomSheet } from '@gorhom/bottom-sheet'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
-  onPress?: () => void
 }
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false)
+  const { collapse } = useBottomSheet()
 
   const lineColor = useLines(useShallow(state => state.lineTheme[props.item.Code]))
   const addLine = useLines(state => state.addLine)
@@ -25,11 +26,11 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
   const isInLines = lineColor !== undefined
 
   const handlePress = async () => {
-    props.onPress?.()
     setIsPending(true)
 
     try {
       await addLine(props.item)
+      collapse()
     }
     finally {
       setIsPending(false)

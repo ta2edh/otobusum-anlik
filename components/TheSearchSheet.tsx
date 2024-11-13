@@ -55,10 +55,6 @@ export function TheSearchSheet() {
     [mutation.data],
   )
 
-  const collapseSheet = useCallback(() => {
-    bottomSheetRef.current?.collapse()
-  }, [])
-
   const emptyItem = useCallback(() => {
     if (mutation.data) {
       return <UiText style={styles.empty}>{i18n.t('emptySearch')}</UiText>
@@ -72,7 +68,7 @@ export function TheSearchSheet() {
   }, [mutation.data, mutation.isPending])
 
   const renderItem = ({ item }: { item: SearchResult }) => {
-    return <TheSearchItem item={item} onPress={collapseSheet} />
+    return <TheSearchItem item={item} />
   }
 
   return (

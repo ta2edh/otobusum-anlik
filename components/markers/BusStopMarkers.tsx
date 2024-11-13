@@ -1,13 +1,14 @@
 import { getLineBusStopLocations } from '@/api/getLineBusStopLocations'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { useTheme } from '@/hooks/useTheme'
 import { useFilters } from '@/stores/filters'
+import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { useQuery } from '@tanstack/react-query'
-import { memo } from 'react'
+import { useMap } from '@/hooks/useMap'
+import { memo, useEffect } from 'react'
 
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { Callout, Marker } from 'react-native-maps'
+import { Callout, LatLng, Marker } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 import { UiText } from '../ui/UiText'
 
@@ -19,21 +20,42 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
+  const map = useMap()
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
   const { getRouteDirection, getDefaultRoute } = useRouteFilter(props.code)
 
   const query = useQuery({
     queryKey: [`${props.code}-stop-locations`],
     queryFn: () => getLineBusStopLocations(props.code),
-    staleTime: 60_000 * 5, // 5 Minutes
+    staleTime: 60_000 * 30,
   })
 
-  const calloutContainerBackground: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
-  }
+  useEffect(() => {
+    if (!query.data || query.data.length < 1) {
+      return
+    }
+
+    const locs: LatLng[] = query.data?.map(stop => ({
+      latitude: parseFloat(stop.yKoordinati),
+      longitude: parseFloat(stop.xKoordinati),
+    }))
+
+    map.current?.fitToCoordinates(locs, {
+      edgePadding: {
+        top: 20,
+        bottom: 200,
+        left: 20,
+        right: 20,
+      },
+    })
+  }, [query.data, map])
 
   if (!query.data) {
     return null
+  }
+
+  const calloutContainerBackground: StyleProp<ViewStyle> = {
+    backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
   const route = selectedRoute || getDefaultRoute()?.route_code
