@@ -59,7 +59,7 @@ export function SelectedLine(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    maxWidth: width * 0.8,
+    width: width * 0.8,
   }
 
   const buttonContainerStyle: StyleProp<ViewStyle> = {
@@ -82,7 +82,14 @@ export function SelectedLine(props: Props) {
       key={props.code}
     >
       <View style={styles.titleContainer}>
-        <UiText style={{ fontWeight: 'bold', color: getSchemeColorHex('onPrimary') }}>
+        <UiText
+          style={{
+            fontWeight: 'bold',
+            fontSize: 24,
+            letterSpacing: 2,
+            color: getSchemeColorHex('onPrimary'),
+          }}
+        >
           {props.code}
         </UiText>
 
@@ -114,12 +121,12 @@ export function SelectedLine(props: Props) {
 
                 <SelectedLineRoutes
                   code={props.code}
-                  style={buttonContainerStyle}
+                  style={[buttonContainerStyle, { flexGrow: 1 }]}
                   textStyle={textContainerStyle}
                 />
               </View>
 
-              <View style={styles.lineButtonsContainer}>
+              <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
                 <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
                   {leftTitle}
                 </UiText>
@@ -156,7 +163,7 @@ export function SelectedLines({
       contentContainerStyle={styles.codes}
       data={keys}
       renderItem={renderItem}
-      snapToInterval={width * 0.8 + 8}
+      snapToInterval={width * 0.8 + 4 + 4}
       snapToAlignment="center"
       style={style}
       horizontal
@@ -193,6 +200,7 @@ const styles = StyleSheet.create({
     flexBasis: 0,
     flexGrow: 1,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   routeContainer: {
     gap: 8,
