@@ -6,11 +6,10 @@ import { useLines } from "@/stores/lines";
 import { useQuery } from "@tanstack/react-query";
 import { memo } from "react";
 
-import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from "react-native";
+import { StyleProp, StyleSheet, View, ViewStyle } from "react-native";
 import { Callout, Marker } from "react-native-maps";
 import { useShallow } from "zustand/react/shallow";
 import { UiText } from "../ui/UiText";
-import { hexFromArgb } from "@material/material-color-utilities";
 
 interface Props {
   code: string;
@@ -20,8 +19,7 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   const lineTheme = useLines(useShallow((state) => state.lineTheme[props.code]));
   const selectedRoute = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
 
-  const isDark = useColorScheme() === 'dark';
-  const { theme } = useTheme();
+  const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme);
   const { getRouteDirection, getDefaultRoute } = useRouteFilter(props.code);
 
   const query = useQuery({
@@ -31,7 +29,7 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   });
 
   const calloutContainerBackground: StyleProp<ViewStyle> = {
-    backgroundColor: theme.surfaceContainerLow,
+    backgroundColor: colorsTheme.surfaceContainerLow,
   };
 
   if (!query.data) {
@@ -42,11 +40,10 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
   const direction = route ? getRouteDirection(route) : undefined;
   const busStops = direction ? query.data.filter((stop) => stop.yon === direction) : query.data;
   
-  const scheme = isDark ? lineTheme?.schemes.dark : lineTheme?.schemes.light
-  const backgroundColor = scheme ? hexFromArgb(scheme.primary) : undefined
+  const backgroundColor = getSchemeColorHex("primary")
 
   const busStopStyle: StyleProp<ViewStyle> = {
-    borderColor: hexFromArgb(scheme?.outlineVariant!),
+    borderColor: getSchemeColorHex("outlineVariant"),
   };
 
   return (

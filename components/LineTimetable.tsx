@@ -13,6 +13,7 @@ import { useLines } from "@/stores/lines";
 import { useFilters } from "@/stores/filters";
 import { useShallow } from "zustand/react/shallow";
 import { useRouteFilter } from "@/hooks/useRouteFilter";
+import { useTheme } from "@/hooks/useTheme";
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {};
@@ -40,8 +41,10 @@ interface Props {
 export function LineTimetable(props: Props) {
   const [dayType, setDayType] = useState<DayType>(() => "I");
   const selectedRouteCode = useFilters(useShallow((state) => state.selectedRoutes[props.code]));
-  const routeColor = useLines(useShallow((state) => state.lineColors[props.code]));
+  const lineTheme = useLines(useShallow((state) => state.lineTheme[props.code]));
+  
   const { getRouteDirection } = useRouteFilter(props.code);
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const query = useQuery({
     queryKey: [`timetable-${props.code}`],
@@ -65,7 +68,7 @@ export function LineTimetable(props: Props) {
   const title = query.data.at(0)?.HATADI;
 
   return (
-    <View style={[styles.wrapper, { borderColor: routeColor }]}>
+    <View style={[styles.wrapper, { borderColor: getSchemeColorHex("primary") }]}>
       <View>
         <UiText>{selectedRouteCode} - {props.code}</UiText>
         <UiText style={styles.title}>{title}</UiText>

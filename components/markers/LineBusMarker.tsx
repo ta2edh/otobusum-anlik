@@ -1,4 +1,4 @@
-import { StyleSheet, View, StyleProp, ViewStyle, useColorScheme } from "react-native";
+import { StyleSheet, View, StyleProp, ViewStyle } from "react-native";
 import { Callout, MapMarker, Marker } from "react-native-maps";
 import { useShallow } from "zustand/react/shallow";
 import { useRef } from "react";
@@ -8,21 +8,18 @@ import { UiText } from "@/components/ui/UiText";
 import { useLines } from "@/stores/lines";
 import { Location } from "@/api/getLineBusLocations";
 import { useTheme } from "@/hooks/useTheme";
-import { hexFromArgb } from "@material/material-color-utilities";
 import { Ionicons } from "@expo/vector-icons";
 
 export function LineBusMarker({ location, lineCode }: { lineCode: string; location: Location }) {
   const markerRef = useRef<MapMarker>(null);
   const lineTheme = useLines(useShallow((state) => state.lineTheme[lineCode]));
-  const isDark = useColorScheme() === 'dark';
-  const { theme } = useTheme();
+  const { getSchemeColorHex, colorsTheme } = useTheme(lineTheme);
 
-  const scheme = isDark ? lineTheme?.schemes.dark : lineTheme?.schemes.light
-  const backgroundColor = scheme ? hexFromArgb(scheme.primaryContainer) : undefined
-  const textColor = scheme ? hexFromArgb(scheme.onPrimaryContainer) : undefined
+  const textColor = getSchemeColorHex("onPrimaryContainer");
+  const backgroundColor = getSchemeColorHex("primaryContainer");
 
   const calloutStyle: StyleProp<ViewStyle> = {
-    backgroundColor: theme.surfaceContainer,
+    backgroundColor: colorsTheme.surfaceContainer,
     padding: 8,
     width: 250,
     borderRadius: 8,

@@ -1,18 +1,32 @@
 import { colors } from "@/constants/colors";
+import { hexFromArgb, Scheme, Theme } from "@material/material-color-utilities";
 import { useColorScheme } from "react-native";
 
-export function useTheme() {
-  const scheme = useColorScheme() ?? 'light'
-  const theme = colors[scheme]
+type SchemeKeys = {
+  [K in keyof Scheme]: Scheme[K] extends number ? K : never
+}[keyof Scheme]
+
+export function useTheme(theme?: Theme) {
+  const mode = useColorScheme() ?? 'dark'
+  const scheme = mode === "dark" ? theme?.schemes.dark : theme?.schemes.light
+  const colorsTheme = colors[mode]
 
   const bottomSheetStyle = {
-    handleStyle: { backgroundColor: theme.surfaceContainerLow },
-    handleIndicatorStyle: { backgroundColor: theme.surfaceContainerHighest },
-    backgroundStyle: { backgroundColor: theme.surfaceContainerLow },
+    handleStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
+    handleIndicatorStyle: { backgroundColor: colorsTheme.surfaceContainerHighest },
+    backgroundStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
+  }
+
+  const getSchemeColorHex = (key: SchemeKeys) => {
+    if (!scheme) return
+
+    return hexFromArgb(scheme[key])
   }
 
   return {
-    theme,
-    bottomSheetStyle
+    colorsTheme,
+    scheme,
+    bottomSheetStyle,
+    getSchemeColorHex,
   }
 }

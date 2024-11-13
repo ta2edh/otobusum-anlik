@@ -10,9 +10,9 @@ export const UiTextInput = forwardRef(function UiTextInput(
   { style, ...props }: BottomSheetTextInputProps,
   ref: ForwardedRef<TextInput>
 ) {
-  const { theme } = useTheme();
+  const { colorsTheme } = useTheme();
 
-  const dynamicStyle = { color: theme.color, backgroundColor: theme.surfaceContainerHigh }
+  const dynamicStyle = { color: colorsTheme.color, backgroundColor: colorsTheme.surfaceContainerHigh }
 
   return (
     <BottomSheetTextInput

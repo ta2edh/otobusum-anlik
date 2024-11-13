@@ -8,15 +8,15 @@ interface Props extends TextProps {
 }
 
 export function UiText({ style, info, uiTheme, ...rest }: Props) {
-  const { theme } = useTheme();
+  const { colorsTheme } = useTheme();
 
   const baseStyle: StyleProp<TextStyle> = {
-    color: theme.color,
+    color: colorsTheme.color,
     flexShrink: 1,
   };
 
   if (info) {
-    baseStyle['color'] = theme.surfaceContainerHighest
+    baseStyle['color'] = colorsTheme.surfaceContainerHighest
     baseStyle['fontWeight'] = "bold"
   }
 
