@@ -26,7 +26,7 @@ export function TheSearchSheet() {
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
       if (bottomSheetIndex.current !== 0) {
-        bottomSheetRef.current?.snapToIndex(0)
+        bottomSheetRef.current?.collapse()
         return true
       }
 

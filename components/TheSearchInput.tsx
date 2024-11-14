@@ -44,6 +44,9 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         placeholder="KM-12, KM-12..."
         onChange={handleQueryChange}
         style={styles.input}
+        onSubmitEditing={handleSearch}
+        multiline={false}
+        returnKeyType="search"
       />
       <UiButton
         title={i18n.t('search')}
