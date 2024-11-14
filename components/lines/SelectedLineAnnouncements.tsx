@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useTheme } from '@/hooks/useTheme'
 import { getAnnouncements } from '@/api/getAnnouncements'
 
-import { UiButton } from './ui/UiButton'
-import { UiText } from './ui/UiText'
+import { UiButton } from '../ui/UiButton'
+import { UiText } from '../ui/UiText'
 
 import { memo, useRef } from 'react'
 import { StyleSheet, ViewProps } from 'react-native'

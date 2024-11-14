@@ -8,8 +8,8 @@ import {
 } from 'react-native'
 import { memo, useCallback, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { UiButton, UiButtonProps } from './ui/UiButton'
-import { UiText } from './ui/UiText'
+import { UiButton, UiButtonProps } from '../ui/UiButton'
+import { UiText } from '../ui/UiText'
 
 import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouteFilter } from '@/hooks/useRouteFilter'

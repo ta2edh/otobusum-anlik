@@ -1,5 +1,5 @@
 import { LineTimetable } from '@/components/LineTimetable'
-import { SelectedLines } from '@/components/SelectedLines'
+import { SelectedLines } from '@/components/lines/SelectedLines'
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { UiText } from '@/components/ui/UiText'
 import { useTheme } from '@/hooks/useTheme'

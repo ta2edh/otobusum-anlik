@@ -1,6 +1,6 @@
 import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
 import { LayoutChangeEvent, StyleSheet } from 'react-native'
-import { SelectedLines } from './SelectedLines'
+import { SelectedLines } from './lines/SelectedLines'
 import { useCallback, useState } from 'react'
 
 export function TheFilters({

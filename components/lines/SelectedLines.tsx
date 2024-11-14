@@ -1,8 +1,8 @@
 import { useLines } from '@/stores/lines'
 import { useFilters } from '@/stores/filters'
 
-import { UiText } from './ui/UiText'
-import { UiButton } from './ui/UiButton'
+import { UiText } from '../ui/UiText'
+import { UiButton } from '../ui/UiButton'
 import {
   StyleProp,
   StyleSheet,
@@ -23,7 +23,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { useCallback, memo } from 'react'
 import { useTheme } from '@/hooks/useTheme'
 
