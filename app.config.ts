@@ -20,6 +20,12 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
   },
+  updates: {
+    url: 'https://u.expo.dev/2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
+  },
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
   androidStatusBar: {
     barStyle: 'light-content',
     translucent: true,
