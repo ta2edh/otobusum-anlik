@@ -1,23 +1,19 @@
 import { BackHandler, StyleSheet } from 'react-native'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@/hooks/useTheme'
 import { useMutation } from '@tanstack/react-query'
 import { getSearchResults, SearchResult } from '@/api/getSearchResults'
-import BottomSheet, { BottomSheetFlashList } from '@gorhom/bottom-sheet'
+import BottomSheet, { BottomSheetFlashList, BottomSheetProps } from '@gorhom/bottom-sheet'
 
 import { TheSearchItem } from './TheSearchItem'
 import { TheSearchInput } from './TheSearchInput'
-import { TheFilters } from './TheFilters'
 import { UiText } from './ui/UiText'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { i18n } from '@/translations/i18n'
 
-export function TheSearchSheet() {
-  const animatedPosition = useSharedValue(0)
-  const animatedIndex = useSharedValue(0)
+export function TheSearchSheet(props: BottomSheetProps) {
   const bottomSheetRef = useRef<BottomSheet>(null)
   const bottomSheetIndex = useRef(0)
   const insets = useSafeAreaInsets()
@@ -73,7 +69,7 @@ export function TheSearchSheet() {
 
   return (
     <>
-      <TheFilters animatedPosition={animatedPosition} animatedIndex={animatedIndex} />
+      {props.children}
 
       <BottomSheet
         ref={bottomSheetRef}
@@ -83,9 +79,8 @@ export function TheSearchSheet() {
         keyboardBehavior="fillParent"
         snapPoints={snapPoints}
         onChange={index => (bottomSheetIndex.current = index)}
-        animatedPosition={animatedPosition}
-        animatedIndex={animatedIndex}
         {...bottomSheetStyle}
+        {...props}
       >
         <TheSearchInput
           onSearch={onSearch}
