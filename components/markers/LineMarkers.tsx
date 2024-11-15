@@ -11,7 +11,7 @@ export function LineMarkers() {
     <>
       {lineCodes.map(code => (
         <View key={code}>
-          {/* <LineBusMarkers code={code} /> */}
+          <LineBusMarkers code={code} />
           <LineBusStopMarkers code={code} />
         </View>
       ))}
