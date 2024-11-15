@@ -47,6 +47,8 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     query: { isPending },
   } = useRouteFilter(props.code)
 
+  console.log('rerender', props.code)
+
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -90,9 +92,9 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     backgroundColor: getSchemeColorHex('secondaryContainer'),
   }), [getSchemeColorHex])
 
-  const textContainerStyle: StyleProp<TextStyle> = {
+  const textContainerStyle: StyleProp<TextStyle> = useMemo(() => ({
     color: getSchemeColorHex('onSecondaryContainer'),
-  }
+  }), [getSchemeColorHex])
 
   const textStyle: StyleProp<TextStyle> = {
     color: getSchemeColorHex('onPrimary'),
@@ -151,7 +153,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
                 <SelectedLineRoutes
                   code={props.code}
-                  style={[buttonContainerStyle, { flexGrow: 1 }]}
+                  style={[buttonContainerStyle, styles.grow]}
                   textStyle={textContainerStyle}
                 />
               </View>
@@ -193,6 +195,7 @@ export function SelectedLines({
       contentContainerStyle={styles.codes}
       data={keys}
       renderItem={renderItem}
+      keyExtractor={item => item}
       snapToInterval={width * 0.8 + 4 + 4}
       snapToAlignment="center"
       style={style}
@@ -234,5 +237,8 @@ const styles = StyleSheet.create({
   },
   routeContainer: {
     gap: 8,
+  },
+  grow: {
+    flexGrow: 1,
   },
 })
