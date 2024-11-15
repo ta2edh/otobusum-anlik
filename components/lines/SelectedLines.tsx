@@ -47,8 +47,6 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     query: { isPending },
   } = useRouteFilter(props.code)
 
-  console.log('rerender', props.code)
-
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
