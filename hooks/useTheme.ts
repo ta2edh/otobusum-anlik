@@ -1,6 +1,6 @@
 import { colors } from '@/constants/colors'
 import { hexFromArgb, Scheme, Theme } from '@material/material-color-utilities'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 
 type SchemeKeys = {
@@ -12,11 +12,11 @@ export function useTheme(theme?: Theme) {
   const scheme = mode === 'dark' ? theme?.schemes.dark : theme?.schemes.light
   const colorsTheme = colors[mode]
 
-  const bottomSheetStyle = {
+  const bottomSheetStyle = useMemo(() => ({
     handleStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
     handleIndicatorStyle: { backgroundColor: colorsTheme.surfaceContainerHighest },
     backgroundStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
-  }
+  }), [colorsTheme])
 
   const getSchemeColorHex = useCallback((key: SchemeKeys) => {
     if (!scheme) return

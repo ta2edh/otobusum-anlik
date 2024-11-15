@@ -1,6 +1,5 @@
 import { useFilters } from '@/stores/filters'
 import { memo } from 'react'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
 
 import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
 import { Callout, MapMarker, Marker } from 'react-native-maps'
@@ -83,9 +82,8 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const line = useLines(useShallow(state => state.lines[props.code]))
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-  const { getDefaultRoute } = useRouteFilter(props.code)
 
-  const route = selectedRoute ?? getDefaultRoute()
+  const route = selectedRoute ?? `${props.code}_G_d0`
   const filtered = line?.filter(loc => loc.guzergahkodu === route)
 
   return (
