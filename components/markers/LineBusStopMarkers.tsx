@@ -29,8 +29,6 @@ export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props)
     staleTime: 60_000 * 30,
   })
 
-  console.log('line bus stop markers', props.code, !!query.data)
-
   useEffect(() => {
     if (!query.data || query.data.length < 1) {
       return
