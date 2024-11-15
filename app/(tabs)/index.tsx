@@ -8,7 +8,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { TheSearchSheet } from '@/components/TheSearchSheet'
-import { BusStopMarkers } from '@/components/markers/BusStopMarkers'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheFilters } from '@/components/TheFilters'
 
@@ -77,7 +76,6 @@ export default function HomeScreen() {
         >
           <MapContext.Provider value={map}>
             <LineMarkers />
-            <BusStopMarkers />
           </MapContext.Provider>
         </MapView>
       </Animated.View>

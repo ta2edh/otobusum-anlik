@@ -1,5 +1,6 @@
 import { colors } from '@/constants/colors'
 import { hexFromArgb, Scheme, Theme } from '@material/material-color-utilities'
+import { useCallback } from 'react'
 import { useColorScheme } from 'react-native'
 
 type SchemeKeys = {
@@ -17,11 +18,11 @@ export function useTheme(theme?: Theme) {
     backgroundStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
   }
 
-  const getSchemeColorHex = (key: SchemeKeys) => {
+  const getSchemeColorHex = useCallback((key: SchemeKeys) => {
     if (!scheme) return
 
     return hexFromArgb(scheme[key])
-  }
+  }, [scheme])
 
   return {
     colorsTheme,

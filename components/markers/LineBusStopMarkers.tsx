@@ -16,7 +16,7 @@ interface Props {
   code: string
 }
 
-export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props) {
+export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props) {
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
@@ -97,18 +97,6 @@ export const BusStopMarkersItem = memo(function BusStopMarkersItem(props: Props)
     </>
   )
 })
-
-export function BusStopMarkers() {
-  const lineKeys = useLines(useShallow(state => Object.keys(state.lines)))
-
-  return (
-    <>
-      {lineKeys.map(code => (
-        <BusStopMarkersItem key={code} code={code} />
-      ))}
-    </>
-  )
-}
 
 const styles = StyleSheet.create({
   busStop: {

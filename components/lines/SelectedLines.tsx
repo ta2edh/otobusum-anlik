@@ -16,6 +16,9 @@ import Animated, {
   FadeInLeft,
   FlatListPropsWithLayout,
   LinearTransition,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
   ZoomIn,
 } from 'react-native-reanimated'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -24,7 +27,7 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { useCallback, memo } from 'react'
+import { useCallback, memo, useEffect, useMemo } from 'react'
 import { useTheme } from '@/hooks/useTheme'
 
 interface Props {
@@ -33,8 +36,10 @@ interface Props {
 
 export const SelectedLine = memo(function SelectedLine(props: Props) {
   const { width } = useWindowDimensions()
+  const isVisible = useSharedValue(true)
 
   const setRoute = useFilters(useShallow(state => state.setRoute))
+  const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
   const deleteLine = useLines(useShallow(state => state.deleteLine))
   const {
     findOtherRouteDirection,
@@ -45,6 +50,16 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
+
+  useEffect(() => {
+    const unsub = useFilters.subscribe(state => state.invisibleRoutes[props.code], (newCodes) => {
+      isVisible.value = !newCodes
+    }, {
+      fireImmediately: true,
+    })
+
+    return unsub
+  }, [props.code, isVisible])
 
   const route = selectedRoute ? findRouteFromCode(selectedRoute) : undefined
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
@@ -58,14 +73,22 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     setRoute(props.code, otherDirection.route_code)
   }
 
+  const handleVisiblity = () => {
+    toggleInvisibleRoute(props.code)
+  }
+
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
     width: width * 0.8,
   }
 
-  const buttonContainerStyle: StyleProp<ViewStyle> = {
+  const containerAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: withTiming(isVisible.value ? 1 : 0.4),
+  }))
+
+  const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(() => ({
     backgroundColor: getSchemeColorHex('secondaryContainer'),
-  }
+  }), [getSchemeColorHex])
 
   const textContainerStyle: StyleProp<TextStyle> = {
     color: getSchemeColorHex('onSecondaryContainer'),
@@ -79,7 +102,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     <Animated.View
       layout={LinearTransition}
       entering={ZoomIn}
-      style={[containerStyle, styles.container]}
+      style={[containerAnimatedStyle, containerStyle, styles.container]}
       key={props.code}
     >
       <View style={styles.titleContainer}>
@@ -95,6 +118,12 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
         </UiText>
 
         <View style={styles.titleContainer}>
+          <UiButton
+            onPress={handleVisiblity}
+            style={buttonContainerStyle}
+            icon="eye-outline"
+          />
+
           <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
           <UiButton
