@@ -15,11 +15,9 @@ import {
 import Animated, {
   FadeInLeft,
   FlatListPropsWithLayout,
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
-  ZoomIn,
 } from 'react-native-reanimated'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useShallow } from 'zustand/react/shallow'
@@ -29,6 +27,7 @@ import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { useCallback, memo, useEffect, useMemo } from 'react'
 import { useTheme } from '@/hooks/useTheme'
+import { SelectedLineBusStops } from './SelectedLineBusStops'
 
 interface Props {
   code: string
@@ -79,7 +78,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    width: width * 0.8,
+    width: width * 0.9,
   }
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -99,9 +98,9 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   }
 
   return (
-    <Animated.View
-      layout={LinearTransition}
-      entering={ZoomIn}
+    <View
+      // layout={LinearTransition}
+      // entering={ZoomIn}
       style={[containerAnimatedStyle, containerStyle, styles.container]}
       key={props.code}
     >
@@ -135,6 +134,8 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
         </View>
       </View>
 
+      <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
+
       {isPending
         ? (
             <UiActivityIndicator size={24} />
@@ -167,7 +168,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
               </View>
             </Animated.View>
           )}
-    </Animated.View>
+    </View>
   )
 })
 
@@ -189,12 +190,12 @@ export function SelectedLines({
   return (
     <Animated.FlatList
       {...rest}
-      layout={LinearTransition}
+      // layout={LinearTransition}
       contentContainerStyle={styles.codes}
       data={keys}
       renderItem={renderItem}
       keyExtractor={item => item}
-      snapToInterval={width * 0.8 + 4 + 4}
+      snapToInterval={width * 0.9 + 4 + 4}
       snapToAlignment="center"
       style={style}
       horizontal
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
   },
   codes: {
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     gap: 8,
     padding: 8,
   },

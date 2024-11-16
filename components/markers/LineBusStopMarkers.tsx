@@ -1,8 +1,6 @@
-import { getLineBusStopLocations } from '@/api/getLineBusStopLocations'
 import { useFilters } from '@/stores/filters'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
-import { useQuery } from '@tanstack/react-query'
 import { useMap } from '@/hooks/useMap'
 import { memo, useEffect } from 'react'
 
@@ -11,6 +9,7 @@ import { Callout, LatLng, Marker } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 import { UiText } from '../ui/UiText'
 import { getRouteDirection } from '@/utils/getRouteDirection'
+import { useLineBusStops } from '@/hooks/useLineBusStops'
 
 interface Props {
   code: string
@@ -22,12 +21,7 @@ export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props)
 
   const map = useMap()
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
-
-  const query = useQuery({
-    queryKey: [`${props.code}-stop-locations`],
-    queryFn: () => getLineBusStopLocations(props.code),
-    staleTime: 60_000 * 30,
-  })
+  const { query } = useLineBusStops(props.code)
 
   useEffect(() => {
     if (!query.data || query.data.length < 1) {

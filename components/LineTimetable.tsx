@@ -1,5 +1,6 @@
 import { getPlannedDepartures, PlannedDeparture } from '@/api/getPlannedDepartures'
 import { ScrollView, StyleSheet, View } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
 import { useState } from 'react'
 
 import { UiText } from './ui/UiText'
@@ -11,9 +12,8 @@ import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
 import { useLines } from '@/stores/lines'
 import { useFilters } from '@/stores/filters'
-import { useShallow } from 'zustand/react/shallow'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
+import { getRouteDirection } from '@/utils/getRouteDirection'
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {}
@@ -44,7 +44,6 @@ export function LineTimetable(props: Props) {
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
-  const { getRouteDirection } = useRouteFilter(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const query = useQuery({

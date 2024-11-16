@@ -1,7 +1,13 @@
-import Animated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { LayoutChangeEvent, StyleSheet } from 'react-native'
 import { SelectedLines } from './lines/SelectedLines'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function TheFilters({
   animatedPosition,
@@ -10,28 +16,33 @@ export function TheFilters({
   animatedPosition: SharedValue<number>
   animatedIndex: SharedValue<number>
 }) {
-  const [height, setHeight] = useState(0)
+  const height = useSharedValue(0)
+  const insets = useSafeAreaInsets()
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: animatedPosition.value - height - 0,
+          translateY: insets.top,
+          // translateY: animatedPosition.value - height.value - 0,
         },
       ],
       opacity: 1 - animatedIndex.value,
     }
   })
 
-  const onLayout = useCallback((event: LayoutChangeEvent) => {
-    // Idk if this is a good idea.
-    if (height <= event.nativeEvent.layout.height) {
-      setHeight(event.nativeEvent.layout.height)
-    }
-  }, [height])
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      height.value = withTiming(event.nativeEvent.layout.height)
+    },
+    [height],
+  )
 
   return (
-    <Animated.View onLayout={onLayout} style={[animatedStyle, styles.filters]}>
+    <Animated.View
+      onLayout={onLayout}
+      style={[animatedStyle, styles.filters]}
+    >
       <SelectedLines />
     </Animated.View>
   )
