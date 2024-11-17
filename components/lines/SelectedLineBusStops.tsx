@@ -7,13 +7,12 @@ import { getRouteDirection } from '@/utils/getRouteDirection'
 
 import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { UiText } from '../ui/UiText'
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import Animated, {
   interpolate,
   runOnJS,
-  runOnUI,
   ScrollHandlerProcessed,
   scrollTo,
   useAnimatedReaction,
@@ -57,7 +56,7 @@ export function SelectedLineBusStops(props: Props) {
   const { query } = useLineBusStops(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const busses = line?.filter(bus => bus.guzergahkodu === props.routeCode)
+  const busses = useMemo(() => line?.filter(bus => bus.guzergahkodu === props.routeCode), [props.routeCode, line])
   const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'
   const filtered = query.data?.filter(stop => stop.yon === direction)
 
@@ -65,9 +64,10 @@ export function SelectedLineBusStops(props: Props) {
     const newIndex = filtered?.findIndex(stop => stop.durakKodu === currentTrackedItem.current?.durakKodu)
     if (!newIndex || newIndex === -1) return
 
-    setTimeout(() => {
-      runOnUI(scrollTo)(flashlistRef, 0, newIndex * ITEM_SIZE - (ITEM_SIZE / 2), true)
-    }, 500)
+    flashlistRef.current?.scrollToIndex({
+      animated: true,
+      index: newIndex,
+    })
   }, [filtered, flashlistRef, line])
 
   const textStyle: StyleProp<TextStyle> = useMemo(
@@ -85,7 +85,7 @@ export function SelectedLineBusStops(props: Props) {
     [getSchemeColorHex],
   )
 
-  const renderItem: ListRenderItem<BusStopLocation> = ({ item }) => {
+  const renderItem: ListRenderItem<BusStopLocation> = useCallback(({ item }) => {
     const closestBusses = busses?.find(bus => bus.yakinDurakKodu === item.durakKodu)
 
     const fillStyle: ViewStyle | undefined = closestBusses
@@ -111,12 +111,13 @@ export function SelectedLineBusStops(props: Props) {
         </UiText>
       </View>
     )
-  }
+  }, [busses, circleStyle, textStyle, getSchemeColorHex])
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
     height: containerHeight.value,
   }))
 
+  // Todo: Replace with findIndex later.
   const checkIfThereIsAStopWithBus = () => {
     const stopWithBus = viewableItems.current.find(stop =>
       busses?.find(bus => bus.yakinDurakKodu === stop.item.durakKodu),
@@ -125,8 +126,10 @@ export function SelectedLineBusStops(props: Props) {
     if (!stopWithBus) return
     currentTrackedItem.current = stopWithBus.item
 
-    const indx = (stopWithBus.index || 0) - 1
-    return (indx * ITEM_SIZE) + (ITEM_SIZE / 2)
+    return stopWithBus.index
+
+    // const indx = (stopWithBus.index || 0) - 1
+    // return (indx * ITEM_SIZE) + (ITEM_SIZE / 2)
   }
 
   const handleViewableItemsChanged = (info: {
@@ -146,11 +149,17 @@ export function SelectedLineBusStops(props: Props) {
   )
 
   const scrollToSnap = () => {
+    // Todo: Rename with targetIndex
     const targetPosition = checkIfThereIsAStopWithBus()
 
     if (targetPosition) {
       scrollSnapped.value = true
-      runOnUI(scrollTo)(flashlistRef, 0, targetPosition, true)
+      flashlistRef.current?.scrollToIndex({
+        animated: true,
+        index: targetPosition,
+        viewOffset: ITEM_SIZE * 0.5,
+      })
+      // runOnUI(scrollTo)(flashlistRef, 0, targetPosition, true)
 
       containerHeight.value = withTiming(COLLAPSED)
     }
@@ -201,6 +210,8 @@ export function SelectedLineBusStops(props: Props) {
   const handleScrollDragStart = () => {
     isScrolling.value = true
     isScrollingWithMomentum.value = true
+
+    currentTrackedItem.current = undefined
   }
 
   const handleScrollMomentumEnd = () => {
