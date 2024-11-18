@@ -103,6 +103,6 @@ const updateLines = async () => {
   setTimeout(updateLines, 50_000)
 }
 
-// if (!__DEV__) {
-useLines.persist.onFinishHydration(updateLines)
-// }
+if (!__DEV__) {
+  useLines.persist.onFinishHydration(updateLines)
+}
