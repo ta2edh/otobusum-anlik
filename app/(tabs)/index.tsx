@@ -21,7 +21,6 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme()
   const animatedIndex = useSharedValue(0)
-  const animatedPosition = useSharedValue(0)
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -80,8 +79,8 @@ export default function HomeScreen() {
         </MapView>
       </Animated.View>
 
-      <TheSearchSheet animatedIndex={animatedIndex} animatedPosition={animatedPosition}>
-        <TheFilters animatedIndex={animatedIndex} animatedPosition={animatedPosition} />
+      <TheSearchSheet animatedIndex={animatedIndex}>
+        <TheFilters animatedIndex={animatedIndex} />
       </TheSearchSheet>
     </View>
   )
