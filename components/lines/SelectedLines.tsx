@@ -15,6 +15,7 @@ import {
 import Animated, {
   FadeInLeft,
   FlatListPropsWithLayout,
+  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -99,74 +100,77 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   }
 
   return (
-    <Animated.View
-      style={[containerAnimatedStyle, containerStyle, styles.container]}
-      key={props.code}
-    >
-      <View style={styles.titleContainer}>
-        <UiText
-          style={{
-            fontWeight: 'bold',
-            fontSize: 24,
-            letterSpacing: 2,
-            color: getSchemeColorHex('onPrimary'),
-          }}
-        >
-          {props.code}
-        </UiText>
-
+    <Animated.View style={containerAnimatedStyle}>
+      <Animated.View
+        layout={LinearTransition}
+        style={[containerStyle, styles.container]}
+        key={props.code}
+      >
         <View style={styles.titleContainer}>
-          <UiButton
-            onPress={handleVisiblity}
-            style={buttonContainerStyle}
-            icon="eye-outline"
-          />
+          <UiText
+            style={{
+              fontWeight: 'bold',
+              fontSize: 24,
+              letterSpacing: 2,
+              color: getSchemeColorHex('onPrimary'),
+            }}
+          >
+            {props.code}
+          </UiText>
 
-          <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
+          <View style={styles.titleContainer}>
+            <UiButton
+              onPress={handleVisiblity}
+              style={buttonContainerStyle}
+              icon="eye-outline"
+            />
 
-          <UiButton
-            onPress={() => deleteLine(props.code)}
-            style={buttonContainerStyle}
-            icon="trash-outline"
-            textStyle={textContainerStyle}
-          />
+            <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
+
+            <UiButton
+              onPress={() => deleteLine(props.code)}
+              style={buttonContainerStyle}
+              icon="trash-outline"
+              textStyle={textContainerStyle}
+            />
+          </View>
         </View>
-      </View>
 
-      <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
+        <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
 
-      {isPending
-        ? (
-            <UiActivityIndicator size={24} />
-          )
-        : (
-            <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
-              <View style={styles.lineButtonsContainer}>
-                <UiButton
-                  onPress={handleSwitchRoute}
-                  icon="refresh"
-                  style={buttonContainerStyle}
-                  textStyle={textContainerStyle}
-                />
+        {isPending
+          ? (
+              <UiActivityIndicator size={24} />
+            )
+          : (
+              <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
+                <View style={styles.lineButtonsContainer}>
+                  <UiButton
+                    onPress={handleSwitchRoute}
+                    icon="refresh"
+                    style={buttonContainerStyle}
+                    textStyle={textContainerStyle}
+                  />
 
-                <SelectedLineRoutes
-                  code={props.code}
-                  style={[buttonContainerStyle, styles.grow]}
-                  textStyle={textContainerStyle}
-                />
-              </View>
+                  <SelectedLineRoutes
+                    code={props.code}
+                    style={[buttonContainerStyle, styles.grow]}
+                    textStyle={textContainerStyle}
+                  />
+                </View>
 
-              <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
-                <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
-                  {leftTitle}
-                </UiText>
-                <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
-                <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
-                  {rightTitle}
-                </UiText>
-              </View>
-            </Animated.View>
-          )}
+                <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
+                  <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+                    {leftTitle}
+                  </UiText>
+                  <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
+                  <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+                    {rightTitle}
+                  </UiText>
+                </View>
+              </Animated.View>
+            )}
+      </Animated.View>
     </Animated.View>
   )
 })
