@@ -39,6 +39,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
+
   const deleteLine = useLines(useShallow(state => state.deleteLine))
   const {
     findOtherRouteDirection,
@@ -98,7 +99,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   }
 
   return (
-    <View
+    <Animated.View
       style={[containerAnimatedStyle, containerStyle, styles.container]}
       key={props.code}
     >
@@ -166,7 +167,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
               </View>
             </Animated.View>
           )}
-    </View>
+    </Animated.View>
   )
 })
 
