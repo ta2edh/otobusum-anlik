@@ -11,25 +11,29 @@ import {
   useWindowDimensions,
   ListRenderItem,
   TextStyle,
+  ViewProps,
+  FlatList,
 } from 'react-native'
 import Animated, {
+  AnimatedProps,
   FadeInLeft,
   FlatListPropsWithLayout,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { useCallback, memo, useEffect, useMemo, forwardRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
+import Ionicons from '@expo/vector-icons/Ionicons'
+
+import { UiActivityIndicator } from '../ui/UiActivityIndicator'
+import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { useCallback, memo, useEffect, useMemo } from 'react'
 import { useTheme } from '@/hooks/useTheme'
-import { SelectedLineBusStops } from './SelectedLineBusStops'
 
-interface Props {
+interface Props extends AnimatedProps<ViewProps> {
   code: string
 }
 
@@ -52,11 +56,15 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   useEffect(() => {
-    const unsub = useFilters.subscribe(state => state.invisibleRoutes[props.code], (newCodes) => {
-      isVisible.value = !newCodes
-    }, {
-      fireImmediately: true,
-    })
+    const unsub = useFilters.subscribe(
+      state => state.invisibleRoutes[props.code],
+      (newCodes) => {
+        isVisible.value = !newCodes
+      },
+      {
+        fireImmediately: true,
+      },
+    )
 
     return unsub
   }, [props.code, isVisible])
@@ -86,102 +94,109 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     opacity: withTiming(isVisible.value ? 1 : 0.4),
   }))
 
-  const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(() => ({
-    backgroundColor: getSchemeColorHex('secondaryContainer'),
-  }), [getSchemeColorHex])
+  const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      backgroundColor: getSchemeColorHex('secondaryContainer'),
+    }),
+    [getSchemeColorHex],
+  )
 
-  const textContainerStyle: StyleProp<TextStyle> = useMemo(() => ({
-    color: getSchemeColorHex('onSecondaryContainer'),
-  }), [getSchemeColorHex])
+  const textContainerStyle: StyleProp<TextStyle> = useMemo(
+    () => ({
+      color: getSchemeColorHex('onSecondaryContainer'),
+    }),
+    [getSchemeColorHex],
+  )
 
   const textStyle: StyleProp<TextStyle> = {
     color: getSchemeColorHex('onPrimary'),
   }
 
   return (
-    <Animated.View style={containerAnimatedStyle}>
-      <Animated.View
-        style={[containerStyle, styles.container]}
-        key={props.code}
-      >
+    <Animated.View
+      style={[containerStyle, containerAnimatedStyle, styles.container]}
+      key={props.code}
+      {...props}
+    >
+      <View style={styles.titleContainer}>
+        <UiText
+          style={{
+            fontWeight: 'bold',
+            fontSize: 24,
+            letterSpacing: 2,
+            color: getSchemeColorHex('onPrimary'),
+          }}
+        >
+          {props.code}
+        </UiText>
+
         <View style={styles.titleContainer}>
-          <UiText
-            style={{
-              fontWeight: 'bold',
-              fontSize: 24,
-              letterSpacing: 2,
-              color: getSchemeColorHex('onPrimary'),
-            }}
-          >
-            {props.code}
-          </UiText>
+          <UiButton onPress={handleVisiblity} style={buttonContainerStyle} icon="eye-outline" />
 
-          <View style={styles.titleContainer}>
-            <UiButton
-              onPress={handleVisiblity}
-              style={buttonContainerStyle}
-              icon="eye-outline"
-            />
+          <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
-            <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
-
-            <UiButton
-              onPress={() => deleteLine(props.code)}
-              style={buttonContainerStyle}
-              icon="trash-outline"
-              textStyle={textContainerStyle}
-            />
-          </View>
+          <UiButton
+            onPress={() => deleteLine(props.code)}
+            style={buttonContainerStyle}
+            icon="trash-outline"
+            textStyle={textContainerStyle}
+          />
         </View>
+      </View>
 
-        <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
+      <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
 
-        {isPending
-          ? (
-              <UiActivityIndicator size={24} />
-            )
-          : (
-              <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
-                <View style={styles.lineButtonsContainer}>
-                  <UiButton
-                    onPress={handleSwitchRoute}
-                    icon="refresh"
-                    style={buttonContainerStyle}
-                    textStyle={textContainerStyle}
-                  />
+      {isPending
+        ? (
+            <UiActivityIndicator size={24} />
+          )
+        : (
+            <Animated.View entering={FadeInLeft} style={styles.routeContainer}>
+              <View style={styles.lineButtonsContainer}>
+                <UiButton
+                  onPress={handleSwitchRoute}
+                  icon="refresh"
+                  style={buttonContainerStyle}
+                  textStyle={textContainerStyle}
+                />
 
-                  <SelectedLineRoutes
-                    code={props.code}
-                    style={[buttonContainerStyle, styles.grow]}
-                    textStyle={textContainerStyle}
-                  />
-                </View>
+                <SelectedLineRoutes
+                  code={props.code}
+                  style={[buttonContainerStyle, styles.grow]}
+                  textStyle={textContainerStyle}
+                />
+              </View>
 
-                <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
-                  <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
-                    {leftTitle}
-                  </UiText>
-                  <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
-                  <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
-                    {rightTitle}
-                  </UiText>
-                </View>
-              </Animated.View>
-            )}
-      </Animated.View>
+              <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
+                <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+                  {leftTitle}
+                </UiText>
+                <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
+                <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+                  {rightTitle}
+                </UiText>
+              </View>
+            </Animated.View>
+          )}
     </Animated.View>
   )
 })
 
-export function SelectedLines({
-  style,
-  ...rest
-}: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>) {
+type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
+
+export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedLines({ style, ...props }, ref) {
   const keys = useLines(useShallow(state => Object.keys(state.lines))) || []
 
-  const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <SelectedLine key={code} code={code} />
-  }, [])
+  const renderItem: ListRenderItem<string> = useCallback(
+    ({ item: code }) => {
+      return (
+        <SelectedLine key={code} code={code}>
+          {props?.children}
+        </SelectedLine>
+      )
+    },
+    [props.children],
+  )
 
   if (keys.length < 1) {
     return null
@@ -189,7 +204,8 @@ export function SelectedLines({
 
   return (
     <Animated.FlatList
-      {...rest}
+      {...props}
+      ref={ref}
       contentContainerStyle={styles.codes}
       data={keys}
       renderItem={renderItem}
@@ -200,7 +216,7 @@ export function SelectedLines({
       horizontal
     />
   )
-}
+})
 
 const styles = StyleSheet.create({
   container: {

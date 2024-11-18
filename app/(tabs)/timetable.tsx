@@ -2,47 +2,62 @@ import { LineTimetable } from '@/components/LineTimetable'
 import { SelectedLines } from '@/components/lines/SelectedLines'
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { UiText } from '@/components/ui/UiText'
-import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { useCallback } from 'react'
 import {
+  FlatList,
   LayoutChangeEvent,
+  ScrollView,
   StyleProp,
-  StyleSheet,
+  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  Easing,
+  scrollTo,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 export default function TimetableScreen() {
-  const { colorsTheme } = useTheme()
+  const { width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const linesHeight = useSharedValue(0)
+  const linesRef = useAnimatedRef<FlatList>()
+  const timetablesRef = useAnimatedRef<FlatList>()
 
   const keys = useLines(useShallow(state => Object.keys(state.lines)))
 
-  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    linesHeight.value = withTiming(nativeEvent.layout.height, { easing: Easing.out(Easing.quad) })
-  }, [linesHeight])
+  const onLayout = useCallback(
+    ({ nativeEvent }: LayoutChangeEvent) => {
+      linesHeight.value = withTiming(nativeEvent.layout.height, {
+        easing: Easing.out(Easing.quad),
+      })
+    },
+    [linesHeight],
+  )
 
-  const childrenStyle = useAnimatedStyle(() => ({
-    paddingTop: linesHeight.value,
+  const childrenContainerStyle = useAnimatedStyle(() => ({
+    width: width - 8 - 8 - 24,
     flex: 1,
-    flexDirection: 'column',
-    gap: 8,
   }))
 
-  const timetableLineStyle: StyleProp<ViewStyle> = {
-    position: 'absolute',
-    paddingTop: insets.top - 4,
-    zIndex: 10,
-    left: 0,
-    right: 0,
-    backgroundColor: colorsTheme.surfaceContainerLow,
+  const containerStyle: StyleProp<ViewStyle> = {
+    paddingTop: insets.top,
+    padding: 8,
   }
+
+  const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
+    scrollTo(linesRef, contentOffset.x, 0, false)
+    scrollTo(timetablesRef, contentOffset.x, 0, false)
+  })
 
   if (keys.length < 1) {
     return (
@@ -57,25 +72,22 @@ export default function TimetableScreen() {
   }
 
   return (
-    <View>
-      <SelectedLines
-        style={timetableLineStyle}
-        onLayout={onLayout}
-      />
+    <View style={containerStyle}>
+      <SelectedLines ref={linesRef} onLayout={onLayout} onScroll={handleOnScroll} />
 
-      <Animated.ScrollView contentContainerStyle={styles.content}>
-        <Animated.View style={childrenStyle}>
-          {keys.map(cd => (
-            <LineTimetable key={cd} code={cd} />
-          ))}
-        </Animated.View>
-      </Animated.ScrollView>
+      <Animated.FlatList
+        ref={timetablesRef}
+        data={keys}
+        renderItem={({ item }) => (
+          <Animated.View style={childrenContainerStyle}>
+            <LineTimetable code={item} />
+          </Animated.View>
+        )}
+        keyExtractor={item => item}
+        contentContainerStyle={{ padding: 8, gap: 8 }}
+        onScroll={handleOnScroll}
+        horizontal
+      />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  content: {
-    gap: 8,
-  },
-})

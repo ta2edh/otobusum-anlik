@@ -1,5 +1,5 @@
 import { getPlannedDepartures, PlannedDeparture } from '@/api/getPlannedDepartures'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { useState } from 'react'
 
@@ -8,7 +8,6 @@ import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 
 import { DayType, Direction } from '@/types/departure'
 import { useQuery } from '@tanstack/react-query'
-import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
 import { useLines } from '@/stores/lines'
 import { useFilters } from '@/stores/filters'
@@ -56,10 +55,26 @@ export function LineTimetable(props: Props) {
     : 'G'
 
   const filteredData
-    = query.data?.filter(it => (direction ? it.SYON === direction : true) && it.SGUNTIPI === dayType) || []
+    = query.data?.filter(
+      it => (direction ? it.SYON === direction : true) && it.SGUNTIPI === dayType,
+    ) || []
 
   const groupedByHour = groupDeparturesByHour(filteredData || [])
   const hours = Object.keys(groupedByHour).sort()
+
+  const containerStyle: StyleProp<ViewStyle> = {
+    borderColor: getSchemeColorHex('primary'),
+    backgroundColor: getSchemeColorHex('primary'),
+  }
+
+  const textStyle: StyleProp<TextStyle> = {
+    color: getSchemeColorHex('onPrimary'),
+  }
+
+  const cellStyle: StyleProp<TextStyle> = {
+    backgroundColor: getSchemeColorHex('primaryContainer'),
+    color: getSchemeColorHex('onPrimaryContainer'),
+  }
 
   if (!query.data) {
     return <UiText>{i18n.t('loading')}</UiText>
@@ -68,16 +83,15 @@ export function LineTimetable(props: Props) {
   const title = query.data.at(0)?.HATADI
 
   return (
-    <View style={[styles.wrapper, { borderColor: getSchemeColorHex('primary') }]}>
+    <View style={[styles.wrapper, containerStyle]}>
       <View>
-        <UiText>
+        <UiText style={textStyle}>
           {selectedRouteCode}
           {' '}
           -
-          {' '}
           {props.code}
         </UiText>
-        <UiText style={styles.title}>{title}</UiText>
+        <UiText style={[styles.title, textStyle]}>{title}</UiText>
       </View>
 
       <View style={styles.filters}>
@@ -85,6 +99,7 @@ export function LineTimetable(props: Props) {
           value={dayType}
           onValueChange={setDayType}
           style={{ flexGrow: 1 }}
+          theme={lineTheme}
           buttons={[
             {
               value: 'I',
@@ -103,32 +118,36 @@ export function LineTimetable(props: Props) {
       </View>
 
       <View style={styles.container}>
-        {/* Fixed column this will be */}
-        <View style={styles.fixed}>
-          {hours.map(hour => (
-            <UiText key={hour} style={[styles.cell, , { backgroundColor: colors.primary }]}>
-              {hour}
-            </UiText>
-          ))}
-        </View>
+        <ScrollView contentContainerStyle={styles.innerScroll}>
+          <View style={styles.fixed}>
+            {hours.map(hour => (
+              <UiText key={hour} style={[styles.cell, cellStyle]}>
+                {hour}
+              </UiText>
+            ))}
+          </View>
 
-        <ScrollView contentContainerStyle={{ flexDirection: 'column', gap: 4 }} horizontal>
-          {hours.map((hour) => {
-            return (
-              <View key={hour} style={styles.row}>
-                {groupedByHour[hour]?.map(departure => (
-                  <UiText
-                    key={`${props.code}-${departure.SSERVISTIPI}-${
-                      departure.SGUZERAH
-                    }-${hour}-${departure.DT.split(':').at(-1)}`}
-                    style={styles.cell}
-                  >
-                    {departure.DT.split(':').at(-1)}
-                  </UiText>
-                ))}
-              </View>
-            )
-          })}
+          <ScrollView
+            contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
+            horizontal
+          >
+            {hours.map((hour) => {
+              return (
+                <View key={hour} style={styles.row}>
+                  {groupedByHour[hour]?.map(departure => (
+                    <UiText
+                      key={`${props.code}-${departure.SSERVISTIPI}-${
+                        departure.SGUZERAH
+                      }-${hour}-${departure.DT.split(':').at(-1)}`}
+                      style={[styles.cell, textStyle]}
+                    >
+                      {departure.DT.split(':').at(-1)}
+                    </UiText>
+                  ))}
+                </View>
+              )
+            })}
+          </ScrollView>
         </ScrollView>
       </View>
     </View>
@@ -139,11 +158,12 @@ const styles = StyleSheet.create({
   wrapper: {
     padding: 14,
     gap: 8,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    elevation: 5,
+    borderRadius: 8,
   },
   container: {
+    height: 300,
+  },
+  innerScroll: {
     flexDirection: 'row',
   },
   cell: {
