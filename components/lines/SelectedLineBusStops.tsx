@@ -61,12 +61,16 @@ export function SelectedLineBusStops(props: Props) {
   const filtered = query.data?.filter(stop => stop.yon === direction)
 
   useEffect(() => {
-    const newIndex = filtered?.findIndex(stop => stop.durakKodu === currentTrackedItem.current?.durakKodu)
-    if (!newIndex || newIndex === -1) return
+    if (!filtered) return
 
+    const newIndex = filtered.findIndex(stop => stop.durakKodu === currentTrackedItem.current?.durakKodu)
+    if (newIndex === -1) return
+
+    console.log(newIndex)
     flashlistRef.current?.scrollToIndex({
       animated: true,
       index: newIndex,
+      viewPosition: 0.5,
     })
   }, [filtered, flashlistRef, line])
 
@@ -118,18 +122,19 @@ export function SelectedLineBusStops(props: Props) {
   }))
 
   // Todo: Replace with findIndex later.
-  const checkIfThereIsAStopWithBus = () => {
-    const stopWithBus = viewableItems.current.find(stop =>
+  const getSnapToTrackStopIndex = () => {
+    const viewableStopWithBus = viewableItems.current.find(stop =>
       busses?.find(bus => bus.yakinDurakKodu === stop.item.durakKodu),
     )
 
-    if (!stopWithBus) return
-    currentTrackedItem.current = stopWithBus.item
+    if (!viewableStopWithBus) {
+      return
+    }
 
-    return stopWithBus.index
+    currentTrackedItem.current = viewableStopWithBus.item
+    const stopInAllStopsIndex = filtered?.findIndex(stop => stop.durakKodu === currentTrackedItem.current?.durakKodu)
 
-    // const indx = (stopWithBus.index || 0) - 1
-    // return (indx * ITEM_SIZE) + (ITEM_SIZE / 2)
+    return stopInAllStopsIndex === -1 ? undefined : stopInAllStopsIndex
   }
 
   const handleViewableItemsChanged = (info: {
@@ -149,17 +154,16 @@ export function SelectedLineBusStops(props: Props) {
   )
 
   const scrollToSnap = () => {
-    // Todo: Rename with targetIndex
-    const targetPosition = checkIfThereIsAStopWithBus()
+    const targetIndex = getSnapToTrackStopIndex()
 
-    if (targetPosition) {
+    if (targetIndex) {
       scrollSnapped.value = true
+
       flashlistRef.current?.scrollToIndex({
         animated: true,
-        index: targetPosition,
-        viewOffset: ITEM_SIZE * 0.5,
+        index: targetIndex + 1,
+        viewPosition: 0.5,
       })
-      // runOnUI(scrollTo)(flashlistRef, 0, targetPosition, true)
 
       containerHeight.value = withTiming(COLLAPSED)
     }
