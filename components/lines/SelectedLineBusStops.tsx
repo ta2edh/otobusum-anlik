@@ -100,6 +100,7 @@ export function SelectedLineBusStops(props: Props) {
         scrollToTrackedBus()
       }, 300)
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busses, scrollToTrackedBus])
 
   const animatedContainerStyle = useAnimatedStyle(() => {

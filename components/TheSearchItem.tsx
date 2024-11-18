@@ -3,14 +3,15 @@ import {
   TouchableOpacity,
   TouchableOpacityProps,
 } from 'react-native'
-import { UiText } from './ui/UiText'
-import { SearchResult } from '@/api/getSearchResults'
 import { useState, memo } from 'react'
+
+import { UiText } from './ui/UiText'
+import { UiActivityIndicator } from './ui/UiActivityIndicator'
+
+import { SearchResult } from '@/api/getSearchResults'
+import { colors } from '@/constants/colors'
 import { useLines } from '@/stores/lines'
 import { useShallow } from 'zustand/react/shallow'
-import { UiActivityIndicator } from './ui/UiActivityIndicator'
-import { colors } from '@/constants/colors'
-import { useBottomSheet } from '@gorhom/bottom-sheet'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
@@ -18,7 +19,6 @@ interface Props extends TouchableOpacityProps {
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const [isPending, setIsPending] = useState(false)
-  const { collapse } = useBottomSheet()
 
   const lineColor = useLines(useShallow(state => state.lineTheme[props.item.Code]))
   const addLine = useLines(state => state.addLine)
@@ -30,7 +30,6 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
 
     try {
       await addLine(props.item)
-      collapse()
     }
     finally {
       setIsPending(false)

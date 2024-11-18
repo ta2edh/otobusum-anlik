@@ -1,13 +1,11 @@
 import { colors } from '@/constants/colors'
 import { useTheme } from '@/hooks/useTheme'
-import { BottomSheetTextInput } from '@gorhom/bottom-sheet'
-import { BottomSheetTextInputProps } from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheetTextInput'
 import { ForwardedRef, forwardRef } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, TextInputProps } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 export const UiTextInput = forwardRef(function UiTextInput(
-  { style, ...props }: BottomSheetTextInputProps,
+  { style, ...props }: TextInputProps,
   ref: ForwardedRef<TextInput>,
 ) {
   const { colorsTheme } = useTheme()
@@ -15,7 +13,7 @@ export const UiTextInput = forwardRef(function UiTextInput(
   const dynamicStyle = { color: colorsTheme.color, backgroundColor: colorsTheme.surfaceContainerHigh }
 
   return (
-    <BottomSheetTextInput
+    <TextInput
       ref={ref}
       style={[styles.input, dynamicStyle, style]}
       placeholderTextColor={colors.light.surfaceContainerHighest}

@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
     gap: 4,
-    paddingHorizontal: 8,
   },
   input: {
     flexGrow: 1,

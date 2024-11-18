@@ -7,7 +7,7 @@ import { i18n } from '@/translations/i18n'
 export default function TabLayout() {
   const { colorsTheme } = useTheme()
 
-  const getName = (n: string, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
+  const getName = (n: keyof typeof Ionicons.glyphMap, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
 
   return (
     <Tabs
@@ -22,7 +22,6 @@ export default function TabLayout() {
           fontWeight: 'bold',
         },
         tabBarShowLabel: false,
-        // unmountOnBlur: true,
       }}
       sceneContainerStyle={{ backgroundColor: colorsTheme.surfaceContainerLow }}
     >
@@ -32,6 +31,15 @@ export default function TabLayout() {
           tabBarLabel: i18n.t('map'),
           tabBarIcon: ({ focused }) => (
             <Ionicons name={getName('map', focused)} size={24} color={colorsTheme.color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          tabBarLabel: i18n.t('search'),
+          tabBarIcon: ({ focused }) => (
+            <Ionicons name={getName('search', focused)} size={24} color={colorsTheme.color} />
           ),
         }}
       />
