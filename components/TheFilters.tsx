@@ -28,6 +28,7 @@ export function TheFilters({
         },
       ],
       opacity: 1 - animatedIndex.value,
+      pointerEvents: animatedIndex.value >= 0.5 ? 'none' : 'auto',
     }
   })
 

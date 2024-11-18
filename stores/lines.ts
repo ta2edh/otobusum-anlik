@@ -100,7 +100,7 @@ const updateLines = async () => {
     }
   }
 
-  setTimeout(updateLines, 30_000)
+  setTimeout(updateLines, 50_000)
 }
 
 if (!__DEV__) {

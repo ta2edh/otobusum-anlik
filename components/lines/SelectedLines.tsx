@@ -99,8 +99,6 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
   return (
     <View
-      // layout={LinearTransition}
-      // entering={ZoomIn}
       style={[containerAnimatedStyle, containerStyle, styles.container]}
       key={props.code}
     >
