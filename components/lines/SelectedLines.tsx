@@ -188,7 +188,6 @@ export function SelectedLines({
   return (
     <Animated.FlatList
       {...rest}
-      // layout={LinearTransition}
       contentContainerStyle={styles.codes}
       data={keys}
       renderItem={renderItem}

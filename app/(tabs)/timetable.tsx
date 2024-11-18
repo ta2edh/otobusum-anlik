@@ -5,33 +5,35 @@ import { UiText } from '@/components/ui/UiText'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import {
   LayoutChangeEvent,
-  ScrollView,
   StyleProp,
   StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 export default function TimetableScreen() {
   const { colorsTheme } = useTheme()
   const insets = useSafeAreaInsets()
-  const [linesHeight, setLinesHeight] = useState(0)
+  const linesHeight = useSharedValue(0)
 
   const keys = useLines(useShallow(state => Object.keys(state.lines)))
 
-  const onLayout = useCallback((event: LayoutChangeEvent) => {
-    setLinesHeight(event.nativeEvent.layout.height)
-  }, [])
+  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
+    linesHeight.value = withTiming(nativeEvent.layout.height, { easing: Easing.out(Easing.quad) })
+  }, [linesHeight])
 
-  const contentStyle: StyleProp<ViewStyle> = {
-    paddingTop: linesHeight,
+  const childrenStyle = useAnimatedStyle(() => ({
+    paddingTop: linesHeight.value,
+    flex: 1,
+    flexDirection: 'column',
     gap: 8,
-  }
+  }))
 
   const timetableLineStyle: StyleProp<ViewStyle> = {
     position: 'absolute',
@@ -61,13 +63,13 @@ export default function TimetableScreen() {
         onLayout={onLayout}
       />
 
-      <ScrollView contentContainerStyle={[styles.content, contentStyle]}>
-        <View style={{ flex: 1, flexDirection: 'column', gap: 8 }}>
+      <Animated.ScrollView contentContainerStyle={styles.content}>
+        <Animated.View style={childrenStyle}>
           {keys.map(cd => (
             <LineTimetable key={cd} code={cd} />
           ))}
-        </View>
-      </ScrollView>
+        </Animated.View>
+      </Animated.ScrollView>
     </View>
   )
 }
