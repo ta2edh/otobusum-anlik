@@ -15,7 +15,6 @@ import {
 import Animated, {
   FadeInLeft,
   FlatListPropsWithLayout,
-  LinearTransition,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -80,7 +79,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    width: width * 0.9,
+    width: width - 8 - 8 - 24,
   }
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -102,7 +101,6 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   return (
     <Animated.View style={containerAnimatedStyle}>
       <Animated.View
-        layout={LinearTransition}
         style={[containerStyle, styles.container]}
         key={props.code}
       >
@@ -180,7 +178,6 @@ export function SelectedLines({
   ...rest
 }: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>) {
   const keys = useLines(useShallow(state => Object.keys(state.lines))) || []
-  const { width } = useWindowDimensions()
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
     return <SelectedLine key={code} code={code} />
@@ -197,8 +194,8 @@ export function SelectedLines({
       data={keys}
       renderItem={renderItem}
       keyExtractor={item => item}
-      snapToInterval={width * 0.9 + 4 + 4}
       snapToAlignment="center"
+      pagingEnabled
       style={style}
       horizontal
     />
@@ -213,7 +210,7 @@ const styles = StyleSheet.create({
   },
   codes: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'flex-end',
     gap: 8,
     padding: 8,
   },
