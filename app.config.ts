@@ -23,6 +23,9 @@ const config: ExpoConfig = {
   },
   updates: {
     url: 'https://u.expo.dev/2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
+    requestHeaders: {
+      'expo-channel-name': 'production',
+    },
   },
   runtimeVersion: {
     policy: 'appVersion',
