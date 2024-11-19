@@ -19,7 +19,7 @@ export async function getLineBusLocations(code: string) {
   const response = await fetch('https://api.ibb.gov.tr/iett/FiloDurum/SeferGerceklesme.asmx', {
     method: 'POST',
     headers: {
-      'Content-Type': 'text/xml',
+      'Content-Type': 'text/xml; charset=UTF-8',
       'SOAPAction': '"http://tempuri.org/GetHatOtoKonum_json"',
     },
     body,

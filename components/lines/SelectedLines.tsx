@@ -76,7 +76,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     if (!selectedRoute) return
 
     const otherDirection = findOtherRouteDirection(selectedRoute)
-    if (!otherDirection) return
+    if (!otherDirection || !otherDirection.route_code) return
 
     setRoute(props.code, otherDirection.route_code)
   }

@@ -39,7 +39,9 @@ function SelectedLineRoutesItem(props: ItemProps) {
   }
 
   const handlePress = () => {
-    setRoute(props.code, props.item.route_code)
+    if (props.item.route_code) {
+      setRoute(props.code, props.item?.route_code)
+    }
   }
 
   return (
@@ -68,7 +70,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
     const element = routes.data?.result.records[index]
     if (!element) continue
 
-    if (element.route_code.endsWith('D0')) {
+    if (element.route_code && element.route_code?.endsWith('D0')) {
       routesDefaults.push(element)
     }
     else {

@@ -21,7 +21,7 @@ export async function getPlannedDepartures(code: string) {
     {
       method: 'POST',
       headers: {
-        'Content-Type': 'text/xml',
+        'Content-Type': 'text/xml; charset=UTF-8',
         'SOAPAction': '"http://tempuri.org/GetPlanlananSeferSaati_json"',
       },
       body,

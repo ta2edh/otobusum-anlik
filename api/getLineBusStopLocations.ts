@@ -21,7 +21,7 @@ export async function getLineBusStopLocations(code: string) {
   const response = await fetch('https://api.ibb.gov.tr/iett/ibb/ibb.asmx?wsdl', {
     method: 'POST',
     headers: {
-      'Content-Type': 'text/xml',
+      'Content-Type': 'text/xml; charset=UTF-8',
       'SOAPAction': '"http://tempuri.org/DurakDetay_GYY"',
     },
     body,

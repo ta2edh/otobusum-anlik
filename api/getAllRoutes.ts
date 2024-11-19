@@ -8,7 +8,7 @@ export interface LineRoute {
   route_long_name: string
   route_type: string
   route_desc: string
-  route_code: `${string}_${Direction}_${string}`
+  route_code?: `${string}_${Direction}_${string}`
   rank: number
 }
 

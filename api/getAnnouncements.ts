@@ -12,7 +12,7 @@ export async function getAnnouncements() {
   const response = await fetch('https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl', {
     method: 'POST',
     headers: {
-      'Content-Type': 'text/xml',
+      'Content-Type': 'text/xml; charset=UTF-8',
       'SOAPAction': '"http://tempuri.org/GetDuyurular_json"',
     },
     body: `
