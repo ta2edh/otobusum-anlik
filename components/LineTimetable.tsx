@@ -118,7 +118,10 @@ export function LineTimetable(props: Props) {
       </View>
 
       <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.innerScroll}>
+        <ScrollView
+          contentContainerStyle={styles.innerScroll}
+          fadingEdgeLength={40}
+        >
           <View style={styles.fixed}>
             {hours.map(hour => (
               <UiText key={hour} style={[styles.cell, cellStyle]}>
@@ -159,9 +162,10 @@ const styles = StyleSheet.create({
     padding: 14,
     gap: 8,
     borderRadius: 8,
+    flexShrink: 1,
   },
   container: {
-    height: 300,
+    flexShrink: 1,
   },
   innerScroll: {
     flexDirection: 'row',

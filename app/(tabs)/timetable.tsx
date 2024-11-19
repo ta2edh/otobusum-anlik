@@ -8,7 +8,6 @@ import { useCallback } from 'react'
 import {
   FlatList,
   LayoutChangeEvent,
-  ScrollView,
   StyleProp,
   useWindowDimensions,
   View,
@@ -46,12 +45,13 @@ export default function TimetableScreen() {
 
   const childrenContainerStyle = useAnimatedStyle(() => ({
     width: width - 8 - 8 - 24,
-    flex: 1,
+    flexShrink: 1,
   }))
 
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top,
     padding: 8,
+    flexShrink: 1,
   }
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
@@ -73,7 +73,12 @@ export default function TimetableScreen() {
 
   return (
     <View style={containerStyle}>
-      <SelectedLines ref={linesRef} onLayout={onLayout} onScroll={handleOnScroll} />
+      <SelectedLines
+        ref={linesRef}
+        onLayout={onLayout}
+        onScroll={handleOnScroll}
+        style={{ flexShrink: 0 }}
+      />
 
       <Animated.FlatList
         ref={timetablesRef}
@@ -83,9 +88,12 @@ export default function TimetableScreen() {
             <LineTimetable code={item} />
           </Animated.View>
         )}
+        style={{ flexGrow: 1, flexShrink: 1 }}
         keyExtractor={item => item}
         contentContainerStyle={{ padding: 8, gap: 8 }}
         onScroll={handleOnScroll}
+        pagingEnabled
+        snapToAlignment="center"
         horizontal
       />
     </View>
