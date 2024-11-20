@@ -78,6 +78,8 @@ export function useLineBusStops(
         setClosestStop(undefined)
         locationListener?.remove()
       }
+    }, {
+      fireImmediately: true,
     })
 
     return () => {
