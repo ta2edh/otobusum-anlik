@@ -19,4 +19,5 @@ export default {
   settings: 'Ayarlar',
   showMyLocation: 'Haritada konumumu göster',
   closeToThisStop: 'Şu an bu durağa yakınsınız',
+  showTraffic: 'Haritada trafik bilgisini göster',
 }

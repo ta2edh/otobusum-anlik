@@ -1,5 +1,5 @@
 import { View, StyleSheet, useColorScheme, StyleProp, ViewStyle } from 'react-native'
-import { mapDarkStyle } from '@/constants/mapStyles'
+import { getMapStyle } from '@/constants/mapStyles'
 import { colors } from '@/constants/colors'
 
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps'
@@ -20,6 +20,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme()
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
+  const showTraffic = useSettings(useShallow(state => state.showTraffic))
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -62,14 +63,14 @@ export default function HomeScreen() {
             pitch: 0,
             zoom: 13,
           }}
-          customMapStyle={colorScheme === 'dark' ? mapDarkStyle : undefined}
+          customMapStyle={getMapStyle(colorScheme)}
           mapPadding={{ top: insets.top, bottom: 4, left: 4, right: 4 }}
           onRegionChangeComplete={handleRegionChangeComplete}
           onMapLoaded={handleMapLoaded}
           onMapReady={handleReady}
           showsIndoors={false}
           toolbarEnabled={false}
-          showsTraffic={true}
+          showsTraffic={showTraffic}
           showsUserLocation={showMyLocation}
         >
           <LineMarkers />

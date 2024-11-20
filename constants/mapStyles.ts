@@ -1,3 +1,11 @@
+import { ColorSchemeName } from 'react-native'
+
+export const getMapStyle = (colorScheme: ColorSchemeName) => {
+  const mapStyle = colorScheme === 'dark' ? mapDarkStyle : mapLightStyle
+
+  return mapStyle
+}
+
 export const mapDarkStyle = [
   {
     elementType: 'geometry',
@@ -56,6 +64,24 @@ export const mapDarkStyle = [
     stylers: [
       {
         color: '#6b9a76',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.business',
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        visibility: 'off',
       },
     ],
   },
@@ -155,6 +181,27 @@ export const mapDarkStyle = [
     stylers: [
       {
         color: '#17263c',
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+]
+
+export const mapLightStyle = [
+  {
+    featureType: 'poi',
+    elementType: 'labels.text',
+    stylers: [
+      {
+        visibility: 'off',
       },
     ],
   },

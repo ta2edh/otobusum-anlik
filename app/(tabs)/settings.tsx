@@ -13,10 +13,11 @@ import { colors } from '@/constants/colors'
 export default function Settings() {
   const paddings = usePaddings()
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
+  const showTraffic = useSettings(useShallow(state => state.showTraffic))
   const { colorsTheme } = useTheme()
 
   const dynamicSettingContainer: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainer,
+    backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
   const handleToggleLocation = async () => {
@@ -35,16 +36,35 @@ export default function Settings() {
     }))
   }
 
+  const handleTrafficInformation = () => {
+    useSettings.setState(state => ({
+      showTraffic: !state.showTraffic,
+    }))
+  }
+
   return (
     <View style={paddings}>
-      <View style={[styles.settingContainer, dynamicSettingContainer]}>
-        <UiText>{i18n.t('showMyLocation')}</UiText>
-        <Switch
-          onValueChange={handleToggleLocation}
-          value={showMyLocation}
-          thumbColor={colors.primary}
-          trackColor={{ true: colors.primaryDarker }}
-        />
+      <View>
+        <UiText style={styles.title}>{i18n.t('map')}</UiText>
+
+        <View style={[styles.settingContainer, dynamicSettingContainer]}>
+          <UiText>{i18n.t('showMyLocation')}</UiText>
+          <Switch
+            onValueChange={handleToggleLocation}
+            value={showMyLocation}
+            thumbColor={colors.primary}
+            trackColor={{ true: colors.primaryDarker }}
+          />
+        </View>
+        <View style={[styles.settingContainer, dynamicSettingContainer]}>
+          <UiText>{i18n.t('showTraffic')}</UiText>
+          <Switch
+            onValueChange={handleTrafficInformation}
+            value={showTraffic}
+            thumbColor={colors.primary}
+            trackColor={{ true: colors.primaryDarker }}
+          />
+        </View>
       </View>
     </View>
   )
@@ -58,5 +78,10 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingHorizontal: 14,
     borderRadius: 8,
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 14,
   },
 })
