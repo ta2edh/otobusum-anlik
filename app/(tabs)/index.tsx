@@ -13,11 +13,13 @@ import { LineMarkers } from '@/components/markers/LineMarkers'
 
 import { useSettings } from '@/stores/settings'
 import { MapContext } from '@/hooks/useMap'
+import { useShallow } from 'zustand/react/shallow'
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null)
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme()
+  const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -60,6 +62,7 @@ export default function HomeScreen() {
           showsIndoors={false}
           toolbarEnabled={false}
           showsTraffic={true}
+          showsUserLocation={showMyLocation}
         >
           <LineMarkers />
         </MapView>

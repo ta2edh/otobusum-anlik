@@ -5,6 +5,7 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 
 export interface SettingsStore {
   initialMapLocation?: LatLng
+  showMyLocation?: boolean
 }
 
 export const useSettings = create(
@@ -12,6 +13,7 @@ export const useSettings = create(
     persist<SettingsStore>(
       () => ({
         initialMapLocation: undefined,
+        showMyLocation: false,
       }),
       {
         name: 'settings-storage',

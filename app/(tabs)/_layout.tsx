@@ -52,6 +52,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          tabBarLabel: i18n.t('settings'),
+          tabBarIcon: ({ focused }) => (
+            <Ionicons name={getName('settings', focused)} size={24} color={colorsTheme.color} />
+          ),
+        }}
+      />
     </Tabs>
   )
 }

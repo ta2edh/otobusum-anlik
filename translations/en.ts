@@ -16,4 +16,6 @@ export default {
   emptySearch: 'No results found',
   searchSomething: 'Search something',
   doorNo: 'Door No',
+  settings: 'Settings',
+  showMyLocation: 'Show my location on the map',
 }

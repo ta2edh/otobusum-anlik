@@ -47,7 +47,7 @@ const config: ExpoConfig = {
     },
     package: 'com.anonymous.otobusumanlik',
   },
-  plugins: ['expo-router', 'expo-localization'],
+  plugins: ['expo-router', 'expo-localization', 'expo-location'],
   experiments: {
     typedRoutes: true,
   },

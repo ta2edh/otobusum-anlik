@@ -16,4 +16,6 @@ export default {
   emptySearch: 'Herhangi bir sonuç bulunamadı',
   searchSomething: 'Bir şey arayın',
   doorNo: 'Kapı No',
+  settings: 'Ayarlar',
+  showMyLocation: 'Haritada konumumu göster',
 }

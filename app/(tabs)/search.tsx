@@ -4,16 +4,16 @@ import { TheSearchItem } from '@/components/TheSearchItem'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 
 import { UiText } from '@/components/ui/UiText'
+import { usePaddings } from '@/hooks/usePaddings'
 import { i18n } from '@/translations/i18n'
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
 
 import { useCallback, useMemo } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { StyleSheet, View } from 'react-native'
 
 export default function Search() {
-  const insets = useSafeAreaInsets()
+  const paddings = usePaddings()
 
   const mutation = useMutation({
     mutationFn: getSearchResults,
@@ -47,14 +47,6 @@ export default function Search() {
 
     return <UiText style={styles.empty}>{i18n.t('searchSomething')}</UiText>
   }, [mutation.data, mutation.isPending])
-
-  const extraPadding = 8
-  const paddings: StyleProp<ViewStyle> = {
-    paddingTop: insets.top + extraPadding,
-    paddingBottom: insets.bottom + extraPadding,
-    paddingLeft: insets.left + extraPadding,
-    paddingRight: insets.right + extraPadding,
-  }
 
   return (
     <View style={[styles.container, paddings]}>
