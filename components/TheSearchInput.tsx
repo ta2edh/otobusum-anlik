@@ -10,15 +10,26 @@ import {
 import Animated, { LinearTransition } from 'react-native-reanimated'
 import { i18n } from '@/translations/i18n'
 import { colors } from '@/constants/colors'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface Props extends ViewProps {
   isLoading?: boolean
+  debounce?: boolean
   onSearch: (query: string) => void
 }
 
-export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
+export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }: Props) {
   const queryValue = useRef('')
   const [queryDisabled, setQueryDisabled] = useState(() => true)
+
+  const handleSearch = useCallback(() => {
+    onSearch(queryValue.current)
+  }, [onSearch])
+
+  const handleDebouncedSearch = useDebouncedCallback(() => {
+    if (!queryValue.current) return
+    onSearch(queryValue.current)
+  }, 800)
 
   const handleQueryChange = useCallback(
     (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -30,13 +41,13 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
       else if (!queryValue.current && queryDisabled === false) {
         setQueryDisabled(true)
       }
-    },
-    [queryDisabled],
-  )
 
-  const handleSearch = useCallback(() => {
-    onSearch(queryValue.current)
-  }, [onSearch])
+      if (debounce) {
+        handleDebouncedSearch()
+      }
+    },
+    [queryDisabled, debounce, handleDebouncedSearch],
+  )
 
   return (
     <Animated.View layout={LinearTransition} style={[styles.container, style]} {...rest}>
@@ -44,7 +55,7 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         placeholder="KM-12, KM-12..."
         onChange={handleQueryChange}
         style={styles.input}
-        onSubmitEditing={handleSearch}
+        onSubmitEditing={debounce ? handleDebouncedSearch : handleSearch}
         multiline={false}
         returnKeyType="search"
       />
@@ -52,7 +63,7 @@ export function TheSearchInput({ isLoading, onSearch, style, ...rest }: Props) {
         title={i18n.t('search')}
         isLoading={isLoading}
         disabled={queryDisabled}
-        onPress={handleSearch}
+        onPress={debounce ? handleDebouncedSearch : handleSearch}
         style={{ backgroundColor: colors.primary }}
         icon="search"
       />

@@ -62,6 +62,7 @@ export default function Search() {
         onSearch={onSearch}
         isLoading={mutation.isPending}
         style={{ marginBottom: 8 }}
+        debounce
       />
 
       <View style={styles.list}>
