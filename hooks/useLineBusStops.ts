@@ -76,8 +76,6 @@ export function useLineBusStops(
       listen()
     }
     else if (!showMyLocation && closestStop) {
-      console.log('set undefined')
-
       setClosestStop(undefined)
       locationListener?.remove()
     }
