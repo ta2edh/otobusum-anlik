@@ -2,7 +2,6 @@ import { getLineBusStopLocations, BusStopLocation } from '@/api/getLineBusStopLo
 import { useQuery } from '@tanstack/react-query'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 import * as Location from 'expo-location'
 
 import { getDistanceFromLatLon } from '@/utils/getDistanceFromLatLon'
@@ -15,7 +14,6 @@ export function useLineBusStops(
   listenToUserLocation?: boolean,
 ) {
   const [closestStop, setClosestStop] = useState<BusStopLocation>()
-  const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
 
   const query = useQuery({
     queryKey: [`${code}-stop-locations`],
@@ -30,6 +28,7 @@ export function useLineBusStops(
     [query.data, direction, closestStop],
   )
 
+  // TODO: These location listeners should moved to their own provider like useMap()
   const handlePositionListener: Location.LocationCallback = useCallback(
     (location) => {
       let currentMinimumDistance
@@ -53,37 +52,39 @@ export function useLineBusStops(
         }
       }
 
-      if (currentClosestStop) {
+      if (currentClosestStop && currentClosestStop.durakKodu !== closestStop?.durakKodu) {
         setClosestStop(currentClosestStop)
       }
     },
-    [filteredStops],
+    [filteredStops, closestStop],
   )
+
+  const setupListener = useCallback(async () => {
+    const listener = await Location.watchPositionAsync(
+      { timeInterval: 5000, distanceInterval: 30 },
+      handlePositionListener,
+    )
+
+    return listener
+  }, [handlePositionListener])
 
   useEffect(() => {
     let locationListener: Location.LocationSubscription | undefined
-    const listen = async () => {
-      const loc = await Location.getCurrentPositionAsync()
-      handlePositionListener(loc)
-
-      locationListener = await Location.watchPositionAsync(
-        { timeInterval: 5000 },
-        handlePositionListener,
-      )
-    }
-
-    if (listenToUserLocation && showMyLocation) {
-      listen()
-    }
-    else if (!showMyLocation && closestStop) {
-      setClosestStop(undefined)
-      locationListener?.remove()
-    }
+    const unlisten = useSettings.subscribe(state => state.showMyLocation, async (showLocation) => {
+      if (listenToUserLocation && showLocation && !locationListener) {
+        locationListener = await setupListener()
+      }
+      else if (!showLocation && closestStop) {
+        setClosestStop(undefined)
+        locationListener?.remove()
+      }
+    })
 
     return () => {
+      unlisten()
       locationListener?.remove()
     }
-  }, [handlePositionListener, listenToUserLocation, showMyLocation, closestStop])
+  }, [closestStop, listenToUserLocation, setupListener])
 
   return {
     query,

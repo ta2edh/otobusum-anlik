@@ -1,10 +1,10 @@
-import { View, StyleSheet, useColorScheme } from 'react-native'
+import { View, StyleSheet, useColorScheme, StyleProp, ViewStyle } from 'react-native'
 import { mapDarkStyle } from '@/constants/mapStyles'
 import { colors } from '@/constants/colors'
 
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useCallback, useRef } from 'react'
+import { useCallback, useMemo, useRef } from 'react'
 import { SplashScreen } from 'expo-router'
 
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
@@ -29,6 +29,14 @@ export default function HomeScreen() {
       pitch: 0,
     })
   }, [])
+
+  const selectedLineContainer: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      position: 'absolute',
+      bottom: 0,
+    }),
+    [],
+  )
 
   const handleRegionChangeComplete = (region: Region, details: Details) => {
     if (!details.isGesture) return
@@ -67,7 +75,7 @@ export default function HomeScreen() {
           <LineMarkers />
         </MapView>
 
-        <View style={{ position: 'absolute', bottom: 0 }}>
+        <View style={selectedLineContainer}>
           <SelectedLines />
         </View>
       </MapContext.Provider>
