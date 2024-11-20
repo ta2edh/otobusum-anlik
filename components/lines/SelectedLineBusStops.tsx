@@ -12,8 +12,6 @@ import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiText } from '../ui/UiText'
 import { UiButton } from '../ui/UiButton'
 import Animated, {
-  FadeIn,
-  FadeOut,
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
@@ -150,11 +148,7 @@ export function SelectedLineBusStops(props: Props) {
       return (
         <View style={styles.item}>
           <View style={styles.itemTitle}>
-            <Animated.View
-              exiting={FadeOut}
-              entering={FadeIn}
-              style={[styles.itemCircle, colorStyle]}
-            >
+            <View style={[styles.itemCircle, colorStyle]}>
               {closestBus && (
                 <Ionicons
                   name="bus-outline"
@@ -162,7 +156,7 @@ export function SelectedLineBusStops(props: Props) {
                   size={20}
                 />
               )}
-            </Animated.View>
+            </View>
 
             <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
               {item.durakAdi}
