@@ -53,12 +53,13 @@ export default function HomeScreen() {
             zoom: 13,
           }}
           customMapStyle={colorScheme === 'dark' ? mapDarkStyle : undefined}
-          showsTraffic={true}
-          mapPadding={{ top: insets.top, bottom: 0, left: 0, right: 0 }}
+          mapPadding={{ top: insets.top, bottom: 4, left: 4, right: 4 }}
           onRegionChangeComplete={handleRegionChangeComplete}
           onMapLoaded={handleMapLoaded}
           onMapReady={handleReady}
           showsIndoors={false}
+          toolbarEnabled={false}
+          showsTraffic={true}
         >
           <LineMarkers />
         </MapView>
