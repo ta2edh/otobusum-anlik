@@ -131,7 +131,12 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
         </UiText>
 
         <View style={styles.titleContainer}>
-          <UiButton onPress={handleVisiblity} style={buttonContainerStyle} icon="eye-outline" />
+          <UiButton
+            onPress={handleVisiblity}
+            style={buttonContainerStyle}
+            icon="eye-outline"
+            textStyle={textContainerStyle}
+          />
 
           <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
@@ -184,7 +189,10 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
 type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 
-export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedLines({ style, ...props }, ref) {
+export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedLines(
+  { style, ...props },
+  ref,
+) {
   const keys = useLines(useShallow(state => Object.keys(state.lines))) || []
 
   const renderItem: ListRenderItem<string> = useCallback(

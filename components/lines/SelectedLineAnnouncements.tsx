@@ -5,8 +5,10 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { memo, useRef } from 'react'
-import { StyleSheet, ViewProps } from 'react-native'
+import { memo, useMemo, useRef } from 'react'
+import { StyleProp, StyleSheet, TextStyle, ViewProps } from 'react-native'
+import { useLines } from '@/stores/lines'
+import { useShallow } from 'zustand/react/shallow'
 
 interface Props extends ViewProps {
   code: string
@@ -14,10 +16,18 @@ interface Props extends ViewProps {
 
 export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const { bottomSheetStyle } = useTheme()
+  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { query } = useAnnouncements()
+  const { getSchemeColorHex, bottomSheetStyle } = useTheme(lineTheme)
 
   const lineAnnouncement = query.data?.find(ann => ann.HATKODU === props.code)
+
+  const textContainerStyle: StyleProp<TextStyle> = useMemo(
+    () => ({
+      color: getSchemeColorHex('onSecondaryContainer'),
+    }),
+    [getSchemeColorHex],
+  )
 
   return (
     <>
@@ -26,6 +36,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
         disabled={!lineAnnouncement}
         style={props.style}
         icon="megaphone-outline"
+        textStyle={textContainerStyle}
       />
 
       {!!lineAnnouncement && (
