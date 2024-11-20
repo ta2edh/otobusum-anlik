@@ -5,11 +5,12 @@ import { useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { getRouteDirection } from '@/utils/getRouteDirection'
 
-import { StyleSheet, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { UiText } from '../ui/UiText'
+import { StyleSheet, View, ViewStyle } from 'react-native'
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
+import { UiText } from '../ui/UiText'
+import { UiButton } from '../ui/UiButton'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -24,6 +25,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { Location } from '@/api/getLineBusLocations'
+import { useMap } from '@/hooks/useMap'
 
 interface Props {
   code: string
@@ -40,6 +42,7 @@ const EXPANDED = COLLAPSED * 2
 export function SelectedLineBusStops(props: Props) {
   const flashlistRef = useAnimatedRef<FlashList<BusStopLocation>>()
   const currentViewableItems = useRef<ViewToken[]>([])
+  const map = useMap()
 
   const currentTrackedBus = useRef<Location>()
   const containerHeight = useSharedValue(COLLAPSED)
@@ -51,7 +54,10 @@ export function SelectedLineBusStops(props: Props) {
   const { query } = useLineBusStops(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const busses = useMemo(() => line?.filter(bus => bus.guzergahkodu === props.routeCode), [line, props.routeCode])
+  const busses = useMemo(
+    () => line?.filter(bus => bus.guzergahkodu === props.routeCode),
+    [line, props.routeCode],
+  )
   const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'
   const filtered = query.data?.filter(stop => stop.yon === direction)
 
@@ -61,9 +67,7 @@ export function SelectedLineBusStops(props: Props) {
     const updatedBus = busses?.find(bus => bus.kapino === currentTrackedBus.current?.kapino)
     if (!updatedBus) return
 
-    const stopIndex = filtered?.findIndex(
-      stop => stop.durakKodu === updatedBus.yakinDurakKodu,
-    )
+    const stopIndex = filtered?.findIndex(stop => stop.durakKodu === updatedBus.yakinDurakKodu)
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -81,11 +85,9 @@ export function SelectedLineBusStops(props: Props) {
     if (isScrolling.value) return
 
     const trackedBus = busses?.find((bus) => {
-      return currentViewableItems.current.find(
-        ({ item }: { item: BusStopLocation }) => {
-          return item.durakKodu === bus.yakinDurakKodu
-        },
-      )
+      return currentViewableItems.current.find(({ item }: { item: BusStopLocation }) => {
+        return item.durakKodu === bus.yakinDurakKodu
+      })
     })
 
     if (!trackedBus) {
@@ -100,7 +102,7 @@ export function SelectedLineBusStops(props: Props) {
         scrollToTrackedBus()
       }, 300)
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busses, scrollToTrackedBus])
 
   const animatedContainerStyle = useAnimatedStyle(() => {
@@ -136,25 +138,49 @@ export function SelectedLineBusStops(props: Props) {
         backgroundColor: closestBus ? getSchemeColorHex('primaryContainer') : undefined,
       }
 
+      const handleZoomBus = () => {
+        map?.current?.animateCamera({
+          center: {
+            latitude: parseFloat(item.yKoordinati),
+            longitude: parseFloat(item.xKoordinati),
+          },
+        })
+      }
+
       return (
         <View style={styles.item}>
-          <Animated.View exiting={FadeOut} entering={FadeIn} style={[styles.itemCircle, colorStyle]}>
-            {closestBus && (
-              <Ionicons
-                name="bus-outline"
-                color={getSchemeColorHex('onPrimaryContainer')}
-                size={20}
-              />
-            )}
-          </Animated.View>
+          <View style={styles.itemTitle}>
+            <Animated.View
+              exiting={FadeOut}
+              entering={FadeIn}
+              style={[styles.itemCircle, colorStyle]}
+            >
+              {closestBus && (
+                <Ionicons
+                  name="bus-outline"
+                  color={getSchemeColorHex('onPrimaryContainer')}
+                  size={20}
+                />
+              )}
+            </Animated.View>
 
-          <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
-            {item.durakAdi}
-          </UiText>
+            <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
+              {item.durakAdi}
+            </UiText>
+          </View>
+
+          {closestBus && (
+            <UiButton
+              icon="locate"
+              onPress={handleZoomBus}
+              textStyle={{ color: getSchemeColorHex('onPrimaryContainer') }}
+              style={{ backgroundColor: getSchemeColorHex('primaryContainer') }}
+            />
+          )}
         </View>
       )
     },
-    [busses, getSchemeColorHex],
+    [busses, getSchemeColorHex, map],
   )
 
   const handleScrollDragStart = () => {
@@ -214,8 +240,15 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 4,
     padding: 4,
+    paddingRight: 8,
+  },
+  itemTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
   itemCircle: {
     width: 38,

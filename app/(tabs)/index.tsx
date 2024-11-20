@@ -41,32 +41,32 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <TheFocusAwareStatusBar />
 
-      <MapView
-        ref={map}
-        style={styles.map}
-        provider={PROVIDER_GOOGLE}
-        initialCamera={{
-          center: { latitude: 41.0082, longitude: 28.9784 },
-          heading: 0,
-          pitch: 0,
-          zoom: 13,
-        }}
-        customMapStyle={colorScheme === 'dark' ? mapDarkStyle : undefined}
-        showsTraffic={true}
-        mapPadding={{ top: insets.top, bottom: 0, left: 0, right: 0 }}
-        onRegionChangeComplete={handleRegionChangeComplete}
-        onMapLoaded={handleMapLoaded}
-        onMapReady={handleReady}
-        showsIndoors={false}
-      >
-        <MapContext.Provider value={map}>
+      <MapContext.Provider value={map}>
+        <MapView
+          ref={map}
+          style={styles.map}
+          provider={PROVIDER_GOOGLE}
+          initialCamera={{
+            center: { latitude: 41.0082, longitude: 28.9784 },
+            heading: 0,
+            pitch: 0,
+            zoom: 13,
+          }}
+          customMapStyle={colorScheme === 'dark' ? mapDarkStyle : undefined}
+          showsTraffic={true}
+          mapPadding={{ top: insets.top, bottom: 0, left: 0, right: 0 }}
+          onRegionChangeComplete={handleRegionChangeComplete}
+          onMapLoaded={handleMapLoaded}
+          onMapReady={handleReady}
+          showsIndoors={false}
+        >
           <LineMarkers />
-        </MapContext.Provider>
-      </MapView>
+        </MapView>
 
-      <View style={{ position: 'absolute', bottom: 0 }}>
-        <SelectedLines />
-      </View>
+        <View style={{ position: 'absolute', bottom: 0 }}>
+          <SelectedLines />
+        </View>
+      </MapContext.Provider>
     </View>
   )
 }
