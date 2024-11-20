@@ -18,4 +18,5 @@ export default {
   doorNo: 'Kapı No',
   settings: 'Ayarlar',
   showMyLocation: 'Haritada konumumu göster',
+  closeToThisStop: 'Şu an bu durağa yakınsınız',
 }

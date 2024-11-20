@@ -18,4 +18,5 @@ export default {
   doorNo: 'Door No',
   settings: 'Settings',
   showMyLocation: 'Show my location on the map',
+  closeToThisStop: 'Currently, you are closest to this stop',
 }

@@ -26,6 +26,7 @@ import { UiButton } from '../ui/UiButton'
 import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { Location as BusLocation } from '@/api/getLineBusLocations'
 import { useMap } from '@/hooks/useMap'
+import { i18n } from '@/translations/i18n'
 
 interface Props {
   code: string
@@ -167,7 +168,7 @@ export function SelectedLineBusStops(props: Props) {
 
               {closestStop?.durakKodu === item.durakKodu && (
                 <UiText info style={{ color: getSchemeColorHex('onPrimary'), fontSize: 12 }}>
-                  Suan bu duraga yakinsiniz
+                  {i18n.t('closeToThisStop')}
                 </UiText>
               )}
             </View>
