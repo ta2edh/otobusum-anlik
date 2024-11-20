@@ -26,8 +26,7 @@ export default function Settings() {
       if (granted) {
         showLocation = true
       }
-    }
-    else {
+    } else {
       showLocation = false
     }
 

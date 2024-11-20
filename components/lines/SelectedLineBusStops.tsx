@@ -72,8 +72,7 @@ export function SelectedLineBusStops(props: Props) {
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
-    }
-    else {
+    } else {
       flashlistRef.current?.scrollToIndex({
         animated: true,
         index: stopIndex,
@@ -94,8 +93,7 @@ export function SelectedLineBusStops(props: Props) {
     if (!trackedBus) {
       currentTrackedBus.current = undefined
       containerHeight.value = withDelay(1000, withTiming(COLLAPSED))
-    }
-    else {
+    } else {
       currentTrackedBus.current = trackedBus
       containerHeight.value = withTiming(COLLAPSED)
 

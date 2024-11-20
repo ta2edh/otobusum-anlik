@@ -72,8 +72,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
 
     if (element.route_code && element.route_code?.endsWith('D0')) {
       routesDefaults.push(element)
-    }
-    else {
+    } else {
       routesfiltered.push(element)
     }
   }

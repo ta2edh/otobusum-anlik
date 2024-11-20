@@ -37,8 +37,7 @@ export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }
 
       if (queryValue.current && queryDisabled === true) {
         setQueryDisabled(false)
-      }
-      else if (!queryValue.current && queryDisabled === false) {
+      } else if (!queryValue.current && queryDisabled === false) {
         setQueryDisabled(true)
       }
 

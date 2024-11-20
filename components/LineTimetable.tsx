@@ -26,8 +26,7 @@ function groupDeparturesByHour(obj: PlannedDeparture[]) {
 
     if (!res[hour]) {
       res[hour] = [element]
-    }
-    else {
+    } else {
       res[hour].push(element)
     }
   }

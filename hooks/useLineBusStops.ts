@@ -73,8 +73,7 @@ export function useLineBusStops(
     const unlisten = useSettings.subscribe(state => state.showMyLocation, async (showLocation) => {
       if (listenToUserLocation && showLocation && !locationListener) {
         locationListener = await setupListener()
-      }
-      else if (!showLocation && closestStop) {
+      } else if (!showLocation && closestStop) {
         setClosestStop(undefined)
         locationListener?.remove()
       }

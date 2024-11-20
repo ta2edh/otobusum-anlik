@@ -8,5 +8,6 @@ module.exports = {
   ],
   rules: {
     ...stylistic.configs['recommended-extends'].rules,
+    '@stylistic/brace-style': ['error', '1tbs'],
   },
 }
