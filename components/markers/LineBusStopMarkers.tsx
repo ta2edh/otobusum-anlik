@@ -33,7 +33,7 @@ export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props)
       longitude: parseFloat(stop.xKoordinati),
     }))
 
-    map.current?.fitToCoordinates(locs, {
+    map?.current?.fitToCoordinates(locs, {
       edgePadding: {
         top: 20,
         bottom: 200,

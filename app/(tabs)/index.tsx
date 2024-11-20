@@ -4,13 +4,13 @@ import { colors } from '@/constants/colors'
 
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useCallback, useRef } from 'react'
+import { SplashScreen } from 'expo-router'
 
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { SelectedLines } from '@/components/lines/SelectedLines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 
-import { SplashScreen } from 'expo-router'
-import { useCallback, useRef } from 'react'
 import { useSettings } from '@/stores/settings'
 import { MapContext } from '@/hooks/useMap'
 
