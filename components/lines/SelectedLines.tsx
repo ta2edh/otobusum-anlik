@@ -240,8 +240,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    flex: 1,
-    overflow: 'hidden',
   },
   directionText: {
     flexBasis: 0,
@@ -251,6 +249,7 @@ const styles = StyleSheet.create({
   },
   routeContainer: {
     gap: 8,
+    flexShrink: 0,
   },
   grow: {
     flexGrow: 1,
