@@ -169,7 +169,7 @@ export function SelectedLineBusStops(props: Props) {
             </UiText>
           </View>
 
-          {closestBus && (
+          {closestBus && map && (
             <UiButton
               icon="locate"
               onPress={handleZoomBus}
