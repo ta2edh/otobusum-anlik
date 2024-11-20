@@ -8,13 +8,14 @@ import { useShallow } from 'zustand/react/shallow'
 
 import * as Location from 'expo-location'
 import { i18n } from '@/translations/i18n'
+import { colors } from '@/constants/colors'
 
 export default function Settings() {
   const paddings = usePaddings()
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
   const { colorsTheme } = useTheme()
 
-  const dynamicPermissionContainer: StyleProp<ViewStyle> = {
+  const dynamicSettingContainer: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainer,
   }
 
@@ -25,7 +26,8 @@ export default function Settings() {
       if (granted) {
         showLocation = true
       }
-    } else {
+    }
+    else {
       showLocation = false
     }
 
@@ -36,11 +38,13 @@ export default function Settings() {
 
   return (
     <View style={paddings}>
-      <View style={[styles.permissionContainer, dynamicPermissionContainer]}>
+      <View style={[styles.settingContainer, dynamicSettingContainer]}>
         <UiText>{i18n.t('showMyLocation')}</UiText>
         <Switch
           onValueChange={handleToggleLocation}
           value={showMyLocation}
+          thumbColor={colors.primary}
+          trackColor={{ true: colors.primaryDarker }}
         />
       </View>
     </View>
@@ -48,12 +52,12 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
-  permissionContainer: {
+  settingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 8,
-    paddingHorizontal: 12,
+    padding: 12,
+    paddingHorizontal: 14,
     borderRadius: 8,
   },
 })

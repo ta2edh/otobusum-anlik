@@ -1,5 +1,6 @@
 export const colors = {
   primary: '#F0A300',
+  primaryDarker: '#c37d00',
   light: {
     surfaceContainerLowest: '#fafafa',
     surfaceContainerLow: '#f5f5f5',
