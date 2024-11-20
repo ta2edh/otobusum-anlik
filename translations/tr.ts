@@ -15,4 +15,5 @@ export default {
   routes: 'Güzergahlar',
   emptySearch: 'Herhangi bir sonuç bulunamadı',
   searchSomething: 'Bir şey arayın',
+  doorNo: 'Kapı No',
 }

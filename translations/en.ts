@@ -15,4 +15,5 @@ export default {
   routes: 'Routes',
   emptySearch: 'No results found',
   searchSomething: 'Search something',
+  doorNo: 'Door No',
 }

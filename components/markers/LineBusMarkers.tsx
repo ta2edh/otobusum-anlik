@@ -63,6 +63,11 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
               {location.hatad}
             </UiText>
             <UiText>
+              {i18n.t('doorNo')}
+              :
+              {location.kapino}
+            </UiText>
+            <UiText>
               {i18n.t('direction')}
               :
               {location.yon}
