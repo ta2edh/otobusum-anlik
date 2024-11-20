@@ -1,7 +1,6 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { useQuery } from '@tanstack/react-query'
+import { useAnnouncements } from '@/hooks/useAnnouncements'
 import { useTheme } from '@/hooks/useTheme'
-import { getAnnouncements } from '@/api/getAnnouncements'
 
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
@@ -16,14 +15,9 @@ interface Props extends ViewProps {
 export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const { bottomSheetStyle } = useTheme()
+  const { query } = useAnnouncements()
 
-  const announcements = useQuery({
-    queryKey: ['announcements'],
-    queryFn: getAnnouncements,
-    staleTime: 60_000 * 30,
-  })
-
-  const lineAnnouncement = announcements.data?.find(ann => ann.HATKODU === props.code)
+  const lineAnnouncement = query.data?.find(ann => ann.HATKODU === props.code)
 
   return (
     <>
