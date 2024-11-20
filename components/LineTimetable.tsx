@@ -40,7 +40,16 @@ interface Props {
 }
 
 export function LineTimetable(props: Props) {
-  const [dayType, setDayType] = useState<DayType>(() => 'I')
+  const now = new Date()
+  const day = now.getDay()
+
+  const defaultDayType: DayType = day === 6
+    ? 'C'
+    : day === 0
+      ? 'P'
+      : 'I'
+
+  const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
@@ -153,7 +162,14 @@ export function LineTimetable(props: Props) {
                       key={`${props.code}-${departure.SSERVISTIPI}-${
                         departure.SGUZERAH
                       }-${hour}-${departure.DT.split(':').at(-1)}`}
-                      style={[styles.cell, textStyle, cancelledHours.includes(departure.DT) && { textDecorationLine: 'line-through', opacity: 0.5 }]}
+                      style={[
+                        styles.cell,
+                        textStyle,
+                        cancelledHours.includes(departure.DT) && {
+                          textDecorationLine: 'line-through',
+                          opacity: 0.5,
+                        },
+                      ]}
                     >
                       {departure.DT.split(':').at(-1)}
                     </UiText>
