@@ -8,9 +8,6 @@ import { getRouteDirection } from '@/utils/getRouteDirection'
 import { useShallow } from 'zustand/react/shallow'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
-import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { UiText } from '../ui/UiText'
-import { UiButton } from '../ui/UiButton'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -21,8 +18,13 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+
+import { UiActivityIndicator } from '../ui/UiActivityIndicator'
+import { UiText } from '../ui/UiText'
+import { UiButton } from '../ui/UiButton'
+
 import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
-import { Location } from '@/api/getLineBusLocations'
+import { Location as BusLocation } from '@/api/getLineBusLocations'
 import { useMap } from '@/hooks/useMap'
 
 interface Props {
@@ -40,24 +42,24 @@ const EXPANDED = COLLAPSED * 2
 export function SelectedLineBusStops(props: Props) {
   const flashlistRef = useAnimatedRef<FlashList<BusStopLocation>>()
   const currentViewableItems = useRef<ViewToken[]>([])
+  const currentTrackedBus = useRef<BusLocation>()
   const map = useMap()
 
-  const currentTrackedBus = useRef<Location>()
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
   const scrollY = useSharedValue(0)
 
   const line = useLines(useShallow(state => state.lines[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const { query } = useLineBusStops(props.code)
+
+  const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'
+  const { filteredStops, query, closestStop } = useLineBusStops(props.code, direction, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(
     () => line?.filter(bus => bus.guzergahkodu === props.routeCode),
     [line, props.routeCode],
   )
-  const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'
-  const filtered = query.data?.filter(stop => stop.yon === direction)
 
   const scrollToTrackedBus = useCallback(() => {
     if (!currentTrackedBus.current) return
@@ -65,7 +67,7 @@ export function SelectedLineBusStops(props: Props) {
     const updatedBus = busses?.find(bus => bus.kapino === currentTrackedBus.current?.kapino)
     if (!updatedBus) return
 
-    const stopIndex = filtered?.findIndex(stop => stop.durakKodu === updatedBus.yakinDurakKodu)
+    const stopIndex = filteredStops?.findIndex(stop => stop.durakKodu === updatedBus.yakinDurakKodu)
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -77,7 +79,7 @@ export function SelectedLineBusStops(props: Props) {
         viewPosition: 0.5,
       })
     }
-  }, [busses, filtered, flashlistRef])
+  }, [busses, filteredStops, flashlistRef])
 
   const snapToBus = useCallback(() => {
     if (isScrolling.value) return
@@ -158,9 +160,17 @@ export function SelectedLineBusStops(props: Props) {
               )}
             </View>
 
-            <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
-              {item.durakAdi}
-            </UiText>
+            <View>
+              <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
+                {item.durakAdi}
+              </UiText>
+
+              {closestStop?.durakKodu === item.durakKodu && (
+                <UiText info style={{ color: getSchemeColorHex('onPrimary'), fontSize: 12 }}>
+                  Suan bu duraga yakinsiniz
+                </UiText>
+              )}
+            </View>
           </View>
 
           {closestBus && map && (
@@ -174,7 +184,7 @@ export function SelectedLineBusStops(props: Props) {
         </View>
       )
     },
-    [busses, getSchemeColorHex, map],
+    [busses, closestStop, getSchemeColorHex, map],
   )
 
   const handleScrollDragStart = () => {
@@ -194,7 +204,7 @@ export function SelectedLineBusStops(props: Props) {
     return <UiActivityIndicator />
   }
 
-  if (!filtered) {
+  if (!filteredStops) {
     return null
   }
 
@@ -206,7 +216,7 @@ export function SelectedLineBusStops(props: Props) {
     <Animated.View style={animatedContainerStyle}>
       <AnimatedFlashList
         ref={flashlistRef}
-        data={filtered}
+        data={filteredStops}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
         keyExtractor={item => item.durakKodu}
