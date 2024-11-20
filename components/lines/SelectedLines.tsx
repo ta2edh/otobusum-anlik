@@ -38,22 +38,22 @@ interface Props extends AnimatedProps<ViewProps> {
 }
 
 export const SelectedLine = memo(function SelectedLine(props: Props) {
-  const { width } = useWindowDimensions()
-  const isVisible = useSharedValue(true)
-
+  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
 
   const deleteLine = useLines(useShallow(state => state.deleteLine))
+  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+
+  const { width } = useWindowDimensions()
+  const { getSchemeColorHex } = useTheme(lineTheme)
+  const isVisible = useSharedValue(true)
+
   const {
     findOtherRouteDirection,
     findRouteFromCode,
     query: { isPending },
   } = useRouteFilter(props.code)
-
-  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const { getSchemeColorHex } = useTheme(lineTheme)
 
   useEffect(() => {
     const unsub = useFilters.subscribe(
