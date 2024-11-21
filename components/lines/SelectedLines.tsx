@@ -160,7 +160,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
               <View style={styles.lineButtonsContainer}>
                 <UiButton
                   onPress={handleSwitchRoute}
-                  icon="refresh"
+                  icon="repeat"
                   style={buttonContainerStyle}
                   textStyle={textContainerStyle}
                 />
