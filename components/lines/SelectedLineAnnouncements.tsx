@@ -46,7 +46,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
           enableDynamicSizing={false}
           {...bottomSheetStyle}
         >
-          <BottomSheetScrollView>
+          <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
             {announcements.map(ann => (
               <View key={`${ann.GUNCELLEME_SAATI}-${ann.MESAJ}`} style={styles.announcementContainer}>
                 <UiText>{ann.GUNCELLEME_SAATI}</UiText>
@@ -61,6 +61,9 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
 })
 
 const styles = StyleSheet.create({
+  contentContainer: {
+    padding: 14,
+  },
   announcementContainer: {
     padding: 8,
     flex: 1,
