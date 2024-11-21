@@ -62,7 +62,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
 
 const styles = StyleSheet.create({
   contentContainer: {
-    padding: 14,
+    padding: 8,
   },
   announcementContainer: {
     padding: 8,
