@@ -1,6 +1,5 @@
 import { View, StyleSheet, useColorScheme, StyleProp, ViewStyle } from 'react-native'
 import { getMapStyle } from '@/constants/mapStyles'
-import { colors } from '@/constants/colors'
 
 import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -91,11 +90,5 @@ const styles = StyleSheet.create({
   },
   map: {
     height: '100%',
-  },
-  handle: {
-    backgroundColor: colors.dark.surfaceContainerLow,
-  },
-  sheetBackground: {
-    backgroundColor: colors.dark.surfaceContainerLow,
   },
 })
