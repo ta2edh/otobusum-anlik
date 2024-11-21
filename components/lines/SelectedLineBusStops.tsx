@@ -27,6 +27,7 @@ import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/f
 import { Location as BusLocation } from '@/api/getLineBusLocations'
 import { useMap } from '@/hooks/useMap'
 import { i18n } from '@/translations/i18n'
+import { useDebouncedCallback } from 'use-debounce'
 
 interface Props {
   code: string
@@ -104,6 +105,8 @@ export function SelectedLineBusStops(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busses, scrollToTrackedBus])
 
+  const snapToBusDebounced = useDebouncedCallback(snapToBus, 400)
+
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       height: containerHeight.value,
@@ -118,7 +121,7 @@ export function SelectedLineBusStops(props: Props) {
     () => isScrolling.value,
     () => {
       if (!isScrolling.value) {
-        runOnJS(snapToBus)()
+        runOnJS(snapToBusDebounced)()
       }
     },
     [snapToBus],
