@@ -21,7 +21,7 @@ export function useLineBusStops(
     staleTime: 60_000 * 30,
   })
 
-  // Closest stop dependecy is here to cause rerender on flatlist usage
+  // Closest stop dependency is here to cause rerender on flatlist usage
   const filteredStops = useMemo(
     () => query.data?.filter(stop => stop.yon === direction),
     // eslint-disable-next-line react-hooks/exhaustive-deps

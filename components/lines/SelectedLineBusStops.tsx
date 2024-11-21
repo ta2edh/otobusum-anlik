@@ -107,11 +107,16 @@ export function SelectedLineBusStops(props: Props) {
 
   const snapToBusDebounced = useDebouncedCallback(snapToBus, 400)
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      height: containerHeight.value,
-    }
-  }, [])
+  useEffect(() => {
+    if (currentTrackedBus.current || !closestStop || !filteredStops) return
+    const closestIndex = filteredStops?.findIndex(stop => stop.durakKodu === closestStop?.durakKodu)
+
+    flashlistRef.current?.scrollToIndex({
+      animated: true,
+      index: closestIndex,
+      viewPosition: 0.5,
+    })
+  }, [closestStop, filteredStops, flashlistRef])
 
   useEffect(() => {
     scrollToTrackedBus()
@@ -126,6 +131,12 @@ export function SelectedLineBusStops(props: Props) {
     },
     [snapToBus],
   )
+
+  const animatedContainerStyle = useAnimatedStyle(() => {
+    return {
+      height: containerHeight.value,
+    }
+  }, [])
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
     scrollY.value = contentOffset.y
