@@ -17,7 +17,7 @@ export default function Settings() {
   const { colorsTheme } = useTheme()
 
   const dynamicSettingContainer: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
+    backgroundColor: colorsTheme.surfaceContainer,
   }
 
   const handleToggleLocation = async () => {
@@ -44,7 +44,7 @@ export default function Settings() {
 
   return (
     <View style={paddings}>
-      <View>
+      <View style={styles.outerContainer}>
         <UiText style={styles.title}>{i18n.t('map')}</UiText>
 
         <View style={[styles.settingContainer, dynamicSettingContainer]}>
@@ -71,6 +71,9 @@ export default function Settings() {
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    gap: 8,
+  },
   settingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
