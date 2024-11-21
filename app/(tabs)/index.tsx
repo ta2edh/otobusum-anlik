@@ -1,25 +1,17 @@
-import { View, StyleSheet, useColorScheme, StyleProp, ViewStyle } from 'react-native'
-import { getMapStyle } from '@/constants/mapStyles'
-
-import MapView, { Details, PROVIDER_GOOGLE, Region } from 'react-native-maps'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useCallback, useMemo, useRef } from 'react'
-import { SplashScreen } from 'expo-router'
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
+import MapView from 'react-native-maps'
+import { useCallback, useRef } from 'react'
 
 import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { SelectedLines } from '@/components/lines/SelectedLines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
+import { TheMap } from '@/components/TheMap'
 
 import { useSettings } from '@/stores/settings'
 import { MapContext } from '@/hooks/useMap'
-import { useShallow } from 'zustand/react/shallow'
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null)
-  const insets = useSafeAreaInsets()
-  const colorScheme = useColorScheme()
-  const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
-  const showTraffic = useSettings(useShallow(state => state.showTraffic))
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
@@ -30,21 +22,9 @@ export default function HomeScreen() {
     })
   }, [])
 
-  const selectedLineContainer: StyleProp<ViewStyle> = useMemo(
-    () => ({
-      position: 'absolute',
-      bottom: 0,
-    }),
-    [],
-  )
-
-  const handleRegionChangeComplete = (region: Region, details: Details) => {
-    if (!details.isGesture) return
-    useSettings.setState(() => ({ initialMapLocation: { ...region } }))
-  }
-
-  const handleMapLoaded = () => {
-    SplashScreen.hideAsync()
+  const selectedLineContainer: StyleProp<ViewStyle> = {
+    position: 'absolute',
+    bottom: 0,
   }
 
   return (
@@ -52,28 +32,9 @@ export default function HomeScreen() {
       <TheFocusAwareStatusBar />
 
       <MapContext.Provider value={map}>
-        <MapView
-          ref={map}
-          style={styles.map}
-          provider={PROVIDER_GOOGLE}
-          initialCamera={{
-            center: { latitude: 41.0082, longitude: 28.9784 },
-            heading: 0,
-            pitch: 0,
-            zoom: 13,
-          }}
-          customMapStyle={getMapStyle(colorScheme)}
-          mapPadding={{ top: insets.top, bottom: 4, left: 4, right: 4 }}
-          onRegionChangeComplete={handleRegionChangeComplete}
-          onMapLoaded={handleMapLoaded}
-          onMapReady={handleReady}
-          showsIndoors={false}
-          toolbarEnabled={false}
-          showsTraffic={showTraffic}
-          showsUserLocation={showMyLocation}
-        >
+        <TheMap ref={map} onMapReady={handleReady}>
           <LineMarkers />
-        </MapView>
+        </TheMap>
 
         <View style={selectedLineContainer}>
           <SelectedLines />
@@ -87,8 +48,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     color: 'white',
-  },
-  map: {
-    height: '100%',
   },
 })
