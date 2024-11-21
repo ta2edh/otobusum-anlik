@@ -3,10 +3,11 @@ import { useTheme } from '@/hooks/useTheme'
 import { usePaddings } from '@/hooks/usePaddings'
 import { useSettings } from '@/stores/settings'
 
-import { StyleProp, StyleSheet, Switch, View, ViewStyle } from 'react-native'
+import { ScrollView, StyleProp, StyleSheet, Switch, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import * as Location from 'expo-location'
+import Constants from 'expo-constants'
 import { i18n } from '@/translations/i18n'
 import { colors } from '@/constants/colors'
 
@@ -43,7 +44,10 @@ export default function Settings() {
   }
 
   return (
-    <View style={paddings}>
+    <ScrollView
+      style={[paddings, styles.scrollContainer]}
+      contentContainerStyle={styles.scrollContainer}
+    >
       <View style={styles.outerContainer}>
         <UiText style={styles.title}>{i18n.t('map')}</UiText>
 
@@ -66,11 +70,18 @@ export default function Settings() {
           />
         </View>
       </View>
-    </View>
+
+      <UiText info style={styles.version}>
+        {`Version ${Constants.expoConfig?.version}`}
+      </UiText>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flex: 1,
+  },
   outerContainer: {
     gap: 8,
   },
@@ -86,5 +97,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginLeft: 14,
+  },
+  version: {
+    marginTop: 'auto',
   },
 })
