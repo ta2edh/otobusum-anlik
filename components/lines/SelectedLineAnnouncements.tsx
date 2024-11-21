@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
 import { useAnnouncements } from '@/hooks/useAnnouncements'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -6,7 +6,7 @@ import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
 import { memo, useMemo, useRef } from 'react'
-import { StyleProp, StyleSheet, TextStyle, ViewProps } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle, View, ViewProps } from 'react-native'
 import { useLines } from '@/stores/lines'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -20,7 +20,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
   const { query } = useAnnouncements()
   const { getSchemeColorHex, bottomSheetStyle } = useTheme(lineTheme)
 
-  const lineAnnouncement = query.data?.find(ann => ann.HATKODU === props.code)
+  const announcements = query.data?.filter(ann => ann.HATKODU === props.code)
 
   const textContainerStyle: StyleProp<TextStyle> = useMemo(
     () => ({
@@ -33,23 +33,27 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
     <>
       <UiButton
         onPress={() => bottomSheetModal.current?.present()}
-        disabled={!lineAnnouncement}
+        disabled={announcements === undefined || announcements.length === 0}
         style={props.style}
         icon="megaphone-outline"
         textStyle={textContainerStyle}
       />
 
-      {!!lineAnnouncement && (
+      {announcements !== undefined && announcements.length > 0 && (
         <BottomSheetModal
           ref={bottomSheetModal}
           snapPoints={['50%']}
           enableDynamicSizing={false}
           {...bottomSheetStyle}
         >
-          <BottomSheetView style={styles.announcementsContainer}>
-            <UiText>{lineAnnouncement.GUNCELLEME_SAATI}</UiText>
-            <UiText>{lineAnnouncement.MESAJ}</UiText>
-          </BottomSheetView>
+          <BottomSheetScrollView>
+            {announcements.map(ann => (
+              <View key={`${ann.GUNCELLEME_SAATI}-${ann.MESAJ}`} style={styles.announcementContainer}>
+                <UiText>{ann.GUNCELLEME_SAATI}</UiText>
+                <UiText>{ann.MESAJ}</UiText>
+              </View>
+            ))}
+          </BottomSheetScrollView>
         </BottomSheetModal>
       )}
     </>
@@ -57,7 +61,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
 })
 
 const styles = StyleSheet.create({
-  announcementsContainer: {
+  announcementContainer: {
     padding: 8,
     flex: 1,
   },
