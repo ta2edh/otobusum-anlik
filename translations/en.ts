@@ -19,5 +19,5 @@ export default {
   settings: 'Settings',
   showMyLocation: 'Show my location on the map',
   closeToThisStop: 'Currently, you are closest to this stop',
-  showTraffic: 'Show traffic information on map',
+  showTraffic: 'Show traffic information on the map',
 }
