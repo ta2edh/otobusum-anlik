@@ -9,7 +9,7 @@ import { useRef } from 'react'
 import { i18n } from '@/translations/i18n'
 import { UiText } from '@/components/ui/UiText'
 import { useLines } from '@/stores/lines'
-import { Location } from '@/api/getLineBusLocations'
+import { BusLocation } from '@/api/getLineBusLocations'
 import { useTheme } from '@/hooks/useTheme'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -22,7 +22,7 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
   lineCode,
 }: {
   lineCode: string
-  location: Location
+  location: BusLocation
 }) {
   const markerRef = useRef<MapMarker>(null)
   const lineTheme = useLines(useShallow(state => state.lineTheme[lineCode]))

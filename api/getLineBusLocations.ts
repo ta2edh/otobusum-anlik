@@ -1,7 +1,7 @@
 import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
 import { getBody } from './body'
 
-export interface Location {
+export interface BusLocation {
   kapino: string
   boylam: string
   enlem: string
@@ -31,6 +31,6 @@ export async function getLineBusLocations(code: string) {
   const innerContent = extractInnerContentXml(key, content)
   if (!innerContent) return []
 
-  const responseParsed: Location[] = JSON.parse(innerContent)
+  const responseParsed: BusLocation[] = JSON.parse(innerContent)
   return responseParsed
 }

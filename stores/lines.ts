@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
-import { getLineBusLocations, Location } from '@/api/getLineBusLocations'
+import { getLineBusLocations, BusLocation } from '@/api/getLineBusLocations'
 import { createTheme } from '@/utils/createTheme'
 import { ToastAndroid } from 'react-native'
 
@@ -10,11 +10,11 @@ import { SearchResult } from '@/api/getSearchResults'
 import { Theme } from '@material/material-color-utilities'
 
 export interface LinesStore {
-  lines: Record<string, Location[]>
+  lines: Record<string, BusLocation[]>
   lineTheme: Record<string, Theme>
   addLine: (code: SearchResult) => Promise<void>
   deleteLine: (code: string) => void
-  updateLine: (code: string, newLine: Location[]) => void
+  updateLine: (code: string, newLine: BusLocation[]) => void
 }
 
 export const useLines = create(

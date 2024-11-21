@@ -24,7 +24,7 @@ import { UiText } from '../ui/UiText'
 import { UiButton } from '../ui/UiButton'
 
 import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
-import { Location as BusLocation } from '@/api/getLineBusLocations'
+import { BusLocation } from '@/api/getLineBusLocations'
 import { useMap } from '@/hooks/useMap'
 import { i18n } from '@/translations/i18n'
 import { useDebouncedCallback } from 'use-debounce'
