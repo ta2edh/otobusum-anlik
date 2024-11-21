@@ -13,6 +13,7 @@ import {
   TextStyle,
   ViewProps,
   FlatList,
+  Pressable,
 } from 'react-native'
 import Animated, {
   AnimatedProps,
@@ -172,7 +173,10 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
                 />
               </View>
 
-              <View style={[styles.lineButtonsContainer, { flexGrow: 1 }]}>
+              <Pressable
+                onPress={handleSwitchRoute}
+                style={[styles.lineButtonsContainer, { flexGrow: 1 }]}
+              >
                 <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
                   {leftTitle}
                 </UiText>
@@ -180,7 +184,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
                 <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
                   {rightTitle}
                 </UiText>
-              </View>
+              </Pressable>
             </Animated.View>
           )}
     </Animated.View>
