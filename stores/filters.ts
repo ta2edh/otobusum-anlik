@@ -81,3 +81,16 @@ export const useFilters = create(
     ),
   ),
 )
+
+export const deleteLineFromGroup = (groupId: string, lineCode: string) => useFilters.setState((state) => {
+  const codeIndex = state.lineGroups[groupId]?.findIndex(code => code === lineCode)
+  if (!codeIndex) return state
+
+  state.lineGroups[groupId]?.splice(codeIndex, 1)
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: [...(state.lineGroups[groupId] || [])],
+    },
+  }
+})

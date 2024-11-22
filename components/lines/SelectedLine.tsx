@@ -1,7 +1,7 @@
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
 import { useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
 import {
@@ -22,6 +22,7 @@ import Animated, {
   AnimatedProps,
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
+
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
@@ -35,10 +36,9 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
-
-  const deleteLine = useLines(useShallow(state => state.deleteLine))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { width } = useWindowDimensions()
@@ -48,6 +48,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
   const {
     findOtherRouteDirection,
     findRouteFromCode,
+    getDefaultRoute,
     query: { isPending },
   } = useRouteFilter(props.code)
 
@@ -65,7 +66,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
     return unsub
   }, [props.code, isVisible])
 
-  const route = selectedRoute ? findRouteFromCode(selectedRoute) : undefined
+  const route = selectedRoute ? findRouteFromCode(selectedRoute) : getDefaultRoute()
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
@@ -79,6 +80,10 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   const handleVisiblity = () => {
     toggleInvisibleRoute(props.code)
+  }
+
+  const handleDelete = () => {
+    deleteLine(props.code)
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -137,7 +142,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
           <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
           <UiButton
-            onPress={() => deleteLine(props.code)}
+            onPress={handleDelete}
             style={buttonContainerStyle}
             icon="trash-outline"
             textStyle={textContainerStyle}
