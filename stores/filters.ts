@@ -6,73 +6,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>
-  invisibleRoutes: Record<string, boolean>
+  invisibleLines: Record<string, boolean>
   lineGroups: Record<string, string[]>
   selectedGroup: string | undefined
-  selectGroup: (groupUuid: string) => void
-  addLineToGroup: (lineCode: string, groupUuid: string) => void
-  createNewGroup: () => void
-  toggleInvisibleRoute: (code: string) => void
-  setRoute: (code: string, routeCode: string) => void
 }
 
 export const useFilters = create(
   subscribeWithSelector(
     persist<FiltersStore>(
-      (set, _get) => ({
+      () => ({
         selectedRoutes: {},
-        invisibleRoutes: {},
+        invisibleLines: {},
         lineGroups: {},
         selectedGroup: undefined,
-        selectGroup: groupId => set(() => ({ selectedGroup: groupId })),
-        addLineToGroup: (lineCode, groupUuid) =>
-          set((state) => {
-            const targetGroup = state.lineGroups[groupUuid] || []
-
-            if (targetGroup.includes(lineCode)) {
-              ToastAndroid.show('This line is already in group', ToastAndroid.SHORT)
-              return state
-            }
-
-            return {
-              lineGroups: {
-                ...state.lineGroups,
-                [groupUuid]: [...targetGroup, lineCode],
-              },
-            }
-          }),
-        createNewGroup: () =>
-          set((state) => {
-            const uuid = randomUUID()
-            return {
-              lineGroups: {
-                ...state.lineGroups,
-                [uuid]: [],
-              },
-            }
-          }),
-        toggleInvisibleRoute: code =>
-          set((state) => {
-            if (state.invisibleRoutes[code]) {
-              delete state.invisibleRoutes[code]
-              return {
-                invisibleRoutes: {
-                  ...state.invisibleRoutes,
-                },
-              }
-            }
-
-            return {
-              invisibleRoutes: {
-                ...state.invisibleRoutes,
-                [code]: true,
-              },
-            }
-          }),
-        setRoute: (code, routeCode) =>
-          set(state => ({
-            selectedRoutes: { ...state.selectedRoutes, [code]: routeCode },
-          })),
       }),
       {
         name: 'filter-storage',
@@ -81,6 +27,64 @@ export const useFilters = create(
     ),
   ),
 )
+
+export const toggleLineVisibility = (lineCode: string) => useFilters.setState((state) => {
+  if (state.invisibleLines[lineCode]) {
+    delete state.invisibleLines[lineCode]
+    return {
+      invisibleLines: {
+        ...state.invisibleLines,
+      },
+    }
+  }
+
+  return {
+    invisibleLines: {
+      [lineCode]: true,
+    },
+  }
+})
+
+export const selectRoute = (lineCode: string, routeCode: string) => useFilters.setState((state) => {
+  return {
+    selectedRoutes: {
+      ...state.selectedRoutes,
+      [lineCode]: routeCode,
+    },
+  }
+})
+
+export const selectGroup = (groupId: string) => useFilters.setState((state) => {
+  return {
+    selectedGroup: groupId,
+  }
+})
+
+export const createNewGroup = () => useFilters.setState((state) => {
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [randomUUID()]: [],
+    },
+  }
+})
+
+export const addLineToGroup = (groupId: string, lineCode: string) => useFilters.setState((state) => {
+  const group = state.lineGroups[groupId]
+  if (!group) return state
+
+  if (group.includes(lineCode)) {
+    ToastAndroid.show('This line is already in group', ToastAndroid.SHORT)
+    return state
+  }
+
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: [...group, lineCode],
+    },
+  }
+})
 
 export const deleteLineFromGroup = (groupId: string, lineCode: string) => useFilters.setState((state) => {
   const codeIndex = state.lineGroups[groupId]?.findIndex(code => code === lineCode)

@@ -1,6 +1,6 @@
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
-import { useFilters } from '@/stores/filters'
+import { selectRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
 import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
@@ -36,9 +36,6 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-
-  const setRoute = useFilters(useShallow(state => state.setRoute))
-  const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { width } = useWindowDimensions()
@@ -54,7 +51,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   useEffect(() => {
     const unsub = useFilters.subscribe(
-      state => state.invisibleRoutes[props.code],
+      state => state.invisibleLines[props.code],
       (newCodes) => {
         isVisible.value = !newCodes
       },
@@ -75,11 +72,11 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
     const otherDirection = findOtherRouteDirection(selectedRoute)
     if (!otherDirection || !otherDirection.route_code) return
 
-    setRoute(props.code, otherDirection.route_code)
+    selectRoute(props.code, otherDirection.route_code)
   }
 
-  const handleVisiblity = () => {
-    toggleInvisibleRoute(props.code)
+  const handleVisibility = () => {
+    toggleLineVisibility(props.code)
   }
 
   const handleDelete = () => {
@@ -133,7 +130,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
         <View style={styles.titleContainer}>
           <UiButton
-            onPress={handleVisiblity}
+            onPress={handleVisibility}
             style={buttonContainerStyle}
             icon="eye-outline"
             textStyle={textContainerStyle}

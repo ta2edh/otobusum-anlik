@@ -1,6 +1,6 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useTheme } from '@/hooks/useTheme'
-import { useFilters } from '@/stores/filters'
+import { createNewGroup, useFilters } from '@/stores/filters'
 import { ListRenderItem } from '@shopify/flash-list'
 import { colors } from '@/constants/colors'
 import { UiButton } from '@/components/ui/UiButton'
@@ -19,7 +19,6 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   ref,
 ) {
   const groups = useFilters(useShallow(state => Object.keys(state.lineGroups)))
-  const createNewGroup = useFilters(state => state.createNewGroup)
   const { bottomSheetStyle, getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(
@@ -31,7 +30,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
-  }, [createNewGroup])
+  }, [])
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: groupId }) => (
