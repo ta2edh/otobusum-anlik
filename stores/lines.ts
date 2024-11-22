@@ -1,13 +1,13 @@
 import { create } from 'zustand'
 import { subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
+import { ToastAndroid } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { Theme } from '@material/material-color-utilities'
+
+import { SearchResult } from '@/api/getSearchResults'
 import { getLineBusLocations, BusLocation } from '@/api/getLineBusLocations'
 import { createTheme } from '@/utils/createTheme'
-import { ToastAndroid } from 'react-native'
-
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFilters } from './filters'
-import { SearchResult } from '@/api/getSearchResults'
-import { Theme } from '@material/material-color-utilities'
 
 export interface LinesStore {
   lines: Record<string, BusLocation[]>
@@ -42,7 +42,6 @@ export const useLines = create(
 
           return set((state) => {
             const newColor = createTheme()
-
             return {
               lines: {
                 ...state.lines,
@@ -59,15 +58,7 @@ export const useLines = create(
           set((state) => {
             delete state.lines[code]
             delete state.lineTheme[code]
-
-            return {
-              lines: {
-                ...state.lines,
-              },
-              lineTheme: {
-                ...state.lineTheme,
-              },
-            }
+            return { ...state }
           }),
         updateLine: (code, newLocations) =>
           set((state) => {

@@ -29,11 +29,11 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 
-interface Props extends AnimatedProps<ViewProps> {
+export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
-export const SelectedLine = memo(function SelectedLine(props: Props) {
+export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const setRoute = useFilters(useShallow(state => state.setRoute))
   const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     gap: 8,
+    flexShrink: 0,
   },
   titleContainer: {
     flexDirection: 'row',

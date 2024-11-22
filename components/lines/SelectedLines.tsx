@@ -1,12 +1,8 @@
-import {
-  StyleSheet,
-  ListRenderItem,
-  FlatList,
-} from 'react-native'
+import { StyleSheet, ListRenderItem, FlatList } from 'react-native'
 import Animated, {
   FlatListPropsWithLayout,
 } from 'react-native-reanimated'
-import { useCallback, forwardRef } from 'react'
+import { forwardRef, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { SelectedLine } from './SelectedLine'
 import { useLines } from '@/stores/lines'
@@ -17,7 +13,7 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
   { style, ...props },
   ref,
 ) {
-  const keys = useLines(useShallow(state => Object.keys(state.lines))) || []
+  const lineCodes = useLines(useShallow(state => Object.keys(state.lines))) || []
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
@@ -30,7 +26,7 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
     [props.children],
   )
 
-  if (keys.length < 1) {
+  if (lineCodes.length < 1) {
     return null
   }
 
@@ -39,22 +35,20 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
       {...props}
       ref={ref}
       contentContainerStyle={styles.codes}
-      data={keys}
+      data={lineCodes}
       renderItem={renderItem}
       keyExtractor={item => item}
       snapToAlignment="center"
       pagingEnabled
-      style={style}
       horizontal
+      style={style}
     />
   )
 })
 
 const styles = StyleSheet.create({
   codes: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 8,
     padding: 8,
+    gap: 8,
   },
 })

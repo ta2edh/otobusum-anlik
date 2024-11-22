@@ -1,50 +1,43 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native'
-import { useState, memo } from 'react'
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+import { memo, useState } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from './ui/UiText'
-import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { LineAddGroup } from './LineAddGroup'
+import { UiLineCode } from './ui/UiLineCode'
 
 import { SearchResult } from '@/api/getSearchResults'
-import { colors } from '@/constants/colors'
 import { useLines } from '@/stores/lines'
-import { useShallow } from 'zustand/react/shallow'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
 }
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
-  const [isPending, setIsPending] = useState(false)
-
-  const lineColor = useLines(useShallow(state => state.lineTheme[props.item.Code]))
+  const lineTheme = useLines(useShallow(state => state.lineTheme[props.item.Code]))
   const addLine = useLines(state => state.addLine)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const isInLines = lineColor !== undefined
+  const isInLines = lineTheme !== undefined
 
   const handlePress = async () => {
-    setIsPending(true)
+    setIsLoading(true)
 
     try {
       await addLine(props.item)
     } finally {
-      setIsPending(false)
+      setIsLoading(false)
     }
   }
 
   return (
-    <TouchableOpacity
-      style={[styles.container, { opacity: isInLines ? 0.4 : 1 }]}
-      disabled={isInLines}
-      onPress={handlePress}
-    >
-      <UiText style={[styles.renderCode]}>
-        {isPending ? <UiActivityIndicator /> : props.item.Code}
-      </UiText>
-      <UiText>{props.item.Name}</UiText>
+    <TouchableOpacity style={styles.container} disabled={isInLines} onPress={handlePress}>
+      <View style={styles.title}>
+        <UiLineCode code={props.item.Code} isLoading={isLoading} />
+        <UiText>{props.item.Name}</UiText>
+      </View>
+
+      <LineAddGroup code={props.item.Code} />
     </TouchableOpacity>
   )
 })
@@ -53,14 +46,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 8,
     padding: 4,
   },
-  renderCode: {
-    borderRadius: 999,
-    padding: 9,
-    minWidth: 70,
-    textAlign: 'center',
-    backgroundColor: colors.primary,
+  title: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
   },
 })
