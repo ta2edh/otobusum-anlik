@@ -4,17 +4,14 @@ import { ToastAndroid } from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Theme } from '@material/material-color-utilities'
 
-import { SearchResult } from '@/api/getSearchResults'
-import { getLineBusLocations, BusLocation } from '@/api/getLineBusLocations'
 import { createTheme } from '@/utils/createTheme'
-import { useFilters } from './filters'
+import { queryClient } from '@/api/client'
 
 export interface LinesStore {
-  lines: Record<string, BusLocation[]>
+  lines: Record<string, string>
   lineTheme: Record<string, Theme>
-  addLine: (code: SearchResult) => Promise<void>
-  deleteLine: (code: string) => void
-  updateLine: (code: string, newLine: BusLocation[]) => void
+  addLine: (lineCode: string) => void
+  deleteLine: (lineCode: string) => void
 }
 
 export const useLines = create(
@@ -23,51 +20,31 @@ export const useLines = create(
       (set, get) => ({
         lines: {},
         lineTheme: {},
-        addLine: async (searchResult) => {
+        addLine: (lineCode) => {
           if (Object.keys(get().lines).length > 3) {
             ToastAndroid.show('Only 4 selections are allowed', ToastAndroid.SHORT)
             return
           }
-
-          const response = await getLineBusLocations(searchResult.Code)
-          if (!response) return
-
-          // Route codes that ends with D0 It's the default. Find if there is a bus with route code ends with D0
-          useFilters.setState(state => ({
-            selectedRoutes: {
-              ...state.selectedRoutes,
-              [searchResult.Code]: `${searchResult.Code}_G_D0`,
-            },
-          }))
 
           return set((state) => {
             const newColor = createTheme()
             return {
               lines: {
                 ...state.lines,
-                [searchResult.Code]: response,
+                [lineCode]: lineCode,
               },
               lineTheme: {
                 ...state.lineTheme,
-                [searchResult.Code]: newColor,
+                [lineCode]: newColor,
               },
             }
           })
         },
-        deleteLine: code =>
+        deleteLine: lineCode =>
           set((state) => {
-            delete state.lines[code]
-            delete state.lineTheme[code]
+            delete state.lines[lineCode]
+            delete state.lineTheme[lineCode]
             return { ...state }
-          }),
-        updateLine: (code, newLocations) =>
-          set((state) => {
-            return {
-              lines: {
-                ...state.lines,
-                [code]: newLocations,
-              },
-            }
           }),
       }),
       {
@@ -80,14 +57,17 @@ export const useLines = create(
 
 const updateLines = async () => {
   const keys = Object.keys(useLines.getState().lines)
-  const results = await Promise.all(keys.map(k => getLineBusLocations(k)))
 
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index]
-    const result = results[index]
 
-    if (result && key) {
-      useLines.getState().updateLine(key, result)
+    if (key) {
+      queryClient.invalidateQueries({
+        queryKey: ['line', key],
+        exact: true,
+      })
+
+      console.log('invalidating queries')
     }
   }
 

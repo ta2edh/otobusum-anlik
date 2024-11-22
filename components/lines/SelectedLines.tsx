@@ -1,4 +1,4 @@
-import { StyleSheet, ListRenderItem, FlatList } from 'react-native'
+import { StyleSheet, ListRenderItem, FlatList, View } from 'react-native'
 import Animated, {
   FlatListPropsWithLayout,
 } from 'react-native-reanimated'
@@ -6,6 +6,8 @@ import { forwardRef, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 import { SelectedLine } from './SelectedLine'
 import { useLines } from '@/stores/lines'
+import { LineGroupsSelect } from './groups/LineGroupsSelect'
+import { useFilters } from '@/stores/filters'
 
 type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 
@@ -14,6 +16,10 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
   ref,
 ) {
   const lineCodes = useLines(useShallow(state => Object.keys(state.lines))) || []
+  const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
+  const selectedGroupLines = selectedGroup ? useFilters.getState().lineGroups[selectedGroup] : undefined
+
+  console.log(selectedGroupLines)
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
@@ -31,18 +37,22 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
   }
 
   return (
-    <Animated.FlatList
-      {...props}
-      ref={ref}
-      contentContainerStyle={styles.codes}
-      data={lineCodes}
-      renderItem={renderItem}
-      keyExtractor={item => item}
-      snapToAlignment="center"
-      pagingEnabled
-      horizontal
-      style={style}
-    />
+    <View>
+      <LineGroupsSelect />
+
+      <Animated.FlatList
+        {...props}
+        ref={ref}
+        contentContainerStyle={styles.codes}
+        data={selectedGroupLines || lineCodes}
+        renderItem={renderItem}
+        keyExtractor={item => item}
+        snapToAlignment="center"
+        pagingEnabled
+        horizontal
+        style={style}
+      />
+    </View>
   )
 })
 

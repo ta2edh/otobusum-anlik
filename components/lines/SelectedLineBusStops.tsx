@@ -28,6 +28,7 @@ import { BusLocation } from '@/api/getLineBusLocations'
 import { useMap } from '@/hooks/useMap'
 import { i18n } from '@/translations/i18n'
 import { useDebouncedCallback } from 'use-debounce'
+import { useLine } from '@/hooks/useLine'
 
 interface Props {
   code: string
@@ -51,7 +52,9 @@ export function SelectedLineBusStops(props: Props) {
   const isScrolling = useSharedValue(false)
   const scrollY = useSharedValue(0)
 
-  const line = useLines(useShallow(state => state.lines[props.code]))
+  const { query: { data: line } } = useLine(props.code)
+
+  // const line = useLines(useShallow(state => state.lines[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'

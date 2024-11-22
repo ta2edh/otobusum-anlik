@@ -11,6 +11,7 @@ import { UiText } from '@/components/ui/UiText'
 import { useLines } from '@/stores/lines'
 import { BusLocation } from '@/api/getLineBusLocations'
 import { useTheme } from '@/hooks/useTheme'
+import { useLine } from '@/hooks/useLine'
 import { Ionicons } from '@expo/vector-icons'
 
 interface Props {
@@ -85,7 +86,9 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
 })
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
-  const line = useLines(useShallow(state => state.lines[props.code]))
+  const { query: { data: line } } = useLine(props.code)
+
+  // const line = useLines(useShallow(state => state.lines[props.code]))
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
   const route = selectedRoute ?? `${props.code}_G_d0`

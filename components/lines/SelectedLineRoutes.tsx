@@ -56,12 +56,12 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme()
-  const { query: routes, findRouteFromCode } = useRouteFilter(props.code)
+  const { query: routes, findRouteFromCode, getDefaultRoute } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : getDefaultRoute()
 
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []
