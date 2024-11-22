@@ -7,6 +7,7 @@ import { createTheme } from '@/utils/createTheme'
 import { queryClient } from '@/api/client'
 import { useFilters } from './filters'
 import { randomUUID } from 'expo-crypto'
+import { i18n } from '@/translations/i18n'
 
 export interface LinesStore {
   lines: Record<string, string>
@@ -57,7 +58,7 @@ export const addTheme = (lineCode: string) => useLines.setState((state) => {
 
 export const addLine = (lineCode: string) => useLines.setState((state) => {
   if (Object.keys(state.lines).length > 3) {
-    ToastAndroid.show('Only 4 selections are allowed', ToastAndroid.SHORT)
+    ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
     return state
   }
 
@@ -84,7 +85,12 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLines.se
   if (!group) return state
 
   if (group.includes(lineCode)) {
-    ToastAndroid.show('This line is already in group', ToastAndroid.SHORT)
+    ToastAndroid.show(i18n.t('lineAlreadyInGroup'), ToastAndroid.SHORT)
+    return state
+  }
+
+  if (group.length > 3) {
+    ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
     return state
   }
 

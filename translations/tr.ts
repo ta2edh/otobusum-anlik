@@ -20,4 +20,6 @@ export default {
   showMyLocation: 'Haritada konumumu göster',
   closeToThisStop: 'Şu an bu durağa yakınsınız',
   showTraffic: 'Haritada trafik bilgisini göster',
+  lineAlreadyInGroup: 'Bu hat zaten grupta',
+  lineLimitExceeded: 'Aynı anda sadece 4 tane hat seçebilirsiniz',
 }
