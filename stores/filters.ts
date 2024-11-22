@@ -40,6 +40,7 @@ export const toggleLineVisibility = (lineCode: string) => useFilters.setState((s
 
   return {
     invisibleLines: {
+      ...state.invisibleLines,
       [lineCode]: true,
     },
   }
