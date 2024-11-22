@@ -4,10 +4,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import { forwardRef, useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { SelectedLine } from './SelectedLine'
+
 import { useLines } from '@/stores/lines'
-import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { useFilters } from '@/stores/filters'
+import { LineGroupsSelect } from './groups/LineGroupsSelect'
+import { SelectedLine } from './SelectedLine'
 
 type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 
@@ -30,20 +31,16 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
     [props.children],
   )
 
-  if (lineCodes.length < 1) {
-    return null
-  }
-
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <LineGroupsSelect />
 
       <Animated.FlatList
         {...props}
         ref={ref}
-        contentContainerStyle={styles.codes}
         data={selectedGroupLines || lineCodes}
         renderItem={renderItem}
+        contentContainerStyle={styles.codes}
         keyExtractor={item => item}
         snapToAlignment="center"
         pagingEnabled

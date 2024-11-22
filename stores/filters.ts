@@ -56,3 +56,9 @@ export const selectGroup = (groupId: string) => useFilters.setState(() => {
     selectedGroup: groupId,
   }
 })
+
+export const unSelectGroup = () => useFilters.setState(() => {
+  return {
+    selectedGroup: undefined,
+  }
+})

@@ -1,12 +1,11 @@
 import { UiButton } from '@/components/ui/UiButton'
-import { selectGroup, useFilters } from '@/stores/filters'
-import { colors } from '@/constants/colors'
+import { selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { LineGroups } from './LineGroups'
 
 import { StyleSheet, View } from 'react-native'
 import { useCallback, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
-import { LineGroups } from './LineGroups'
 
 export function LineGroupsSelect() {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -18,17 +17,27 @@ export function LineGroupsSelect() {
   )
 
   const handleSelectGroup = useCallback(
-    (groupId: string) => selectGroup(groupId),
+    (groupId: string) => {
+      selectGroup(groupId)
+      bottomSheetModal.current?.close()
+    },
     [],
   )
 
   return (
     <View style={styles.container}>
-      <UiButton
-        onPress={handleButtonPress}
-        title={selectedGroup || 'Select a group'}
-        style={styles.button}
-      />
+      <View style={styles.buttons}>
+        <UiButton
+          onPress={handleButtonPress}
+          title={selectedGroup || 'Select a group'}
+          style={styles.button}
+        />
+        <UiButton
+          onPress={unSelectGroup}
+          icon="close"
+          style={styles.button}
+        />
+      </View>
 
       <LineGroups
         ref={bottomSheetModal}
@@ -43,7 +52,12 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   button: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  buttons: {
     alignSelf: 'flex-start',
-    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 })

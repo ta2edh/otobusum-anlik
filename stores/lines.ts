@@ -64,6 +64,7 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
   addTheme(lineCode)
   return {
     lines: {
+      ...state.lines,
       [lineCode]: lineCode,
     },
   }

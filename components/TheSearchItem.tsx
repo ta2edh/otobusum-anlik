@@ -1,6 +1,5 @@
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import { memo, useCallback, useRef } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from './ui/UiText'
 import { LineGroups } from './lines/groups/LineGroups'
@@ -8,7 +7,7 @@ import { UiLineCode } from './ui/UiLineCode'
 import { UiButton } from './ui/UiButton'
 
 import { SearchResult } from '@/api/getSearchResults'
-import { addLine, addLineToGroup, useLines } from '@/stores/lines'
+import { addLine, addLineToGroup } from '@/stores/lines'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 
 interface Props extends TouchableOpacityProps {
@@ -17,9 +16,6 @@ interface Props extends TouchableOpacityProps {
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.item.Code]))
-
-  const isInLines = lineTheme !== undefined
 
   const handlePress = () => {
     addLine(props.item.Code)
@@ -31,10 +27,14 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
 
   const handleGroupSelect = useCallback((groupId: string) => {
     addLineToGroup(groupId, props.item.Code)
+    bottomSheetModal.current?.close()
   }, [props.item.Code])
 
   return (
-    <TouchableOpacity style={styles.container} disabled={isInLines} onPress={handlePress}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handlePress}
+    >
       <View style={styles.title}>
         <UiLineCode code={props.item.Code} />
         <UiText>{props.item.Name}</UiText>
