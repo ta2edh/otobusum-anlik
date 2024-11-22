@@ -5,11 +5,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Theme } from '@material/material-color-utilities'
 import { createTheme } from '@/utils/createTheme'
 import { queryClient } from '@/api/client'
-import { deleteLineFromGroup, useFilters } from './filters'
+import { useFilters } from './filters'
+import { randomUUID } from 'expo-crypto'
 
 export interface LinesStore {
   lines: Record<string, string>
   lineTheme: Record<string, Theme>
+  lineGroups: Record<string, string[]>
 }
 
 export const useLines = create(
@@ -18,6 +20,7 @@ export const useLines = create(
       () => ({
         lines: {},
         lineTheme: {},
+        lineGroups: {},
       }),
       {
         name: 'line-storage',
@@ -39,9 +42,8 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
   return { ...state }
 })
 
-export const addLine = (lineCode: string) => useLines.setState((state) => {
-  if (Object.keys(state.lines).length > 3) {
-    ToastAndroid.show('Only 4 selections are allowed', ToastAndroid.SHORT)
+export const addTheme = (lineCode: string) => useLines.setState((state) => {
+  if (state.lineTheme[lineCode]) {
     return state
   }
 
@@ -50,8 +52,59 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
       ...state.lineTheme,
       [lineCode]: createTheme(),
     },
+  }
+})
+
+export const addLine = (lineCode: string) => useLines.setState((state) => {
+  if (Object.keys(state.lines).length > 3) {
+    ToastAndroid.show('Only 4 selections are allowed', ToastAndroid.SHORT)
+    return state
+  }
+
+  addTheme(lineCode)
+  return {
     lines: {
       [lineCode]: lineCode,
+    },
+  }
+})
+
+export const createNewGroup = () => useLines.setState((state) => {
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [randomUUID()]: [],
+    },
+  }
+})
+
+export const addLineToGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+  const group = state.lineGroups[groupId]
+  if (!group) return state
+
+  if (group.includes(lineCode)) {
+    ToastAndroid.show('This line is already in group', ToastAndroid.SHORT)
+    return state
+  }
+
+  addTheme(lineCode)
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: [...group, lineCode],
+    },
+  }
+})
+
+export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+  const codeIndex = state.lineGroups[groupId]?.findIndex(code => code === lineCode)
+  if (!codeIndex) return state
+
+  state.lineGroups[groupId]?.splice(codeIndex, 1)
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: [...(state.lineGroups[groupId] || [])],
     },
   }
 })

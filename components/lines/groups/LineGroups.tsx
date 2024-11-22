@@ -1,6 +1,5 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useTheme } from '@/hooks/useTheme'
-import { createNewGroup, useFilters } from '@/stores/filters'
 import { ListRenderItem } from '@shopify/flash-list'
 import { colors } from '@/constants/colors'
 import { UiButton } from '@/components/ui/UiButton'
@@ -9,6 +8,7 @@ import { LineGroupsItem } from './LineGroupsItem'
 import { useShallow } from 'zustand/react/shallow'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useMemo } from 'react'
+import { createNewGroup, useLines } from '@/stores/lines'
 
 interface LineGroupsProps extends ViewProps {
   onPressGroup?: (groupId: string) => void
@@ -18,7 +18,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   { onPressGroup, ...props },
   ref,
 ) {
-  const groups = useFilters(useShallow(state => Object.keys(state.lineGroups)))
+  const groups = useLines(useShallow(state => Object.keys(state.lineGroups)))
   const { bottomSheetStyle, getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(
@@ -54,7 +54,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
             <BottomSheetFlashList
               data={groups}
               renderItem={renderItem}
-              estimatedItemSize={35}
+              estimatedItemSize={80}
               fadingEdgeLength={40}
             />
           </View>

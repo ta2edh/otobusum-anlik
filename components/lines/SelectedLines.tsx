@@ -17,7 +17,7 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
 ) {
   const lineCodes = useLines(useShallow(state => Object.keys(state.lines))) || []
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
-  const selectedGroupLines = selectedGroup ? useFilters.getState().lineGroups[selectedGroup] : undefined
+  const selectedGroupLines = useLines(useShallow(state => selectedGroup ? state.lineGroups[selectedGroup] : undefined))
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {

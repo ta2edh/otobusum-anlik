@@ -8,9 +8,8 @@ import { UiLineCode } from './ui/UiLineCode'
 import { UiButton } from './ui/UiButton'
 
 import { SearchResult } from '@/api/getSearchResults'
-import { addLine, useLines } from '@/stores/lines'
+import { addLine, addLineToGroup, useLines } from '@/stores/lines'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { addLineToGroup } from '@/stores/filters'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
