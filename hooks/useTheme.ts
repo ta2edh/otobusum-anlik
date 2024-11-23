@@ -25,8 +25,9 @@ export function useTheme(theme?: Theme) {
   }, [scheme])
 
   return {
-    colorsTheme,
+    mode,
     scheme,
+    colorsTheme,
     bottomSheetStyle,
     getSchemeColorHex,
   }

@@ -5,24 +5,45 @@ import { QueryClientProvider } from '@tanstack/react-query'
 
 import { Stack, SplashScreen } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+import {
+  DefaultTheme,
+  DarkTheme,
+  ThemeProvider,
+  Theme,
+} from '@react-navigation/native'
 
 SplashScreen.preventAutoHideAsync()
 
 export default function RootLayout() {
-  const { colorsTheme } = useTheme()
+  const { colorsTheme, mode } = useTheme()
+
+  const targetTheme = mode === 'dark' ? DarkTheme : DefaultTheme
+  const modifiedTheme: Theme = {
+    ...targetTheme,
+    colors: {
+      ...targetTheme.colors,
+      background: colorsTheme.surfaceContainerLow,
+    },
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView>
         <BottomSheetModalProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              navigationBarColor: colorsTheme.surfaceContainerLow,
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-          </Stack>
+          <ThemeProvider value={modifiedTheme}>
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="group/[groupId]/edit"
+                options={{ presentation: 'modal' }}
+              />
+            </Stack>
+          </ThemeProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>

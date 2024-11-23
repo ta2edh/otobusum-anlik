@@ -6,6 +6,7 @@ import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react
 import { useShallow } from 'zustand/react/shallow'
 import { useCallback } from 'react'
 import { useLines } from '@/stores/lines'
+import { router } from 'expo-router'
 
 interface Props extends TouchableOpacityProps {
   groupId: string
@@ -13,6 +14,13 @@ interface Props extends TouchableOpacityProps {
 
 export function LineGroupsItem({ groupId, ...props }: Props) {
   const groupLines = useLines(useShallow(state => state.lineGroups[groupId]))
+
+  const handleLongPress = useCallback(
+    () => {
+      router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId } })
+    },
+    [groupId],
+  )
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: lineCode }) => (
@@ -31,6 +39,7 @@ export function LineGroupsItem({ groupId, ...props }: Props) {
   return (
     <TouchableOpacity
       style={styles.container}
+      onLongPress={handleLongPress}
       {...props}
     >
       <UiText info>{groupId}</UiText>
