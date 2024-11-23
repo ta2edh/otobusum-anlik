@@ -41,7 +41,14 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
     deleteLineFromGroup(selectedGroup.id, lineCode)
   }
 
-  return { ...state }
+  return {
+    lines: {
+      ...state.lines,
+    },
+    lineTheme: {
+      ...state.lineTheme,
+    },
+  }
 })
 
 export const addTheme = (lineCode: string) => useLines.setState((state) => {

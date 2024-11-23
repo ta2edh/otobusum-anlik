@@ -1,5 +1,5 @@
 import { StyleSheet, ListRenderItem, FlatList, View, Platform, ViewProps } from 'react-native'
-import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -14,6 +14,7 @@ interface SelectedLinesProps {
   listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 }
 
+// TODO: Some rerender issues are here.
 export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function SelectedLines(
   props,
   outerRef,
@@ -25,14 +26,18 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
   const lineGroups = useLines(state => state.lineGroups)
 
-  const items = selectedGroup ? selectedGroup.lineCodes : defaultLines
+  const items = useMemo(
+    () => selectedGroup ? selectedGroup.lineCodes : defaultLines,
+    [defaultLines, selectedGroup],
+  )
+
   const groupCount = Object.keys(lineGroups).length
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
-      return <SelectedLine code={code}>{props?.viewProps?.children}</SelectedLine>
+      return <SelectedLine code={code} />
     },
-    [props.viewProps?.children],
+    [],
   )
 
   const handleOnEndReached = useCallback(() => {
