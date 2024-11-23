@@ -1,26 +1,73 @@
 import { useFilters } from '@/stores/filters'
-import { useTheme } from '@/hooks/useTheme'
-import { useLines } from '@/stores/lines'
 import { useMap } from '@/hooks/useMap'
-import { memo, useEffect } from 'react'
 
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { Callout, LatLng, Marker } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
+import { LatLng } from 'react-native-maps'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { memo, useEffect, useMemo } from 'react'
+
 import { UiText } from '../ui/UiText'
 import { getRouteDirection } from '@/utils/getRouteDirection'
 import { useLineBusStops } from '@/hooks/useLineBusStops'
+import { useTheme } from '@/hooks/useTheme'
+import { useLines } from '@/stores/lines'
+import { BusStopLocation } from '@/api/getLineBusStopLocations'
+import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 interface Props {
   code: string
 }
 
-export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+interface LineBusStopMarkersItemProps {
+  stop: BusStopLocation
+  code: string
+}
+
+export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemProps) {
+  const lineTheme = useLines(useShallow(state => state.lineTheme[code]))
+  const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
+
+  const backgroundColor = getSchemeColorHex('primary')
+
+  const busStopStyle: StyleProp<ViewStyle> = {
+    borderColor: getSchemeColorHex('outlineVariant'),
+  }
+
+  const calloutContainerBackground: StyleProp<ViewStyle> = {
+    backgroundColor: colorsTheme.surfaceContainerLow,
+  }
+
+  const coordinate = useMemo(() => ({
+    latitude: parseFloat(stop.yKoordinati),
+    longitude: parseFloat(stop.xKoordinati),
+  }), [stop.xKoordinati, stop.yKoordinati])
+  return (
+    <MarkerLazyCallout
+      coordinate={coordinate}
+      tracksInfoWindowChanges={false}
+      tracksViewChanges={false}
+      calloutProps={{
+        children: (
+          <View style={[styles.calloutContainer, calloutContainerBackground]}>
+            <UiText style={{ textAlign: 'center' }}>
+              {stop.durakKodu}
+              {' '}
+              -
+              {stop.durakAdi}
+            </UiText>
+          </View>
+        ),
+      }}
+    >
+      <View style={[styles.busStop, busStopStyle, { backgroundColor }]} />
+    </MarkerLazyCallout>
+  )
+}
+
+export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
   const map = useMap()
-  const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
   const { query } = useLineBusStops(props.code)
 
   useEffect(() => {
@@ -47,60 +94,33 @@ export const LineBusStopMarkers = memo(function BusStopMarkersItem(props: Props)
     return null
   }
 
-  const calloutContainerBackground: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
-  }
-
   const route = selectedRoute || `${props.code}_G_D0`
   const direction = route ? getRouteDirection(route) : undefined
   const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data
 
-  const backgroundColor = getSchemeColorHex('primary')
-
-  const busStopStyle: StyleProp<ViewStyle> = {
-    borderColor: getSchemeColorHex('outlineVariant'),
-  }
-
   return (
     <>
       {busStops.map(stop => (
-        <Marker
+        <LineBusStopMarkersItem
           key={`${stop.xKoordinati}-${stop.yKoordinati}-${stop.yon}-${stop.siraNo}`}
-          coordinate={{
-            latitude: parseFloat(stop.yKoordinati),
-            longitude: parseFloat(stop.xKoordinati),
-          }}
-          tracksInfoWindowChanges={false}
-          tracksViewChanges={false}
-        >
-          <View style={[styles.busStop, busStopStyle, { backgroundColor }]} />
-
-          <Callout tooltip>
-            <View style={[styles.calloutContainer, calloutContainerBackground]}>
-              <UiText style={{ textAlign: 'center' }}>
-                {stop.durakKodu}
-                {' '}
-                -
-                {stop.durakAdi}
-              </UiText>
-            </View>
-          </Callout>
-        </Marker>
+          stop={stop}
+          code={props.code}
+        />
       ))}
     </>
   )
 })
 
 const styles = StyleSheet.create({
+  calloutContainer: {
+    width: 250,
+    padding: 8,
+    borderRadius: 8,
+  },
   busStop: {
     width: 14,
     height: 14,
     borderWidth: 1,
     borderRadius: 1000,
-  },
-  calloutContainer: {
-    width: 250,
-    padding: 8,
-    borderRadius: 8,
   },
 })
