@@ -23,6 +23,11 @@ export function LineGroupsItem({ groupId, ...props }: Props) {
     [],
   )
 
+  const emptyItem = useCallback(
+    () => <UiText info>This group is empty</UiText>,
+    [],
+  )
+
   return (
     <TouchableOpacity
       style={styles.container}
@@ -30,11 +35,12 @@ export function LineGroupsItem({ groupId, ...props }: Props) {
     >
       <UiText info>{groupId}</UiText>
 
-      <View style={styles.listContainer}>
+      <View>
         <FlashList
           data={groupLines}
           renderItem={renderItem}
           estimatedItemSize={70}
+          ListEmptyComponent={emptyItem}
           horizontal
         />
       </View>
@@ -50,8 +56,5 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginHorizontal: 4,
-  },
-  listContainer: {
-    minHeight: 37,
   },
 })
