@@ -83,14 +83,6 @@ export const createNewGroup = () => useLines.setState((state) => {
         lineCodes: [],
       },
     ],
-
-    // lineGroups: {
-    //   ...state.lineGroups,
-    //   [randomUUID()]: {
-    //     title: randomUUID(),
-    //     lineCodes: [],
-    //   },
-    // },
   }
 })
 

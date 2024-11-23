@@ -3,7 +3,7 @@ import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useLines } from '@/stores/lines'
+import { findGroupFromId, useLines } from '@/stores/lines'
 import { useFilters } from '@/stores/filters'
 
 import { LineGroupsSelect } from './groups/LineGroupsSelect'
@@ -22,19 +22,15 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
   const defaultLines = useLines(useShallow(state => Object.keys(state.lines)))
-  const lineGroups = useLines(useShallow(state => state.lineGroups))
-  const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
+  const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
+  const lineGroups = useLines(state => state.lineGroups)
 
-  const items = selectedGroup?.lineCodes || defaultLines
+  const items = selectedGroup ? selectedGroup.lineCodes : defaultLines
   const groupCount = Object.keys(lineGroups).length
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
-      return (
-        <SelectedLine key={code} code={code}>
-          {props?.viewProps?.children}
-        </SelectedLine>
-      )
+      return <SelectedLine code={code}>{props?.viewProps?.children}</SelectedLine>
     },
     [props.viewProps?.children],
   )
