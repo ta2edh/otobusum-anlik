@@ -25,7 +25,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   const lineGroups = useLines(useShallow(state => state.lineGroups))
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
 
-  const items = selectedGroup ? lineGroups[selectedGroup]?.lineCodes : defaultLines
+  const items = selectedGroup?.lineCodes || defaultLines
   const groupCount = Object.keys(lineGroups).length
 
   const renderItem: ListRenderItem<string> = useCallback(

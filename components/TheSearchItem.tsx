@@ -9,6 +9,7 @@ import { UiButton } from './ui/UiButton'
 import { SearchResult } from '@/api/getSearchResults'
 import { addLine, addLineToGroup } from '@/stores/lines'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { LineGroup } from '@/types/lineGroup'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
@@ -25,8 +26,8 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
     bottomSheetModal.current?.present()
   }
 
-  const handleGroupSelect = useCallback((groupId: string) => {
-    addLineToGroup(groupId, props.item.Code)
+  const handleGroupSelect = useCallback((group: LineGroup) => {
+    addLineToGroup(group.id, props.item.Code)
     bottomSheetModal.current?.close()
   }, [props.item.Code])
 

@@ -31,9 +31,9 @@ export default function TimetableScreen() {
   const timetablesRef = useAnimatedRef<FlatList>()
 
   const lines = useLines(useShallow(state => Object.keys(state.lines)))
-  const lineGroups = useLines(useShallow(state => state.lineGroups))
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
-  const items = selectedGroup ? lineGroups[selectedGroup]?.lineCodes : lines
+
+  const items = selectedGroup?.lineCodes || lines
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
