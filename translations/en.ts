@@ -20,4 +20,6 @@ export default {
   showMyLocation: 'Show my location on the map',
   closeToThisStop: 'Currently, you are closest to this stop',
   showTraffic: 'Show traffic information on the map',
+  lineAlreadyInGroup: 'This line is already in the group',
+  lineLimitExceeded: 'Only 4 lines can be selected at the same time',
 }

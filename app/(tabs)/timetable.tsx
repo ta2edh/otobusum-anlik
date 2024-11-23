@@ -1,9 +1,6 @@
 import { LineTimetable } from '@/components/LineTimetable'
 import { SelectedLines } from '@/components/lines/SelectedLines'
-import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
-import { UiText } from '@/components/ui/UiText'
 import { useLines } from '@/stores/lines'
-import { i18n } from '@/translations/i18n'
 import { useCallback } from 'react'
 import {
   FlatList,
@@ -24,6 +21,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
+import { useFilters } from '@/stores/filters'
 
 export default function TimetableScreen() {
   const { width } = useWindowDimensions()
@@ -32,7 +30,10 @@ export default function TimetableScreen() {
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const keys = useLines(useShallow(state => Object.keys(state.lines)))
+  const lines = useLines(useShallow(state => Object.keys(state.lines)))
+  const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
+
+  const items = selectedGroup?.lineCodes || lines
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
@@ -49,9 +50,7 @@ export default function TimetableScreen() {
   }))
 
   const containerStyle: StyleProp<ViewStyle> = {
-    paddingTop: insets.top,
-    padding: 8,
-    flexShrink: 1,
+    paddingTop: insets.top + 8,
   }
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
@@ -59,30 +58,34 @@ export default function TimetableScreen() {
     scrollTo(timetablesRef, contentOffset.x, 0, false)
   })
 
-  if (keys.length < 1) {
-    return (
-      <View style={{ flex: 1 }}>
-        <TheFocusAwareStatusBar />
+  // if (keys.length < 1) {
+  //   return (
+  //     <View style={{ flex: 1 }}>
+  //       <TheFocusAwareStatusBar />
 
-        <UiText info style={{ textAlign: 'center', textAlignVertical: 'center', flex: 1 }}>
-          {i18n.t('timetableEmpty')}
-        </UiText>
-      </View>
-    )
-  }
+  //       <UiText info style={{ textAlign: 'center', textAlignVertical: 'center', flex: 1 }}>
+  //         {i18n.t('timetableEmpty')}
+  //       </UiText>
+  //     </View>
+  //   )
+  // }
 
   return (
     <View style={containerStyle}>
       <SelectedLines
         ref={linesRef}
-        onLayout={onLayout}
-        onScroll={handleOnScroll}
-        style={{ flexShrink: 0 }}
+        listProps={{
+          onLayout,
+          onScroll: handleOnScroll,
+        }}
+        viewProps={{
+          style: { flexShrink: 0 },
+        }}
       />
 
       <Animated.FlatList
         ref={timetablesRef}
-        data={keys}
+        data={items}
         renderItem={({ item }) => (
           <Animated.View style={childrenContainerStyle}>
             <LineTimetable code={item} />

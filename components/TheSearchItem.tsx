@@ -1,50 +1,49 @@
-import {
-  StyleSheet,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native'
-import { useState, memo } from 'react'
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+import { memo, useCallback, useRef } from 'react'
 
 import { UiText } from './ui/UiText'
-import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { LineGroups } from './lines/groups/LineGroups'
+import { UiLineCode } from './ui/UiLineCode'
+import { UiButton } from './ui/UiButton'
 
 import { SearchResult } from '@/api/getSearchResults'
-import { colors } from '@/constants/colors'
-import { useLines } from '@/stores/lines'
-import { useShallow } from 'zustand/react/shallow'
+import { addLine, addLineToGroup } from '@/stores/lines'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { LineGroup } from '@/types/lineGroup'
 
 interface Props extends TouchableOpacityProps {
   item: SearchResult
 }
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
-  const [isPending, setIsPending] = useState(false)
+  const bottomSheetModal = useRef<BottomSheetModal>(null)
 
-  const lineColor = useLines(useShallow(state => state.lineTheme[props.item.Code]))
-  const addLine = useLines(state => state.addLine)
-
-  const isInLines = lineColor !== undefined
-
-  const handlePress = async () => {
-    setIsPending(true)
-
-    try {
-      await addLine(props.item)
-    } finally {
-      setIsPending(false)
-    }
+  const handlePress = () => {
+    addLine(props.item.Code)
   }
+
+  const handleAddPress = () => {
+    bottomSheetModal.current?.present()
+  }
+
+  const handleGroupSelect = useCallback((group: LineGroup) => {
+    addLineToGroup(group.id, props.item.Code)
+    bottomSheetModal.current?.close()
+  }, [props.item.Code])
 
   return (
     <TouchableOpacity
-      style={[styles.container, { opacity: isInLines ? 0.4 : 1 }]}
-      disabled={isInLines}
+      style={styles.container}
       onPress={handlePress}
     >
-      <UiText style={[styles.renderCode]}>
-        {isPending ? <UiActivityIndicator /> : props.item.Code}
-      </UiText>
-      <UiText>{props.item.Name}</UiText>
+      <View style={styles.title}>
+        <UiLineCode code={props.item.Code} />
+        <UiText>{props.item.Name}</UiText>
+      </View>
+
+      <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
+        <UiButton icon="add-circle-outline" onPress={handleAddPress} />
+      </LineGroups>
     </TouchableOpacity>
   )
 })
@@ -53,14 +52,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 8,
     padding: 4,
   },
-  renderCode: {
-    borderRadius: 999,
-    padding: 9,
-    minWidth: 70,
-    textAlign: 'center',
-    backgroundColor: colors.primary,
+  title: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
   },
 })

@@ -6,10 +6,10 @@ import { useShallow } from 'zustand/react/shallow'
 import { View } from 'react-native'
 
 export function LineMarkers() {
-  const invisibleRoutes = useFilters(state => state.invisibleRoutes)
+  const invisibleLines = useFilters(state => state.invisibleLines)
   const lineCodes = useLines(useShallow(state => Object.keys(state.lines)))
 
-  const filteredCodes = lineCodes.filter(lineCode => !invisibleRoutes[lineCode])
+  const filteredCodes = lineCodes.filter(lineCode => !invisibleLines[lineCode])
 
   return (
     <>

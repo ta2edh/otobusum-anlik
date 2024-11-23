@@ -1,7 +1,7 @@
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
-import { useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { selectRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
+import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
 import {
@@ -22,6 +22,7 @@ import Animated, {
   AnimatedProps,
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
+
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
@@ -29,16 +30,12 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 
-interface Props extends AnimatedProps<ViewProps> {
+export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
-export const SelectedLine = memo(function SelectedLine(props: Props) {
+export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-  const setRoute = useFilters(useShallow(state => state.setRoute))
-  const toggleInvisibleRoute = useFilters(useShallow(state => state.toggleInvisibleRoute))
-
-  const deleteLine = useLines(useShallow(state => state.deleteLine))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { width } = useWindowDimensions()
@@ -48,12 +45,13 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
   const {
     findOtherRouteDirection,
     findRouteFromCode,
+    getDefaultRoute,
     query: { isPending },
   } = useRouteFilter(props.code)
 
   useEffect(() => {
     const unsub = useFilters.subscribe(
-      state => state.invisibleRoutes[props.code],
+      state => state.invisibleLines[props.code],
       (newCodes) => {
         isVisible.value = !newCodes
       },
@@ -65,7 +63,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     return unsub
   }, [props.code, isVisible])
 
-  const route = selectedRoute ? findRouteFromCode(selectedRoute) : undefined
+  const route = selectedRoute ? findRouteFromCode(selectedRoute) : getDefaultRoute()
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
@@ -74,11 +72,15 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
     const otherDirection = findOtherRouteDirection(selectedRoute)
     if (!otherDirection || !otherDirection.route_code) return
 
-    setRoute(props.code, otherDirection.route_code)
+    selectRoute(props.code, otherDirection.route_code)
   }
 
-  const handleVisiblity = () => {
-    toggleInvisibleRoute(props.code)
+  const handleVisibility = () => {
+    toggleLineVisibility(props.code)
+  }
+
+  const handleDelete = () => {
+    deleteLine(props.code)
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -128,7 +130,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
 
         <View style={styles.titleContainer}>
           <UiButton
-            onPress={handleVisiblity}
+            onPress={handleVisibility}
             style={buttonContainerStyle}
             icon="eye-outline"
             textStyle={textContainerStyle}
@@ -137,7 +139,7 @@ export const SelectedLine = memo(function SelectedLine(props: Props) {
           <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
 
           <UiButton
-            onPress={() => deleteLine(props.code)}
+            onPress={handleDelete}
             style={buttonContainerStyle}
             icon="trash-outline"
             textStyle={textContainerStyle}
@@ -191,6 +193,7 @@ const styles = StyleSheet.create({
     padding: 14,
     borderRadius: 8,
     gap: 8,
+    flexShrink: 0,
   },
   titleContainer: {
     flexDirection: 'row',

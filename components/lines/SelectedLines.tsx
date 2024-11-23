@@ -1,60 +1,74 @@
-import {
-  StyleSheet,
-  ListRenderItem,
-  FlatList,
-} from 'react-native'
-import Animated, {
-  FlatListPropsWithLayout,
-} from 'react-native-reanimated'
-import { useCallback, forwardRef } from 'react'
+import { StyleSheet, ListRenderItem, FlatList, View, Platform, ViewProps } from 'react-native'
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
+import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
+
+import { findGroupFromId, useLines } from '@/stores/lines'
+import { useFilters } from '@/stores/filters'
+
+import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { SelectedLine } from './SelectedLine'
-import { useLines } from '@/stores/lines'
 
-type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
+interface SelectedLinesProps {
+  viewProps?: ViewProps
+  listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
+}
 
-export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedLines(
-  { style, ...props },
-  ref,
+// TODO: Some rerender issues are here.
+export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function SelectedLines(
+  props,
+  outerRef,
 ) {
-  const keys = useLines(useShallow(state => Object.keys(state.lines))) || []
+  const innerRef = useRef<FlatList>(null)
+  useImperativeHandle(outerRef, () => innerRef.current!, [])
+
+  const defaultLines = useLines(useShallow(state => Object.keys(state.lines)))
+  const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
+  const lineGroups = useLines(state => state.lineGroups)
+
+  const items = useMemo(
+    () => selectedGroup ? selectedGroup.lineCodes : defaultLines,
+    [defaultLines, selectedGroup],
+  )
+
+  const groupCount = Object.keys(lineGroups).length
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
-      return (
-        <SelectedLine key={code} code={code}>
-          {props?.children}
-        </SelectedLine>
-      )
+      return <SelectedLine code={code} />
     },
-    [props.children],
+    [],
   )
 
-  if (keys.length < 1) {
-    return null
-  }
+  const handleOnEndReached = useCallback(() => {
+    if (Platform.OS === 'android') {
+      innerRef.current?.scrollToEnd()
+    }
+  }, [])
 
   return (
-    <Animated.FlatList
-      {...props}
-      ref={ref}
-      contentContainerStyle={styles.codes}
-      data={keys}
-      renderItem={renderItem}
-      keyExtractor={item => item}
-      snapToAlignment="center"
-      pagingEnabled
-      style={style}
-      horizontal
-    />
+    <View style={[props.viewProps?.style]}>
+      {groupCount > 0 && <LineGroupsSelect />}
+
+      <Animated.FlatList
+        {...props.listProps}
+        ref={innerRef}
+        data={items}
+        renderItem={renderItem}
+        contentContainerStyle={styles.codes}
+        keyExtractor={item => item}
+        snapToAlignment="center"
+        pagingEnabled
+        horizontal
+        onEndReached={handleOnEndReached}
+      />
+    </View>
   )
 })
 
 const styles = StyleSheet.create({
   codes: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    gap: 8,
     padding: 8,
+    gap: 8,
   },
 })

@@ -1,83 +1,28 @@
 import { create } from 'zustand'
 import { subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
-import { getLineBusLocations, BusLocation } from '@/api/getLineBusLocations'
-import { createTheme } from '@/utils/createTheme'
 import { ToastAndroid } from 'react-native'
-
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useFilters } from './filters'
-import { SearchResult } from '@/api/getSearchResults'
 import { Theme } from '@material/material-color-utilities'
+import { createTheme } from '@/utils/createTheme'
+import { queryClient } from '@/api/client'
+import { useFilters } from './filters'
+import { randomUUID } from 'expo-crypto'
+import { i18n } from '@/translations/i18n'
+import { LineGroup } from '@/types/lineGroup'
 
 export interface LinesStore {
-  lines: Record<string, BusLocation[]>
+  lines: Record<string, string>
   lineTheme: Record<string, Theme>
-  addLine: (code: SearchResult) => Promise<void>
-  deleteLine: (code: string) => void
-  updateLine: (code: string, newLine: BusLocation[]) => void
+  lineGroups: LineGroup[]
 }
 
 export const useLines = create(
   subscribeWithSelector(
     persist<LinesStore>(
-      (set, get) => ({
+      () => ({
         lines: {},
         lineTheme: {},
-        addLine: async (searchResult) => {
-          if (Object.keys(get().lines).length > 3) {
-            ToastAndroid.show('Only 4 selections are allowed', ToastAndroid.SHORT)
-            return
-          }
-
-          const response = await getLineBusLocations(searchResult.Code)
-          if (!response) return
-
-          // Route codes that ends with D0 It's the default. Find if there is a bus with route code ends with D0
-          useFilters.setState(state => ({
-            selectedRoutes: {
-              ...state.selectedRoutes,
-              [searchResult.Code]: `${searchResult.Code}_G_D0`,
-            },
-          }))
-
-          return set((state) => {
-            const newColor = createTheme()
-
-            return {
-              lines: {
-                ...state.lines,
-                [searchResult.Code]: response,
-              },
-              lineTheme: {
-                ...state.lineTheme,
-                [searchResult.Code]: newColor,
-              },
-            }
-          })
-        },
-        deleteLine: code =>
-          set((state) => {
-            delete state.lines[code]
-            delete state.lineTheme[code]
-
-            return {
-              lines: {
-                ...state.lines,
-              },
-              lineTheme: {
-                ...state.lineTheme,
-              },
-            }
-          }),
-        updateLine: (code, newLocations) =>
-          set((state) => {
-            return {
-              lines: {
-                ...state.lines,
-                [code]: newLocations,
-              },
-            }
-          }),
+        lineGroups: [],
       }),
       {
         name: 'line-storage',
@@ -87,16 +32,137 @@ export const useLines = create(
   ),
 )
 
+export const deleteLine = (lineCode: string) => useLines.setState((state) => {
+  delete state.lines[lineCode]
+  delete state.lineTheme[lineCode]
+
+  const selectedGroup = useFilters.getState().selectedGroup
+  if (selectedGroup) {
+    deleteLineFromGroup(selectedGroup.id, lineCode)
+  }
+
+  return {
+    lines: {
+      ...state.lines,
+    },
+    lineTheme: {
+      ...state.lineTheme,
+    },
+  }
+})
+
+export const addTheme = (lineCode: string) => useLines.setState((state) => {
+  if (state.lineTheme[lineCode]) {
+    return state
+  }
+
+  return {
+    lineTheme: {
+      ...state.lineTheme,
+      [lineCode]: createTheme(),
+    },
+  }
+})
+
+export const addLine = (lineCode: string) => useLines.setState((state) => {
+  if (Object.keys(state.lines).length > 3) {
+    ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
+    return state
+  }
+
+  addTheme(lineCode)
+  return {
+    lines: {
+      ...state.lines,
+      [lineCode]: lineCode,
+    },
+  }
+})
+
+export const createNewGroup = () => useLines.setState((state) => {
+  const id = randomUUID()
+  return {
+    lineGroups: [
+      ...state.lineGroups,
+      {
+        id,
+        title: id,
+        lineCodes: [],
+      },
+    ],
+  }
+})
+
+export const findGroupFromId = (groupId: string) => {
+  return useLines.getState().lineGroups.find(gr => gr.id === groupId)
+}
+
+export const addLineToGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+  const group = findGroupFromId(groupId)
+  if (!group) return state
+
+  if (group.lineCodes.includes(lineCode)) {
+    ToastAndroid.show(i18n.t('lineAlreadyInGroup'), ToastAndroid.SHORT)
+    return state
+  }
+
+  if (group.lineCodes.length > 3) {
+    ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
+    return state
+  }
+
+  addTheme(lineCode)
+  group.lineCodes.push(lineCode)
+
+  return {
+    lineGroups: [...state.lineGroups],
+  }
+})
+
+export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.setState((state) => {
+  const group = findGroupFromId(groupId)
+  if (!group) return state
+
+  group.title = newTitle
+
+  return {
+    lineGroups: [...state.lineGroups],
+  }
+})
+
+export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+  const group = findGroupFromId(groupId)
+  if (!group) return state
+
+  const codeIndex = group.lineCodes.findIndex(code => code === lineCode)
+  if (codeIndex === -1) return state
+
+  group.lineCodes.splice(codeIndex, 1)
+  return {
+    lineGroups: [
+      ...state.lineGroups,
+    ],
+  }
+})
+
+// UPDATER UPDATER UPDATER
+//
+//
+//
+//
 const updateLines = async () => {
   const keys = Object.keys(useLines.getState().lines)
-  const results = await Promise.all(keys.map(k => getLineBusLocations(k)))
 
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index]
-    const result = results[index]
 
-    if (result && key) {
-      useLines.getState().updateLine(key, result)
+    if (key) {
+      queryClient.invalidateQueries({
+        queryKey: ['line', key],
+        exact: true,
+      })
+
+      console.log('invalidating queries')
     }
   }
 

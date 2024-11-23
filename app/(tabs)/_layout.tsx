@@ -1,8 +1,7 @@
 import { useTheme } from '@/hooks/useTheme'
 import { Tabs } from 'expo-router'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 export default function TabLayout() {
   const { colorsTheme } = useTheme()
@@ -13,17 +12,8 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: {
-          backgroundColor: colorsTheme.surfaceContainerLow,
-          borderColor: colorsTheme.surfaceContainer,
-        },
-        tabBarActiveTintColor: colors.primary,
-        tabBarLabelStyle: {
-          fontWeight: 'bold',
-        },
         tabBarShowLabel: false,
       }}
-      sceneContainerStyle={{ backgroundColor: colorsTheme.surfaceContainerLow }}
     >
       <Tabs.Screen
         name="index"

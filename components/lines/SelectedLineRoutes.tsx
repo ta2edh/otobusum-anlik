@@ -13,7 +13,7 @@ import { UiText } from '../ui/UiText'
 
 import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { useFilters } from '@/stores/filters'
+import { selectRoute, useFilters } from '@/stores/filters'
 import { LineRoute } from '@/api/getAllRoutes'
 import { useTheme } from '@/hooks/useTheme'
 import { colors } from '@/constants/colors'
@@ -29,7 +29,6 @@ interface ItemProps extends Props {
 }
 
 function SelectedLineRoutesItem(props: ItemProps) {
-  const setRoute = useFilters(useShallow(state => state.setRoute))
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
   const isSelected = selectedRouteCode === props.item.route_code
@@ -40,7 +39,7 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
   const handlePress = () => {
     if (props.item.route_code) {
-      setRoute(props.code, props.item?.route_code)
+      selectRoute(props.code, props.item.route_code)
     }
   }
 
@@ -56,12 +55,12 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme()
-  const { query: routes, findRouteFromCode } = useRouteFilter(props.code)
+  const { query: routes, findRouteFromCode, getDefaultRoute } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : undefined
+  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : getDefaultRoute()
 
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []

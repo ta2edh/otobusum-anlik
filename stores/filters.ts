@@ -1,41 +1,21 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
+import { LineGroup } from '@/types/lineGroup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>
-  invisibleRoutes: Record<string, boolean>
-  toggleInvisibleRoute: (code: string) => void
-  setRoute: (code: string, routeCode: string) => void
+  invisibleLines: Record<string, boolean>
+  selectedGroup?: LineGroup
 }
 
 export const useFilters = create(
   subscribeWithSelector(
     persist<FiltersStore>(
-      (set, _get) => ({
+      () => ({
         selectedRoutes: {},
-        invisibleRoutes: {},
-        toggleInvisibleRoute: code => set((state) => {
-          if (state.invisibleRoutes[code]) {
-            delete state.invisibleRoutes[code]
-            return {
-              invisibleRoutes: {
-                ...state.invisibleRoutes,
-              },
-            }
-          }
-
-          return {
-            invisibleRoutes: {
-              ...state.invisibleRoutes,
-              [code]: true,
-            },
-          }
-        }),
-        setRoute: (code, routeCode) =>
-          set(state => ({
-            selectedRoutes: { ...state.selectedRoutes, [code]: routeCode },
-          })),
+        invisibleLines: {},
+        selectedGroup: undefined,
       }),
       {
         name: 'filter-storage',
@@ -44,3 +24,42 @@ export const useFilters = create(
     ),
   ),
 )
+
+export const toggleLineVisibility = (lineCode: string) => useFilters.setState((state) => {
+  if (state.invisibleLines[lineCode]) {
+    delete state.invisibleLines[lineCode]
+    return {
+      invisibleLines: {
+        ...state.invisibleLines,
+      },
+    }
+  }
+
+  return {
+    invisibleLines: {
+      ...state.invisibleLines,
+      [lineCode]: true,
+    },
+  }
+})
+
+export const selectRoute = (lineCode: string, routeCode: string) => useFilters.setState((state) => {
+  return {
+    selectedRoutes: {
+      ...state.selectedRoutes,
+      [lineCode]: routeCode,
+    },
+  }
+})
+
+export const selectGroup = (newGroup: LineGroup) => useFilters.setState(() => {
+  return {
+    selectedGroup: newGroup,
+  }
+})
+
+export const unSelectGroup = () => useFilters.setState(() => {
+  return {
+    selectedGroup: undefined,
+  }
+})

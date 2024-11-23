@@ -51,6 +51,7 @@ export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
 
 const styles = StyleSheet.create({
   map: {
-    height: '100%',
+    flexGrow: 1,
+    flexShrink: 0,
   },
 })
