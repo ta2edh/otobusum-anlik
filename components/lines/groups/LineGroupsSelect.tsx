@@ -6,6 +6,7 @@ import { LineGroups } from './LineGroups'
 import { StyleSheet, View } from 'react-native'
 import { useCallback, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
+import { LineGroup } from '@/types/lineGroup'
 
 export function LineGroupsSelect() {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -17,8 +18,8 @@ export function LineGroupsSelect() {
   )
 
   const handleSelectGroup = useCallback(
-    (groupId: string) => {
-      selectGroup(groupId)
+    (group: LineGroup) => {
+      selectGroup(group)
       bottomSheetModal.current?.close()
     },
     [],
@@ -29,7 +30,7 @@ export function LineGroupsSelect() {
       <View style={styles.buttons}>
         <UiButton
           onPress={handleButtonPress}
-          title={selectedGroup || 'Select a group'}
+          title={selectedGroup?.title || 'Select a group'}
           style={styles.button}
         />
         {selectedGroup && (

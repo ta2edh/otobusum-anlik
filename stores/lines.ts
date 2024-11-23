@@ -8,11 +8,12 @@ import { queryClient } from '@/api/client'
 import { useFilters } from './filters'
 import { randomUUID } from 'expo-crypto'
 import { i18n } from '@/translations/i18n'
+import { LineGroup } from '@/types/lineGroup'
 
 export interface LinesStore {
   lines: Record<string, string>
   lineTheme: Record<string, Theme>
-  lineGroups: Record<string, string[]>
+  lineGroups: LineGroup[]
 }
 
 export const useLines = create(
@@ -21,7 +22,7 @@ export const useLines = create(
       () => ({
         lines: {},
         lineTheme: {},
-        lineGroups: {},
+        lineGroups: [],
       }),
       {
         name: 'line-storage',
@@ -37,7 +38,7 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
 
   const selectedGroup = useFilters.getState().selectedGroup
   if (selectedGroup) {
-    deleteLineFromGroup(selectedGroup, lineCode)
+    deleteLineFromGroup(selectedGroup.id, lineCode)
   }
 
   return { ...state }
@@ -72,49 +73,76 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
 })
 
 export const createNewGroup = () => useLines.setState((state) => {
+  const id = randomUUID()
   return {
-    lineGroups: {
+    lineGroups: [
       ...state.lineGroups,
-      [randomUUID()]: [],
-    },
+      {
+        id,
+        title: id,
+        lineCodes: [],
+      },
+    ],
+
+    // lineGroups: {
+    //   ...state.lineGroups,
+    //   [randomUUID()]: {
+    //     title: randomUUID(),
+    //     lineCodes: [],
+    //   },
+    // },
   }
 })
 
+export const findGroupFromId = (groupId: string) => {
+  return useLines.getState().lineGroups.find(gr => gr.id === groupId)
+}
+
 export const addLineToGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
-  const group = state.lineGroups[groupId]
+  const group = findGroupFromId(groupId)
   if (!group) return state
 
-  if (group.includes(lineCode)) {
+  if (group.lineCodes.includes(lineCode)) {
     ToastAndroid.show(i18n.t('lineAlreadyInGroup'), ToastAndroid.SHORT)
     return state
   }
 
-  if (group.length > 3) {
+  if (group.lineCodes.length > 3) {
     ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
     return state
   }
 
   addTheme(lineCode)
+  group.lineCodes.push(lineCode)
+
   return {
-    lineGroups: {
-      ...state.lineGroups,
-      [groupId]: [...group, lineCode],
-    },
+    lineGroups: [...state.lineGroups],
+  }
+})
+
+export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.setState((state) => {
+  const group = findGroupFromId(groupId)
+  if (!group) return state
+
+  group.title = newTitle
+
+  return {
+    lineGroups: [...state.lineGroups],
   }
 })
 
 export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
-  const codeIndex = state.lineGroups[groupId]?.findIndex(code => code === lineCode)
-  if (codeIndex === undefined) return state
+  const group = findGroupFromId(groupId)
+  if (!group) return state
 
-  state.lineGroups[groupId]?.splice(codeIndex, 1)
-  const res = state.lineGroups[groupId] || []
+  const codeIndex = group.lineCodes.findIndex(code => code === lineCode)
+  if (codeIndex === -1) return state
 
+  group.lineCodes.splice(codeIndex, 1)
   return {
-    lineGroups: {
+    lineGroups: [
       ...state.lineGroups,
-      [groupId]: [...res],
-    },
+    ],
   }
 })
 

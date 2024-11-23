@@ -1,24 +1,26 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { useTheme } from '@/hooks/useTheme'
+import { createNewGroup, useLines } from '@/stores/lines'
 import { ListRenderItem } from '@shopify/flash-list'
-import { colors } from '@/constants/colors'
-import { UiButton } from '@/components/ui/UiButton'
 import { LineGroupsItem } from './LineGroupsItem'
+
+import { LineGroup } from '@/types/lineGroup'
+import { UiButton } from '@/components/ui/UiButton'
+import { useTheme } from '@/hooks/useTheme'
+import { colors } from '@/constants/colors'
 
 import { useShallow } from 'zustand/react/shallow'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useMemo } from 'react'
-import { createNewGroup, useLines } from '@/stores/lines'
 
 interface LineGroupsProps extends ViewProps {
-  onPressGroup?: (groupId: string) => void
+  onPressGroup?: (group: LineGroup) => void
 }
 
 export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function LineGroups(
   { onPressGroup, ...props },
   ref,
 ) {
-  const groups = useLines(useShallow(state => Object.keys(state.lineGroups)))
+  const groups = useLines(useShallow(state => state.lineGroups))
   const { bottomSheetStyle, getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(
@@ -32,9 +34,9 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
     createNewGroup()
   }, [])
 
-  const renderItem: ListRenderItem<string> = useCallback(
-    ({ item: groupId }) => (
-      <LineGroupsItem groupId={groupId} onPress={() => onPressGroup?.(groupId)} />
+  const renderItem: ListRenderItem<LineGroup> = useCallback(
+    ({ item }) => (
+      <LineGroupsItem group={item} onPress={() => onPressGroup?.(item)} />
     ),
     [onPressGroup],
   )

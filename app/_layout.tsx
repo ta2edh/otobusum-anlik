@@ -23,6 +23,7 @@ export default function RootLayout() {
     colors: {
       ...targetTheme.colors,
       background: colorsTheme.surfaceContainerLow,
+      card: colorsTheme.surfaceContainerLow,
     },
   }
 
@@ -40,7 +41,7 @@ export default function RootLayout() {
               />
               <Stack.Screen
                 name="group/[groupId]/edit"
-                options={{ presentation: 'modal' }}
+                options={{ presentation: 'modal', headerTitle: 'Edit Group Title' }}
               />
             </Stack>
           </ThemeProvider>

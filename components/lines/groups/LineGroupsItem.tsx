@@ -3,23 +3,24 @@ import { UiText } from '@/components/ui/UiText'
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
-import { useShallow } from 'zustand/react/shallow'
 import { useCallback } from 'react'
-import { useLines } from '@/stores/lines'
 import { router } from 'expo-router'
+import { useBottomSheetModal } from '@gorhom/bottom-sheet'
+import { LineGroup } from '@/types/lineGroup'
 
 interface Props extends TouchableOpacityProps {
-  groupId: string
+  group: LineGroup
 }
 
-export function LineGroupsItem({ groupId, ...props }: Props) {
-  const groupLines = useLines(useShallow(state => state.lineGroups[groupId]))
+export function LineGroupsItem({ group, ...props }: Props) {
+  const { dismiss } = useBottomSheetModal()
 
   const handleLongPress = useCallback(
     () => {
-      router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId } })
+      router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId: group.id } })
+      dismiss()
     },
-    [groupId],
+    [dismiss, group.id],
   )
 
   const renderItem: ListRenderItem<string> = useCallback(
@@ -42,11 +43,11 @@ export function LineGroupsItem({ groupId, ...props }: Props) {
       onLongPress={handleLongPress}
       {...props}
     >
-      <UiText info>{groupId}</UiText>
+      <UiText info>{group?.title}</UiText>
 
       <View>
         <FlashList
-          data={groupLines}
+          data={group?.lineCodes}
           renderItem={renderItem}
           estimatedItemSize={70}
           ListEmptyComponent={emptyItem}

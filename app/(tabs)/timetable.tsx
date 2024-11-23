@@ -33,7 +33,7 @@ export default function TimetableScreen() {
   const lines = useLines(useShallow(state => Object.keys(state.lines)))
   const lineGroups = useLines(useShallow(state => state.lineGroups))
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
-  const items = selectedGroup ? lineGroups[selectedGroup] : lines
+  const items = selectedGroup ? lineGroups[selectedGroup]?.lineCodes : lines
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
@@ -50,8 +50,7 @@ export default function TimetableScreen() {
   }))
 
   const containerStyle: StyleProp<ViewStyle> = {
-    paddingTop: insets.top,
-    padding: 8,
+    paddingTop: insets.top + 8,
   }
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {

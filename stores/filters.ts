@@ -1,11 +1,12 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
+import { LineGroup } from '@/types/lineGroup'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>
   invisibleLines: Record<string, boolean>
-  selectedGroup: string | undefined
+  selectedGroup?: LineGroup
 }
 
 export const useFilters = create(
@@ -51,9 +52,9 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFilters.s
   }
 })
 
-export const selectGroup = (groupId: string) => useFilters.setState(() => {
+export const selectGroup = (newGroup: LineGroup) => useFilters.setState(() => {
   return {
-    selectedGroup: groupId,
+    selectedGroup: newGroup,
   }
 })
 
