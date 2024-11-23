@@ -1,4 +1,4 @@
-import { StyleSheet, ListRenderItem, FlatList, View, Platform } from 'react-native'
+import { StyleSheet, ListRenderItem, FlatList, View, Platform, ViewProps } from 'react-native'
 import { forwardRef, useCallback, useImperativeHandle, useRef } from 'react'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
@@ -9,10 +9,13 @@ import { useFilters } from '@/stores/filters'
 import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { SelectedLine } from './SelectedLine'
 
-type LinesProps = Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
+interface SelectedLinesProps {
+  viewProps?: ViewProps
+  listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
+}
 
-export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedLines(
-  { style, ...props },
+export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function SelectedLines(
+  props,
   outerRef,
 ) {
   const innerRef = useRef<FlatList>(null)
@@ -29,11 +32,11 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
     ({ item: code }) => {
       return (
         <SelectedLine key={code} code={code}>
-          {props?.children}
+          {props?.viewProps?.children}
         </SelectedLine>
       )
     },
-    [props.children],
+    [props.viewProps?.children],
   )
 
   const handleOnEndReached = useCallback(() => {
@@ -43,11 +46,11 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
   }, [])
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={[props.viewProps?.style]}>
       {groupCount > 0 && <LineGroupsSelect />}
 
       <Animated.FlatList
-        {...props}
+        {...props.listProps}
         ref={innerRef}
         data={items}
         renderItem={renderItem}
@@ -56,7 +59,6 @@ export const SelectedLines = forwardRef<FlatList, LinesProps>(function SelectedL
         snapToAlignment="center"
         pagingEnabled
         horizontal
-        style={style}
         onEndReached={handleOnEndReached}
       />
     </View>
