@@ -32,11 +32,13 @@ export function LineGroupsSelect() {
           title={selectedGroup || 'Select a group'}
           style={styles.button}
         />
-        <UiButton
-          onPress={unSelectGroup}
-          icon="close"
-          style={styles.button}
-        />
+        {selectedGroup && (
+          <UiButton
+            onPress={unSelectGroup}
+            icon="close"
+            style={styles.button}
+          />
+        )}
       </View>
 
       <LineGroups
@@ -49,7 +51,7 @@ export function LineGroupsSelect() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 8,
+    paddingHorizontal: 8,
   },
   button: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

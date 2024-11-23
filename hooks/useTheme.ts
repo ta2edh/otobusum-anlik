@@ -13,9 +13,9 @@ export function useTheme(theme?: Theme) {
   const colorsTheme = colors[mode]
 
   const bottomSheetStyle = useMemo(() => ({
-    handleStyle: { backgroundColor: colorsTheme.surfaceContainer },
+    handleStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
     handleIndicatorStyle: { backgroundColor: colorsTheme.surfaceContainerHighest },
-    backgroundStyle: { backgroundColor: colorsTheme.surfaceContainer },
+    backgroundStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
   }), [colorsTheme])
 
   const getSchemeColorHex = useCallback((key: SchemeKeys) => {

@@ -105,13 +105,15 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLines.se
 
 export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
   const codeIndex = state.lineGroups[groupId]?.findIndex(code => code === lineCode)
-  if (!codeIndex) return state
+  if (codeIndex === undefined) return state
 
   state.lineGroups[groupId]?.splice(codeIndex, 1)
+  const res = state.lineGroups[groupId] || []
+
   return {
     lineGroups: {
       ...state.lineGroups,
-      [groupId]: [...(state.lineGroups[groupId] || [])],
+      [groupId]: [...res],
     },
   }
 })
