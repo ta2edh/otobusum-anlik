@@ -118,6 +118,21 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
       key={props.code}
       {...props}
     >
+      {isRefetching && (
+        <UiActivityIndicator
+          color={getSchemeColorHex('onPrimary')}
+          size={50}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            opacity: 0.2,
+          }}
+        />
+      )}
+
       <View style={styles.titleContainer}>
         <UiText
           style={{
@@ -128,7 +143,6 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
           }}
         >
           {props.code}
-          {isRefetching}
         </UiText>
 
         <View style={styles.titleContainer}>
