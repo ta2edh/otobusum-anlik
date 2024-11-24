@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
   codes: {
     padding: 8,
     gap: 8,
+    alignItems: 'flex-end',
   },
 })

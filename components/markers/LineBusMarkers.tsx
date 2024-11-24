@@ -84,17 +84,19 @@ export const LineBusMarkersItem = function LineBusMarkersItem({
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const { query: { data: line } } = useLine(props.code)
-
-  // const line = useLines(useShallow(state => state.lines[props.code]))
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
-  const route = selectedRoute ?? `${props.code}_G_d0`
+  const route = selectedRoute || `${props.code}_G_D0`
   const filtered = line?.filter(loc => loc.guzergahkodu === route)
 
   return (
     <>
       {filtered?.map(loc => (
-        <LineBusMarkersItem key={loc.kapino} lineCode={props.code} location={loc} />
+        <LineBusMarkersItem
+          key={loc.kapino}
+          lineCode={props.code}
+          location={loc}
+        />
       ))}
     </>
   )

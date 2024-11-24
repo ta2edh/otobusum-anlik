@@ -183,6 +183,6 @@ const startUpdateLoop = () => {
   )
 }
 
-if (__DEV__) {
+if (!__DEV__) {
   useLines.persist.onFinishHydration(startUpdateLoop)
 }
