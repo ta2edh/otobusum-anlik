@@ -29,6 +29,7 @@ import { UiText } from '../ui/UiText'
 import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
+import { useLine } from '@/hooks/useLine'
 
 export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
@@ -37,6 +38,7 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const { query: { isRefetching } } = useLine(props.code)
 
   const { width } = useWindowDimensions()
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -67,9 +69,9 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
   const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
-    if (!selectedRoute) return
+    if (!route?.route_code) return
 
-    const otherDirection = findOtherRouteDirection(selectedRoute)
+    const otherDirection = findOtherRouteDirection(route.route_code)
     if (!otherDirection || !otherDirection.route_code) return
 
     selectRoute(props.code, otherDirection.route_code)
@@ -126,6 +128,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
           }}
         >
           {props.code}
+          {isRefetching}
         </UiText>
 
         <View style={styles.titleContainer}>
