@@ -25,7 +25,7 @@ export function MarkerLazyCallout({ calloutProps, ...props }: Props) {
       {props.children}
 
       {renderCallout && (
-        <Callout {...calloutProps}>
+        <Callout tooltip {...calloutProps}>
           {calloutProps?.children}
         </Callout>
       )}
