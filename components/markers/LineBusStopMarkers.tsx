@@ -13,6 +13,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { BusStopLocation } from '@/api/getLineBusStopLocations'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
+import { router } from 'expo-router'
 
 interface Props {
   code: string
@@ -28,6 +29,15 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
   const backgroundColor = getSchemeColorHex('primary')
+
+  const handleOnCalloutPress = () => {
+    router.navigate({
+      pathname: '/(tabs)/(home)/stop/[stopId]',
+      params: {
+        stopId: 1,
+      },
+    })
+  }
 
   const busStopStyle: StyleProp<ViewStyle> = {
     borderColor: getSchemeColorHex('outlineVariant'),
@@ -47,6 +57,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       calloutProps={{
+        onPress: handleOnCalloutPress,
         children: (
           <View style={[styles.calloutContainer, calloutContainerBackground]}>
             <UiText style={{ textAlign: 'center' }}>

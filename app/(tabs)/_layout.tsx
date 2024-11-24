@@ -16,7 +16,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
           tabBarLabel: i18n.t('map'),
           tabBarIcon: ({ focused }) => (
@@ -25,7 +25,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="search"
+        name="(search)"
         options={{
           tabBarLabel: i18n.t('search'),
           tabBarIcon: ({ focused }) => (
