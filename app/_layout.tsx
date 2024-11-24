@@ -32,7 +32,7 @@ export default function RootLayout() {
       <GestureHandlerRootView>
         <BottomSheetModalProvider>
           <ThemeProvider value={modifiedTheme}>
-            <Stack>
+            <Stack screenOptions={{ navigationBarColor: colorsTheme.surfaceContainerLow }}>
               <Stack.Screen
                 name="(tabs)"
                 options={{
