@@ -150,25 +150,39 @@ export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLin
 //
 //
 //
-const updateLines = async () => {
-  const keys = Object.keys(useLines.getState().lines)
-
+const updateLines = (keys: string[]) => {
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index]
+    if (!key) continue
 
-    if (key) {
-      queryClient.invalidateQueries({
-        queryKey: ['line', key],
-        exact: true,
-      })
-
-      console.log('invalidating queries')
-    }
+    queryClient.invalidateQueries({
+      queryKey: ['line', key],
+      exact: true,
+    })
   }
-
-  setTimeout(updateLines, 50_000)
 }
 
-if (!__DEV__) {
-  useLines.persist.onFinishHydration(updateLines)
+let listener: NodeJS.Timeout
+const startUpdateLoop = () => {
+  useFilters.subscribe(
+    state => state.selectedGroup,
+    (newGroup) => {
+      clearTimeout(listener)
+      console.log('loop start')
+
+      const loop = () => {
+        updateLines(newGroup?.lineCodes || Object.keys(useLines.getState().lines))
+        return setTimeout(loop, 50_000)
+      }
+
+      listener = loop()
+    },
+    {
+      fireImmediately: true,
+    },
+  )
+}
+
+if (__DEV__) {
+  useLines.persist.onFinishHydration(startUpdateLoop)
 }

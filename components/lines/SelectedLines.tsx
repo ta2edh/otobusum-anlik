@@ -1,4 +1,4 @@
-import { StyleSheet, ListRenderItem, FlatList, View, Platform, ViewProps } from 'react-native'
+import { StyleSheet, ListRenderItem, FlatList, View, ViewProps } from 'react-native'
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
@@ -40,12 +40,6 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
     [],
   )
 
-  const handleOnEndReached = useCallback(() => {
-    if (Platform.OS === 'android') {
-      innerRef.current?.scrollToEnd()
-    }
-  }, [])
-
   return (
     <View style={[props.viewProps?.style]}>
       {groupCount > 0 && <LineGroupsSelect />}
@@ -60,7 +54,6 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
         snapToAlignment="center"
         pagingEnabled
         horizontal
-        onEndReached={handleOnEndReached}
       />
     </View>
   )
