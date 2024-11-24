@@ -1,16 +1,12 @@
-import { queryClient } from '@/api/client'
+import { queryClient, persister } from '@/api/client'
 import { useTheme } from '@/hooks/useTheme'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { QueryClientProvider } from '@tanstack/react-query'
 
 import { Stack, SplashScreen } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import {
-  DefaultTheme,
-  DarkTheme,
-  ThemeProvider,
-  Theme,
-} from '@react-navigation/native'
+import { DefaultTheme, DarkTheme, ThemeProvider, Theme } from '@react-navigation/native'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { DehydrateOptions } from '@tanstack/react-query'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -27,8 +23,20 @@ export default function RootLayout() {
     },
   }
 
+  const dehydrateOptions: DehydrateOptions = {
+    shouldDehydrateQuery: (query) => {
+      return !!query.meta?.persist
+    },
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        dehydrateOptions,
+      }}
+    >
       <GestureHandlerRootView>
         <BottomSheetModalProvider>
           <ThemeProvider value={modifiedTheme}>
@@ -47,6 +55,6 @@ export default function RootLayout() {
           </ThemeProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   )
 }

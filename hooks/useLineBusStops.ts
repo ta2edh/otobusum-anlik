@@ -19,6 +19,7 @@ export function useLineBusStops(
     queryKey: [`${code}-stop-locations`],
     queryFn: () => getLineBusStopLocations(code),
     staleTime: 60_000 * 30,
+    meta: { persist: true },
   })
 
   // Closest stop dependency is here to cause rerender on flatlist usage
