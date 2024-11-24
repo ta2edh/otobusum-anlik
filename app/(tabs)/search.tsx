@@ -30,7 +30,7 @@ export default function Search() {
           longitude: 29.297951,
         },
       })
-      // mutation.mutate(q)
+      mutation.mutate(q)
     },
     [mutation],
   )
