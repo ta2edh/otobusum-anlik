@@ -36,7 +36,7 @@ export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
         zoom: 13,
       }}
       customMapStyle={getMapStyle(colorScheme)}
-      mapPadding={{ top: insets.top, bottom: 4, left: 4, right: 4 }}
+      mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
       onRegionChangeComplete={handleRegionChangeComplete}
       onMapLoaded={handleMapLoaded}
       showsIndoors={false}

@@ -6,7 +6,6 @@ import {
   FlatList,
   LayoutChangeEvent,
   StyleProp,
-  useWindowDimensions,
   View,
   ViewStyle,
 } from 'react-native'
@@ -22,9 +21,9 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 import { useFilters } from '@/stores/filters'
+import { SelectedLineWidth } from '@/constants/width'
 
 export default function TimetableScreen() {
-  const { width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
   const linesHeight = useSharedValue(0)
   const linesRef = useAnimatedRef<FlatList>()
@@ -45,7 +44,7 @@ export default function TimetableScreen() {
   )
 
   const childrenContainerStyle = useAnimatedStyle(() => ({
-    width: width - 8 - 8 - 24,
+    width: SelectedLineWidth,
     flexShrink: 1,
   }))
 
@@ -57,18 +56,6 @@ export default function TimetableScreen() {
     scrollTo(linesRef, contentOffset.x, 0, false)
     scrollTo(timetablesRef, contentOffset.x, 0, false)
   })
-
-  // if (keys.length < 1) {
-  //   return (
-  //     <View style={{ flex: 1 }}>
-  //       <TheFocusAwareStatusBar />
-
-  //       <UiText info style={{ textAlign: 'center', textAlignVertical: 'center', flex: 1 }}>
-  //         {i18n.t('timetableEmpty')}
-  //       </UiText>
-  //     </View>
-  //   )
-  // }
 
   return (
     <View style={containerStyle}>

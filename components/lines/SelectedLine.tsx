@@ -5,7 +5,6 @@ import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
 import {
-  useWindowDimensions,
   StyleProp,
   ViewStyle,
   TextStyle,
@@ -30,6 +29,7 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 import { useLine } from '@/hooks/useLine'
+import { SelectedLineWidth } from '@/constants/width'
 
 export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
@@ -40,7 +40,6 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { query: { isRefetching } } = useLine(props.code)
 
-  const { width } = useWindowDimensions()
   const { getSchemeColorHex } = useTheme(lineTheme)
   const isVisible = useSharedValue(true)
 
@@ -87,7 +86,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    width: width - 8 - 8 - 24,
+    width: SelectedLineWidth,
   }
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
