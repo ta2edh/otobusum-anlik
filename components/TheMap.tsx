@@ -7,9 +7,7 @@ import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-n
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
-type Props = MapViewProps
-
-export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
+export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, ref) {
   const insets = useSafeAreaInsets()
   const colorScheme = useColorScheme()
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
@@ -43,6 +41,7 @@ export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
       toolbarEnabled={false}
       showsTraffic={showTraffic}
       showsUserLocation={showMyLocation}
+      {...props}
     >
       {props.children}
     </MapView>
