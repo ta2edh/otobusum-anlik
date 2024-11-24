@@ -72,7 +72,7 @@ export default function Settings() {
       </View>
 
       <UiText info style={styles.version}>
-        {`Version ${Constants.expoConfig?.version}`}
+        {`${i18n.t('version')} ${Constants.expoConfig?.version}`}
       </UiText>
     </ScrollView>
   )

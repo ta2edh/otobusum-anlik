@@ -7,6 +7,7 @@ import { useCallback } from 'react'
 import { router } from 'expo-router'
 import { useBottomSheetModal } from '@gorhom/bottom-sheet'
 import { LineGroup } from '@/types/lineGroup'
+import { i18n } from '@/translations/i18n'
 
 interface Props extends TouchableOpacityProps {
   group: LineGroup
@@ -33,7 +34,7 @@ export function LineGroupsItem({ group, ...props }: Props) {
   )
 
   const emptyItem = useCallback(
-    () => <UiText info>This group is empty</UiText>,
+    () => <UiText info>{i18n.t('emptyGroup')}</UiText>,
     [],
   )
 

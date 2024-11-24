@@ -11,6 +11,7 @@ import { colors } from '@/constants/colors'
 import { useShallow } from 'zustand/react/shallow'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useMemo } from 'react'
+import { i18n } from '@/translations/i18n'
 
 interface LineGroupsProps extends ViewProps {
   onPressGroup?: (group: LineGroup) => void
@@ -62,7 +63,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
           </View>
 
           <UiButton
-            title="Create new group"
+            title={i18n.t('createNewGroup')}
             icon="add"
             style={buttonBackground}
             onPress={handlePressNewGroup}

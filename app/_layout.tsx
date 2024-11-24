@@ -7,6 +7,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { DefaultTheme, DarkTheme, ThemeProvider, Theme } from '@react-navigation/native'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { DehydrateOptions } from '@tanstack/react-query'
+import { i18n } from '@/translations/i18n'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -49,7 +50,7 @@ export default function RootLayout() {
               />
               <Stack.Screen
                 name="group/[groupId]/edit"
-                options={{ presentation: 'modal', headerTitle: 'Edit Group Title' }}
+                options={{ presentation: 'modal', headerTitle: i18n.t('editGroupTitle') }}
               />
             </Stack>
           </ThemeProvider>

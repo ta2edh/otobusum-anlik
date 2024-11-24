@@ -2,6 +2,8 @@ import { UiButton } from '@/components/ui/UiButton'
 import { UiTextInput } from '@/components/ui/UiTextInput'
 import { usePaddings } from '@/hooks/usePaddings'
 import { findGroupFromId, updateGroupTitle } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
+
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useCallback, useEffect, useRef } from 'react'
 import { View } from 'react-native'
@@ -13,7 +15,6 @@ export default function GroupEdit() {
   const title = useRef('')
 
   const group = typeof groupId === 'string' ? findGroupFromId(groupId) : undefined
-  // const placeholder = typeof groupId === 'string' ? useLines.getState().lineGroups[groupId]?.title : undefined
 
   const handleQueryChange = useCallback(
     (text: string) => title.current = text,
@@ -31,7 +32,7 @@ export default function GroupEdit() {
       navigation.setOptions({
         headerRight: () => (
           <UiButton
-            title="Save"
+            title={i18n.t('save')}
             onPress={handleOnPress}
           />
         ),
