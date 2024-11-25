@@ -167,7 +167,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
       {isPending
         ? (
-            <UiActivityIndicator size={24} />
+            <UiActivityIndicator size="small" />
           )
         : (
             <Animated.View entering={FadeInLeft} style={styles.routeContainer}>

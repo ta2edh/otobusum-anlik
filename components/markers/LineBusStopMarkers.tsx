@@ -34,7 +34,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
     router.navigate({
       pathname: '/(tabs)/(home)/stop/[stopId]',
       params: {
-        stopId: 1,
+        stopId: stop.durakKodu,
       },
     })
   }

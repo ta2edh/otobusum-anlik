@@ -55,7 +55,7 @@ export default function Search() {
     }
 
     if (mutation.isPending) {
-      return <UiActivityIndicator size={34} />
+      return <UiActivityIndicator size="large" />
     }
 
     return <UiText info style={styles.empty}>{i18n.t('searchSomething')}</UiText>
