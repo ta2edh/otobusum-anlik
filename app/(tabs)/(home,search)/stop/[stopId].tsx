@@ -8,7 +8,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import MapView from 'react-native-maps'
 
 const MAP_COLLAPSED = 150
 const MAP_EXPANDED = 100
@@ -16,17 +17,25 @@ const MAP_EXPANDED = 100
 export default function StopDetails() {
   const { stopId } = useLocalSearchParams<{ stopId: string }>()
   const { colorsTheme } = useTheme()
+  const map = useRef<MapView>(null)
   const scrollY = useSharedValue(0)
 
   const query = useQuery({
-    queryKey: ['busses-in-stop', stopId],
+    queryKey: ['stop', stopId],
     queryFn: () => getBussesInStop(stopId),
     staleTime: 60_000 * 30,
   })
 
   useEffect(() => {
     if (!query.data) return
-    // TODO: Animate to bus stop coordinates here.
+
+    map.current?.animateCamera({
+      center: {
+        latitude: query.data.ykoordinati,
+        longitude: query.data.xkoordinati,
+      },
+      zoom: 16,
+    })
   }, [query.data])
 
   const lineCodeStyle: StyleProp<ViewStyle> = {
@@ -55,7 +64,7 @@ export default function StopDetails() {
   return (
     <View style={styles.container}>
       <Animated.View style={animatedStyle}>
-        <TheMap />
+        <TheMap ref={map} />
       </Animated.View>
 
       <Animated.ScrollView
@@ -68,13 +77,21 @@ export default function StopDetails() {
               <UiActivityIndicator size="large" />
             )
           : (
-              <View style={[styles.codeOuter, { backgroundColor: colorsTheme.surfaceContainerLow }]}>
-                {query.data?.map(lineCode => (
-                  <View key={lineCode} style={[styles.code, lineCodeStyle]}>
-                    <UiText>{lineCode}</UiText>
-                  </View>
-                ))}
-              </View>
+              <>
+                <View>
+                  <UiText>{query.data?.durakkodu}</UiText>
+                  <UiText size="lg" style={styles.title}>{query.data?.durakadi}</UiText>
+                  <UiText>{query.data?.ilceadi}</UiText>
+                </View>
+
+                <View style={[styles.codeOuter, { backgroundColor: colorsTheme.surfaceContainerLow }]}>
+                  {query.data?.buses.map(lineCode => (
+                    <View key={lineCode} style={[styles.code, lineCodeStyle]}>
+                      <UiText>{lineCode}</UiText>
+                    </View>
+                  ))}
+                </View>
+              </>
             )}
 
       </Animated.ScrollView>
@@ -91,7 +108,11 @@ const styles = StyleSheet.create({
     marginTop: MAP_COLLAPSED,
   },
   content: {
-    padding: 8,
+    padding: 14,
+    gap: 8,
+  },
+  title: {
+    fontWeight: 'bold',
   },
   codeOuter: {
     flexDirection: 'row',
