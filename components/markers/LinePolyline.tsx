@@ -42,7 +42,7 @@ export function LinePolyline(props: Props) {
     <Polyline
       coordinates={parsedPolyline}
       strokeColor={getSchemeColorHex('primary')}
-      strokeWidth={10}
+      strokeWidth={6}
     />
   )
 }
