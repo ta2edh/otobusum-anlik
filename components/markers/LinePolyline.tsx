@@ -21,15 +21,11 @@ export function LinePolyline(props: Props) {
   const route = selectedRoute || `${props.code}_G_D0`
   const direction = route ? getRouteDirection(route) : undefined
 
-  console.log(props.code)
-
   const queryPolyline = useQuery({
     queryKey: ['polyline', props.code],
     queryFn: () => getLinePolyline(props.code, direction || 'G'),
     staleTime: 60_000 * 30,
   })
-
-  console.log(queryPolyline.data)
 
   if (!queryPolyline.data) return null
 

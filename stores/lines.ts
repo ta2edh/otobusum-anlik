@@ -168,7 +168,6 @@ const startUpdateLoop = () => {
     state => state.selectedGroup,
     (newGroup) => {
       clearTimeout(listener)
-      console.log('loop start')
 
       const loop = () => {
         updateLines(newGroup?.lineCodes || Object.keys(useLines.getState().lines))
