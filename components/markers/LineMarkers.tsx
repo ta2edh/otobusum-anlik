@@ -4,7 +4,7 @@ import { LineBusMarkers } from './LineBusMarkers'
 import { LineBusStopMarkers } from './LineBusStopMarkers'
 import { useShallow } from 'zustand/react/shallow'
 import { View } from 'react-native'
-import { LinePolyline } from './LinePolyline'
+// import { LinePolyline } from './LinePolyline'
 
 export function LineMarkers() {
   const invisibleLines = useFilters(state => state.invisibleLines)
@@ -18,7 +18,7 @@ export function LineMarkers() {
         <View key={code}>
           <LineBusMarkers code={code} />
           <LineBusStopMarkers code={code} />
-          <LinePolyline code={code} />
+          {/* <LinePolyline code={code} /> */}
         </View>
       ))}
     </>
