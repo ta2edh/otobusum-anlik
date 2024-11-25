@@ -18,6 +18,7 @@ export function LinePolyline(props: Props) {
 
   const { getSchemeColorHex } = useTheme(lineTheme)
 
+  // TODO: Clean later
   const route = selectedRoute || `${props.code}_G_D0`
   const direction = route ? getRouteDirection(route) : undefined
 
