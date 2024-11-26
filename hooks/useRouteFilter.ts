@@ -1,14 +1,26 @@
 import { getAllRoutes } from '@/api/getAllRoutes'
+import { useFilters } from '@/stores/filters'
 import { Direction } from '@/types/departure'
 import { useQuery } from '@tanstack/react-query'
 import { useCallback } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 export function useRouteFilter(code: string) {
+  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[code]))
+
   const query = useQuery({
     queryKey: ['line-routes', code],
     queryFn: () => getAllRoutes(code),
     staleTime: 60_000 * 30,
   })
+
+  const getCurrentOrDefaultRouteCode = () => {
+    return selectedRoute || `${code}_G_D0`
+  }
+
+  const getRouteDirection = (routeCode?: string) => {
+    return routeCode?.split('_').at(1) as Direction | undefined
+  }
 
   const getDefaultRoute = useCallback(() => {
     return query.data?.result.records.find(
@@ -41,6 +53,8 @@ export function useRouteFilter(code: string) {
   return {
     query,
     getDefaultRoute,
+    getRouteDirection,
+    getCurrentOrDefaultRouteCode,
     findOtherRouteDirection,
     findRouteFromCode,
   }

@@ -1,18 +1,16 @@
-import { useFilters } from '@/stores/filters'
-import { useMap } from '@/hooks/useMap'
-
 import { useShallow } from 'zustand/react/shallow'
 import { LatLng } from 'react-native-maps'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { memo, useEffect, useMemo } from 'react'
 
 import { UiText } from '../ui/UiText'
-import { getRouteDirection } from '@/utils/getRouteDirection'
 import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { BusStopLocation } from '@/api/getLineBusStopLocations'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useMap } from '@/hooks/useMap'
 
 interface Props {
   code: string
@@ -65,7 +63,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
 }
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
-  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+  const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
 
   const map = useMap()
   const { query } = useLineBusStops(props.code)
@@ -94,8 +92,7 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     return null
   }
 
-  const route = selectedRoute || `${props.code}_G_D0`
-  const direction = route ? getRouteDirection(route) : undefined
+  const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
   const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data
 
   return (

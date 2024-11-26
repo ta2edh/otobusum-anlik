@@ -3,7 +3,6 @@ import { BusStopLocation } from '@/api/getLineBusStopLocations'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
-import { getRouteDirection } from '@/utils/getRouteDirection'
 
 import { useShallow } from 'zustand/react/shallow'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -29,6 +28,7 @@ import { useMap } from '@/hooks/useMap'
 import { i18n } from '@/translations/i18n'
 import { useDebouncedCallback } from 'use-debounce'
 import { useLine } from '@/hooks/useLine'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
 
 interface Props {
   code: string
@@ -53,11 +53,11 @@ export function SelectedLineBusStops(props: Props) {
   const scrollY = useSharedValue(0)
 
   const { query: { data: line } } = useLine(props.code)
+  const { getRouteDirection } = useRouteFilter(props.code)
 
-  // const line = useLines(useShallow(state => state.lines[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const direction = getRouteDirection(props.routeCode)
 
-  const direction = props.routeCode ? getRouteDirection(props.routeCode) : 'G'
   const { filteredStops, query, closestStop } = useLineBusStops(props.code, direction, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 

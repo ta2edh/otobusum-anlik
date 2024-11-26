@@ -1,8 +1,7 @@
 import { getLinePolyline } from '@/api/getLinePolyline'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
-import { useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
-import { getRouteDirection } from '@/utils/getRouteDirection'
 import { useQuery } from '@tanstack/react-query'
 
 import { LatLng, Polyline } from 'react-native-maps'
@@ -14,13 +13,11 @@ interface Props {
 
 export function LinePolyline(props: Props) {
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
+  const { getRouteDirection, getCurrentOrDefaultRouteCode } = useRouteFilter(props.code)
 
-  // TODO: Clean later
-  const route = selectedRoute || `${props.code}_G_D0`
-  const direction = route ? getRouteDirection(route) : undefined
+  const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
 
   const queryPolyline = useQuery({
     queryKey: ['polyline', props.code],
