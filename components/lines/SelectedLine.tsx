@@ -38,15 +38,14 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const { query: { isRefetching } } = useLine(props.code)
 
+  const { query: { isRefetching } } = useLine(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
   const isVisible = useSharedValue(true)
 
   const {
     findOtherRouteDirection,
-    findRouteFromCode,
-    getDefaultRoute,
+    getCurrentOrDefaultRouteCode,
     query: { isPending },
   } = useRouteFilter(props.code)
 
@@ -64,13 +63,13 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
     return unsub
   }, [props.code, isVisible])
 
-  const route = selectedRoute ? findRouteFromCode(selectedRoute) : getDefaultRoute()
-  const [leftTitle, rightTitle] = route?.route_long_name.trim().split('-') ?? ['', ''] ?? ['', '']
+  const routeCode = getCurrentOrDefaultRouteCode()
+  const [leftTitle, rightTitle] = routeCode?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
-    if (!route?.route_code) return
+    if (!routeCode) return
 
-    const otherDirection = findOtherRouteDirection(route.route_code)
+    const otherDirection = findOtherRouteDirection(routeCode)
     if (!otherDirection || !otherDirection.route_code) return
 
     selectRoute(props.code, otherDirection.route_code)

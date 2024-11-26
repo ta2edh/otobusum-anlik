@@ -2,7 +2,6 @@ import { getAllRoutes } from '@/api/getAllRoutes'
 import { useFilters } from '@/stores/filters'
 import { Direction } from '@/types/departure'
 import { useQuery } from '@tanstack/react-query'
-import { useCallback } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 export function useRouteFilter(code: string) {
@@ -21,16 +20,6 @@ export function useRouteFilter(code: string) {
   const getRouteDirection = (routeCode?: string) => {
     return routeCode?.split('_').at(1) as Direction | undefined
   }
-
-  const getDefaultRoute = useCallback(() => {
-    return query.data?.result.records.find(
-      item => item.route_code === `${item.route_short_name}_G_D0`,
-    )
-  }, [query.data])
-
-  const findRouteFromCode = useCallback((code: string) => {
-    return query.data?.result.records.find(item => item.route_code === code)
-  }, [query.data])
 
   const findOtherRouteDirection = (routeCode: string) => {
     const [left, dir, right] = routeCode.split('_')
@@ -52,10 +41,8 @@ export function useRouteFilter(code: string) {
 
   return {
     query,
-    getDefaultRoute,
     getRouteDirection,
     getCurrentOrDefaultRouteCode,
     findOtherRouteDirection,
-    findRouteFromCode,
   }
 }

@@ -30,7 +30,6 @@ interface ItemProps extends Props {
 
 function SelectedLineRoutesItem(props: ItemProps) {
   const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-
   const isSelected = selectedRouteCode === props.item.route_code
 
   const selectedStyle: StyleProp<ViewStyle> = {
@@ -55,12 +54,10 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme()
-  const { query: routes, findRouteFromCode, getDefaultRoute } = useRouteFilter(props.code)
+  const { query: routes, getCurrentOrDefaultRouteCode } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
-
-  const route = selectedRouteCode ? findRouteFromCode(selectedRouteCode) : getDefaultRoute()
+  const routeCode = getCurrentOrDefaultRouteCode()
 
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []
@@ -96,7 +93,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
   return (
     <>
       <UiButton
-        title={route?.route_long_name}
+        title={routeCode}
         style={props.style}
         onPress={() => bottomSheetModal.current?.present()}
         {...props}
