@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useShallow } from 'zustand/react/shallow'
 
 export function useRouteFilter(code: string) {
-  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[code]))
+  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[code]))
 
   const query = useQuery({
     queryKey: ['line-routes', code],
@@ -14,7 +14,7 @@ export function useRouteFilter(code: string) {
   })
 
   const getCurrentOrDefaultRouteCode = () => {
-    return selectedRoute || `${code}_G_D0`
+    return selectedRouteCode || `${code}_G_D0`
   }
 
   const getRouteDirection = (routeCode?: string) => {

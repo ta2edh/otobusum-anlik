@@ -36,7 +36,7 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 }
 
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
-  const selectedRoute = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { query: { isRefetching } } = useLine(props.code)
@@ -162,7 +162,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
         </View>
       </View>
 
-      <SelectedLineBusStops code={props.code} routeCode={selectedRoute} />
+      <SelectedLineBusStops code={props.code} routeCode={selectedRouteCode} />
 
       {isPending
         ? (
