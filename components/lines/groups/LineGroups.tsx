@@ -67,6 +67,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
             icon="add"
             style={buttonBackground}
             onPress={handlePressNewGroup}
+            textStyle={{ color: 'white' }}
           />
         </BottomSheetView>
       </BottomSheetModal>

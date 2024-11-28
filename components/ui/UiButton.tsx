@@ -34,7 +34,12 @@ export function UiButton({ style, ...props }: UiButtonProps) {
           )
         : props.icon
           ? (
-              <Ionicons name={props.icon} size={20} color={colorsTheme.color} style={props.textStyle} />
+              <Ionicons
+                name={props.icon}
+                size={20}
+                color={colorsTheme.color}
+                style={[{ color: colorsTheme.color }, props.textStyle]}
+              />
             )
           : null}
 
