@@ -6,6 +6,7 @@ import {
   FlatList,
   LayoutChangeEvent,
   StyleProp,
+  StyleSheet,
   View,
   ViewStyle,
 } from 'react-native'
@@ -22,6 +23,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 import { useFilters } from '@/stores/filters'
 import { SelectedLineWidth } from '@/constants/width'
+import { UiText } from '@/components/ui/UiText'
+import { i18n } from '@/translations/i18n'
 
 export default function TimetableScreen() {
   const insets = useSafeAreaInsets()
@@ -57,6 +60,10 @@ export default function TimetableScreen() {
     scrollTo(timetablesRef, contentOffset.x, 0, false)
   })
 
+  if (items.length < 1) {
+    return <UiText style={styles.center} info>{i18n.t('timetableEmpty')}</UiText>
+  }
+
   return (
     <View style={containerStyle}>
       <SelectedLines
@@ -89,3 +96,11 @@ export default function TimetableScreen() {
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+  },
+})
