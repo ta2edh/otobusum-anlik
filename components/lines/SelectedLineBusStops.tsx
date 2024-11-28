@@ -1,5 +1,4 @@
 import { useLineBusStops } from '@/hooks/useLineBusStops'
-import { BusStop } from '@/api/getLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
@@ -29,6 +28,7 @@ import { i18n } from '@/translations/i18n'
 import { useDebouncedCallback } from 'use-debounce'
 import { useLine } from '@/hooks/useLine'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { BusLineStop } from '@/types/bus'
 
 interface Props {
   code: string
@@ -36,14 +36,14 @@ interface Props {
 }
 
 const AnimatedFlashList
-  = Animated.createAnimatedComponent<FlashListProps<BusStop>>(FlashList)
+  = Animated.createAnimatedComponent<FlashListProps<BusLineStop>>(FlashList)
 
 const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export function SelectedLineBusStops(props: Props) {
-  const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
+  const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
   const currentTrackedBus = useRef<BusLocation>()
   const map = useMap()
@@ -72,7 +72,7 @@ export function SelectedLineBusStops(props: Props) {
     const updatedBus = busses?.find(bus => bus.kapino === currentTrackedBus.current?.kapino)
     if (!updatedBus) return
 
-    const stopIndex = filteredStops?.findIndex(stop => stop.durakKodu === updatedBus.yakinDurakKodu)
+    const stopIndex = filteredStops?.findIndex(stop => stop.stop_code === updatedBus.yakinDurakKodu)
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -89,8 +89,8 @@ export function SelectedLineBusStops(props: Props) {
     if (isScrolling.value) return
 
     const trackedBus = busses?.find((bus) => {
-      return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
-        return item.durakKodu === bus.yakinDurakKodu
+      return currentViewableItems.current.find(({ item }: { item: BusLineStop }) => {
+        return item.stop_code === bus.yakinDurakKodu
       })
     })
 
@@ -112,7 +112,7 @@ export function SelectedLineBusStops(props: Props) {
 
   useEffect(() => {
     if (currentTrackedBus.current || !closestStop || !filteredStops) return
-    const closestIndex = filteredStops?.findIndex(stop => stop.durakKodu === closestStop?.durakKodu)
+    const closestIndex = filteredStops?.findIndex(stop => stop.stop_code === closestStop?.stop_code)
 
     flashlistRef.current?.scrollToIndex({
       animated: true,
@@ -145,9 +145,9 @@ export function SelectedLineBusStops(props: Props) {
     scrollY.value = contentOffset.y
   }, [])
 
-  const renderItem: ListRenderItem<BusStop> = useCallback(
+  const renderItem: ListRenderItem<BusLineStop> = useCallback(
     ({ item }) => {
-      const closestBus = busses?.find(bus => bus.yakinDurakKodu === item.durakKodu)
+      const closestBus = busses?.find(bus => bus.yakinDurakKodu === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),
@@ -157,8 +157,8 @@ export function SelectedLineBusStops(props: Props) {
       const handleZoomBus = () => {
         map?.current?.animateCamera({
           center: {
-            latitude: parseFloat(item.yKoordinati),
-            longitude: parseFloat(item.xKoordinati),
+            latitude: item.y_coord,
+            longitude: item.x_coord,
           },
         })
       }
@@ -178,10 +178,10 @@ export function SelectedLineBusStops(props: Props) {
 
             <View>
               <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
-                {item.durakAdi}
+                {item.stop_name}
               </UiText>
 
-              {closestStop?.durakKodu === item.durakKodu && (
+              {closestStop?.stop_code === item.stop_code && (
                 <UiText info style={{ color: getSchemeColorHex('onPrimary'), fontSize: 12 }}>
                   {i18n.t('closeToThisStop')}
                 </UiText>
@@ -235,7 +235,7 @@ export function SelectedLineBusStops(props: Props) {
         data={filteredStops}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
-        keyExtractor={item => item.durakKodu}
+        keyExtractor={item => item.stop_code}
         overrideItemLayout={overrideItemLayout}
         fadingEdgeLength={40}
         onScrollBeginDrag={handleScrollDragStart}

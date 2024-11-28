@@ -13,6 +13,11 @@ export function useRouteFilter(code: string) {
     staleTime: 60_000 * 30,
   })
 
+  const getCurrentOrDefaultRoute = () => {
+    const routeCode = getCurrentOrDefaultRouteCode()
+    return query.data?.result.records.find(item => item.route_code === routeCode)
+  }
+
   const getCurrentOrDefaultRouteCode = () => {
     return selectedRouteCode || `${code}_G_D0`
   }
@@ -41,6 +46,7 @@ export function useRouteFilter(code: string) {
 
   return {
     query,
+    getCurrentOrDefaultRoute,
     getRouteDirection,
     getCurrentOrDefaultRouteCode,
     findOtherRouteDirection,

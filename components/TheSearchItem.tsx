@@ -6,20 +6,26 @@ import { LineGroups } from './lines/groups/LineGroups'
 import { UiLineCode } from './ui/UiLineCode'
 import { UiButton } from './ui/UiButton'
 
-import { SearchResult } from '@/api/getSearchResults'
 import { addLine, addLineToGroup } from '@/stores/lines'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { LineGroup } from '@/types/lineGroup'
+import { BusLine, BusStop } from '@/types/bus'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 interface Props extends TouchableOpacityProps {
-  item: SearchResult
+  item: BusStop | BusLine
+}
+
+function isStop(item: BusStop | BusLine): item is BusStop {
+  return (item as BusStop).stop_code !== undefined
 }
 
 export const TheSearchItem = memo(function SearchItem(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
   const handlePress = () => {
-    addLine(props.item.Code)
+    if (isStop(props.item)) return
+    addLine(props.item.code)
   }
 
   const handleAddPress = () => {
@@ -27,9 +33,11 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
   }
 
   const handleGroupSelect = useCallback((group: LineGroup) => {
-    addLineToGroup(group.id, props.item.Code)
+    if (isStop(props.item)) return
+
+    addLineToGroup(group.id, props.item.code)
     bottomSheetModal.current?.close()
-  }, [props.item.Code])
+  }, [props.item])
 
   return (
     <TouchableOpacity
@@ -37,8 +45,21 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
       onPress={handlePress}
     >
       <View style={styles.title}>
-        <UiLineCode code={props.item.Code} />
-        <UiText>{props.item.Name}</UiText>
+        {isStop(props.item)
+          ? (
+              <>
+                <UiLineCode code="">
+                  <MaterialCommunityIcons name="bus-stop" size={20} />
+                </UiLineCode>
+                <UiText>{props.item.stop_name}</UiText>
+              </>
+            )
+          : (
+              <>
+                <UiLineCode code={props.item.code} />
+                <UiText>{props.item.title}</UiText>
+              </>
+            )}
       </View>
 
       <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>

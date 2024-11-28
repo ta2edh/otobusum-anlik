@@ -1,20 +1,10 @@
-export interface BusStopWithBusLines {
-  // hatkodu: string
-  // siraNo: string
-  durakkodu: string
-  durakadi: string
-  xkoordinati: number
-  ykoordinati: number
-  duraktipi: string
-  isletmebolge: string
-  isletmealtbolge: string
-  ilceadi: string
+import { BusStop } from '@/types/bus'
+import { api } from './api'
+
+export interface BusStopWithBusLines extends BusStop {
   buses: string[]
 }
 
-export async function getBussesInStop(stopId: string | number) {
-  const response = await fetch(`https://otobusum.metkm.win/stop/${stopId}`)
-  const parsed: BusStopWithBusLines = await response.json()
-
-  return parsed
+export async function getBussesInStop(stopId: string | number): Promise<BusStopWithBusLines> {
+  return api(`/stop/${stopId}`)
 }

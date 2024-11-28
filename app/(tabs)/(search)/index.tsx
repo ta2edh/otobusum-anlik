@@ -1,4 +1,4 @@
-import { getSearchResults, SearchResult } from '@/api/getSearchResults'
+import { getSearchResults } from '@/api/getSearchResults'
 import { TheMap } from '@/components/TheMap'
 import { TheSearchInput } from '@/components/TheSearchInput'
 import { TheSearchItem } from '@/components/TheSearchItem'
@@ -11,8 +11,9 @@ import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
 
 import MapView from 'react-native-maps'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { BusLine, BusStop } from '@/types/bus'
 
 export default function Search() {
   const { colorsTheme } = useTheme()
@@ -35,17 +36,17 @@ export default function Search() {
     [mutation],
   )
 
-  const data = useMemo(
-    () => mutation.data?.list.filter(i => i.Stationcode === 0),
-    [mutation.data],
-  )
+  const data = [
+    ...mutation.data?.lines || [],
+    ...mutation.data?.stops || [],
+  ]
 
   const dynamicSearchContainer: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
   const renderItem = useCallback(
-    ({ item }: { item: SearchResult }) => <TheSearchItem item={item} />,
+    ({ item }: { item: BusLine | BusStop }) => <TheSearchItem item={item} />,
     [],
   )
 

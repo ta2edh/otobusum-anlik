@@ -31,8 +31,8 @@ export default function StopDetails() {
 
     map.current?.animateCamera({
       center: {
-        latitude: query.data.ykoordinati,
-        longitude: query.data.xkoordinati,
+        latitude: query.data.y_coord,
+        longitude: query.data.x_coord,
       },
       zoom: 16,
     })
@@ -79,9 +79,9 @@ export default function StopDetails() {
           : (
               <>
                 <View>
-                  <UiText>{query.data?.durakkodu}</UiText>
-                  <UiText size="lg" style={styles.title}>{query.data?.durakadi}</UiText>
-                  <UiText>{query.data?.ilceadi}</UiText>
+                  <UiText>{query.data?.stop_code}</UiText>
+                  <UiText size="lg" style={styles.title}>{query.data?.stop_name}</UiText>
+                  <UiText>{query.data?.province}</UiText>
                 </View>
 
                 <View style={[styles.codeOuter, { backgroundColor: colorsTheme.surfaceContainerLow }]}>

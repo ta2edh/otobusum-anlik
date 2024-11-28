@@ -2,21 +2,24 @@ import { useShallow } from 'zustand/react/shallow'
 import { LatLng } from 'react-native-maps'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { memo, useEffect, useMemo } from 'react'
+import { router } from 'expo-router'
 
 import { UiText } from '../ui/UiText'
+import { MarkerLazyCallout } from './MarkerLazyCallout'
+
 import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
-import { BusStop } from '@/api/getLineBusStops'
-import { MarkerLazyCallout } from './MarkerLazyCallout'
-import { router } from 'expo-router'
+import { BusLineStop } from '@/types/bus'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useMap } from '@/hooks/useMap'
 
 interface Props {
   code: string
 }
 
 interface LineBusStopMarkersItemProps {
-  stop: BusStop
+  stop: BusLineStop
   code: string
 }
 
@@ -30,7 +33,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
     router.navigate({
       pathname: '/(tabs)/(home)/stop/[stopId]',
       params: {
-        stopId: stop.durakKodu,
+        stopId: stop.stop_code,
       },
     })
   }
@@ -44,9 +47,9 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
   }
 
   const coordinate = useMemo(() => ({
-    latitude: parseFloat(stop.yKoordinati),
-    longitude: parseFloat(stop.xKoordinati),
-  }), [stop.xKoordinati, stop.yKoordinati])
+    latitude: stop.y_coord,
+    longitude: stop.x_coord,
+  }), [stop.x_coord, stop.y_coord])
   return (
     <MarkerLazyCallout
       coordinate={coordinate}
@@ -57,10 +60,10 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
         children: (
           <View style={[styles.calloutContainer, calloutContainerBackground]}>
             <UiText style={{ textAlign: 'center' }}>
-              {stop.durakKodu}
+              {stop.stop_code}
               {' '}
               -
-              {stop.durakAdi}
+              {stop.stop_name}
             </UiText>
           </View>
         ),
@@ -83,8 +86,8 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     }
 
     const locs: LatLng[] = query.data?.map(stop => ({
-      latitude: parseFloat(stop.yKoordinati),
-      longitude: parseFloat(stop.xKoordinati),
+      latitude: stop.y_coord,
+      longitude: stop.x_coord,
     }))
 
     map?.current?.fitToCoordinates(locs, {
@@ -102,13 +105,13 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
   }
 
   const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
-  const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data
+  const busStops = direction ? query.data.filter(stop => stop.direction === direction) : query.data
 
   return (
     <>
       {busStops.map(stop => (
         <LineBusStopMarkersItem
-          key={`${stop.xKoordinati}-${stop.yKoordinati}-${stop.yon}-${stop.siraNo}`}
+          key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
           stop={stop}
           code={props.code}
         />
