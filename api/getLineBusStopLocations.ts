@@ -1,21 +1,8 @@
 import { Direction } from '@/types/departure'
 import { getBody } from './body'
+import { BusStop } from '@/models/bus'
 
-export interface BusStopLocation {
-  hatKodu: string
-  yon: Direction
-  siraNo: string
-  durakKodu: string
-  durakAdi: string
-  xKoordinati: string
-  yKoordinati: string
-  durakTipi: string
-  isletmeBolge: string
-  isletmeAltBolge: string
-  ilceAdi: string
-}
-
-export async function getLineBusStopLocations(code: string) {
+export async function getLineBusStops(code: string) {
   const body = getBody('hat_kodu', 'DurakDetay_GYY', code)
 
   const response = await fetch('https://api.ibb.gov.tr/iett/ibb/ibb.asmx?wsdl', {
@@ -37,7 +24,7 @@ export async function getLineBusStopLocations(code: string) {
   const tableInnerContent = datasetInnerContent?.split(`<Table>`)
   if (!tableInnerContent) return
 
-  const results: BusStopLocation[] = []
+  const results: BusStop[] = []
   for (let index = 1; index < tableInnerContent.length; index++) {
     const itemInnerContent = tableInnerContent[index]?.slice(0, -8)
     if (!itemInnerContent) continue

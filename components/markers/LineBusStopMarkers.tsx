@@ -7,7 +7,7 @@ import { UiText } from '../ui/UiText'
 import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
-import { BusStopLocation } from '@/api/getLineBusStopLocations'
+import { BusStop } from '@/api/getLineBusStops'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useMap } from '@/hooks/useMap'
@@ -17,7 +17,7 @@ interface Props {
 }
 
 interface LineBusStopMarkersItemProps {
-  stop: BusStopLocation
+  stop: BusStop
   code: string
 }
 

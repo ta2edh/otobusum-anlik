@@ -1,5 +1,5 @@
 import { useLineBusStops } from '@/hooks/useLineBusStops'
-import { BusStopLocation } from '@/api/getLineBusStopLocations'
+import { BusStop } from '@/api/getLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
@@ -36,14 +36,14 @@ interface Props {
 }
 
 const AnimatedFlashList
-  = Animated.createAnimatedComponent<FlashListProps<BusStopLocation>>(FlashList)
+  = Animated.createAnimatedComponent<FlashListProps<BusStop>>(FlashList)
 
 const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export function SelectedLineBusStops(props: Props) {
-  const flashlistRef = useAnimatedRef<FlashList<BusStopLocation>>()
+  const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
   const currentTrackedBus = useRef<BusLocation>()
   const map = useMap()
@@ -89,7 +89,7 @@ export function SelectedLineBusStops(props: Props) {
     if (isScrolling.value) return
 
     const trackedBus = busses?.find((bus) => {
-      return currentViewableItems.current.find(({ item }: { item: BusStopLocation }) => {
+      return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
         return item.durakKodu === bus.yakinDurakKodu
       })
     })
@@ -145,7 +145,7 @@ export function SelectedLineBusStops(props: Props) {
     scrollY.value = contentOffset.y
   }, [])
 
-  const renderItem: ListRenderItem<BusStopLocation> = useCallback(
+  const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
       const closestBus = busses?.find(bus => bus.yakinDurakKodu === item.durakKodu)
 
