@@ -12,67 +12,65 @@ import { LineGroup } from '@/types/lineGroup'
 import { BusLine, BusStop } from '@/types/bus'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { isStop } from '@/utils/isStop'
 
 interface Props extends TouchableOpacityProps {
   item: BusStop | BusLine
 }
 
-function isStop(item: BusStop | BusLine): item is BusStop {
-  return (item as BusStop).stop_code !== undefined
-}
-
-export const TheSearchItem = memo(function SearchItem(props: Props) {
+export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
-  const handlePress = () => {
-    if (isStop(props.item)) {
+  const handlePress = useCallback(() => {
+    if (isStop(item)) {
       router.navigate({
         pathname: '/(search)/stop/[stopId]',
         params: {
-          stopId: props.item.stop_code,
+          stopId: item.stop_code,
         },
       })
     } else {
-      addLine(props.item.code)
+      addLine(item.code)
     }
-  }
+  }, [item])
 
   const handleAddPress = () => {
     bottomSheetModal.current?.present()
   }
 
   const handleGroupSelect = useCallback((group: LineGroup) => {
-    if (isStop(props.item)) return
+    if (isStop(item)) return
 
-    addLineToGroup(group.id, props.item.code)
+    addLineToGroup(group.id, item.code)
     bottomSheetModal.current?.close()
-  }, [props.item])
+  }, [item])
 
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={handlePress}
+      {...props}
     >
       <View style={styles.title}>
-        {isStop(props.item)
+        {isStop(item)
           ? (
               <>
                 <UiLineCode code="">
                   <MaterialCommunityIcons name="bus-stop" size={20} />
                 </UiLineCode>
-                <UiText>{props.item.stop_name}</UiText>
+                <UiText>{item.stop_name}</UiText>
               </>
             )
           : (
               <>
-                <UiLineCode code={props.item.code} />
-                <UiText>{props.item.title}</UiText>
+                <UiLineCode code={item.code} />
+                <UiText>{item.title}</UiText>
               </>
             )}
       </View>
 
       {
-        !isStop(props.item)
+        !isStop(item)
         && (
           <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
             <UiButton icon="add-circle-outline" onPress={handleAddPress} />

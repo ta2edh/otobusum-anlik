@@ -1,7 +1,7 @@
 import { useShallow } from 'zustand/react/shallow'
 import { LatLng } from 'react-native-maps'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { router } from 'expo-router'
 
 import { UiText } from '../ui/UiText'
@@ -13,6 +13,7 @@ import { useLines } from '@/stores/lines'
 import { BusLineStop } from '@/types/bus'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useMap } from '@/hooks/useMap'
+import { colors } from '@/constants/colors'
 
 interface Props {
   code: string
@@ -20,27 +21,27 @@ interface Props {
 
 interface LineBusStopMarkersItemProps {
   stop: BusLineStop
-  code: string
+  code?: string
 }
 
 export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemProps) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[code]))
+  const lineTheme = useLines(useShallow(state => code ? state.lineTheme[code] : undefined))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
-  const backgroundColor = getSchemeColorHex('primary')
-
-  const handleOnCalloutPress = () => {
+  const handleOnCalloutPress = useCallback(() => {
     router.navigate({
       pathname: '/(tabs)/(home)/stop/[stopId]',
       params: {
         stopId: stop.stop_code,
       },
     })
-  }
+  }, [stop.stop_code])
 
-  const busStopStyle: StyleProp<ViewStyle> = {
+  const backgroundColor = useMemo(() => getSchemeColorHex('primary') || colors.primary, [getSchemeColorHex])
+
+  const busStopStyle: StyleProp<ViewStyle> = useMemo(() => ({
     borderColor: getSchemeColorHex('outlineVariant'),
-  }
+  }), [getSchemeColorHex])
 
   const calloutContainerBackground: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainerLow,
@@ -50,6 +51,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
     latitude: stop.y_coord,
     longitude: stop.x_coord,
   }), [stop.x_coord, stop.y_coord])
+
   return (
     <MarkerLazyCallout
       coordinate={coordinate}
@@ -59,7 +61,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
         onPress: handleOnCalloutPress,
         children: (
           <View style={[styles.calloutContainer, calloutContainerBackground]}>
-            <UiText style={{ textAlign: 'center' }}>
+            <UiText style={styles.calloutText}>
               {stop.stop_code}
               {' '}
               -
@@ -131,5 +133,8 @@ const styles = StyleSheet.create({
     height: 14,
     borderWidth: 1,
     borderRadius: 1000,
+  },
+  calloutText: {
+    textAlign: 'center',
   },
 })

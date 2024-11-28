@@ -10,6 +10,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { interpolate, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useEffect, useRef } from 'react'
 import MapView from 'react-native-maps'
+import { LineBusStopMarkersItem } from '@/components/markers/LineBusStopMarkers'
 
 const MAP_COLLAPSED = 150
 const MAP_EXPANDED = 100
@@ -43,18 +44,19 @@ export default function StopDetails() {
   }
 
   const animatedStyle = useAnimatedStyle(() => ({
-    height: MAP_EXPANDED + MAP_COLLAPSED,
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    transform: [{
-      translateY: interpolate(
-        scrollY.value,
-        [0, MAP_EXPANDED],
-        [0, -MAP_EXPANDED],
-        'clamp',
-      ),
-    }],
+    // height: MAP_EXPANDED + MAP_COLLAPSED,
+    // position: 'absolute',
+    // left: 0,
+    // right: 0,
+    // transform: [{
+    //   translateY: interpolate(
+    //     scrollY.value,
+    //     [0, MAP_EXPANDED],
+    //     [0, -MAP_EXPANDED],
+    //     'clamp',
+    //   ),
+    // }],
+    flex: 1,
   }))
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
@@ -64,7 +66,11 @@ export default function StopDetails() {
   return (
     <View style={styles.container}>
       <Animated.View style={animatedStyle}>
-        <TheMap ref={map} />
+        <TheMap ref={map}>
+          {
+            !!query.data?.stop && <LineBusStopMarkersItem stop={query.data.stop} />
+          }
+        </TheMap>
       </Animated.View>
 
       <Animated.ScrollView
@@ -93,9 +99,42 @@ export default function StopDetails() {
                 </View>
               </>
             )}
-
       </Animated.ScrollView>
     </View>
+
+  // <View style={styles.container}>
+  //   <Animated.View style={animatedStyle}>
+  //     <TheMap ref={map} />
+  //   </Animated.View>
+
+  //   <Animated.ScrollView
+  //     style={styles.scroll}
+  //     onScroll={handleOnScroll}
+  //     contentContainerStyle={styles.content}
+  //   >
+  //     {query.isPending
+  //       ? (
+  //           <UiActivityIndicator size="large" />
+  //         )
+  //       : (
+  //           <>
+  //             <View>
+  //               <UiText>{query.data?.stop.stop_code}</UiText>
+  //               <UiText size="lg" style={styles.title}>{query.data?.stop.stop_name}</UiText>
+  //               <UiText>{query.data?.stop.province}</UiText>
+  //             </View>
+
+  //             <View style={[styles.codeOuter, { backgroundColor: colorsTheme.surfaceContainerLow }]}>
+  //               {query.data?.buses.map(lineCode => (
+  //                 <View key={lineCode} style={[styles.code, lineCodeStyle]}>
+  //                   <UiText>{lineCode}</UiText>
+  //                 </View>
+  //               ))}
+  //             </View>
+  //           </>
+  //         )}
+  //   </Animated.ScrollView>
+  // </View>
   )
 }
 
@@ -104,8 +143,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scroll: {
-    paddingTop: MAP_EXPANDED,
-    marginTop: MAP_COLLAPSED,
+    // paddingTop: MAP_EXPANDED,
+    // marginTop: MAP_COLLAPSED,
   },
   content: {
     padding: 14,
