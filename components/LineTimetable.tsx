@@ -6,14 +6,14 @@ import { useMemo, useState } from 'react'
 import { UiText } from './ui/UiText'
 import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 
-import { DayType, Direction } from '@/types/departure'
+import { DayType } from '@/types/departure'
 import { useQuery } from '@tanstack/react-query'
 import { i18n } from '@/translations/i18n'
 import { useLines } from '@/stores/lines'
 import { useFilters } from '@/stores/filters'
 import { useTheme } from '@/hooks/useTheme'
-import { getRouteDirection } from '@/utils/getRouteDirection'
 import { useAnnouncements } from '@/hooks/useAnnouncements'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {}
@@ -54,15 +54,14 @@ export function LineTimetable(props: Props) {
 
   const { query: announcementsQuery } = useAnnouncements()
   const { getSchemeColorHex } = useTheme(lineTheme)
+  const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
 
   const query = useQuery({
     queryKey: [`timetable-${props.code}`],
     queryFn: () => getPlannedDepartures(props.code),
   })
 
-  const direction: Direction = selectedRouteCode
-    ? getRouteDirection(selectedRouteCode) ?? 'G'
-    : 'G'
+  const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
 
   const filteredData = useMemo(
     () =>

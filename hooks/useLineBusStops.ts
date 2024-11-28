@@ -1,4 +1,4 @@
-import { getLineBusStopLocations, BusStopLocation } from '@/api/getLineBusStopLocations'
+import { getLineBusStops, BusStop } from '@/api/getLineBusStops'
 import { useQuery } from '@tanstack/react-query'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -13,11 +13,11 @@ export function useLineBusStops(
   direction?: Direction,
   listenToUserLocation?: boolean,
 ) {
-  const [closestStop, setClosestStop] = useState<BusStopLocation>()
+  const [closestStop, setClosestStop] = useState<BusStop>()
 
   const query = useQuery({
     queryKey: [`${code}-stop-locations`],
-    queryFn: () => getLineBusStopLocations(code),
+    queryFn: () => getLineBusStops(code),
     staleTime: 60_000 * 30,
     meta: { persist: true },
   })
