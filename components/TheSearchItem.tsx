@@ -11,6 +11,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { LineGroup } from '@/types/lineGroup'
 import { BusLine, BusStop } from '@/types/bus'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
 
 interface Props extends TouchableOpacityProps {
   item: BusStop | BusLine
@@ -24,8 +25,16 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
   const handlePress = () => {
-    if (isStop(props.item)) return
-    addLine(props.item.code)
+    if (isStop(props.item)) {
+      router.navigate({
+        pathname: '/(search)/stop/[stopId]',
+        params: {
+          stopId: props.item.stop_code,
+        },
+      })
+    } else {
+      addLine(props.item.code)
+    }
   }
 
   const handleAddPress = () => {
@@ -62,9 +71,14 @@ export const TheSearchItem = memo(function SearchItem(props: Props) {
             )}
       </View>
 
-      <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
-        <UiButton icon="add-circle-outline" onPress={handleAddPress} />
-      </LineGroups>
+      {
+        !isStop(props.item)
+        && (
+          <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
+            <UiButton icon="add-circle-outline" onPress={handleAddPress} />
+          </LineGroups>
+        )
+      }
     </TouchableOpacity>
   )
 })

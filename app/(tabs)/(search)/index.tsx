@@ -9,11 +9,11 @@ import { useTheme } from '@/hooks/useTheme'
 import { i18n } from '@/translations/i18n'
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
+import { BusLine, BusStop } from '@/types/bus'
 
 import MapView from 'react-native-maps'
 import { useCallback, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { BusLine, BusStop } from '@/types/bus'
 
 export default function Search() {
   const { colorsTheme } = useTheme()

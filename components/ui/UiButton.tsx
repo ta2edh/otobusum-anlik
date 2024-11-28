@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { Ionicons } from '@expo/vector-icons'
+import { useTheme } from '@/hooks/useTheme'
 
 export interface UiButtonProps extends TouchableOpacityProps {
   title?: string
@@ -19,6 +20,8 @@ export interface UiButtonProps extends TouchableOpacityProps {
 }
 
 export function UiButton({ style, ...props }: UiButtonProps) {
+  const { colorsTheme } = useTheme()
+
   const dynamicStyle: StyleProp<ViewStyle> = {
     opacity: props.disabled ? 0.4 : 1,
   }
@@ -31,7 +34,7 @@ export function UiButton({ style, ...props }: UiButtonProps) {
           )
         : props.icon
           ? (
-              <Ionicons name={props.icon} size={20} color="white" style={props.textStyle} />
+              <Ionicons name={props.icon} size={20} color={colorsTheme.color} style={props.textStyle} />
             )
           : null}
 

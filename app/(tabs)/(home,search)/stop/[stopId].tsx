@@ -1,4 +1,4 @@
-import { getBussesInStop } from '@/api/getBussesInStop'
+import { getStop } from '@/api/getStop'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { TheMap } from '@/components/TheMap'
 import { UiText } from '@/components/ui/UiText'
@@ -22,7 +22,7 @@ export default function StopDetails() {
 
   const query = useQuery({
     queryKey: ['stop', stopId],
-    queryFn: () => getBussesInStop(stopId),
+    queryFn: () => getStop(stopId),
     staleTime: 60_000 * 30,
   })
 
@@ -31,8 +31,8 @@ export default function StopDetails() {
 
     map.current?.animateCamera({
       center: {
-        latitude: query.data.y_coord,
-        longitude: query.data.x_coord,
+        latitude: query.data.stop.y_coord,
+        longitude: query.data.stop.x_coord,
       },
       zoom: 16,
     })
@@ -79,9 +79,9 @@ export default function StopDetails() {
           : (
               <>
                 <View>
-                  <UiText>{query.data?.stop_code}</UiText>
-                  <UiText size="lg" style={styles.title}>{query.data?.stop_name}</UiText>
-                  <UiText>{query.data?.province}</UiText>
+                  <UiText>{query.data?.stop.stop_code}</UiText>
+                  <UiText size="lg" style={styles.title}>{query.data?.stop.stop_name}</UiText>
+                  <UiText>{query.data?.stop.province}</UiText>
                 </View>
 
                 <View style={[styles.codeOuter, { backgroundColor: colorsTheme.surfaceContainerLow }]}>

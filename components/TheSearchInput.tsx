@@ -64,6 +64,7 @@ export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }
         disabled={queryDisabled}
         onPress={debounce ? handleDebouncedSearch : handleSearch}
         style={{ backgroundColor: colors.primary }}
+        textStyle={{ color: 'white' }}
         icon="search"
       />
     </Animated.View>
