@@ -28,11 +28,11 @@ export function UiButton({ style, ...props }: UiButtonProps) {
 
   return (
     <TouchableOpacity style={[styles.button, dynamicStyle, style]} {...props}>
-      {!props.isLoading
+      {props.isLoading
         ? (
             <UiActivityIndicator
               size="small"
-              color={(props.textStyle as TextStyle).color || colorsTheme.color}
+              color={(props.textStyle as TextStyle | undefined)?.color || colorsTheme.color}
             />
           )
         : props.icon
