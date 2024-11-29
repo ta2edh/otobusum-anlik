@@ -8,16 +8,13 @@ import { i18n } from '@/translations/i18n'
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
 import { BusLine, BusStop } from '@/types/bus'
-import { isStop } from '@/utils/isStop'
 
-import MapView from 'react-native-maps'
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { usePaddings } from '@/hooks/usePaddings'
 
 export default function Search() {
   const paddings = usePaddings()
-  const map = useRef<MapView>(null)
 
   const mutation = useMutation({
     mutationFn: getSearchResults,
@@ -36,23 +33,11 @@ export default function Search() {
     [mutation.data?.lines, mutation.data?.stops],
   )
 
-  const handleLongPress = useCallback((item: BusLine | BusStop) => {
-    if (!isStop(item)) return
-
-    map.current?.animateCamera({
-      center: {
-        latitude: item.y_coord,
-        longitude: item.x_coord,
-      },
-      zoom: 16,
-    })
-  }, [])
-
   const renderItem = useCallback(
     ({ item }: { item: BusLine | BusStop }) => (
-      <TheSearchItem item={item} onLongPress={() => handleLongPress(item)} />
+      <TheSearchItem item={item} />
     ),
-    [handleLongPress],
+    [],
   )
 
   const emptyItem = useCallback(() => {
@@ -76,10 +61,11 @@ export default function Search() {
   }, [mutation.data, mutation.isPending])
 
   return (
-    <View style={[styles.container, { ...paddings }]}>
+    <View style={styles.container}>
       <TheSearchInput
         onSearch={onSearch}
         isLoading={mutation.isPending}
+        style={paddings}
         debounce
       />
 
@@ -89,7 +75,7 @@ export default function Search() {
           renderItem={renderItem}
           estimatedItemSize={45}
           fadingEdgeLength={20}
-          contentContainerStyle={styles.content}
+          contentContainerStyle={styles.contentStyle}
           keyboardDismissMode="on-drag"
           ListEmptyComponent={emptyItem}
         />
@@ -104,13 +90,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
   },
+  contentStyle: {
+    padding: 14,
+  },
   container: {
     flex: 1,
   },
   list: {
     flex: 1,
-  },
-  content: {
-    paddingVertical: 14,
   },
 })
