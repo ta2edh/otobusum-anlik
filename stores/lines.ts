@@ -142,12 +142,16 @@ export const deleteGroup = (groupId: string) => useLines.setState((state) => {
   // Check if line in the deleted group are in other groups
   // If they are not in other groups delete their theme
   // This will probably cause rerenders that are not really needed
-  group.lineCodes.forEach((lineCode) => {
-    const found = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
-    if (found) return
+  const lineKeys = Object.keys(state.lines)
+
+  for (const lineCode of group.lineCodes) {
+    const inOtherGroup = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
+    if (lineKeys.includes(lineCode) || inOtherGroup) {
+      continue
+    }
 
     delete state.lineTheme[lineCode]
-  })
+  }
 
   return {
     lineGroups: [...state.lineGroups],

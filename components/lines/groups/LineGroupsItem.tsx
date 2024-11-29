@@ -1,13 +1,15 @@
-import { UiLineCode } from '@/components/ui/UiLineCode'
 import { UiText } from '@/components/ui/UiText'
+import { UiButton } from '@/components/ui/UiButton'
+import { UiLineCode } from '@/components/ui/UiLineCode'
+
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { useBottomSheetModal } from '@gorhom/bottom-sheet'
+import { LineGroup } from '@/types/lineGroup'
+import { i18n } from '@/translations/i18n'
 
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 import { useCallback } from 'react'
 import { router } from 'expo-router'
-import { useBottomSheetModal } from '@gorhom/bottom-sheet'
-import { LineGroup } from '@/types/lineGroup'
-import { i18n } from '@/translations/i18n'
 
 interface Props extends TouchableOpacityProps {
   group: LineGroup
@@ -44,26 +46,36 @@ export function LineGroupsItem({ group, ...props }: Props) {
       onLongPress={handleLongPress}
       {...props}
     >
-      <UiText info>{group?.title}</UiText>
+      <View style={styles.content}>
+        <UiText info>{group?.title}</UiText>
 
-      <View>
-        <FlashList
-          data={group?.lineCodes}
-          renderItem={renderItem}
-          estimatedItemSize={70}
-          ListEmptyComponent={emptyItem}
-          horizontal
-        />
+        <View>
+          <FlashList
+            data={group?.lineCodes}
+            renderItem={renderItem}
+            estimatedItemSize={70}
+            ListEmptyComponent={emptyItem}
+            horizontal
+          />
+        </View>
       </View>
+
+      <UiButton
+        icon="pencil"
+        onPress={handleLongPress}
+      />
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 8,
-    gap: 8,
+    flexDirection: 'row',
+    padding: 14,
+  },
+  content: {
     flex: 1,
+    gap: 8,
   },
   itemContainer: {
     marginHorizontal: 4,

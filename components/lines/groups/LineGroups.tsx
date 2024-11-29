@@ -27,6 +27,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   const buttonBackground: StyleProp<ViewStyle> = useMemo(
     () => ({
       backgroundColor: getSchemeColorHex('primary') || colors.primary,
+      margin: 14,
     }),
     [getSchemeColorHex],
   )
@@ -78,8 +79,6 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 14,
-    gap: 8,
   },
   listContainer: {
     flex: 1,
