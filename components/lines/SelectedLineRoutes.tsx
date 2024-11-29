@@ -112,6 +112,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         <BottomSheetFlashList
           data={routesfiltered}
           renderItem={renderItem}
+          keyExtractor={item => item.route_code?.toString() || ''}
           estimatedItemSize={35}
           ListHeaderComponent={defaultRoutes}
         />
