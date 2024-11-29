@@ -8,14 +8,15 @@ import {
 } from 'react-native'
 import { memo, useCallback, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
+
 import { UiButton, UiButtonProps } from '../ui/UiButton'
+import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiText } from '../ui/UiText'
 
 import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { selectRoute, useFilters } from '@/stores/filters'
 import { LineRoute } from '@/api/getAllRoutes'
-import { useTheme } from '@/hooks/useTheme'
 import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
 
@@ -53,7 +54,6 @@ function SelectedLineRoutesItem(props: ItemProps) {
 }
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
-  const { bottomSheetStyle } = useTheme()
   const { query: routes, getCurrentOrDefaultRoute } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -99,11 +99,10 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         {...props}
       />
 
-      <BottomSheetModal
+      <UiSheetModal
         ref={bottomSheetModal}
         snapPoints={['50%']}
         enableDynamicSizing={false}
-        {...bottomSheetStyle}
       >
         <UiText info style={styles.title}>
           {i18n.t('routes')}
@@ -116,7 +115,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
           estimatedItemSize={35}
           ListHeaderComponent={defaultRoutes}
         />
-      </BottomSheetModal>
+      </UiSheetModal>
     </>
   )
 })

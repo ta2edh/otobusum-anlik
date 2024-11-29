@@ -12,6 +12,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import { forwardRef, useCallback, useMemo } from 'react'
 import { i18n } from '@/translations/i18n'
+import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
 
 interface LineGroupsProps extends ViewProps {
   onPressGroup?: (group: LineGroup) => void
@@ -22,7 +23,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   ref,
 ) {
   const groups = useLines(useShallow(state => state.lineGroups))
-  const { bottomSheetStyle, getSchemeColorHex } = useTheme()
+  const { getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -47,11 +48,10 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
     <>
       {props.children}
 
-      <BottomSheetModal
+      <UiSheetModal
         ref={ref}
         snapPoints={['50%']}
         enableDynamicSizing={false}
-        {...bottomSheetStyle}
       >
         <BottomSheetView style={styles.container}>
           <View style={styles.listContainer}>
@@ -71,7 +71,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
             textStyle={{ color: 'white' }}
           />
         </BottomSheetView>
-      </BottomSheetModal>
+      </UiSheetModal>
     </>
   )
 })

@@ -9,6 +9,7 @@ import { memo, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, TextStyle, View, ViewProps } from 'react-native'
 import { useLines } from '@/stores/lines'
 import { useShallow } from 'zustand/react/shallow'
+import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 
 interface Props extends ViewProps {
   code: string
@@ -18,7 +19,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const { query } = useAnnouncements()
-  const { getSchemeColorHex, bottomSheetStyle } = useTheme(lineTheme)
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const announcements = query.data?.filter(ann => ann.HATKODU === props.code)
 
@@ -40,11 +41,10 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
       />
 
       {announcements !== undefined && announcements.length > 0 && (
-        <BottomSheetModal
+        <UiSheetModal
           ref={bottomSheetModal}
           snapPoints={['50%']}
           enableDynamicSizing={false}
-          {...bottomSheetStyle}
         >
           <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
             {announcements.map(ann => (
@@ -54,7 +54,7 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
               </View>
             ))}
           </BottomSheetScrollView>
-        </BottomSheetModal>
+        </UiSheetModal>
       )}
     </>
   )
