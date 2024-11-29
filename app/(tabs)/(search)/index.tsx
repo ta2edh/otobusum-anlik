@@ -1,12 +1,9 @@
-import { TheMap } from '@/components/TheMap'
 import { TheSearchItem } from '@/components/TheSearchItem'
 import { TheSearchInput } from '@/components/TheSearchInput'
 import { getSearchResults } from '@/api/getSearchResults'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
-import { LineBusStopMarkersItem } from '@/components/markers/LineBusStopMarkers'
 import { UiText } from '@/components/ui/UiText'
 
-import { useTheme } from '@/hooks/useTheme'
 import { i18n } from '@/translations/i18n'
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
@@ -14,12 +11,12 @@ import { BusLine, BusStop } from '@/types/bus'
 import { isStop } from '@/utils/isStop'
 
 import MapView from 'react-native-maps'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { useCallback, useMemo, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { usePaddings } from '@/hooks/usePaddings'
 
 export default function Search() {
-  const { colorsTheme } = useTheme()
-  const [renderedStop, setRenderedStop] = useState<BusStop>()
+  const paddings = usePaddings()
   const map = useRef<MapView>(null)
 
   const mutation = useMutation({
@@ -39,10 +36,6 @@ export default function Search() {
     [mutation.data?.lines, mutation.data?.stops],
   )
 
-  const dynamicSearchContainer: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
-  }
-
   const handleLongPress = useCallback((item: BusLine | BusStop) => {
     if (!isStop(item)) return
 
@@ -53,8 +46,6 @@ export default function Search() {
       },
       zoom: 16,
     })
-
-    setRenderedStop(item)
   }, [])
 
   const renderItem = useCallback(
@@ -85,33 +76,23 @@ export default function Search() {
   }, [mutation.data, mutation.isPending])
 
   return (
-    <View style={[styles.container]}>
-      <TheMap
-        ref={map}
-        liteMode
-      >
-        {!!renderedStop && <LineBusStopMarkersItem stop={renderedStop} />}
-      </TheMap>
+    <View style={[styles.container, { ...paddings }]}>
+      <TheSearchInput
+        onSearch={onSearch}
+        isLoading={mutation.isPending}
+        debounce
+      />
 
-      <View style={[styles.searchContainer, dynamicSearchContainer]}>
-        <TheSearchInput
-          onSearch={onSearch}
-          isLoading={mutation.isPending}
-          style={styles.searchInput}
-          debounce
+      <View style={styles.list}>
+        <FlashList
+          data={data}
+          renderItem={renderItem}
+          estimatedItemSize={45}
+          fadingEdgeLength={20}
+          contentContainerStyle={styles.content}
+          keyboardDismissMode="on-drag"
+          ListEmptyComponent={emptyItem}
         />
-
-        <View style={styles.list}>
-          <FlashList
-            data={data}
-            renderItem={renderItem}
-            estimatedItemSize={45}
-            fadingEdgeLength={20}
-            contentContainerStyle={styles.content}
-            keyboardDismissMode="on-drag"
-            ListEmptyComponent={emptyItem}
-          />
-        </View>
       </View>
     </View>
   )
@@ -126,19 +107,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  searchInput: {
-    padding: 14,
-    paddingBottom: 0,
-  },
-  content: {
-    padding: 14,
-  },
-  searchContainer: {
-    borderRadius: 32,
-    height: '78%',
-    marginTop: -100,
-  },
   list: {
     flex: 1,
+  },
+  content: {
+    paddingVertical: 14,
   },
 })

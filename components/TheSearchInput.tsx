@@ -5,9 +5,9 @@ import {
   NativeSyntheticEvent,
   StyleSheet,
   TextInputChangeEventData,
+  View,
   ViewProps,
 } from 'react-native'
-import Animated, { LinearTransition } from 'react-native-reanimated'
 import { i18n } from '@/translations/i18n'
 import { colors } from '@/constants/colors'
 import { useDebouncedCallback } from 'use-debounce'
@@ -49,7 +49,7 @@ export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }
   )
 
   return (
-    <Animated.View layout={LinearTransition} style={[styles.container, style]} {...rest}>
+    <View style={[styles.container, style]} {...rest}>
       <UiTextInput
         placeholder="KM-12, KM-12..."
         onChange={handleQueryChange}
@@ -67,7 +67,7 @@ export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }
         textStyle={{ color: 'white' }}
         icon="search"
       />
-    </Animated.View>
+    </View>
   )
 }
 
