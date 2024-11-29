@@ -130,6 +130,33 @@ export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.
   }
 })
 
+export const deleteGroup = (groupId: string) => useLines.setState((state) => {
+  const index = state.lineGroups.findIndex(group => group.id === groupId)
+  if (index === -1) return state
+
+  const group = state.lineGroups[index]
+  if (!group) return state
+
+  state.lineGroups.splice(index, 1)
+
+  // Check if line in the deleted group are in other groups
+  // If they are not in other groups delete their theme
+  // This will probably cause rerenders that are not really needed
+  group.lineCodes.forEach((lineCode) => {
+    const found = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
+    if (found) return
+
+    delete state.lineTheme[lineCode]
+  })
+
+  return {
+    lineGroups: [...state.lineGroups],
+    lineTheme: {
+      ...state.lineTheme,
+    },
+  }
+})
+
 export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
   const group = findGroupFromId(groupId)
   if (!group) return state

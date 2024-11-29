@@ -28,4 +28,5 @@ export default {
   save: 'Kaydet',
   editGroupTitle: 'Grup başlığını düzenle',
   version: 'Versiyon',
+  deleteGroup: 'Grubu sil',
 }
