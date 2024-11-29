@@ -10,8 +10,6 @@ export function LineMarkers() {
   const invisibleLines = useFilters(state => state.invisibleLines)
   const lineCodes = useLines(useShallow(state => state.lines))
 
-  console.log(lineCodes, 'uh')
-
   const filteredCodes = lineCodes.filter(lineCode => !invisibleLines[lineCode])
 
   return (
