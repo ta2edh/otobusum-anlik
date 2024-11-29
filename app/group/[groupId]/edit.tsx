@@ -1,12 +1,14 @@
 import { UiButton } from '@/components/ui/UiButton'
 import { UiTextInput } from '@/components/ui/UiTextInput'
+import { colors } from '@/constants/colors'
 import { usePaddings } from '@/hooks/usePaddings'
-import { findGroupFromId, updateGroupTitle } from '@/stores/lines'
+import { selectGroup } from '@/stores/filters'
+import { deleteGroup, findGroupFromId, updateGroupTitle } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useCallback, useEffect, useRef } from 'react'
-import { View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 export default function GroupEdit() {
   const { groupId } = useLocalSearchParams()
@@ -27,6 +29,15 @@ export default function GroupEdit() {
     navigation.goBack()
   }, [groupId, navigation])
 
+  const handleDeleteGroup = () => {
+    if (!groupId || typeof groupId !== 'string') return
+
+    deleteGroup(groupId)
+    selectGroup(undefined)
+
+    navigation.goBack()
+  }
+
   useEffect(
     () => {
       navigation.setOptions({
@@ -42,11 +53,25 @@ export default function GroupEdit() {
   )
 
   return (
-    <View style={paddings}>
+    <View style={[styles.container, paddings]}>
       <UiTextInput
         placeholder={group?.title}
         onChangeText={handleQueryChange}
       />
+
+      <UiButton
+        title={i18n.t('deleteGroup')}
+        icon="trash-outline"
+        style={{ backgroundColor: colors.rose }}
+        onPress={handleDeleteGroup}
+      />
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+})

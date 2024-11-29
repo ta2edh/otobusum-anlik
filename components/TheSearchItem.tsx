@@ -6,44 +6,77 @@ import { LineGroups } from './lines/groups/LineGroups'
 import { UiLineCode } from './ui/UiLineCode'
 import { UiButton } from './ui/UiButton'
 
-import { SearchResult } from '@/api/getSearchResults'
 import { addLine, addLineToGroup } from '@/stores/lines'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { LineGroup } from '@/types/lineGroup'
+import { BusLine, BusStop } from '@/types/bus'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { router } from 'expo-router'
+import { isStop } from '@/utils/isStop'
 
 interface Props extends TouchableOpacityProps {
-  item: SearchResult
+  item: BusStop | BusLine
 }
 
-export const TheSearchItem = memo(function SearchItem(props: Props) {
+export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
-  const handlePress = () => {
-    addLine(props.item.Code)
-  }
+  const handlePress = useCallback(() => {
+    if (isStop(item)) {
+      router.navigate({
+        pathname: '/(search)/stop/[stopId]',
+        params: {
+          stopId: item.stop_code,
+        },
+      })
+    } else {
+      addLine(item.code)
+    }
+  }, [item])
 
   const handleAddPress = () => {
     bottomSheetModal.current?.present()
   }
 
   const handleGroupSelect = useCallback((group: LineGroup) => {
-    addLineToGroup(group.id, props.item.Code)
+    if (isStop(item)) return
+
+    addLineToGroup(group.id, item.code)
     bottomSheetModal.current?.close()
-  }, [props.item.Code])
+  }, [item])
 
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={handlePress}
+      {...props}
     >
       <View style={styles.title}>
-        <UiLineCode code={props.item.Code} />
-        <UiText>{props.item.Name}</UiText>
+        {isStop(item)
+          ? (
+              <>
+                <UiLineCode code="">
+                  <MaterialCommunityIcons name="bus-stop" size={20} />
+                </UiLineCode>
+                <UiText>{item.stop_name}</UiText>
+              </>
+            )
+          : (
+              <>
+                <UiLineCode code={item.code} />
+                <UiText>{item.title}</UiText>
+              </>
+            )}
       </View>
 
-      <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
-        <UiButton icon="add-circle-outline" onPress={handleAddPress} />
-      </LineGroups>
+      {
+        !isStop(item)
+        && (
+          <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
+            <UiButton icon="add-circle-outline" onPress={handleAddPress} />
+          </LineGroups>
+        )
+      }
     </TouchableOpacity>
   )
 })

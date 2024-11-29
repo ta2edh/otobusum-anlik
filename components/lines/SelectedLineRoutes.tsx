@@ -54,10 +54,10 @@ function SelectedLineRoutesItem(props: ItemProps) {
 
 export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
   const { bottomSheetStyle } = useTheme()
-  const { query: routes, getCurrentOrDefaultRouteCode } = useRouteFilter(props.code)
+  const { query: routes, getCurrentOrDefaultRoute } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const routeCode = getCurrentOrDefaultRouteCode()
+  const route = getCurrentOrDefaultRoute()
 
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []
@@ -93,7 +93,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
   return (
     <>
       <UiButton
-        title={routeCode}
+        title={route?.route_long_name}
         style={props.style}
         onPress={() => bottomSheetModal.current?.present()}
         {...props}
@@ -112,6 +112,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
         <BottomSheetFlashList
           data={routesfiltered}
           renderItem={renderItem}
+          keyExtractor={item => item.route_code?.toString() || ''}
           estimatedItemSize={35}
           ListHeaderComponent={defaultRoutes}
         />

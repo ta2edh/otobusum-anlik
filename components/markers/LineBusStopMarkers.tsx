@@ -1,57 +1,71 @@
 import { useShallow } from 'zustand/react/shallow'
 import { LatLng } from 'react-native-maps'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
+import { router } from 'expo-router'
 
 import { UiText } from '../ui/UiText'
+import { MarkerLazyCallout } from './MarkerLazyCallout'
+
 import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
-import { BusStop } from '@/api/getLineBusStops'
-import { MarkerLazyCallout } from './MarkerLazyCallout'
+import { BusLineStop } from '@/types/bus'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useMap } from '@/hooks/useMap'
+import { colors } from '@/constants/colors'
 
 interface Props {
   code: string
 }
 
 interface LineBusStopMarkersItemProps {
-  stop: BusStop
-  code: string
+  stop: BusLineStop
+  code?: string
 }
 
 export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemProps) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[code]))
+  const lineTheme = useLines(useShallow(state => code ? state.lineTheme[code] : undefined))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
-  const backgroundColor = getSchemeColorHex('primary')
+  const handleOnCalloutPress = useCallback(() => {
+    router.navigate({
+      pathname: '/(tabs)/(home)/stop/[stopId]',
+      params: {
+        stopId: stop.stop_code,
+      },
+    })
+  }, [stop.stop_code])
 
-  const busStopStyle: StyleProp<ViewStyle> = {
+  const backgroundColor = useMemo(() => getSchemeColorHex('primary') || colors.primary, [getSchemeColorHex])
+
+  const busStopStyle: StyleProp<ViewStyle> = useMemo(() => ({
     borderColor: getSchemeColorHex('outlineVariant'),
-  }
+  }), [getSchemeColorHex])
 
   const calloutContainerBackground: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
   const coordinate = useMemo(() => ({
-    latitude: parseFloat(stop.yKoordinati),
-    longitude: parseFloat(stop.xKoordinati),
-  }), [stop.xKoordinati, stop.yKoordinati])
+    latitude: stop.y_coord,
+    longitude: stop.x_coord,
+  }), [stop.x_coord, stop.y_coord])
+
   return (
     <MarkerLazyCallout
       coordinate={coordinate}
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       calloutProps={{
+        onPress: handleOnCalloutPress,
         children: (
           <View style={[styles.calloutContainer, calloutContainerBackground]}>
-            <UiText style={{ textAlign: 'center' }}>
-              {stop.durakKodu}
+            <UiText style={styles.calloutText}>
+              {stop.stop_code}
               {' '}
               -
-              {stop.durakAdi}
+              {stop.stop_name}
             </UiText>
           </View>
         ),
@@ -74,8 +88,8 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     }
 
     const locs: LatLng[] = query.data?.map(stop => ({
-      latitude: parseFloat(stop.yKoordinati),
-      longitude: parseFloat(stop.xKoordinati),
+      latitude: stop.y_coord,
+      longitude: stop.x_coord,
     }))
 
     map?.current?.fitToCoordinates(locs, {
@@ -93,13 +107,13 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
   }
 
   const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
-  const busStops = direction ? query.data.filter(stop => stop.yon === direction) : query.data
+  const busStops = direction ? query.data.filter(stop => stop.direction === direction) : query.data
 
   return (
     <>
       {busStops.map(stop => (
         <LineBusStopMarkersItem
-          key={`${stop.xKoordinati}-${stop.yKoordinati}-${stop.yon}-${stop.siraNo}`}
+          key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
           stop={stop}
           code={props.code}
         />
@@ -119,5 +133,8 @@ const styles = StyleSheet.create({
     height: 14,
     borderWidth: 1,
     borderRadius: 1000,
+  },
+  calloutText: {
+    textAlign: 'center',
   },
 })

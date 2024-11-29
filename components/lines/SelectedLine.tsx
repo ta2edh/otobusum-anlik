@@ -36,7 +36,6 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 }
 
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
-  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { query: { isRefetching } } = useLine(props.code)
@@ -45,6 +44,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   const {
     findOtherRouteDirection,
+    getCurrentOrDefaultRoute,
     getCurrentOrDefaultRouteCode,
     query: { isPending },
   } = useRouteFilter(props.code)
@@ -63,8 +63,9 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
     return unsub
   }, [props.code, isVisible])
 
+  const route = getCurrentOrDefaultRoute()
   const routeCode = getCurrentOrDefaultRouteCode()
-  const [leftTitle, rightTitle] = routeCode?.trim().split('-') ?? ['', ''] ?? ['', '']
+  const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
     if (!routeCode) return
@@ -162,11 +163,11 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
         </View>
       </View>
 
-      <SelectedLineBusStops code={props.code} routeCode={selectedRouteCode} />
+      <SelectedLineBusStops code={props.code} routeCode={routeCode} />
 
       {isPending
         ? (
-            <UiActivityIndicator size={24} />
+            <UiActivityIndicator size="small" />
           )
         : (
             <Animated.View entering={FadeInLeft} style={styles.routeContainer}>

@@ -28,4 +28,5 @@ export default {
   save: 'Save',
   editGroupTitle: 'Edit group title',
   version: 'Version',
+  deleteGroup: 'Delete Group',
 }

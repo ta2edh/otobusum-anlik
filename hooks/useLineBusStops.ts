@@ -1,4 +1,5 @@
-import { getLineBusStops, BusStop } from '@/api/getLineBusStops'
+import { getLineBusStops } from '@/api/getLineBusStops'
+import { BusLineStop } from '@/types/bus'
 import { useQuery } from '@tanstack/react-query'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -13,7 +14,7 @@ export function useLineBusStops(
   direction?: Direction,
   listenToUserLocation?: boolean,
 ) {
-  const [closestStop, setClosestStop] = useState<BusStop>()
+  const [closestStop, setClosestStop] = useState<BusLineStop>()
 
   const query = useQuery({
     queryKey: [`${code}-stop-locations`],
@@ -24,7 +25,7 @@ export function useLineBusStops(
 
   // Closest stop dependency is here to cause rerender on flatlist usage
   const filteredStops = useMemo(
-    () => query.data?.filter(stop => stop.yon === direction),
+    () => query.data?.filter(stop => stop.direction === direction),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [query.data, direction, closestStop],
   )
@@ -42,8 +43,8 @@ export function useLineBusStops(
         const distance = getDistanceFromLatLon(
           { ...location.coords },
           {
-            latitude: parseFloat(stop.yKoordinati),
-            longitude: parseFloat(stop.xKoordinati),
+            latitude: stop.y_coord,
+            longitude: stop.x_coord,
           },
         )
 
@@ -53,7 +54,7 @@ export function useLineBusStops(
         }
       }
 
-      if (currentClosestStop && currentClosestStop.durakKodu !== closestStop?.durakKodu) {
+      if (currentClosestStop && currentClosestStop.stop_code !== closestStop?.stop_code) {
         setClosestStop(currentClosestStop)
       }
     },

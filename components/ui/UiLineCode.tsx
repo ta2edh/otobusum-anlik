@@ -1,18 +1,18 @@
 import { colors } from '@/constants/colors'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
-import { StyleProp, StyleSheet, TextStyle } from 'react-native'
+import { StyleProp, StyleSheet, TextProps, TextStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
-interface Props {
+interface Props extends TextProps {
   isLoading?: boolean
   code: string
 }
 
-export function UiLineCode(props: Props) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+export function UiLineCode({ isLoading, code, ...props }: Props) {
+  const lineTheme = useLines(useShallow(state => state.lineTheme[code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const renderCodeContainer: StyleProp<TextStyle> = {
@@ -22,7 +22,8 @@ export function UiLineCode(props: Props) {
 
   return (
     <UiText style={[styles.renderCode, renderCodeContainer]}>
-      {props.isLoading ? <UiActivityIndicator /> : props.code}
+      {isLoading ? <UiActivityIndicator /> : code}
+      {props.children}
     </UiText>
   )
 }

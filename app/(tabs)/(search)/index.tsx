@@ -1,16 +1,17 @@
-import { getSearchResults, SearchResult } from '@/api/getSearchResults'
-import { TheSearchInput } from '@/components/TheSearchInput'
 import { TheSearchItem } from '@/components/TheSearchItem'
+import { TheSearchInput } from '@/components/TheSearchInput'
+import { getSearchResults } from '@/api/getSearchResults'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
-
 import { UiText } from '@/components/ui/UiText'
-import { usePaddings } from '@/hooks/usePaddings'
+
 import { i18n } from '@/translations/i18n'
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
+import { BusLine, BusStop } from '@/types/bus'
 
 import { useCallback, useMemo } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { usePaddings } from '@/hooks/usePaddings'
 
 export default function Search() {
   const paddings = usePaddings()
@@ -20,40 +21,51 @@ export default function Search() {
   })
 
   const onSearch = useCallback(
-    (q: string) => {
-      mutation.mutate(q)
-    },
+    (q: string) => mutation.mutate(q),
     [mutation],
   )
 
   const data = useMemo(
-    () => mutation.data?.list.filter(i => i.Stationcode === 0),
-    [mutation.data],
+    () => ([
+      ...(mutation.data?.lines || []),
+      ...(mutation.data?.stops || []),
+    ]),
+    [mutation.data?.lines, mutation.data?.stops],
   )
 
   const renderItem = useCallback(
-    ({ item }: { item: SearchResult }) => <TheSearchItem item={item} />,
+    ({ item }: { item: BusLine | BusStop }) => (
+      <TheSearchItem item={item} />
+    ),
     [],
   )
 
   const emptyItem = useCallback(() => {
     if (mutation.data) {
-      return <UiText style={styles.empty}>{i18n.t('emptySearch')}</UiText>
+      return (
+        <UiText info style={styles.empty}>
+          {i18n.t('emptySearch')}
+        </UiText>
+      )
     }
 
     if (mutation.isPending) {
-      return <UiActivityIndicator size={34} />
+      return <UiActivityIndicator size="large" />
     }
 
-    return <UiText style={styles.empty}>{i18n.t('searchSomething')}</UiText>
+    return (
+      <UiText info style={styles.empty}>
+        {i18n.t('searchSomething')}
+      </UiText>
+    )
   }, [mutation.data, mutation.isPending])
 
   return (
-    <View style={[styles.container, paddings]}>
+    <View style={styles.container}>
       <TheSearchInput
         onSearch={onSearch}
         isLoading={mutation.isPending}
-        style={{ marginBottom: 8 }}
+        style={paddings}
         debounce
       />
 
@@ -63,7 +75,7 @@ export default function Search() {
           renderItem={renderItem}
           estimatedItemSize={45}
           fadingEdgeLength={20}
-          contentContainerStyle={{ paddingVertical: 8 }}
+          contentContainerStyle={styles.contentStyle}
           keyboardDismissMode="on-drag"
           ListEmptyComponent={emptyItem}
         />
@@ -77,6 +89,9 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  contentStyle: {
+    padding: 14,
   },
   container: {
     flex: 1,

@@ -52,7 +52,7 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFilters.s
   }
 })
 
-export const selectGroup = (newGroup: LineGroup) => useFilters.setState(() => {
+export const selectGroup = (newGroup?: LineGroup) => useFilters.setState(() => {
   return {
     selectedGroup: newGroup,
   }

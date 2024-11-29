@@ -1,17 +1,17 @@
 import { getMapStyle } from '@/constants/mapStyles'
+import { useTheme } from '@/hooks/useTheme'
 import { useSettings } from '@/stores/settings'
-import { SplashScreen } from 'expo-router'
-import { forwardRef } from 'react'
-import { StyleSheet, useColorScheme } from 'react-native'
+
 import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { forwardRef } from 'react'
+import { StyleSheet } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
+import { SplashScreen } from 'expo-router'
 
-type Props = MapViewProps
-
-export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
+export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, ref) {
+  const { mode } = useTheme()
   const insets = useSafeAreaInsets()
-  const colorScheme = useColorScheme()
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
   const showTraffic = useSettings(useShallow(state => state.showTraffic))
 
@@ -35,7 +35,7 @@ export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
         pitch: 0,
         zoom: 13,
       }}
-      customMapStyle={getMapStyle(colorScheme)}
+      customMapStyle={getMapStyle(mode)}
       mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
       onRegionChangeComplete={handleRegionChangeComplete}
       onMapLoaded={handleMapLoaded}
@@ -43,6 +43,7 @@ export const TheMap = forwardRef<MapView, Props>(function TheMap(props, ref) {
       toolbarEnabled={false}
       showsTraffic={showTraffic}
       showsUserLocation={showMyLocation}
+      {...props}
     >
       {props.children}
     </MapView>

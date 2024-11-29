@@ -1,5 +1,13 @@
+import { useTheme } from '@/hooks/useTheme'
 import { ActivityIndicator, ActivityIndicatorProps } from 'react-native'
 
 export function UiActivityIndicator(props: ActivityIndicatorProps) {
-  return <ActivityIndicator color="#FFFFFF" {...props} />
+  const { colorsTheme } = useTheme()
+
+  return (
+    <ActivityIndicator
+      color={colorsTheme.color}
+      {...props}
+    />
+  )
 }
