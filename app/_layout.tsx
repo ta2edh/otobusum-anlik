@@ -16,6 +16,7 @@ export default function RootLayout() {
   const { colorsTheme, mode } = useTheme()
 
   const targetTheme = mode === 'dark' ? DarkTheme : DefaultTheme
+
   const modifiedTheme: Theme = {
     ...targetTheme,
     colors: {
