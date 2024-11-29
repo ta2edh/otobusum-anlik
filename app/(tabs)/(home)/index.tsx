@@ -2,7 +2,6 @@ import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 import { useCallback, useRef } from 'react'
 
-import { TheFocusAwareStatusBar } from '@/components/TheFocusAwareStatusbar'
 import { SelectedLines } from '@/components/lines/SelectedLines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMap } from '@/components/TheMap'
@@ -29,8 +28,6 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
-      <TheFocusAwareStatusBar />
-
       <MapContext.Provider value={map}>
         <TheMap ref={map} onMapReady={handleReady}>
           <LineMarkers />

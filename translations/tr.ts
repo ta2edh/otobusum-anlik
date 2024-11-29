@@ -29,4 +29,10 @@ export default {
   editGroupTitle: 'Grup başlığını düzenle',
   version: 'Versiyon',
   deleteGroup: 'Grubu sil',
+  theme: 'Tema',
+  dark: 'Karanlık',
+  light: 'Aydınlık',
+  appTheme: 'Uygulama Teması',
+  changeTheme: 'Tema değiştir',
+  system: 'Sistem',
 }

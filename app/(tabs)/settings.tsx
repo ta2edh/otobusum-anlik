@@ -8,6 +8,7 @@ import { ScrollView, StyleSheet } from 'react-native'
 import Constants from 'expo-constants'
 import { i18n } from '@/translations/i18n'
 import { SettingsTraffic } from '@/components/settings/Traffic'
+import { SettingsTheme } from '@/components/settings/Theme'
 
 export default function Settings() {
   const paddings = usePaddings()
@@ -22,6 +23,10 @@ export default function Settings() {
         <SettingsTraffic />
       </GroupContainer>
 
+      <GroupContainer title={i18n.t('theme')}>
+        <SettingsTheme />
+      </GroupContainer>
+
       <UiText info style={styles.version}>
         {`${i18n.t('version')} ${Constants.expoConfig?.version}`}
       </UiText>
@@ -32,6 +37,7 @@ export default function Settings() {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
+    gap: 8,
   },
   version: {
     marginTop: 'auto',

@@ -1,7 +1,6 @@
 import {
   StyleProp,
   StyleSheet,
-  Text,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -10,6 +9,7 @@ import {
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { Ionicons } from '@expo/vector-icons'
 import { useTheme } from '@/hooks/useTheme'
+import { UiText } from './UiText'
 
 export interface UiButtonProps extends TouchableOpacityProps {
   title?: string
@@ -47,9 +47,9 @@ export function UiButton({ style, ...props }: UiButtonProps) {
           : null}
 
       {props.title && (
-        <Text style={[styles.title, props.textStyle]} numberOfLines={1}>
+        <UiText style={[styles.title, props.textStyle]} numberOfLines={1}>
           {props.title}
-        </Text>
+        </UiText>
       )}
     </TouchableOpacity>
   )
@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
     flexShrink: 1,
   },
   title: {
-    color: 'white',
     textAlign: 'center',
     textAlignVertical: 'center',
   },

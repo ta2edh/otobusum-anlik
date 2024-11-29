@@ -29,4 +29,10 @@ export default {
   editGroupTitle: 'Edit group title',
   version: 'Version',
   deleteGroup: 'Delete Group',
+  theme: 'Theme',
+  dark: 'Dark',
+  light: 'Light',
+  appTheme: 'App Theme',
+  changeTheme: 'Change theme',
+  system: 'System',
 }

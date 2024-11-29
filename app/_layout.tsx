@@ -1,13 +1,14 @@
-import { queryClient, persister } from '@/api/client'
-import { useTheme } from '@/hooks/useTheme'
+import { DefaultTheme, DarkTheme, ThemeProvider, Theme } from '@react-navigation/native'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
+import { queryClient, persister } from '@/api/client'
+import { DehydrateOptions } from '@tanstack/react-query'
+import { TheStatusBar } from '@/components/TheStatusBar'
+import { useTheme } from '@/hooks/useTheme'
+import { i18n } from '@/translations/i18n'
 
 import { Stack, SplashScreen } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { DefaultTheme, DarkTheme, ThemeProvider, Theme } from '@react-navigation/native'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { DehydrateOptions } from '@tanstack/react-query'
-import { i18n } from '@/translations/i18n'
 
 SplashScreen.preventAutoHideAsync()
 
@@ -38,6 +39,8 @@ export default function RootLayout() {
         dehydrateOptions,
       }}
     >
+      <TheStatusBar />
+
       <GestureHandlerRootView>
         <BottomSheetModalProvider>
           <ThemeProvider value={modifiedTheme}>
