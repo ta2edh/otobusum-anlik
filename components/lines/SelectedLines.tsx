@@ -22,7 +22,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   const innerRef = useRef<FlatList>(null)
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
-  const defaultLines = useLines(useShallow(state => state.lines))
+  const defaultLines = useLines(state => state.lines)
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
   const lineGroups = useLines(state => state.lineGroups)
 

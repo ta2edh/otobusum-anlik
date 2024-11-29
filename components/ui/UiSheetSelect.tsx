@@ -2,7 +2,7 @@ import { RefObject } from 'react'
 import { StyleSheet, View, TouchableOpacity } from 'react-native'
 
 import { UiText } from './UiText'
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useTheme } from '@/hooks/useTheme'
 import { usePaddings } from '@/hooks/usePaddings'
 import { colors } from '@/constants/colors'
@@ -25,8 +25,22 @@ export function UiSheetSelect<T>(
   const { bottomSheetStyle } = useTheme()
   const paddings = usePaddings(true)
 
+  const BackdropComponent = (props: any) => {
+    return (
+      <BottomSheetBackdrop
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        {...props}
+      />
+    )
+  }
+
   return (
-    <BottomSheetModal ref={props.cRef} {...bottomSheetStyle}>
+    <BottomSheetModal
+      ref={props.cRef}
+      {...bottomSheetStyle}
+      backdropComponent={BackdropComponent}
+    >
       <BottomSheetView style={paddings}>
         <UiText info style={styles.title}>
           {props.title}

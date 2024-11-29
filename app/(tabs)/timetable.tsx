@@ -32,7 +32,7 @@ export default function TimetableScreen() {
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const lines = useLines(useShallow(state => state.lines))
+  const lines = useLines(state => state.lines)
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
 
   const items = selectedGroup?.lineCodes || lines
