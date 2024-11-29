@@ -86,7 +86,10 @@ export default function Search() {
 
   return (
     <View style={[styles.container]}>
-      <TheMap ref={map} scrollEnabled={false}>
+      <TheMap
+        ref={map}
+        liteMode
+      >
         {!!renderedStop && <LineBusStopMarkersItem stop={renderedStop} />}
       </TheMap>
 
