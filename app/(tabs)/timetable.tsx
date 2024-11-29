@@ -53,6 +53,7 @@ export default function TimetableScreen() {
 
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top + 8,
+    flex: 1,
   }
 
   const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
@@ -85,7 +86,7 @@ export default function TimetableScreen() {
             <LineTimetable code={item} />
           </Animated.View>
         )}
-        style={{ flexGrow: 1, flexShrink: 1 }}
+        style={{ flexGrow: 1, flexShrink: 1, maxHeight: '100%' }}
         keyExtractor={item => item}
         contentContainerStyle={{ padding: 8, gap: 8 }}
         onScroll={handleOnScroll}
