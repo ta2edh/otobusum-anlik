@@ -1,17 +1,22 @@
 import { create } from 'zustand'
 import { subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
 import { ToastAndroid } from 'react-native'
+import { randomUUID } from 'expo-crypto'
+
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Theme } from '@material/material-color-utilities'
 import { createTheme } from '@/utils/createTheme'
 import { queryClient } from '@/api/client'
 import { useFilters } from './filters'
-import { randomUUID } from 'expo-crypto'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
 
+interface StoreV0 {
+  lines: Record<string, {}[]>
+}
+
 export interface LinesStore {
-  lines: Record<string, string>
+  lines: string[]
   lineTheme: Record<string, Theme>
   lineGroups: LineGroup[]
 }
@@ -20,20 +25,35 @@ export const useLines = create(
   subscribeWithSelector(
     persist<LinesStore>(
       () => ({
-        lines: {},
+        lines: [],
         lineTheme: {},
         lineGroups: [],
       }),
       {
         name: 'line-storage',
         storage: createJSONStorage(() => AsyncStorage),
+        version: 1,
+        migrate: (persistedStore, version) => {
+          if (version === 0) {
+            const st = persistedStore as StoreV0
+            const keys = Object.keys(st.lines);
+
+            (persistedStore as LinesStore).lines = keys
+          }
+
+          return persistedStore as LinesStore
+        },
       },
     ),
   ),
 )
 
 export const deleteLine = (lineCode: string) => useLines.setState((state) => {
-  delete state.lines[lineCode]
+  const index = state.lines.indexOf(lineCode)
+  if (index !== -1) {
+    state.lines.splice(index, 1)
+  }
+
   delete state.lineTheme[lineCode]
 
   const selectedGroup = useFilters.getState().selectedGroup
@@ -42,9 +62,7 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
   }
 
   return {
-    lines: {
-      ...state.lines,
-    },
+    lines: [...state.lines],
     lineTheme: {
       ...state.lineTheme,
     },
@@ -65,17 +83,16 @@ export const addTheme = (lineCode: string) => useLines.setState((state) => {
 })
 
 export const addLine = (lineCode: string) => useLines.setState((state) => {
-  if (Object.keys(state.lines).length > 3) {
+  if (state.lines.length > 3) {
     ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
     return state
   }
 
   addTheme(lineCode)
+
+  state.lines.push(lineCode)
   return {
-    lines: {
-      ...state.lines,
-      [lineCode]: lineCode,
-    },
+    lines: [...state.lines],
   }
 })
 
@@ -142,11 +159,9 @@ export const deleteGroup = (groupId: string) => useLines.setState((state) => {
   // Check if line in the deleted group are in other groups
   // If they are not in other groups delete their theme
   // This will probably cause rerenders that are not really needed
-  const lineKeys = Object.keys(state.lines)
-
   for (const lineCode of group.lineCodes) {
     const inOtherGroup = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
-    if (lineKeys.includes(lineCode) || inOtherGroup) {
+    if (state.lines.includes(lineCode) || inOtherGroup) {
       continue
     }
 
@@ -201,7 +216,7 @@ const startUpdateLoop = () => {
       clearTimeout(listener)
 
       const loop = () => {
-        updateLines(newGroup?.lineCodes || Object.keys(useLines.getState().lines))
+        updateLines(newGroup?.lineCodes || useLines.getState().lines)
         return setTimeout(loop, 50_000)
       }
 
