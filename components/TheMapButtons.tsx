@@ -1,21 +1,29 @@
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@/hooks/useTheme'
 
+import { LineGroups } from './lines/groups/LineGroups'
 import { UiButton } from './ui/UiButton'
 
-import { changeRouteDirection, useFilters } from '@/stores/filters'
+import { changeRouteDirection, selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
+import { LineGroup } from '@/types/lineGroup'
 
 export function TheMapButtons() {
+  const lines = useLines(state => state.lines)
+  const lineGroups = useLines(state => state.lineGroups)
+  const selectedGroup = useFilters(state => state.selectedGroup)
+
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue('#ffffff')
   const txtColor = useSharedValue('#ffffff')
+  const bottomSheetModalGroups = useRef<BottomSheetModal>(null)
   const { mode } = useTheme()
 
   useEffect(() => {
@@ -56,9 +64,21 @@ export function TheMapButtons() {
     }
   }
 
+  const handleLineGroupsSelect = () => {
+    bottomSheetModalGroups.current?.present()
+  }
+
+  const handlePressGroup = (group: LineGroup) => {
+    selectGroup(group)
+    bottomSheetModalGroups.current?.close()
+  }
+
   const animatedContainerStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: bgColor.value,
+      // padding: 12,
+      // paddingHorizontal: 6,
+      borderRadius: 14,
     }
   })
 
@@ -70,15 +90,48 @@ export function TheMapButtons() {
 
   return (
     <View style={[styles.container, insetStyle]}>
-      <Animated.View style={[styles.button, animatedContainerStyle]}>
-        <UiButton
-          icon="repeat"
-          onPress={handleChangeAllDirections}
-          textStyle={animatedTextStyle}
-          iconSize="lg"
-          square
-        />
-      </Animated.View>
+      {lines.length > 0 && (
+        <Animated.View style={animatedContainerStyle}>
+          <UiButton
+            icon="repeat"
+            onPress={handleChangeAllDirections}
+            textStyle={animatedTextStyle}
+            square
+          />
+        </Animated.View>
+      )}
+
+      {lineGroups.length > 0 && (
+        <>
+          <Animated.View style={animatedContainerStyle}>
+            <UiButton
+              icon="albums"
+              onPress={handleLineGroupsSelect}
+              textStyle={animatedTextStyle}
+              square
+            />
+          </Animated.View>
+
+          {
+            !!selectedGroup && (
+              <Animated.View style={animatedContainerStyle}>
+                <UiButton
+                  icon="close"
+                  onPress={unSelectGroup}
+                  textStyle={animatedTextStyle}
+                  square
+                />
+              </Animated.View>
+            )
+          }
+
+          <LineGroups
+            ref={bottomSheetModalGroups}
+            onPressGroup={handlePressGroup}
+          />
+        </>
+      )}
+
     </View>
   )
 }
@@ -88,10 +141,6 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'absolute',
     padding: 14,
-  },
-  button: {
-    padding: 12,
-    paddingHorizontal: 6,
-    borderRadius: 14,
+    gap: 8,
   },
 })

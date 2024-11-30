@@ -39,9 +39,14 @@ const AnimatedIonicons = Animated.createAnimatedComponent(
 export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonProps) {
   const { colorsTheme } = useTheme()
 
+  const squareStyle: StyleProp<ViewStyle> = {
+    borderRadius: 14,
+    padding: 14,
+    paddingHorizontal: 14,
+  }
+
   const dynamicStyle: StyleProp<ViewStyle> = {
     opacity: props.disabled ? 0.4 : 1,
-    borderRadius: square ? 14 : 999,
   }
 
   const Icon = () => {
@@ -59,6 +64,7 @@ export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonP
         <AnimatedIonicons
           name={props.icon}
           size={iconSizes[iconSize]}
+          color={(props.textStyle as TextStyle)?.color}
           style={[{ color: colorsTheme.color }, props.textStyle]}
         />
       )
@@ -68,7 +74,7 @@ export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonP
   }
 
   return (
-    <TouchableOpacity style={[styles.button, dynamicStyle, style]} {...props}>
+    <TouchableOpacity style={[styles.button, dynamicStyle, square ? squareStyle : undefined, style]} {...props}>
       {Icon()}
 
       {props.title && (
@@ -90,6 +96,7 @@ const styles = StyleSheet.create({
     minWidth: 48,
     padding: 8,
     paddingHorizontal: 12,
+    borderRadius: 999,
     flexShrink: 1,
   },
   title: {

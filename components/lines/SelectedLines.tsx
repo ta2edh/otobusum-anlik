@@ -3,7 +3,6 @@ import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, Styl
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { SelectedLine } from './SelectedLine'
 
 import { SelectedLineWidth } from '@/constants/width'
@@ -26,14 +25,11 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
 
   const defaultLines = useLines(state => state.lines)
   const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
-  const lineGroups = useLines(state => state.lineGroups)
 
   const items = useMemo(
     () => selectedGroup ? selectedGroup.lineCodes : defaultLines,
     [defaultLines, selectedGroup],
   )
-
-  const groupCount = Object.keys(lineGroups).length
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
@@ -51,8 +47,6 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
 
   return (
     <View style={[props.viewProps?.style]}>
-      {groupCount > 0 && <LineGroupsSelect />}
-
       <Animated.FlatList
         {...props.listProps}
         ref={innerRef}
