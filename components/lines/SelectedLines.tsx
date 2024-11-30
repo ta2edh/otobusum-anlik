@@ -1,13 +1,15 @@
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
-import { FlatList, ListRenderItem, StyleSheet, View, ViewProps } from 'react-native'
+import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View, ViewProps } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { SelectedLine } from './SelectedLine'
 
+import { SelectedLineWidth } from '@/constants/width'
 import { useFilters } from '@/stores/filters'
 import { findGroupFromId, useLines } from '@/stores/lines'
+import { useMisc } from '@/stores/misc'
 
 interface SelectedLinesProps {
   viewProps?: ViewProps
@@ -40,6 +42,13 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
     [],
   )
 
+  const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const index = Math.ceil(event.nativeEvent.contentOffset.x / SelectedLineWidth)
+    useMisc.setState(() => ({ selectedLineScrollIndex: index }))
+  }, [])
+
+  const keyExtractor = useCallback((item: string) => item, [])
+
   return (
     <View style={[props.viewProps?.style]}>
       {groupCount > 0 && <LineGroupsSelect />}
@@ -49,8 +58,9 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
         ref={innerRef}
         data={items}
         renderItem={renderItem}
+        onMomentumScrollEnd={handleMomentumScrollEnd}
         contentContainerStyle={styles.codes}
-        keyExtractor={item => item}
+        keyExtractor={keyExtractor}
         snapToAlignment="center"
         pagingEnabled
         horizontal

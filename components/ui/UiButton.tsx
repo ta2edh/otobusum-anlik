@@ -7,6 +7,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -17,12 +18,25 @@ export interface UiButtonProps extends TouchableOpacityProps {
   title?: string
   isLoading?: boolean
   icon?: keyof typeof Ionicons.glyphMap
+  iconSize?: IconSize
   disabled?: boolean
   textStyle?: StyleProp<TextStyle>
   square?: boolean
 }
 
-export function UiButton({ style, square, ...props }: UiButtonProps) {
+type IconSize = 'sm' | 'md' | 'lg'
+
+const iconSizes: Record<IconSize, number> = {
+  sm: 18,
+  md: 20,
+  lg: 24,
+}
+
+const AnimatedIonicons = Animated.createAnimatedComponent(
+  Ionicons,
+)
+
+export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonProps) {
   const { colorsTheme } = useTheme()
 
   const dynamicStyle: StyleProp<ViewStyle> = {
@@ -30,25 +44,32 @@ export function UiButton({ style, square, ...props }: UiButtonProps) {
     borderRadius: square ? 14 : 999,
   }
 
+  const Icon = () => {
+    if (props.isLoading) {
+      return (
+        <UiActivityIndicator
+          size="small"
+          color={(props.textStyle as TextStyle | undefined)?.color || colorsTheme.color}
+        />
+      )
+    }
+
+    if (props.icon) {
+      return (
+        <AnimatedIonicons
+          name={props.icon}
+          size={iconSizes[iconSize]}
+          style={[{ color: colorsTheme.color }, props.textStyle]}
+        />
+      )
+    }
+
+    return null
+  }
+
   return (
     <TouchableOpacity style={[styles.button, dynamicStyle, style]} {...props}>
-      {props.isLoading
-        ? (
-            <UiActivityIndicator
-              size="small"
-              color={(props.textStyle as TextStyle | undefined)?.color || colorsTheme.color}
-            />
-          )
-        : props.icon
-          ? (
-              <Ionicons
-                name={props.icon}
-                size={20}
-                color={colorsTheme.color}
-                style={[{ color: colorsTheme.color }, props.textStyle]}
-              />
-            )
-          : null}
+      {Icon()}
 
       {props.title && (
         <UiText style={[styles.title, props.textStyle]} numberOfLines={1}>
