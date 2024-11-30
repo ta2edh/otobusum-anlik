@@ -3,6 +3,7 @@ import MapView from 'react-native-maps'
 import { useCallback, useRef } from 'react'
 
 import { SelectedLines } from '@/components/lines/SelectedLines'
+import { TheMapButtons } from '@/components/TheMapButtons'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMap } from '@/components/TheMap'
 
@@ -32,6 +33,8 @@ export default function HomeScreen() {
         <TheMap ref={map} onMapReady={handleReady}>
           <LineMarkers />
         </TheMap>
+
+        <TheMapButtons />
 
         <View style={selectedLineContainer}>
           <SelectedLines />

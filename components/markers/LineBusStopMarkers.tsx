@@ -11,9 +11,10 @@ import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
 import { BusLineStop } from '@/types/bus'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useMap } from '@/hooks/useMap'
 import { colors } from '@/constants/colors'
+import { getRoute, useFilters } from '@/stores/filters'
+import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
   code: string
@@ -77,7 +78,8 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
 }
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
-  const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
+  const routeCode = useFilters(() => getRoute(props.code))
+  // const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
 
   const map = useMap()
   const { query } = useLineBusStops(props.code)
@@ -106,7 +108,7 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     return null
   }
 
-  const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
+  const direction = extractRouteCodeDirection(routeCode)
   const busStops = direction ? query.data.filter(stop => stop.direction === direction) : query.data
 
   return (

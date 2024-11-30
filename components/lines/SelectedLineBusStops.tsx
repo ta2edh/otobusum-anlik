@@ -1,6 +1,8 @@
 import { useLineBusStops } from '@/hooks/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 import { useLines } from '@/stores/lines'
+import { useMap } from '@/hooks/useMap'
+import { useLine } from '@/hooks/useLine'
 import { Ionicons } from '@expo/vector-icons'
 
 import { useShallow } from 'zustand/react/shallow'
@@ -16,6 +18,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
+import { useDebouncedCallback } from 'use-debounce'
 
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiText } from '../ui/UiText'
@@ -23,16 +26,13 @@ import { UiButton } from '../ui/UiButton'
 
 import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { BusLocation } from '@/api/getLineBusLocations'
-import { useMap } from '@/hooks/useMap'
 import { i18n } from '@/translations/i18n'
-import { useDebouncedCallback } from 'use-debounce'
-import { useLine } from '@/hooks/useLine'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { BusLineStop } from '@/types/bus'
+import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
   code: string
-  routeCode?: string
+  routeCode: string
 }
 
 const AnimatedFlashList
@@ -53,10 +53,9 @@ export function SelectedLineBusStops(props: Props) {
   const scrollY = useSharedValue(0)
 
   const { query: { data: line } } = useLine(props.code)
-  const { getRouteDirection } = useRouteFilter(props.code)
 
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const direction = getRouteDirection(props.routeCode)
+  const direction = extractRouteCodeDirection(props.routeCode)
 
   const { filteredStops, query, closestStop } = useLineBusStops(props.code, direction, true)
   const { getSchemeColorHex } = useTheme(lineTheme)

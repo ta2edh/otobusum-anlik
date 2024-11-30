@@ -1,6 +1,6 @@
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
-import { selectRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
+import { changeRouteDirection, getRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
 import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
@@ -37,17 +37,13 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
 
 export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const routeCode = useFilters(() => getRoute(props.code))
 
   const { query: { isRefetching } } = useLine(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
   const isVisible = useSharedValue(true)
 
-  const {
-    findOtherRouteDirection,
-    getCurrentOrDefaultRoute,
-    getCurrentOrDefaultRouteCode,
-    query: { isPending },
-  } = useRouteFilter(props.code)
+  const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
 
   useEffect(() => {
     const unsub = useFilters.subscribe(
@@ -64,16 +60,10 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
   }, [props.code, isVisible])
 
   const route = getCurrentOrDefaultRoute()
-  const routeCode = getCurrentOrDefaultRouteCode()
   const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const handleSwitchRoute = () => {
-    if (!routeCode) return
-
-    const otherDirection = findOtherRouteDirection(routeCode)
-    if (!otherDirection || !otherDirection.route_code) return
-
-    selectRoute(props.code, otherDirection.route_code)
+    changeRouteDirection(props.code)
   }
 
   const handleVisibility = () => {

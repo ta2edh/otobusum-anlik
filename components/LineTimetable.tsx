@@ -10,10 +10,10 @@ import { DayType } from '@/types/departure'
 import { useQuery } from '@tanstack/react-query'
 import { i18n } from '@/translations/i18n'
 import { useLines } from '@/stores/lines'
-import { useFilters } from '@/stores/filters'
+import { getRoute, useFilters } from '@/stores/filters'
 import { useTheme } from '@/hooks/useTheme'
 import { useAnnouncements } from '@/hooks/useAnnouncements'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
   const res: Record<string, PlannedDeparture[]> = {}
@@ -49,19 +49,18 @@ export function LineTimetable(props: Props) {
       : 'I'
 
   const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
-  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+  const routeCode = useFilters(() => getRoute(props.code))
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
 
   const { query: announcementsQuery } = useAnnouncements()
   const { getSchemeColorHex } = useTheme(lineTheme)
-  const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
 
   const query = useQuery({
     queryKey: [`timetable-${props.code}`],
     queryFn: () => getPlannedDepartures(props.code),
   })
 
-  const direction = getRouteDirection(getCurrentOrDefaultRouteCode())
+  const direction = extractRouteCodeDirection(routeCode)
 
   const filteredData = useMemo(
     () =>
@@ -110,7 +109,7 @@ export function LineTimetable(props: Props) {
     <View style={[styles.wrapper, containerStyle]}>
       <View>
         <UiText style={textStyle}>
-          {selectedRouteCode}
+          {routeCode}
           {' '}
           -
           {props.code}

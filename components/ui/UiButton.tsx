@@ -17,13 +17,15 @@ export interface UiButtonProps extends TouchableOpacityProps {
   icon?: keyof typeof Ionicons.glyphMap
   disabled?: boolean
   textStyle?: StyleProp<TextStyle>
+  square?: boolean
 }
 
-export function UiButton({ style, ...props }: UiButtonProps) {
+export function UiButton({ style, square, ...props }: UiButtonProps) {
   const { colorsTheme } = useTheme()
 
   const dynamicStyle: StyleProp<ViewStyle> = {
     opacity: props.disabled ? 0.4 : 1,
+    borderRadius: square ? 14 : 999,
   }
 
   return (
@@ -61,7 +63,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 999,
     gap: 4,
     minWidth: 48,
     padding: 8,

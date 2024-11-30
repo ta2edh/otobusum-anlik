@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { useLine } from '@/hooks/useLine'
 import { Ionicons } from '@expo/vector-icons'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { getSelectedRouteCodeOrDefault } from '@/hooks/useRouteFilter'
 
 interface Props {
   code: string
@@ -83,10 +83,9 @@ export const LineBusMarkersItem = function LineBusMarkersItem({
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const { query: { data: line } } = useLine(props.code)
-  const { getCurrentOrDefaultRouteCode } = useRouteFilter(props.code)
 
-  const route = getCurrentOrDefaultRouteCode()
-  const filtered = line?.filter(loc => loc.guzergahkodu === route)
+  const routeCode = getSelectedRouteCodeOrDefault(props.code)
+  const filtered = line?.filter(loc => loc.guzergahkodu === routeCode)
 
   return (
     <>
