@@ -35,4 +35,5 @@ export default {
   appTheme: 'App Theme',
   changeTheme: 'Change theme',
   system: 'System',
+  clusterBusStops: 'Cluster bus stops for improved performance',
 }

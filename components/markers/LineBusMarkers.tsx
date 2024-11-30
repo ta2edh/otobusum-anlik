@@ -88,7 +88,7 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const { query: { data: line } } = useLine(props.code)
   const routeCode = useFilters(() => getRoute(props.code))
 
-  const filtered = line?.filter(loc => loc.guzergahkodu === routeCode)
+  const filtered = line?.filter(loc => loc.guzergahkodu === routeCode) || []
 
   return (
     <>

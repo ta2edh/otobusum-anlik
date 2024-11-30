@@ -1,6 +1,7 @@
 import Constants from 'expo-constants'
 import { ScrollView, StyleSheet } from 'react-native'
 
+import { SettingsCluster } from '@/components/settings/Cluster'
 import { GroupContainer } from '@/components/settings/Container'
 import { SettingsLocation } from '@/components/settings/Location'
 import { SettingsTheme } from '@/components/settings/Theme'
@@ -22,6 +23,7 @@ export default function Settings() {
       <GroupContainer title={i18n.t('map')}>
         <SettingsLocation />
         <SettingsTraffic />
+        <SettingsCluster />
       </GroupContainer>
 
       <GroupContainer title={i18n.t('theme')}>

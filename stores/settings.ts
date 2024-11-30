@@ -9,6 +9,7 @@ export interface SettingsStore {
   showMyLocation: boolean
   showTraffic: boolean
   colorScheme?: ColorSchemeName
+  clusterStops: boolean
 }
 
 export const useSettings = create(
@@ -19,6 +20,7 @@ export const useSettings = create(
         showMyLocation: false,
         showTraffic: true,
         colorScheme: undefined,
+        clusterStops: false,
       }),
       {
         name: 'settings-storage',

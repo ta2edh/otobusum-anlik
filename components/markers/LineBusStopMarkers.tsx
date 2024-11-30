@@ -1,7 +1,8 @@
 import { router } from 'expo-router'
 import { memo, useCallback, useEffect, useMemo } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { LatLng } from 'react-native-maps'
+import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native'
+import { Clusterer, isPointCluster, supercluster } from 'react-native-clusterer'
+import { LatLng, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useLineBusStops } from '@/hooks/useLineBusStops'
@@ -15,6 +16,7 @@ import { MarkerLazyCallout } from './MarkerLazyCallout'
 import { colors } from '@/constants/colors'
 import { getRoute, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
+import { useSettings } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
@@ -23,11 +25,15 @@ interface Props {
 }
 
 interface LineBusStopMarkersItemProps {
-  stop: BusLineStop
   code?: string
+  stop: BusLineStop
+  coordinate?: {
+    latitude: number
+    longitude: number
+  }
 }
 
-export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemProps) {
+export function LineBusStopMarkersItem({ stop, code, coordinate }: LineBusStopMarkersItemProps) {
   const lineTheme = useLines(useShallow(state => code ? state.lineTheme[code] : undefined))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
@@ -38,7 +44,7 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
         stopId: stop.stop_code,
       },
     })
-  }, [stop.stop_code])
+  }, [stop?.stop_code])
 
   const backgroundColor = useMemo(() => getSchemeColorHex('primary') || colors.primary, [getSchemeColorHex])
 
@@ -50,14 +56,14 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
     backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
-  const coordinate = useMemo(() => ({
+  const coordinateDefault = useMemo(() => ({
     latitude: stop.y_coord,
     longitude: stop.x_coord,
   }), [stop.x_coord, stop.y_coord])
 
   return (
     <MarkerLazyCallout
-      coordinate={coordinate}
+      coordinate={coordinate || coordinateDefault}
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       calloutProps={{
@@ -81,8 +87,11 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
   const routeCode = useFilters(() => getRoute(props.code))
+  const initialLocation = useSettings(state => state.initialMapLocation)
+  const clusterStops = useSettings(state => state.clusterStops)
 
   const map = useMap()
+  const { width, height } = useWindowDimensions()
   const { query } = useLineBusStops(props.code)
 
   useEffect(() => {
@@ -105,12 +114,54 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     })
   }, [query.data, map])
 
+  const direction = extractRouteCodeDirection(routeCode)
+  const busStops = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
+
   if (!query.data) {
     return null
   }
 
-  const direction = extractRouteCodeDirection(routeCode)
-  const busStops = direction ? query.data.filter(stop => stop.direction === direction) : query.data
+  if (clusterStops) {
+    const filteredParsed: supercluster.PointFeature<any>[] = busStops.map((item, index) => ({
+      geometry: {
+        coordinates: [item.x_coord, item.y_coord],
+        type: 'Point',
+      },
+      properties: {
+        id: index,
+      },
+      type: 'Feature',
+    }))
+
+    return (
+      <Clusterer
+        data={filteredParsed}
+        region={initialLocation as Region}
+        mapDimensions={{
+          width, height,
+        }}
+        options={{
+          minPoints: 6,
+          radius: 32,
+        }}
+        renderItem={(point, index) => (
+          <LineBusStopMarkersItem
+            key={
+              isPointCluster(point)
+                ? `cluster-${point.properties.cluster_id}`
+                : `point-${point.properties.id}`
+            }
+            stop={busStops[index]!}
+            code={props.code}
+            coordinate={{
+              latitude: point.geometry.coordinates[1]!,
+              longitude: point.geometry.coordinates[0]!,
+            }}
+          />
+        )}
+      />
+    )
+  }
 
   return (
     <>

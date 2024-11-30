@@ -35,4 +35,5 @@ export default {
   appTheme: 'Uygulama Teması',
   changeTheme: 'Tema değiştir',
   system: 'Sistem',
+  clusterBusStops: 'Otobüs duraklarını daha iyi performans için grupla',
 }
