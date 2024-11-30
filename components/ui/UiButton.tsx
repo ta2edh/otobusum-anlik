@@ -7,7 +7,6 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native'
-import Animated from 'react-native-reanimated'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -31,10 +30,6 @@ const iconSizes: Record<IconSize, number> = {
   md: 20,
   lg: 24,
 }
-
-const AnimatedIonicons = Animated.createAnimatedComponent(
-  Ionicons,
-)
 
 export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonProps) {
   const { colorsTheme } = useTheme()
@@ -61,7 +56,7 @@ export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonP
 
     if (props.icon) {
       return (
-        <AnimatedIonicons
+        <Ionicons
           name={props.icon}
           size={iconSizes[iconSize]}
           color={(props.textStyle as TextStyle)?.color}

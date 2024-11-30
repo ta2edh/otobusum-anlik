@@ -1,7 +1,7 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
-import { useCallback, useEffect, useRef } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -59,7 +59,7 @@ export function TheMapButtons() {
 
   useEffect(() => {
     updateColors(0)
-  }, [selectedGroup, updateColors])
+  }, [selectedGroup, updateColors, lines])
 
   const insetStyle: StyleProp<ViewStyle> = {
     top: insets.top,
@@ -88,11 +88,12 @@ export function TheMapButtons() {
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
     backgroundColor: bgColor.value,
-  }))
+    borderRadius: 14,
+  }), [])
 
-  const animatedTextStyle = useAnimatedStyle(() => ({
-    color: txtColor.value,
-  }))
+  const textStyle: StyleProp<TextStyle> = useMemo(() => ({
+    color: 'white',
+  }), [])
 
   return (
     <View style={[styles.container, insetStyle]}>
@@ -101,7 +102,7 @@ export function TheMapButtons() {
           <UiButton
             icon="repeat"
             onPress={handleChangeAllDirections}
-            textStyle={animatedTextStyle}
+            textStyle={textStyle}
             square
           />
         </Animated.View>
@@ -113,7 +114,7 @@ export function TheMapButtons() {
             <UiButton
               icon="albums"
               onPress={handleLineGroupsSelect}
-              textStyle={animatedTextStyle}
+              textStyle={textStyle}
               square
             />
           </Animated.View>
@@ -124,7 +125,7 @@ export function TheMapButtons() {
                 <UiButton
                   icon="close"
                   onPress={unSelectGroup}
-                  textStyle={animatedTextStyle}
+                  textStyle={textStyle}
                   square
                 />
               </Animated.View>
