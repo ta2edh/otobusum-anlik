@@ -234,6 +234,7 @@ export function SelectedLineBusStops(props: Props) {
         data={filteredStops}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
+        estimatedListSize={{ height: COLLAPSED, width: 358.7 }}
         keyExtractor={item => item.stop_code}
         overrideItemLayout={overrideItemLayout}
         fadingEdgeLength={40}

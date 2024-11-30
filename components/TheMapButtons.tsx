@@ -10,6 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { LineGroups } from './lines/groups/LineGroups'
 import { UiButton } from './ui/UiButton'
 
+import { colors } from '@/constants/colors'
 import { changeRouteDirection, selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
@@ -21,7 +22,7 @@ export function TheMapButtons() {
   const selectedGroup = useFilters(state => state.selectedGroup)
 
   const insets = useSafeAreaInsets()
-  const bgColor = useSharedValue('#ffffff')
+  const bgColor = useSharedValue(colors.primary)
   const txtColor = useSharedValue('#ffffff')
   const bottomSheetModalGroups = useRef<BottomSheetModal>(null)
   const { mode } = useTheme()
