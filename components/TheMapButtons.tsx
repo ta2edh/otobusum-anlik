@@ -1,8 +1,10 @@
 import { hexFromArgb } from '@material/material-color-utilities'
 import { useEffect } from 'react'
-import { StyleProp, StyleSheet, useColorScheme, View, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+import { useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from './ui/UiButton'
 
@@ -12,9 +14,9 @@ import { useMisc } from '@/stores/misc'
 
 export function TheMapButtons() {
   const insets = useSafeAreaInsets()
-  const colorScheme = useColorScheme()
   const bgColor = useSharedValue('#ffffff')
   const txtColor = useSharedValue('#ffffff')
+  const { mode } = useTheme()
 
   useEffect(() => {
     const unsub = useMisc.subscribe(state => state.selectedLineScrollIndex, (index) => {
@@ -24,7 +26,7 @@ export function TheMapButtons() {
       const theme = useLines.getState().lineTheme[lineCode]
       if (!theme) return
 
-      const scheme = theme.schemes[colorScheme || 'dark']
+      const scheme = theme.schemes[mode]
 
       const targetBackground = hexFromArgb(scheme.primary)
       const targetText = hexFromArgb(scheme.onPrimary)
@@ -36,7 +38,7 @@ export function TheMapButtons() {
     })
 
     return unsub
-  }, [bgColor, txtColor, colorScheme])
+  }, [bgColor, txtColor, mode])
 
   const insetStyle: StyleProp<ViewStyle> = {
     top: insets.top,
