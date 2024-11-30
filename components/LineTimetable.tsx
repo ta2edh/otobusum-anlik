@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -39,7 +39,7 @@ interface Props {
   code: string
 }
 
-export function LineTimetable(props: Props) {
+export const LineTimetable = memo(function LineTimetable(props: Props) {
   const now = new Date()
   const day = now.getDay()
 
@@ -180,7 +180,7 @@ export function LineTimetable(props: Props) {
       </View>
     </View>
   )
-}
+})
 
 const styles = StyleSheet.create({
   wrapper: {

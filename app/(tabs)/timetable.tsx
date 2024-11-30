@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import {
   FlatList,
   LayoutChangeEvent,
+  ListRenderItem,
   StyleProp,
   StyleSheet,
   View,
@@ -12,7 +13,6 @@ import Animated, {
   scrollTo,
   useAnimatedRef,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
@@ -23,7 +23,7 @@ import { SelectedLines } from '@/components/lines/SelectedLines'
 import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
-import { SelectedLineWidth } from '@/constants/width'
+import { selectedLineWidth } from '@/constants/width'
 import { useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
@@ -48,11 +48,6 @@ export default function TimetableScreen() {
     [linesHeight],
   )
 
-  const childrenContainerStyle = useAnimatedStyle(() => ({
-    width: SelectedLineWidth,
-    flexShrink: 1,
-  }))
-
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top + 8,
     flex: 1,
@@ -63,8 +58,28 @@ export default function TimetableScreen() {
     scrollTo(timetablesRef, contentOffset.x, 0, false)
   })
 
+  const renderItem: ListRenderItem<string> = useCallback(
+    ({ item }) => {
+      return (
+        <Animated.View style={styles.childrenContainer}>
+          <LineTimetable code={item} />
+        </Animated.View>
+      )
+    },
+    [],
+  )
+
+  const keyExtractor = useCallback(
+    (item: string) => item,
+    [],
+  )
+
   if (items.length < 1) {
-    return <UiText style={styles.center} info>{i18n.t('timetableEmpty')}</UiText>
+    return (
+      <UiText style={styles.center} info>
+        {i18n.t('timetableEmpty')}
+      </UiText>
+    )
   }
 
   return (
@@ -83,14 +98,10 @@ export default function TimetableScreen() {
       <Animated.FlatList
         ref={timetablesRef}
         data={items}
-        renderItem={({ item }) => (
-          <Animated.View style={childrenContainerStyle}>
-            <LineTimetable code={item} />
-          </Animated.View>
-        )}
-        style={{ flexGrow: 1, flexShrink: 1, maxHeight: '100%' }}
-        keyExtractor={item => item}
-        contentContainerStyle={{ padding: 8, gap: 8 }}
+        renderItem={renderItem}
+        style={styles.list}
+        keyExtractor={keyExtractor}
+        contentContainerStyle={styles.listContent}
         onScroll={handleOnScroll}
         pagingEnabled
         snapToAlignment="center"
@@ -105,5 +116,18 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  list: {
+    flexGrow: 1,
+    flexShrink: 1,
+    maxHeight: '100%',
+  },
+  listContent: {
+    padding: 8,
+    gap: 8,
+  },
+  childrenContainer: {
+    flexShrink: 1,
+    width: selectedLineWidth,
   },
 })

@@ -89,9 +89,11 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
     return state
   }
 
-  addTheme(lineCode)
+  if (state.lines.includes(lineCode)) return state
 
+  addTheme(lineCode)
   state.lines.push(lineCode)
+
   return {
     lines: [...state.lines],
   }

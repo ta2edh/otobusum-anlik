@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { SelectedLine } from './SelectedLine'
 
-import { SelectedLineWidth } from '@/constants/width'
+import { selectedLineWidth } from '@/constants/width'
 import { useFilters } from '@/stores/filters'
 import { findGroupFromId, useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
@@ -39,7 +39,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   )
 
   const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.ceil(event.nativeEvent.contentOffset.x / SelectedLineWidth)
+    const index = Math.ceil(event.nativeEvent.contentOffset.x / selectedLineWidth)
     useMisc.setState(() => ({ selectedLineScrollIndex: index }))
   }, [])
 

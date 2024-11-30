@@ -30,7 +30,7 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 
-import { SelectedLineWidth } from '@/constants/width'
+import { selectedLineWidth } from '@/constants/width'
 import { changeRouteDirection, getRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
 import { deleteLine, useLines } from '@/stores/lines'
 
@@ -79,7 +79,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    width: SelectedLineWidth,
+    width: selectedLineWidth,
   }
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
