@@ -1,6 +1,6 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -26,27 +26,40 @@ export function TheMapButtons() {
   const bottomSheetModalGroups = useRef<BottomSheetModal>(null)
   const { mode } = useTheme()
 
+  const updateColors = useCallback((index: number) => {
+    const lines = selectedGroup?.lineCodes || useLines.getState().lines
+    const lineCode = lines.at(index)
+    if (lineCode === undefined) return
+
+    const theme = useLines.getState().lineTheme[lineCode]
+    if (!theme) return
+
+    const scheme = theme.schemes[mode]
+
+    const targetBackground = hexFromArgb(scheme.primary)
+    const targetText = hexFromArgb(scheme.onPrimary)
+
+    bgColor.value = withTiming(targetBackground)
+    txtColor.value = withTiming(targetText)
+  }, [bgColor, mode, txtColor, selectedGroup?.lineCodes])
+
   useEffect(() => {
-    const unsub = useMisc.subscribe(state => state.selectedLineScrollIndex, (index) => {
-      const lineCode = useLines.getState().lines.at(index)
-      if (lineCode === undefined) return
-
-      const theme = useLines.getState().lineTheme[lineCode]
-      if (!theme) return
-
-      const scheme = theme.schemes[mode]
-
-      const targetBackground = hexFromArgb(scheme.primary)
-      const targetText = hexFromArgb(scheme.onPrimary)
-
-      bgColor.value = withTiming(targetBackground)
-      txtColor.value = withTiming(targetText)
-    }, {
-      fireImmediately: true,
-    })
+    const unsub = useMisc.subscribe(
+      state => state.selectedLineScrollIndex,
+      (index) => {
+        updateColors(index)
+      },
+      {
+        fireImmediately: true,
+      },
+    )
 
     return unsub
-  }, [bgColor, txtColor, mode])
+  }, [updateColors])
+
+  useEffect(() => {
+    updateColors(0)
+  }, [selectedGroup, updateColors])
 
   const insetStyle: StyleProp<ViewStyle> = {
     top: insets.top,
@@ -73,20 +86,13 @@ export function TheMapButtons() {
     bottomSheetModalGroups.current?.close()
   }
 
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: bgColor.value,
-      // padding: 12,
-      // paddingHorizontal: 6,
-      borderRadius: 14,
-    }
-  })
+  const animatedContainerStyle = useAnimatedStyle(() => ({
+    backgroundColor: bgColor.value,
+  }))
 
-  const animatedTextStyle = useAnimatedStyle(() => {
-    return {
-      color: txtColor.value,
-    }
-  })
+  const animatedTextStyle = useAnimatedStyle(() => ({
+    color: txtColor.value,
+  }))
 
   return (
     <View style={[styles.container, insetStyle]}>
