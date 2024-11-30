@@ -1,6 +1,7 @@
+import { getBody } from './body'
+
 import { DayType, Direction } from '@/types/departure'
 import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
-import { getBody } from './body'
 
 export interface PlannedDeparture {
   SHATKODU: string

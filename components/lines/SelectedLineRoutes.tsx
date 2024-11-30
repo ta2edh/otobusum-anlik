@@ -1,3 +1,5 @@
+import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
+import { memo, useCallback, useRef } from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -6,18 +8,17 @@ import {
   View,
   ViewStyle,
 } from 'react-native'
-import { memo, useCallback, useRef } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
-import { UiButton, UiButtonProps } from '../ui/UiButton'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
+
 import { UiSheetModal } from '../ui/sheet/UiSheetModal'
+import { UiButton, UiButtonProps } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { selectRoute, useFilters } from '@/stores/filters'
 import { LineRoute } from '@/api/getAllRoutes'
 import { colors } from '@/constants/colors'
+import { selectRoute, useFilters } from '@/stores/filters'
 import { i18n } from '@/translations/i18n'
 
 type MergedProps = TouchableOpacityProps & UiButtonProps

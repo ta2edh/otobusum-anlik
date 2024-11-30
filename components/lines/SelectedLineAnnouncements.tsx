@@ -1,15 +1,16 @@
 import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { memo, useMemo, useRef } from 'react'
+import { StyleProp, StyleSheet, TextStyle, View, ViewProps } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
+
 import { useAnnouncements } from '@/hooks/useAnnouncements'
 import { useTheme } from '@/hooks/useTheme'
 
+import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { memo, useMemo, useRef } from 'react'
-import { StyleProp, StyleSheet, TextStyle, View, ViewProps } from 'react-native'
 import { useLines } from '@/stores/lines'
-import { useShallow } from 'zustand/react/shallow'
-import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 
 interface Props extends ViewProps {
   code: string

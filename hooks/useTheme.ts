@@ -1,9 +1,10 @@
-import { colors } from '@/constants/colors'
-import { useSettings } from '@/stores/settings'
-import { hexFromArgb, Scheme, Theme } from '@material/material-color-utilities'
+import { Scheme, Theme, hexFromArgb } from '@material/material-color-utilities'
 import { useCallback, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
+
+import { colors } from '@/constants/colors'
+import { useSettings } from '@/stores/settings'
 
 type SchemeKeys = {
   [K in keyof Scheme]: Scheme[K] extends number ? K : never

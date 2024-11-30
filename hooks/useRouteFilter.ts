@@ -1,6 +1,7 @@
+import { useQuery } from '@tanstack/react-query'
+
 import { getAllRoutes } from '@/api/getAllRoutes'
 import { useFilters } from '@/stores/filters'
-import { useQuery } from '@tanstack/react-query'
 
 export const getSelectedRouteCodeOrDefault = (lineCode: string) => {
   return useFilters.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`

@@ -1,5 +1,6 @@
+import { StyleProp, Text, TextProps, TextStyle } from 'react-native'
+
 import { useTheme } from '@/hooks/useTheme'
-import { TextProps, Text, StyleProp, TextStyle } from 'react-native'
 
 type FontSizes = 'sm' | 'md' | 'lg' | 'xl'
 

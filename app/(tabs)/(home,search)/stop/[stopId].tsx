@@ -1,15 +1,17 @@
-import { getStop } from '@/api/getStop'
-import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
+import { useQuery } from '@tanstack/react-query'
+import { useLocalSearchParams } from 'expo-router'
+import { useEffect, useRef } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import MapView from 'react-native-maps'
+
 import { LineBusStopMarkersItem } from '@/components/markers/LineBusStopMarkers'
 import { TheMap } from '@/components/TheMap'
+import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiText } from '@/components/ui/UiText'
-import { useTheme } from '@/hooks/useTheme'
-import { useQuery } from '@tanstack/react-query'
 
-import MapView from 'react-native-maps'
-import { useLocalSearchParams } from 'expo-router'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { useEffect, useRef } from 'react'
+import { useTheme } from '@/hooks/useTheme'
+
+import { getStop } from '@/api/getStop'
 
 export default function StopDetails() {
   const { stopId } = useLocalSearchParams<{ stopId: string }>()

@@ -1,14 +1,16 @@
-import { DefaultTheme, DarkTheme, ThemeProvider, Theme } from '@react-navigation/native'
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
-import { queryClient, persister } from '@/api/client'
+import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { DehydrateOptions } from '@tanstack/react-query'
-import { TheStatusBar } from '@/components/TheStatusBar'
-import { useTheme } from '@/hooks/useTheme'
-import { i18n } from '@/translations/i18n'
-
-import { Stack, SplashScreen } from 'expo-router'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { SplashScreen, Stack } from 'expo-router'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
+
+import { TheStatusBar } from '@/components/TheStatusBar'
+
+import { useTheme } from '@/hooks/useTheme'
+
+import { persister, queryClient } from '@/api/client'
+import { i18n } from '@/translations/i18n'
 
 SplashScreen.preventAutoHideAsync()
 

@@ -1,17 +1,17 @@
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { router } from 'expo-router'
 import { memo, useCallback, useRef } from 'react'
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 
-import { UiText } from './ui/UiText'
 import { LineGroups } from './lines/groups/LineGroups'
-import { UiLineCode } from './ui/UiLineCode'
 import { UiButton } from './ui/UiButton'
+import { UiLineCode } from './ui/UiLineCode'
+import { UiText } from './ui/UiText'
 
 import { addLine, addLineToGroup } from '@/stores/lines'
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { LineGroup } from '@/types/lineGroup'
 import { BusLine, BusStop } from '@/types/bus'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { router } from 'expo-router'
+import { LineGroup } from '@/types/lineGroup'
 import { isStop } from '@/utils/isStop'
 
 interface Props extends TouchableOpacityProps {

@@ -1,13 +1,12 @@
-import { getLineBusStops } from '@/api/getLineBusStops'
-import { BusLineStop } from '@/types/bus'
 import { useQuery } from '@tanstack/react-query'
-
-import { useCallback, useEffect, useMemo, useState } from 'react'
 import * as Location from 'expo-location'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { getDistanceFromLatLon } from '@/utils/getDistanceFromLatLon'
+import { getLineBusStops } from '@/api/getLineBusStops'
 import { useSettings } from '@/stores/settings'
+import { BusLineStop } from '@/types/bus'
 import { Direction } from '@/types/departure'
+import { getDistanceFromLatLon } from '@/utils/getDistanceFromLatLon'
 
 export function useLineBusStops(
   code: string,

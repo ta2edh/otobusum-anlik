@@ -1,6 +1,3 @@
-import { LineTimetable } from '@/components/LineTimetable'
-import { SelectedLines } from '@/components/lines/SelectedLines'
-import { useLines } from '@/stores/lines'
 import { useCallback } from 'react'
 import {
   FlatList,
@@ -21,9 +18,14 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
-import { useFilters } from '@/stores/filters'
-import { SelectedLineWidth } from '@/constants/width'
+
+import { SelectedLines } from '@/components/lines/SelectedLines'
+import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
+
+import { SelectedLineWidth } from '@/constants/width'
+import { useFilters } from '@/stores/filters'
+import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 export default function TimetableScreen() {

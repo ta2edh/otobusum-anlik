@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { ColorSchemeName } from 'react-native'
 import { LatLng } from 'react-native-maps'
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
-import { ColorSchemeName } from 'react-native'
 
 export interface SettingsStore {
   initialMapLocation?: LatLng

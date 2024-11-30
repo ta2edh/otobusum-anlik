@@ -1,4 +1,3 @@
-import { useTheme } from '@/hooks/useTheme'
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -6,6 +5,8 @@ import {
   BottomSheetModalProps,
 } from '@gorhom/bottom-sheet'
 import { forwardRef } from 'react'
+
+import { useTheme } from '@/hooks/useTheme'
 
 interface Props extends BottomSheetModalProps {}
 

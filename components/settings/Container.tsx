@@ -1,5 +1,7 @@
-import { ViewProps, View, StyleProp, ViewStyle, StyleSheet } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+
 import { useTheme } from '@/hooks/useTheme'
+
 import { UiText } from '../ui/UiText'
 
 interface ContainerProps extends ViewProps {

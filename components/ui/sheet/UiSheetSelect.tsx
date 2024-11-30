@@ -1,11 +1,13 @@
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { RefObject } from 'react'
-import { StyleSheet, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+
+import { usePaddings } from '@/hooks/usePaddings'
 
 import { UiText } from '../UiText'
+
 import { UiSheetModal } from './UiSheetModal'
 
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { usePaddings } from '@/hooks/usePaddings'
 import { colors } from '@/constants/colors'
 
 interface Option<T> {

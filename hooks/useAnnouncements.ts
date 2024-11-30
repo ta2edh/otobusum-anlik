@@ -1,5 +1,6 @@
-import { getAnnouncements } from '@/api/getAnnouncements'
 import { useQuery } from '@tanstack/react-query'
+
+import { getAnnouncements } from '@/api/getAnnouncements'
 
 export function useAnnouncements() {
   const query = useQuery({

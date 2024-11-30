@@ -1,12 +1,15 @@
-import { useCallback, useRef } from 'react'
-import { UiButton } from '../ui/UiButton'
-import { SettingContainer } from './Container'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { UiSheetSelect } from '../ui/sheet/UiSheetSelect'
+import { useCallback, useRef } from 'react'
 import { ColorSchemeName } from 'react-native'
-import { i18n } from '@/translations/i18n'
-import { useSettings } from '@/stores/settings'
 import { useShallow } from 'zustand/react/shallow'
+
+import { UiSheetSelect } from '../ui/sheet/UiSheetSelect'
+import { UiButton } from '../ui/UiButton'
+
+import { SettingContainer } from './Container'
+
+import { useSettings } from '@/stores/settings'
+import { i18n } from '@/translations/i18n'
 
 const options: {
   label: string

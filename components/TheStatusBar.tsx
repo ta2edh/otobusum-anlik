@@ -1,5 +1,6 @@
 import { StatusBarProps } from 'expo-status-bar'
 import { StatusBar, StatusBarStyle } from 'react-native'
+
 import { useTheme } from '@/hooks/useTheme'
 
 export function TheStatusBar(props: StatusBarProps) {

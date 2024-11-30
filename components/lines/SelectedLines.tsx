@@ -1,13 +1,13 @@
-import { StyleSheet, ListRenderItem, FlatList, View, ViewProps } from 'react-native'
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
+import { FlatList, ListRenderItem, StyleSheet, View, ViewProps } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { findGroupFromId, useLines } from '@/stores/lines'
-import { useFilters } from '@/stores/filters'
-
 import { LineGroupsSelect } from './groups/LineGroupsSelect'
 import { SelectedLine } from './SelectedLine'
+
+import { useFilters } from '@/stores/filters'
+import { findGroupFromId, useLines } from '@/stores/lines'
 
 interface SelectedLinesProps {
   viewProps?: ViewProps

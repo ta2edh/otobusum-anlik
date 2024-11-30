@@ -1,6 +1,7 @@
-import { Direction } from '@/types/departure'
 import { getBody } from './body'
+
 import { BusLineStop } from '@/types/bus'
+import { Direction } from '@/types/departure'
 
 export async function getLineBusStops(code: string) {
   const body = getBody('hat_kodu', 'DurakDetay_GYY', code)

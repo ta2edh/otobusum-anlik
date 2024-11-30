@@ -1,7 +1,9 @@
-import { useTheme } from '@/hooks/useTheme'
-import { Tabs } from 'expo-router'
-import { i18n } from '@/translations/i18n'
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { Tabs } from 'expo-router'
+
+import { useTheme } from '@/hooks/useTheme'
+
+import { i18n } from '@/translations/i18n'
 
 export default function TabLayout() {
   const { colorsTheme } = useTheme()

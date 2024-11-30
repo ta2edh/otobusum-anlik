@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons'
 import {
   StyleProp,
   StyleSheet,
@@ -6,9 +7,10 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native'
-import { UiActivityIndicator } from './UiActivityIndicator'
-import { Ionicons } from '@expo/vector-icons'
+
 import { useTheme } from '@/hooks/useTheme'
+
+import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
 export interface UiButtonProps extends TouchableOpacityProps {

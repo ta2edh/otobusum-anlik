@@ -1,14 +1,16 @@
-import { UiButton } from '@/components/ui/UiButton'
-import { UiTextInput } from '@/components/ui/UiTextInput'
-import { colors } from '@/constants/colors'
-import { usePaddings } from '@/hooks/usePaddings'
-import { selectGroup } from '@/stores/filters'
-import { deleteGroup, findGroupFromId, updateGroupTitle } from '@/stores/lines'
-import { i18n } from '@/translations/i18n'
-
 import { useLocalSearchParams, useNavigation } from 'expo-router'
 import { useCallback, useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
+
+import { UiButton } from '@/components/ui/UiButton'
+import { UiTextInput } from '@/components/ui/UiTextInput'
+
+import { usePaddings } from '@/hooks/usePaddings'
+
+import { colors } from '@/constants/colors'
+import { selectGroup } from '@/stores/filters'
+import { deleteGroup, findGroupFromId, updateGroupTitle } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
 
 export default function GroupEdit() {
   const { groupId } = useLocalSearchParams()

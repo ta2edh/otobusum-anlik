@@ -1,19 +1,21 @@
-import { useShallow } from 'zustand/react/shallow'
-import { LatLng } from 'react-native-maps'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import { memo, useCallback, useEffect, useMemo } from 'react'
 import { router } from 'expo-router'
-
-import { UiText } from '../ui/UiText'
-import { MarkerLazyCallout } from './MarkerLazyCallout'
+import { memo, useCallback, useEffect, useMemo } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { LatLng } from 'react-native-maps'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useLineBusStops } from '@/hooks/useLineBusStops'
-import { useTheme } from '@/hooks/useTheme'
-import { useLines } from '@/stores/lines'
-import { BusLineStop } from '@/types/bus'
 import { useMap } from '@/hooks/useMap'
+import { useTheme } from '@/hooks/useTheme'
+
+import { UiText } from '../ui/UiText'
+
+import { MarkerLazyCallout } from './MarkerLazyCallout'
+
 import { colors } from '@/constants/colors'
 import { getRoute, useFilters } from '@/stores/filters'
+import { useLines } from '@/stores/lines'
+import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {

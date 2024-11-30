@@ -1,5 +1,6 @@
-import { BusStop } from '@/types/bus'
 import { api } from './api'
+
+import { BusStop } from '@/types/bus'
 
 export interface BusStopDetails {
   buses: string[]

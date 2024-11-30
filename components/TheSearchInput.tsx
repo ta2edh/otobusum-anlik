@@ -1,6 +1,4 @@
 import { useCallback, useRef, useState } from 'react'
-import { UiTextInput } from './ui/UiTextInput'
-import { UiButton } from './ui/UiButton'
 import {
   NativeSyntheticEvent,
   StyleSheet,
@@ -8,9 +6,13 @@ import {
   View,
   ViewProps,
 } from 'react-native'
-import { i18n } from '@/translations/i18n'
-import { colors } from '@/constants/colors'
 import { useDebouncedCallback } from 'use-debounce'
+
+import { UiButton } from './ui/UiButton'
+import { UiTextInput } from './ui/UiTextInput'
+
+import { colors } from '@/constants/colors'
+import { i18n } from '@/translations/i18n'
 
 interface Props extends ViewProps {
   isLoading?: boolean

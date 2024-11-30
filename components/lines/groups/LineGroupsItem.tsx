@@ -1,15 +1,15 @@
-import { UiText } from '@/components/ui/UiText'
+import { useBottomSheetModal } from '@gorhom/bottom-sheet'
+import { FlashList, ListRenderItem } from '@shopify/flash-list'
+import { router } from 'expo-router'
+import { useCallback } from 'react'
+import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+
 import { UiButton } from '@/components/ui/UiButton'
 import { UiLineCode } from '@/components/ui/UiLineCode'
+import { UiText } from '@/components/ui/UiText'
 
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
-import { useBottomSheetModal } from '@gorhom/bottom-sheet'
-import { LineGroup } from '@/types/lineGroup'
 import { i18n } from '@/translations/i18n'
-
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
-import { useCallback } from 'react'
-import { router } from 'expo-router'
+import { LineGroup } from '@/types/lineGroup'
 
 interface Props extends TouchableOpacityProps {
   group: LineGroup

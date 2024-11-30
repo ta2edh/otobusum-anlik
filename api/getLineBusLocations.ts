@@ -1,5 +1,6 @@
-import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
 import { getBody } from './body'
+
+import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
 
 export interface BusLocation {
   kapino: string

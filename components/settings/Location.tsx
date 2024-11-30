@@ -1,11 +1,12 @@
-import { useSettings } from '@/stores/settings'
-import { colors } from '@/constants/colors'
-import { i18n } from '@/translations/i18n'
-
+import * as Location from 'expo-location'
 import { Switch } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
+
 import { SettingContainer } from './Container'
-import * as Location from 'expo-location'
+
+import { colors } from '@/constants/colors'
+import { useSettings } from '@/stores/settings'
+import { i18n } from '@/translations/i18n'
 
 export function SettingsLocation() {
   const showMyLocation = useSettings(useShallow(state => state.showMyLocation))

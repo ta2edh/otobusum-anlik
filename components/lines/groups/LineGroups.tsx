@@ -1,18 +1,20 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { createNewGroup, useLines } from '@/stores/lines'
 import { ListRenderItem } from '@shopify/flash-list'
+import { forwardRef, useCallback, useMemo } from 'react'
+import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
+
+import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
+import { UiButton } from '@/components/ui/UiButton'
+
+import { useTheme } from '@/hooks/useTheme'
+
 import { LineGroupsItem } from './LineGroupsItem'
 
-import { LineGroup } from '@/types/lineGroup'
-import { UiButton } from '@/components/ui/UiButton'
-import { useTheme } from '@/hooks/useTheme'
 import { colors } from '@/constants/colors'
-
-import { useShallow } from 'zustand/react/shallow'
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
-import { forwardRef, useCallback, useMemo } from 'react'
+import { createNewGroup, useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
-import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
+import { LineGroup } from '@/types/lineGroup'
 
 interface LineGroupsProps extends ViewProps {
   onPressGroup?: (group: LineGroup) => void

@@ -1,10 +1,13 @@
-import { colors } from '@/constants/colors'
-import { useTheme } from '@/hooks/useTheme'
-import { useLines } from '@/stores/lines'
 import { StyleProp, StyleSheet, TextProps, TextStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
+
+import { useTheme } from '@/hooks/useTheme'
+
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
+
+import { colors } from '@/constants/colors'
+import { useLines } from '@/stores/lines'
 
 interface Props extends TextProps {
   isLoading?: boolean

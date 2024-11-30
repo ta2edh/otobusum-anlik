@@ -1,18 +1,19 @@
-import { getPlannedDepartures, PlannedDeparture } from '@/api/getPlannedDepartures'
+import { useQuery } from '@tanstack/react-query'
+import { useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
-import { useMemo, useState } from 'react'
 
-import { UiText } from './ui/UiText'
-import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
-
-import { DayType } from '@/types/departure'
-import { useQuery } from '@tanstack/react-query'
-import { i18n } from '@/translations/i18n'
-import { useLines } from '@/stores/lines'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useTheme } from '@/hooks/useTheme'
 import { useAnnouncements } from '@/hooks/useAnnouncements'
+import { useTheme } from '@/hooks/useTheme'
+
+import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
+import { UiText } from './ui/UiText'
+
+import { PlannedDeparture, getPlannedDepartures } from '@/api/getPlannedDepartures'
+import { getRoute, useFilters } from '@/stores/filters'
+import { useLines } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
+import { DayType } from '@/types/departure'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {

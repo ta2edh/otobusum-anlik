@@ -1,10 +1,11 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
-import { LineGroup } from '@/types/lineGroup'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Direction } from '@/types/departure'
+
 import { queryClient } from '@/api/client'
 import { GetAllRoutesResponse } from '@/api/getAllRoutes'
+import { Direction } from '@/types/departure'
+import { LineGroup } from '@/types/lineGroup'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>

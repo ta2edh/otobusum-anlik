@@ -1,14 +1,15 @@
-import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native'
-import MapView from 'react-native-maps'
 import { useCallback, useRef } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import MapView from 'react-native-maps'
 
 import { SelectedLines } from '@/components/lines/SelectedLines'
-import { TheMapButtons } from '@/components/TheMapButtons'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMap } from '@/components/TheMap'
+import { TheMapButtons } from '@/components/TheMapButtons'
+
+import { MapContext } from '@/hooks/useMap'
 
 import { useSettings } from '@/stores/settings'
-import { MapContext } from '@/hooks/useMap'
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null)

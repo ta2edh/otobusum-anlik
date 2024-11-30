@@ -1,17 +1,19 @@
+import { Theme } from '@material/material-color-utilities'
 import {
-  StyleSheet,
-  View,
   StyleProp,
-  ViewStyle,
-  TouchableOpacityProps,
-  TouchableOpacity,
+  StyleSheet,
   TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+  View,
+  ViewStyle,
 } from 'react-native'
 
-import { UiText } from './UiText'
 import { useTheme } from '@/hooks/useTheme'
+
+import { UiText } from './UiText'
+
 import { colors } from '@/constants/colors'
-import { Theme } from '@material/material-color-utilities'
 
 interface Button<T> {
   label: string

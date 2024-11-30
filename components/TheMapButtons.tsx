@@ -1,7 +1,10 @@
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { UiButton } from './ui/UiButton'
+
 import { useTheme } from '@/hooks/useTheme'
+
+import { UiButton } from './ui/UiButton'
+
 import { changeRouteDirection, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 

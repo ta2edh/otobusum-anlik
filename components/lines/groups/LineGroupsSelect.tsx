@@ -1,14 +1,16 @@
-import { UiButton } from '@/components/ui/UiButton'
-import { selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { useCallback, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
+
+import { UiButton } from '@/components/ui/UiButton'
+
 import { LineGroups } from './LineGroups'
 
-import { StyleSheet, View } from 'react-native'
-import { useCallback, useRef } from 'react'
-import { useShallow } from 'zustand/react/shallow'
-import { LineGroup } from '@/types/lineGroup'
-import { i18n } from '@/translations/i18n'
 import { colors } from '@/constants/colors'
+import { selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
+import { i18n } from '@/translations/i18n'
+import { LineGroup } from '@/types/lineGroup'
 
 export function LineGroupsSelect() {
   const bottomSheetModal = useRef<BottomSheetModal>(null)

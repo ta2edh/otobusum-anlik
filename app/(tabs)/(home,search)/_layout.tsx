@@ -1,5 +1,5 @@
-import { router, Stack } from 'expo-router'
 import { HeaderBackButton } from '@react-navigation/elements'
+import { Stack, router } from 'expo-router'
 
 export default function Both() {
   return (

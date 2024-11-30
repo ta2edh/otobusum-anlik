@@ -1,8 +1,10 @@
-import { useLines } from '@/stores/lines'
-import { useFilters } from '@/stores/filters'
+import { View } from 'react-native'
+
 import { LineBusMarkers } from './LineBusMarkers'
 import { LineBusStopMarkers } from './LineBusStopMarkers'
-import { View } from 'react-native'
+
+import { useFilters } from '@/stores/filters'
+import { useLines } from '@/stores/lines'
 
 export function LineMarkers() {
   const invisibleLines = useFilters(state => state.invisibleLines)

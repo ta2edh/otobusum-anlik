@@ -1,13 +1,14 @@
-import { getMapStyle } from '@/constants/mapStyles'
-import { useTheme } from '@/hooks/useTheme'
-import { useSettings } from '@/stores/settings'
-
-import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-native-maps'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { SplashScreen } from 'expo-router'
 import { forwardRef } from 'react'
 import { StyleSheet } from 'react-native'
+import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-native-maps'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
-import { SplashScreen } from 'expo-router'
+
+import { useTheme } from '@/hooks/useTheme'
+
+import { getMapStyle } from '@/constants/mapStyles'
+import { useSettings } from '@/stores/settings'
 
 export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, ref) {
   const { mode } = useTheme()

@@ -1,14 +1,15 @@
-import { GroupContainer } from '@/components/settings/Container'
-import { SettingsLocation } from '@/components/settings/Location'
-import { UiText } from '@/components/ui/UiText'
-import { usePaddings } from '@/hooks/usePaddings'
-
+import Constants from 'expo-constants'
 import { ScrollView, StyleSheet } from 'react-native'
 
-import Constants from 'expo-constants'
-import { i18n } from '@/translations/i18n'
-import { SettingsTraffic } from '@/components/settings/Traffic'
+import { GroupContainer } from '@/components/settings/Container'
+import { SettingsLocation } from '@/components/settings/Location'
 import { SettingsTheme } from '@/components/settings/Theme'
+import { SettingsTraffic } from '@/components/settings/Traffic'
+import { UiText } from '@/components/ui/UiText'
+
+import { usePaddings } from '@/hooks/usePaddings'
+
+import { i18n } from '@/translations/i18n'
 
 export default function Settings() {
   const paddings = usePaddings()

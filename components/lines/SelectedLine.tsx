@@ -1,35 +1,38 @@
-import { useRouteFilter } from '@/hooks/useRouteFilter'
-import { useTheme } from '@/hooks/useTheme'
-import { changeRouteDirection, getRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
-import { deleteLine, useLines } from '@/stores/lines'
 import { Ionicons } from '@expo/vector-icons'
 import { memo, useEffect, useMemo } from 'react'
 import {
+  Pressable,
   StyleProp,
-  ViewStyle,
+  StyleSheet,
   TextStyle,
   View,
-  Pressable,
   ViewProps,
-  StyleSheet,
+  ViewStyle,
 } from 'react-native'
 import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  FadeInLeft,
   AnimatedProps,
+  FadeInLeft,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
+
+import { useLine } from '@/hooks/useLine'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
+
 import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
-import { useLine } from '@/hooks/useLine'
+
 import { SelectedLineWidth } from '@/constants/width'
+import { changeRouteDirection, getRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
+import { deleteLine, useLines } from '@/stores/lines'
 
 export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string

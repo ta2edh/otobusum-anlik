@@ -1,5 +1,6 @@
-import { BusLine, BusStop } from '@/types/bus'
 import { api } from './api'
+
+import { BusLine, BusStop } from '@/types/bus'
 
 export interface SearchResponse {
   stops: BusStop[]

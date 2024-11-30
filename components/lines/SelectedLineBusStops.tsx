@@ -1,11 +1,5 @@
-import { useLineBusStops } from '@/hooks/useLineBusStops'
-import { useTheme } from '@/hooks/useTheme'
-import { useLines } from '@/stores/lines'
-import { useMap } from '@/hooks/useMap'
-import { useLine } from '@/hooks/useLine'
 import { Ionicons } from '@expo/vector-icons'
-
-import { useShallow } from 'zustand/react/shallow'
+import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
@@ -19,13 +13,19 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useDebouncedCallback } from 'use-debounce'
+import { useShallow } from 'zustand/react/shallow'
+
+import { useLine } from '@/hooks/useLine'
+import { useLineBusStops } from '@/hooks/useLineBusStops'
+import { useMap } from '@/hooks/useMap'
+import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { UiText } from '../ui/UiText'
 import { UiButton } from '../ui/UiButton'
+import { UiText } from '../ui/UiText'
 
-import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
 import { BusLocation } from '@/api/getLineBusLocations'
+import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'

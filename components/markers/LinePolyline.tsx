@@ -1,12 +1,13 @@
-import { getLinePolyline } from '@/api/getLinePolyline'
+import { useQuery } from '@tanstack/react-query'
+import { LatLng, Polyline } from 'react-native-maps'
+import { useShallow } from 'zustand/react/shallow'
+
 import { useTheme } from '@/hooks/useTheme'
+
+import { getLinePolyline } from '@/api/getLinePolyline'
 import { getRoute, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
-import { useQuery } from '@tanstack/react-query'
-
-import { LatLng, Polyline } from 'react-native-maps'
-import { useShallow } from 'zustand/react/shallow'
 
 interface Props {
   code: string

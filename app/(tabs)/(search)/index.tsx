@@ -1,17 +1,18 @@
-import { TheSearchItem } from '@/components/TheSearchItem'
+import { FlashList } from '@shopify/flash-list'
+import { useMutation } from '@tanstack/react-query'
+import { useCallback, useMemo } from 'react'
+import { StyleSheet, View } from 'react-native'
+
 import { TheSearchInput } from '@/components/TheSearchInput'
-import { getSearchResults } from '@/api/getSearchResults'
+import { TheSearchItem } from '@/components/TheSearchItem'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiText } from '@/components/ui/UiText'
 
-import { i18n } from '@/translations/i18n'
-import { FlashList } from '@shopify/flash-list'
-import { useMutation } from '@tanstack/react-query'
-import { BusLine, BusStop } from '@/types/bus'
-
-import { useCallback, useMemo } from 'react'
-import { StyleSheet, View } from 'react-native'
 import { usePaddings } from '@/hooks/usePaddings'
+
+import { getSearchResults } from '@/api/getSearchResults'
+import { i18n } from '@/translations/i18n'
+import { BusLine, BusStop } from '@/types/bus'
 
 export default function Search() {
   const paddings = usePaddings()

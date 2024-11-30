@@ -1,16 +1,19 @@
+import { Ionicons } from '@expo/vector-icons'
 import { memo } from 'react'
-import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { i18n } from '@/translations/i18n'
 import { UiText } from '@/components/ui/UiText'
-import { useLines } from '@/stores/lines'
-import { BusLocation } from '@/api/getLineBusLocations'
-import { useTheme } from '@/hooks/useTheme'
+
 import { useLine } from '@/hooks/useLine'
-import { Ionicons } from '@expo/vector-icons'
-import { MarkerLazyCallout } from './MarkerLazyCallout'
 import { getSelectedRouteCodeOrDefault } from '@/hooks/useRouteFilter'
+import { useTheme } from '@/hooks/useTheme'
+
+import { MarkerLazyCallout } from './MarkerLazyCallout'
+
+import { BusLocation } from '@/api/getLineBusLocations'
+import { useLines } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
 
 interface Props {
   code: string
