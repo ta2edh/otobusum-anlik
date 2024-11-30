@@ -81,7 +81,6 @@ export function LineBusStopMarkersItem({ stop, code }: LineBusStopMarkersItemPro
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
   const routeCode = useFilters(() => getRoute(props.code))
-  // const { getCurrentOrDefaultRouteCode, getRouteDirection } = useRouteFilter(props.code)
 
   const map = useMap()
   const { query } = useLineBusStops(props.code)

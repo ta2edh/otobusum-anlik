@@ -6,12 +6,12 @@ import { useShallow } from 'zustand/react/shallow'
 import { UiText } from '@/components/ui/UiText'
 
 import { useLine } from '@/hooks/useLine'
-import { getSelectedRouteCodeOrDefault } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
 
 import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
+import { getRoute, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
@@ -86,8 +86,8 @@ export const LineBusMarkersItem = function LineBusMarkersItem({
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const { query: { data: line } } = useLine(props.code)
+  const routeCode = useFilters(() => getRoute(props.code))
 
-  const routeCode = getSelectedRouteCodeOrDefault(props.code)
   const filtered = line?.filter(loc => loc.guzergahkodu === routeCode)
 
   return (
