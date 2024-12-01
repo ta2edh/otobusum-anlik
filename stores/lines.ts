@@ -51,7 +51,6 @@ export const useLines = create(
 
 // Line stuff
 export const deleteLine = (lineCode: string) => useLines.setState((state) => {
-  const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
   const index = state.lines.indexOf(lineCode)
 
   const selectedGroup = useLines.getState().selectedGroup
@@ -61,7 +60,9 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
     state.lines.splice(index, 1)
   }
 
+  const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
   const shouldDeleteTheme = !groupLinecodes.includes(lineCode) && state.lines.indexOf(lineCode) === -1
+
   if (shouldDeleteTheme) {
     delete state.lineTheme[lineCode]
   }
