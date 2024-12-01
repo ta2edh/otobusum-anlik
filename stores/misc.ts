@@ -4,13 +4,15 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 
 export interface MiscStore {
   selectedLineScrollIndex: number
+  invisibleLines: string[]
 }
 
 export const useMisc = create(
   subscribeWithSelector(
-    persist(
+    persist<MiscStore>(
       () => ({
         selectedLineScrollIndex: 0,
+        invisibleLines: [],
       }),
       {
         name: 'misc-storage',
@@ -19,3 +21,18 @@ export const useMisc = create(
     ),
   ),
 )
+
+export const toggleLineVisibility = (lineCode: string) => useMisc.setState((state) => {
+  const index = state.invisibleLines.indexOf(lineCode)
+
+  if (index === -1) {
+    return {
+      invisibleLines: [...state.invisibleLines, lineCode],
+    }
+  }
+
+  state.invisibleLines.splice(index, 1)
+  return {
+    invisibleLines: [...state.invisibleLines],
+  }
+})

@@ -31,8 +31,9 @@ import { SelectedLineBusStops } from './SelectedLineBusStops'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 
 import { selectedLineWidth } from '@/constants/width'
-import { changeRouteDirection, getRoute, toggleLineVisibility, useFilters } from '@/stores/filters'
+import { changeRouteDirection, getRoute, useFilters } from '@/stores/filters'
 import { deleteLine, useLines } from '@/stores/lines'
+import { toggleLineVisibility, useMisc } from '@/stores/misc'
 
 export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
@@ -49,10 +50,10 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
   const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
 
   useEffect(() => {
-    const unsub = useFilters.subscribe(
-      state => state.invisibleLines[props.code],
+    const unsub = useMisc.subscribe(
+      state => state.invisibleLines,
       (newCodes) => {
-        isVisible.value = !newCodes
+        isVisible.value = !newCodes.includes(props.code)
       },
       {
         fireImmediately: true,
