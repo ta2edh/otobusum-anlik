@@ -65,6 +65,7 @@ export default function GroupEdit() {
         title={i18n.t('deleteGroup')}
         icon="trash-outline"
         style={{ backgroundColor: colors.rose }}
+        textStyle={{ color: 'white' }}
         onPress={handleDeleteGroup}
       />
     </View>
