@@ -1,13 +1,12 @@
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
 import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View, ViewProps } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
-import { useShallow } from 'zustand/react/shallow'
 
 import { SelectedLine } from './SelectedLine'
 
 import { selectedLineWidth } from '@/constants/width'
 import { useFilters } from '@/stores/filters'
-import { findGroupFromId, useLines } from '@/stores/lines'
+import { useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
 
 interface SelectedLinesProps {
@@ -24,7 +23,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
   const defaultLines = useLines(state => state.lines)
-  const selectedGroup = useFilters(useShallow(state => state.selectedGroup ? findGroupFromId(state.selectedGroup.id) : undefined))
+  const selectedGroup = useFilters(state => state.selectedGroup)
 
   const items = useMemo(
     () => selectedGroup ? selectedGroup.lineCodes : defaultLines,
