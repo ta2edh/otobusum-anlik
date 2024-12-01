@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import {
   FlatList,
   LayoutChangeEvent,
@@ -25,6 +25,7 @@ import { UiText } from '@/components/ui/UiText'
 
 import { selectedLineWidth } from '@/constants/width'
 import { useLines } from '@/stores/lines'
+import { useMisc } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
 export default function TimetableScreen() {
@@ -47,6 +48,15 @@ export default function TimetableScreen() {
     },
     [linesHeight],
   )
+
+  useEffect(() => {
+    setTimeout(() => {
+      linesRef.current?.scrollToIndex({
+        index: useMisc.getState().selectedLineScrollIndex,
+        viewPosition: 0.5,
+      })
+    }, 200)
+  }, [linesRef])
 
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top + 8,
