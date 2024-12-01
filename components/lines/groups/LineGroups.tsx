@@ -24,7 +24,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   { onPressGroup, ...props },
   ref,
 ) {
-  const groups = useLines(useShallow(state => state.lineGroups))
+  const groups = useLines(useShallow(state => Object.values(state.lineGroups)))
   const { getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(

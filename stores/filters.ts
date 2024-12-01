@@ -5,11 +5,9 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 import { queryClient } from '@/api/client'
 import { GetAllRoutesResponse } from '@/api/getAllRoutes'
 import { Direction } from '@/types/departure'
-import { LineGroup } from '@/types/lineGroup'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>
-  selectedGroup?: LineGroup
 }
 
 export const useFilters = create(
@@ -17,7 +15,6 @@ export const useFilters = create(
     persist<FiltersStore>(
       () => ({
         selectedRoutes: {},
-        selectedGroup: undefined,
       }),
       {
         name: 'filter-storage',
@@ -70,14 +67,14 @@ export const changeRouteDirection = (lineCode: string) => useFilters.setState((s
   }
 })
 
-export const selectGroup = (newGroup?: LineGroup) => useFilters.setState(() => {
-  return {
-    selectedGroup: newGroup,
-  }
-})
+// export const selectGroup = (newGroupId?: string) => useFilters.setState(() => {
+//   return {
+//     selectedGroup: newGroupId,
+//   }
+// })
 
-export const unSelectGroup = () => useFilters.setState(() => {
-  return {
-    selectedGroup: undefined,
-  }
-})
+// export const unSelectGroup = () => useFilters.setState(() => {
+//   return {
+//     selectedGroup: undefined,
+//   }
+// })

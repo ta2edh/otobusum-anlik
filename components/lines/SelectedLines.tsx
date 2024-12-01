@@ -5,7 +5,6 @@ import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { SelectedLine } from './SelectedLine'
 
 import { selectedLineWidth } from '@/constants/width'
-import { useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
 
@@ -23,11 +22,14 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
   const defaultLines = useLines(state => state.lines)
-  const selectedGroup = useFilters(state => state.selectedGroup)
+  const selectedGroup = useLines(state => state.selectedGroup)
+  const selectedGroupLines = useLines(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
+
+  console.log(selectedGroupLines)
 
   const items = useMemo(
-    () => selectedGroup ? selectedGroup.lineCodes : defaultLines,
-    [defaultLines, selectedGroup],
+    () => selectedGroupLines || defaultLines,
+    [defaultLines, selectedGroupLines],
   )
 
   const renderItem: ListRenderItem<string> = useCallback(

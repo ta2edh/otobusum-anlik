@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -11,15 +12,16 @@ import { LineGroups } from './lines/groups/LineGroups'
 import { UiButton } from './ui/UiButton'
 
 import { colors } from '@/constants/colors'
-import { changeRouteDirection, selectGroup, unSelectGroup, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { changeRouteDirection } from '@/stores/filters'
+import { selectGroup, unSelectGroup, useLines } from '@/stores/lines'
 import { useMisc } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
 export function TheMapButtons() {
   const lines = useLines(state => state.lines)
-  const lineGroups = useLines(state => state.lineGroups)
-  const selectedGroup = useFilters(state => state.selectedGroup)
+  const lineGroups = useLines(useShallow(state => Object.keys(state.lineGroups)))
+  const selectedGroup = useLines(state => state.selectedGroup)
+  const selectedGroupLines = useLines(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
 
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue(colors.primary)
@@ -28,7 +30,7 @@ export function TheMapButtons() {
   const { mode } = useTheme()
 
   const updateColors = useCallback((index: number) => {
-    const lines = selectedGroup?.lineCodes || useLines.getState().lines
+    const lines = selectedGroupLines || useLines.getState().lines
     const lineCode = lines.at(index)
     if (lineCode === undefined) return
 
@@ -42,7 +44,7 @@ export function TheMapButtons() {
 
     bgColor.value = withTiming(targetBackground)
     txtColor.value = withTiming(targetText)
-  }, [bgColor, mode, txtColor, selectedGroup?.lineCodes])
+  }, [bgColor, mode, selectedGroupLines, txtColor])
 
   useEffect(() => {
     const unsub = useMisc.subscribe(
@@ -68,7 +70,7 @@ export function TheMapButtons() {
   }
 
   const handleChangeAllDirections = () => {
-    const group = useFilters.getState().selectedGroup?.lineCodes || useLines.getState().lines
+    const group = selectedGroupLines || useLines.getState().lines
 
     for (let index = 0; index < group.length; index++) {
       const lineCode = group[index]
@@ -83,7 +85,7 @@ export function TheMapButtons() {
   }
 
   const handlePressGroup = (group: LineGroup) => {
-    selectGroup(group)
+    selectGroup(group.id)
     bottomSheetModalGroups.current?.close()
   }
 
@@ -109,7 +111,7 @@ export function TheMapButtons() {
         </Animated.View>
       )}
 
-      {lineGroups.length > 0 && (
+      {(lineGroups.length > 0) && (
         <>
           <Animated.View style={animatedContainerStyle}>
             <UiButton

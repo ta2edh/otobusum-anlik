@@ -5,8 +5,6 @@ import { ToastAndroid } from 'react-native'
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
-import { useFilters } from './filters'
-
 import { queryClient } from '@/api/client'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
@@ -19,7 +17,8 @@ interface StoreV0 {
 export interface LinesStore {
   lines: string[]
   lineTheme: Record<string, Theme>
-  lineGroups: LineGroup[]
+  lineGroups: Record<string, LineGroup>
+  selectedGroup?: string
 }
 
 export const useLines = create(
@@ -28,7 +27,8 @@ export const useLines = create(
       () => ({
         lines: [],
         lineTheme: {},
-        lineGroups: [],
+        lineGroups: {},
+        selectedGroup: undefined,
       }),
       {
         name: 'line-storage',
@@ -49,36 +49,36 @@ export const useLines = create(
   ),
 )
 
+// Line stuff
 export const deleteLine = (lineCode: string) => useLines.setState((state) => {
+  // delete state.lineTheme[lineCode]
+
+  const selectedGroup = useLines.getState().selectedGroup
+  if (selectedGroup) {
+    deleteLineFromGroup(selectedGroup, lineCode)
+
+    const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
+    if (!groupLinecodes.includes(lineCode)) {
+      delete state.lineTheme[lineCode]
+    }
+
+    return state
+  }
+
   const index = state.lines.indexOf(lineCode)
   if (index !== -1) {
     state.lines.splice(index, 1)
   }
 
-  delete state.lineTheme[lineCode]
-
-  const selectedGroup = useFilters.getState().selectedGroup
-  if (selectedGroup) {
-    deleteLineFromGroup(selectedGroup.id, lineCode)
+  const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
+  if (!groupLinecodes.includes(lineCode)) {
+    delete state.lineTheme[lineCode]
   }
 
   return {
     lines: [...state.lines],
     lineTheme: {
       ...state.lineTheme,
-    },
-  }
-})
-
-export const addTheme = (lineCode: string) => useLines.setState((state) => {
-  if (state.lineTheme[lineCode]) {
-    return state
-  }
-
-  return {
-    lineTheme: {
-      ...state.lineTheme,
-      [lineCode]: createTheme(),
     },
   }
 })
@@ -98,27 +98,41 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
     lines: [...state.lines],
   }
 })
+// Line stuff end
 
+// Theme stuff
+export const addTheme = (lineCode: string) => useLines.setState((state) => {
+  if (state.lineTheme[lineCode]) {
+    return state
+  }
+
+  return {
+    lineTheme: {
+      ...state.lineTheme,
+      [lineCode]: createTheme(),
+    },
+  }
+})
+// Theme stuff end
+
+// Group stuff
 export const createNewGroup = () => useLines.setState((state) => {
   const id = randomUUID()
+
   return {
-    lineGroups: [
+    lineGroups: {
       ...state.lineGroups,
-      {
+      [id]: {
         id,
-        title: id,
+        title: `new group ${Object.keys(state.lineGroups).length + 1}`,
         lineCodes: [],
       },
-    ],
+    },
   }
 })
 
-export const findGroupFromId = (groupId: string) => {
-  return useLines.getState().lineGroups.find(gr => gr.id === groupId)
-}
-
 export const addLineToGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
-  const group = findGroupFromId(groupId)
+  const group = state.lineGroups[groupId]
   if (!group) return state
 
   if (group.lineCodes.includes(lineCode)) {
@@ -132,67 +146,85 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLines.se
   }
 
   addTheme(lineCode)
-  group.lineCodes.push(lineCode)
 
   return {
-    lineGroups: [...state.lineGroups],
-  }
-})
-
-export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.setState((state) => {
-  const group = findGroupFromId(groupId)
-  if (!group) return state
-
-  group.title = newTitle
-
-  return {
-    lineGroups: [...state.lineGroups],
-  }
-})
-
-export const deleteGroup = (groupId: string) => useLines.setState((state) => {
-  const index = state.lineGroups.findIndex(group => group.id === groupId)
-  if (index === -1) return state
-
-  const group = state.lineGroups[index]
-  if (!group) return state
-
-  state.lineGroups.splice(index, 1)
-
-  // Check if line in the deleted group are in other groups
-  // If they are not in other groups delete their theme
-  // This will probably cause rerenders that are not really needed
-  for (const lineCode of group.lineCodes) {
-    const inOtherGroup = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
-    if (state.lines.includes(lineCode) || inOtherGroup) {
-      continue
-    }
-
-    delete state.lineTheme[lineCode]
-  }
-
-  return {
-    lineGroups: [...state.lineGroups],
-    lineTheme: {
-      ...state.lineTheme,
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: {
+        ...state.lineGroups[groupId]!,
+        lineCodes: [
+          ...(state.lineGroups[groupId]?.lineCodes || []),
+          lineCode,
+        ],
+      },
     },
   }
 })
 
-export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
-  const group = findGroupFromId(groupId)
+export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.setState((state) => {
+  const group = state.lineGroups[groupId]
   if (!group) return state
 
-  const codeIndex = group.lineCodes.findIndex(code => code === lineCode)
-  if (codeIndex === -1) return state
-
-  group.lineCodes.splice(codeIndex, 1)
   return {
-    lineGroups: [
+    lineGroups: {
       ...state.lineGroups,
-    ],
+      [groupId]: {
+        ...(state.lineGroups[groupId]!),
+        title: newTitle,
+      },
+    },
   }
 })
+
+export const deleteGroup = (groupId: string) => useLines.setState((state) => {
+  delete state.lineGroups[groupId]
+
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+    },
+  }
+
+  // // Check if line in the deleted group are in other groups
+  // // If they are not in other groups delete their theme
+  // // This will probably cause rerenders that are not really needed
+  // for (const lineCode of group.lineCodes) {
+  //   const inOtherGroup = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
+  //   if (state.lines.includes(lineCode) || inOtherGroup) {
+  //     continue
+  //   }
+
+  //   delete state.lineTheme[lineCode]
+  // }
+})
+
+export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+  const lineIndex = state.lineGroups[groupId]?.lineCodes.indexOf(lineCode)
+  if (lineIndex === undefined || lineIndex === -1) return state
+
+  return {
+    lineGroups: {
+      ...state.lineGroups,
+      [groupId]: {
+        ...state.lineGroups[groupId]!,
+        lineCodes: state.lineGroups[groupId]!.lineCodes.splice(lineIndex, 1),
+      },
+    },
+  }
+})
+
+export const selectGroup = (newGroupId?: string) => useLines.setState(() => {
+  return {
+    selectedGroup: newGroupId,
+  }
+})
+
+export const unSelectGroup = () => useLines.setState(() => {
+  return {
+    selectedGroup: undefined,
+  }
+})
+// Group stuff end
 
 // UPDATER UPDATER UPDATER
 //
@@ -213,13 +245,15 @@ const updateLines = (keys: string[]) => {
 
 let listener: NodeJS.Timeout
 const startUpdateLoop = () => {
-  useFilters.subscribe(
+  useLines.subscribe(
     state => state.selectedGroup,
-    (newGroup) => {
+    (selectedGroup) => {
       clearTimeout(listener)
 
       const loop = () => {
-        updateLines(newGroup?.lineCodes || useLines.getState().lines)
+        const groupLines = selectedGroup ? useLines.getState().lineGroups[selectedGroup]?.lineCodes : []
+
+        updateLines(groupLines || useLines.getState().lines)
         return setTimeout(loop, 50_000)
       }
 

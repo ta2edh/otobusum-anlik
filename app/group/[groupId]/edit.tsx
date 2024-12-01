@@ -8,8 +8,7 @@ import { UiTextInput } from '@/components/ui/UiTextInput'
 import { usePaddings } from '@/hooks/usePaddings'
 
 import { colors } from '@/constants/colors'
-import { selectGroup } from '@/stores/filters'
-import { deleteGroup, findGroupFromId, updateGroupTitle } from '@/stores/lines'
+import { deleteGroup, unSelectGroup, updateGroupTitle } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 export default function GroupEdit() {
@@ -18,7 +17,7 @@ export default function GroupEdit() {
   const paddings = usePaddings(true)
   const title = useRef('')
 
-  const group = typeof groupId === 'string' ? findGroupFromId(groupId) : undefined
+  // const group = typeof groupId === 'string' ? findGroupFromId(groupId) : undefined
 
   const handleQueryChange = useCallback(
     (text: string) => title.current = text,
@@ -35,7 +34,7 @@ export default function GroupEdit() {
     if (!groupId || typeof groupId !== 'string') return
 
     deleteGroup(groupId)
-    selectGroup(undefined)
+    unSelectGroup()
 
     navigation.goBack()
   }
@@ -57,7 +56,7 @@ export default function GroupEdit() {
   return (
     <View style={[styles.container, paddings]}>
       <UiTextInput
-        placeholder={group?.title}
+        // placeholder={group?.title}
         onChangeText={handleQueryChange}
       />
 

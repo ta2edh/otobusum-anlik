@@ -24,7 +24,6 @@ import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
 import { selectedLineWidth } from '@/constants/width'
-import { useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
@@ -35,9 +34,10 @@ export default function TimetableScreen() {
   const timetablesRef = useAnimatedRef<FlatList>()
 
   const lines = useLines(state => state.lines)
-  const selectedGroup = useFilters(useShallow(state => state.selectedGroup))
+  const selectedGroup = useLines(useShallow(state => state.selectedGroup))
+  const selectedGroupLines = useLines(useShallow(state => selectedGroup ? state.lineGroups[selectedGroup] : undefined))
 
-  const items = selectedGroup?.lineCodes || lines
+  const items = selectedGroupLines?.lineCodes || lines
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
