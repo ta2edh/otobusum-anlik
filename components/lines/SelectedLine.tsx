@@ -39,7 +39,7 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
-export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps) {
+export const SelectedLine = memo(function SelectedLine({ style, ...props }: SelectedLineProps) {
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
   const routeCode = useFilters(() => getRoute(props.code))
 
@@ -107,7 +107,7 @@ export const SelectedLine = memo(function SelectedLine(props: SelectedLineProps)
 
   return (
     <Animated.View
-      style={[containerStyle, containerAnimatedStyle, styles.container]}
+      style={[containerStyle, containerAnimatedStyle, styles.container, style]}
       key={props.code}
       {...props}
     >

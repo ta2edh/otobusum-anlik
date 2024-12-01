@@ -1,5 +1,13 @@
-import { forwardRef, useCallback, useImperativeHandle, useMemo, useRef } from 'react'
-import { FlatList, ListRenderItem, NativeScrollEvent, NativeSyntheticEvent, StyleSheet, View, ViewProps } from 'react-native'
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import {
+  FlatList,
+  ListRenderItem,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  View,
+  ViewProps,
+} from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 
 import { SelectedLine } from './SelectedLine'
@@ -23,21 +31,34 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
 
   const defaultLines = useLines(state => state.lines)
   const selectedGroup = useLines(state => state.selectedGroup)
-  const selectedGroupLines = useLines(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
-
-  console.log(selectedGroupLines)
+  const selectedGroupLines = useLines(state =>
+    selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined,
+  )
 
   const items = useMemo(
     () => selectedGroupLines || defaultLines,
     [defaultLines, selectedGroupLines],
   )
 
-  const renderItem: ListRenderItem<string> = useCallback(
-    ({ item: code }) => {
-      return <SelectedLine code={code} />
-    },
-    [],
-  )
+  const previousItems = useRef<string[]>(items)
+
+  useEffect(() => {
+    const scrolledToIndex = useMisc.getState().selectedLineScrollIndex
+    if (items.length === 0 || scrolledToIndex !== items.length) return
+
+    innerRef.current?.scrollToIndex({
+      index: items.length - 1,
+      animated: true,
+    })
+
+    if (items.length !== previousItems.current.length) {
+      previousItems.current = items
+    }
+  }, [items])
+
+  const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
+    return <SelectedLine code={code} />
+  }, [])
 
   const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.ceil(event.nativeEvent.contentOffset.x / selectedLineWidth)
@@ -56,6 +77,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
         onMomentumScrollEnd={handleMomentumScrollEnd}
         contentContainerStyle={styles.codes}
         keyExtractor={keyExtractor}
+        onScrollToIndexFailed={() => {}}
         snapToAlignment="center"
         pagingEnabled
         horizontal
