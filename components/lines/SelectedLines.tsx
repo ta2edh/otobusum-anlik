@@ -58,14 +58,15 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
     return <SelectedLine code={code} />
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [items, selectedGroup])
 
   const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const index = Math.ceil(event.nativeEvent.contentOffset.x / selectedLineWidth)
     useMisc.setState(() => ({ selectedLineScrollIndex: index }))
   }, [])
 
-  const keyExtractor = useCallback((item: string) => item, [])
+  const keyExtractor = useCallback((item: string) => `${item}-${selectedGroup}`, [selectedGroup])
 
   return (
     <View style={[props.viewProps?.style]}>

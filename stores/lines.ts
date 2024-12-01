@@ -51,27 +51,18 @@ export const useLines = create(
 
 // Line stuff
 export const deleteLine = (lineCode: string) => useLines.setState((state) => {
-  // delete state.lineTheme[lineCode]
+  const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
+  const index = state.lines.indexOf(lineCode)
 
   const selectedGroup = useLines.getState().selectedGroup
   if (selectedGroup) {
     deleteLineFromGroup(selectedGroup, lineCode)
-
-    const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
-    if (!groupLinecodes.includes(lineCode)) {
-      delete state.lineTheme[lineCode]
-    }
-
-    return state
-  }
-
-  const index = state.lines.indexOf(lineCode)
-  if (index !== -1) {
+  } else if (index !== -1) {
     state.lines.splice(index, 1)
   }
 
-  const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
-  if (!groupLinecodes.includes(lineCode)) {
+  const shouldDeleteTheme = !groupLinecodes.includes(lineCode) && state.lines.indexOf(lineCode) === -1
+  if (shouldDeleteTheme) {
     delete state.lineTheme[lineCode]
   }
 
@@ -201,12 +192,14 @@ export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLin
   const lineIndex = state.lineGroups[groupId]?.lineCodes.indexOf(lineCode)
   if (lineIndex === undefined || lineIndex === -1) return state
 
+  state.lineGroups[groupId]!.lineCodes.splice(lineIndex, 1)
+
   return {
     lineGroups: {
       ...state.lineGroups,
       [groupId]: {
         ...state.lineGroups[groupId]!,
-        lineCodes: state.lineGroups[groupId]!.lineCodes.splice(lineIndex, 1),
+        lineCodes: [...(state.lineGroups[groupId]!.lineCodes || [])],
       },
     },
   }
