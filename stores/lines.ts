@@ -83,6 +83,7 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
   if (state.lines.includes(lineCode)) return state
 
   addTheme(lineCode)
+  ToastAndroid.show(i18n.t('added', { lineCode: lineCode }), ToastAndroid.SHORT)
 
   return {
     lines: [...state.lines, lineCode],
@@ -135,6 +136,7 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLines.se
     return state
   }
 
+  ToastAndroid.show(i18n.t('addedToGroup', { lineCode: lineCode }), ToastAndroid.SHORT)
   addTheme(lineCode)
 
   return {

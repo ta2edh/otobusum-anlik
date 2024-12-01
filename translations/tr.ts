@@ -36,4 +36,6 @@ export default {
   changeTheme: 'Tema değiştir',
   system: 'Sistem',
   clusterBusStops: 'Otobüs duraklarını daha iyi performans için grupla',
+  addedToGroup: '%{lineCode} Gruba eklendi',
+  added: '%{lineCode} Eklendi',
 }

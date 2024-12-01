@@ -36,4 +36,6 @@ export default {
   changeTheme: 'Change theme',
   system: 'System',
   clusterBusStops: 'Cluster bus stops for improved performance',
+  addedToGroup: 'Added %{lineCode} to group',
+  added: 'Added %{lineCode}',
 }
