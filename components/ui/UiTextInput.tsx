@@ -1,4 +1,3 @@
-import { ForwardedRef, forwardRef } from 'react'
 import { StyleSheet, TextInputProps } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
@@ -6,23 +5,19 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { colors } from '@/constants/colors'
 
-export const UiTextInput = ({ style, ...props }: TextInputProps,
-  ref: ForwardedRef<TextInput>) => {
+export const UiTextInput = ({ style, ...props }: TextInputProps) => {
   const { colorsTheme } = useTheme()
 
   const dynamicStyle = { color: colorsTheme.color, backgroundColor: colorsTheme.surfaceContainerHigh }
 
   return (
     <TextInput
-      ref={ref}
       style={[styles.input, dynamicStyle, style]}
       placeholderTextColor={colors.light.surfaceContainerHighest}
       {...props}
     />
   )
 }
-
-export const UiTextInputFr = forwardRef(UiTextInput)
 
 const styles = StyleSheet.create({
   input: {
