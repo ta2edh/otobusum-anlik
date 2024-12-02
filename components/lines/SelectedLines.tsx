@@ -79,6 +79,8 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
         contentContainerStyle={styles.codes}
         keyExtractor={keyExtractor}
         onScrollToIndexFailed={() => {}}
+        initialNumToRender={2}
+        maxToRenderPerBatch={2}
         snapToAlignment="center"
         pagingEnabled
         horizontal

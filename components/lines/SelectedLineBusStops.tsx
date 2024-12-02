@@ -25,6 +25,7 @@ import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
 import { BusLocation } from '@/api/getLineBusLocations'
+import { getRoute, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { BusLineStop } from '@/types/bus'
@@ -32,7 +33,6 @@ import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
   code: string
-  routeCode: string
 }
 
 const AnimatedFlashList
@@ -43,6 +43,8 @@ const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export function SelectedLineBusStops(props: Props) {
+  const routeCode = useFilters(() => getRoute(props.code))
+
   const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
   const currentTrackedBus = useRef<BusLocation>()
@@ -55,14 +57,14 @@ export function SelectedLineBusStops(props: Props) {
   const { query: { data: line } } = useLine(props.code)
 
   const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const direction = extractRouteCodeDirection(props.routeCode)
+  const direction = extractRouteCodeDirection(routeCode)
 
   const { filteredStops, query, closestStop } = useLineBusStops(props.code, direction, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(
-    () => line?.filter(bus => bus.guzergahkodu === props.routeCode),
-    [line, props.routeCode],
+    () => line?.filter(bus => bus.guzergahkodu === routeCode),
+    [line, routeCode],
   )
 
   const scrollToTrackedBus = useCallback(() => {

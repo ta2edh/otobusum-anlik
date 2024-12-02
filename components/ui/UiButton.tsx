@@ -34,12 +34,6 @@ const iconSizes: Record<IconSize, number> = {
 export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonProps) {
   const { colorsTheme } = useTheme()
 
-  const squareStyle: StyleProp<ViewStyle> = {
-    borderRadius: 14,
-    padding: 14,
-    paddingHorizontal: 14,
-  }
-
   const dynamicStyle: StyleProp<ViewStyle> = {
     opacity: props.disabled ? 0.4 : 1,
   }
@@ -69,7 +63,7 @@ export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonP
   }
 
   return (
-    <TouchableOpacity style={[styles.button, dynamicStyle, square ? squareStyle : undefined, style]} {...props}>
+    <TouchableOpacity style={[styles.button, dynamicStyle, square ? styles.square : undefined, style]} {...props}>
       {Icon()}
 
       {props.title && (
@@ -97,5 +91,10 @@ const styles = StyleSheet.create({
   title: {
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  square: {
+    borderRadius: 14,
+    padding: 14,
+    paddingHorizontal: 14,
   },
 })

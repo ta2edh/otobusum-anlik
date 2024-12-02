@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { memo } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
@@ -11,6 +11,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
+import { colors } from '@/constants/colors'
 import { getRoute, useFilters } from '@/stores/filters'
 import { useLines } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
@@ -19,25 +20,20 @@ interface Props {
   code: string
 }
 
-export const LineBusMarkersItem = function LineBusMarkersItem({
+interface LineBusMarkersItemProps {
+  location: BusLocation
+  lineCode: string
+}
+
+export const LineBusMarkersItem = memo(function LineBusMarkersItem({
   location,
   lineCode,
-}: {
-  lineCode: string
-  location: BusLocation
-}) {
+}: LineBusMarkersItemProps) {
   const lineTheme = useLines(useShallow(state => state.lineTheme[lineCode]))
-  const { getSchemeColorHex, colorsTheme } = useTheme(lineTheme)
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const textColor = getSchemeColorHex('onPrimaryContainer')
   const backgroundColor = getSchemeColorHex('primaryContainer')
-
-  const calloutStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainer,
-    padding: 8,
-    width: 250,
-    borderRadius: 8,
-  }
 
   return (
     <MarkerLazyCallout
@@ -49,7 +45,7 @@ export const LineBusMarkersItem = function LineBusMarkersItem({
       tracksViewChanges={false}
       calloutProps={{
         children: (
-          <View style={calloutStyle}>
+          <View style={styles.calloutContainer}>
             <View>
               <UiText>
                 {location.hatkodu}
@@ -82,10 +78,12 @@ export const LineBusMarkersItem = function LineBusMarkersItem({
       </View>
     </MarkerLazyCallout>
   )
-}
+})
 
 export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
-  const { query: { data: line } } = useLine(props.code)
+  const {
+    query: { data: line },
+  } = useLine(props.code)
   const routeCode = useFilters(() => getRoute(props.code))
 
   const filtered = line?.filter(loc => loc.guzergahkodu === routeCode) || []
@@ -93,11 +91,7 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   return (
     <>
       {filtered?.map(loc => (
-        <LineBusMarkersItem
-          key={loc.kapino}
-          lineCode={props.code}
-          location={loc}
-        />
+        <LineBusMarkersItem key={loc.kapino} location={loc} lineCode={props.code} />
       ))}
     </>
   )
@@ -114,5 +108,11 @@ const styles = StyleSheet.create({
   icon: {
     width: 10,
     height: 10,
+  },
+  calloutContainer: {
+    backgroundColor: colors.dark.surfaceContainer,
+    padding: 8,
+    width: 250,
+    borderRadius: 8,
   },
 })
