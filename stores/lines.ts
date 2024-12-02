@@ -35,7 +35,7 @@ export const useLines = create(
         storage: createJSONStorage(() => AsyncStorage),
         version: 1,
         migrate: (persistedStore, version) => {
-          if (version === 0) {
+          if (version === 0 || version === undefined) {
             const st = persistedStore as StoreV0
             const keys = Object.keys(st.lines);
 
