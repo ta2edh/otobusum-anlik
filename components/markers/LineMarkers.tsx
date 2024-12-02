@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 
-import { LineBusMarkers } from './LineBusMarkers'
-import { LineBusStopMarkers } from './LineBusStopMarkers'
+import { LineBusMarkers } from './BusMarkers'
+import { LineBusStopMarkers } from './BusStopMarkers'
 
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'

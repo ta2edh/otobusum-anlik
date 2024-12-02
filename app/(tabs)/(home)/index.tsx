@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 
-import { SelectedLinesFr } from '@/components/lines/SelectedLines'
+import { LinesFr } from '@/components/lines/Lines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMapFr } from '@/components/TheMap'
 import { TheMapButtons } from '@/components/TheMapButtons'
@@ -38,7 +38,7 @@ export const HomeScreen = () => {
         <TheMapButtons />
 
         <View style={selectedLineContainer}>
-          <SelectedLinesFr />
+          <LinesFr />
         </View>
       </MapContext.Provider>
     </View>

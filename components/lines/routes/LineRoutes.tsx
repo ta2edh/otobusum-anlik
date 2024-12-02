@@ -30,7 +30,7 @@ interface ItemProps extends Props {
   item: LineRoute
 }
 
-const SelectedLineRoutesItem = (props: ItemProps) => {
+const LineRoutesItem = (props: ItemProps) => {
   const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
   const isSelected = selectedRouteCode === props.item.route_code
 
@@ -54,7 +54,7 @@ const SelectedLineRoutesItem = (props: ItemProps) => {
   )
 }
 
-export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props) {
+export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: routes, getCurrentOrDefaultRoute } = useRouteFilter(props.code)
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -76,7 +76,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
 
   const renderItem = useCallback(
     ({ item }: { item: LineRoute }) => {
-      return <SelectedLineRoutesItem code={props.code} item={item} />
+      return <LineRoutesItem code={props.code} item={item} />
     },
     [props.code],
   )
@@ -85,7 +85,7 @@ export const SelectedLineRoutes = memo(function SelectedLineRoutes(props: Props)
     return (
       <View>
         {routesDefaults.map(item => (
-          <SelectedLineRoutesItem key={item._id} code={props.code} item={item} />
+          <LineRoutesItem key={item._id} code={props.code} item={item} />
         ))}
       </View>
     )

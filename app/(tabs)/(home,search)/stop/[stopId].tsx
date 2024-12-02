@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 
-import { LineBusStopMarkersItem } from '@/components/markers/LineBusStopMarkers'
+import { LineBusStopMarkersItem } from '@/components/markers/BusStopMarkers'
 import { TheMapFr } from '@/components/TheMap'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiText } from '@/components/ui/UiText'

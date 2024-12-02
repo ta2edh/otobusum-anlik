@@ -13,19 +13,19 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { SelectedLineRoutesContainer } from './routes/SelectedLineRoutesContainer'
-import { SelectedLineAnnouncementsMemoized } from './SelectedLineAnnouncements'
-import { SelectedLineBusStops } from './SelectedLineBusStops'
+import { LineAnnouncementsMemoized } from './LineAnnouncements'
+import { LineBusStops } from './LineBusStops'
+import { LineRoutesContainer } from './routes/LineRoutesContainer'
 
-import { selectedLineWidth } from '@/constants/width'
+import { lineWidth } from '@/constants/width'
 import { deleteLine, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
-export interface SelectedLineProps extends AnimatedProps<ViewProps> {
+export interface LineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
-const SelectedLine = ({ style, ...props }: SelectedLineProps) => {
+const Line = ({ style, ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -55,7 +55,7 @@ const SelectedLine = ({ style, ...props }: SelectedLineProps) => {
 
   const containerStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
-    width: selectedLineWidth,
+    width: lineWidth,
   }
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
@@ -117,7 +117,7 @@ const SelectedLine = ({ style, ...props }: SelectedLineProps) => {
             textStyle={textContainerStyle}
           />
 
-          <SelectedLineAnnouncementsMemoized code={props.code} style={buttonContainerStyle} />
+          <LineAnnouncementsMemoized code={props.code} style={buttonContainerStyle} />
 
           <UiButton
             onPress={handleDelete}
@@ -128,13 +128,13 @@ const SelectedLine = ({ style, ...props }: SelectedLineProps) => {
         </View>
       </View>
 
-      <SelectedLineBusStops code={props.code} />
-      <SelectedLineRoutesContainer code={props.code} />
+      <LineBusStops code={props.code} />
+      <LineRoutesContainer code={props.code} />
     </Animated.View>
   )
 }
 
-export const SelectedLineMemoized = memo(SelectedLine)
+export const LineMemoized = memo(Line)
 
 const styles = StyleSheet.create({
   container: {

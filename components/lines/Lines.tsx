@@ -10,19 +10,19 @@ import {
 } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 
-import { SelectedLineMemoized } from './SelectedLine'
+import { LineMemoized } from './Line'
 
-import { selectedLineWidth } from '@/constants/width'
+import { lineWidth } from '@/constants/width'
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
-interface SelectedLinesProps {
+interface LinesProps {
   viewProps?: ViewProps
   listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 }
 
 // TODO: Some rerender issues are here.
-const SelectedLines = (props: SelectedLinesProps, outerRef: ForwardedRef<FlatList>) => {
+const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const innerRef = useRef<FlatList>(null)
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
@@ -54,12 +54,12 @@ const SelectedLines = (props: SelectedLinesProps, outerRef: ForwardedRef<FlatLis
   }, [items])
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <SelectedLineMemoized code={code} />
+    return <LineMemoized code={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, selectedGroup])
 
   const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.ceil(event.nativeEvent.contentOffset.x / selectedLineWidth)
+    const index = Math.ceil(event.nativeEvent.contentOffset.x / lineWidth)
     useMiscStore.setState(() => ({ selectedLineScrollIndex: index }))
   }, [])
 
@@ -86,7 +86,7 @@ const SelectedLines = (props: SelectedLinesProps, outerRef: ForwardedRef<FlatLis
   )
 }
 
-export const SelectedLinesFr = forwardRef<FlatList, SelectedLinesProps>(SelectedLines)
+export const LinesFr = forwardRef<FlatList, LinesProps>(Lines)
 
 const styles = StyleSheet.create({
   codes: {

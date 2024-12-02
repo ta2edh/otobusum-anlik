@@ -10,7 +10,7 @@ import { UiText } from '@/components/ui/UiText'
 import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
 
-import { SelectedLineRoutes } from './SelectedLineRoutes'
+import { LineRoutes } from './LineRoutes'
 
 import { changeRouteDirection } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
@@ -19,7 +19,7 @@ interface Props {
   code: string
 }
 
-export const SelectedLineRoutesContainer = (props: Props) => {
+export const LineRoutesContainer = (props: Props) => {
   const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -63,7 +63,7 @@ export const SelectedLineRoutesContainer = (props: Props) => {
           textStyle={textContainerStyle}
         />
 
-        <SelectedLineRoutes
+        <LineRoutes
           code={props.code}
           style={[buttonContainerStyle, styles.grow]}
           textStyle={textContainerStyle}

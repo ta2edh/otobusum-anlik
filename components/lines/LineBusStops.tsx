@@ -42,7 +42,7 @@ const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
-export const SelectedLineBusStops = (props: Props) => {
+export const LineBusStops = (props: Props) => {
   const routeCode = useFiltersStore(() => getRoute(props.code))
 
   const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
