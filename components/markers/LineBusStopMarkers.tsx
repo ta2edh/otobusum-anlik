@@ -42,12 +42,16 @@ interface LineBusStopMarkersItemProps {
   label?: string
 }
 
-export function LineBusStopMarkersItem({
+export const Test = () => {
+  return <UiText>alsdhkj</UiText>
+}
+
+export const LineBusStopMarkersItem = ({
   stop,
   code,
   coordinate,
   ...props
-}: LineBusStopMarkersItemProps) {
+}: LineBusStopMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(state => (code ? state.lineTheme[code] : undefined)))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 

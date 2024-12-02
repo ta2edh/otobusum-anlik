@@ -3,7 +3,7 @@ import { StatusBar, StatusBarStyle } from 'react-native'
 
 import { useTheme } from '@/hooks/useTheme'
 
-export function TheStatusBar(props: StatusBarProps) {
+export const TheStatusBar = (props: StatusBarProps) => {
   const { mode } = useTheme()
 
   const style: StatusBarStyle = mode === 'dark' ? 'light-content' : 'dark-content'

@@ -5,7 +5,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { i18n } from '@/translations/i18n'
 
-export default function TabLayout() {
+export const TabsLayout = () => {
   const { colorsTheme } = useTheme()
 
   const getName = (n: keyof typeof Ionicons.glyphMap, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
@@ -56,3 +56,5 @@ export default function TabLayout() {
     </Tabs>
   )
 }
+
+export default TabsLayout

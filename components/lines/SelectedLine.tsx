@@ -1,12 +1,5 @@
 import { memo, useEffect, useMemo } from 'react'
-import {
-  StyleProp,
-  StyleSheet,
-  TextStyle,
-  View,
-  ViewProps,
-  ViewStyle,
-} from 'react-native'
+import { StyleProp, StyleSheet, TextStyle, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   AnimatedProps,
   useAnimatedStyle,
@@ -21,7 +14,7 @@ import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
 import { SelectedLineRoutesContainer } from './routes/SelectedLineRoutesContainer'
-import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
+import { SelectedLineAnnouncementsMemoized } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 
 import { selectedLineWidth } from '@/constants/width'
@@ -32,7 +25,7 @@ export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
-export const SelectedLine = memo(function SelectedLine({ style, ...props }: SelectedLineProps) {
+const SelectedLine = ({ style, ...props }: SelectedLineProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -124,7 +117,7 @@ export const SelectedLine = memo(function SelectedLine({ style, ...props }: Sele
             textStyle={textContainerStyle}
           />
 
-          <SelectedLineAnnouncements code={props.code} style={buttonContainerStyle} />
+          <SelectedLineAnnouncementsMemoized code={props.code} style={buttonContainerStyle} />
 
           <UiButton
             onPress={handleDelete}
@@ -139,7 +132,9 @@ export const SelectedLine = memo(function SelectedLine({ style, ...props }: Sele
       <SelectedLineRoutesContainer code={props.code} />
     </Animated.View>
   )
-})
+}
+
+export const SelectedLineMemoized = memo(SelectedLine)
 
 const styles = StyleSheet.create({
   container: {

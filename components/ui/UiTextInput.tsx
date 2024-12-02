@@ -6,10 +6,8 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { colors } from '@/constants/colors'
 
-export const UiTextInput = forwardRef(function UiTextInput(
-  { style, ...props }: TextInputProps,
-  ref: ForwardedRef<TextInput>,
-) {
+export const UiTextInput = ({ style, ...props }: TextInputProps,
+  ref: ForwardedRef<TextInput>) => {
   const { colorsTheme } = useTheme()
 
   const dynamicStyle = { color: colorsTheme.color, backgroundColor: colorsTheme.surfaceContainerHigh }
@@ -22,7 +20,9 @@ export const UiTextInput = forwardRef(function UiTextInput(
       {...props}
     />
   )
-})
+}
+
+export const UiTextInputFr = forwardRef(UiTextInput)
 
 const styles = StyleSheet.create({
   input: {

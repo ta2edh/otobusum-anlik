@@ -8,7 +8,7 @@ interface ContainerProps extends ViewProps {
   title: string
 }
 
-export function GroupContainer(props: ContainerProps) {
+export const GroupContainer = (props: ContainerProps) => {
   return (
     <View style={styles.outerContainer}>
       <UiText style={styles.title}>{props.title}</UiText>
@@ -18,7 +18,7 @@ export function GroupContainer(props: ContainerProps) {
   )
 }
 
-export function SettingContainer(props: ContainerProps) {
+export const SettingContainer = (props: ContainerProps) => {
   const { colorsTheme } = useTheme()
 
   const dynamicSettingContainer: StyleProp<ViewStyle> = {

@@ -17,7 +17,7 @@ import { selectGroup, unSelectGroup, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
-export function TheMapButtons() {
+export const TheMapButtons = () => {
   const lines = useLinesStore(state => state.lines)
   const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
   const selectedGroup = useLinesStore(state => state.selectedGroup)

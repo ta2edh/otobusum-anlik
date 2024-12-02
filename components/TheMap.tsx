@@ -1,5 +1,5 @@
 import { SplashScreen } from 'expo-router'
-import { forwardRef } from 'react'
+import { ForwardedRef, forwardRef } from 'react'
 import { StyleSheet } from 'react-native'
 import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { getMapStyle } from '@/constants/mapStyles'
 import { useSettingsStore } from '@/stores/settings'
 
-export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, ref) {
+export const TheMap = (props: MapViewProps, ref: ForwardedRef<MapView>) => {
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
@@ -49,7 +49,9 @@ export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, r
       {props.children}
     </MapView>
   )
-})
+}
+
+export const TheMapFr = forwardRef<MapView, MapViewProps>(TheMap)
 
 const styles = StyleSheet.create({
   map: {

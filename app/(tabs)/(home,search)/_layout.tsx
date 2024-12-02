@@ -1,7 +1,7 @@
 import { HeaderBackButton } from '@react-navigation/elements'
 import { Stack, router } from 'expo-router'
 
-export default function Both() {
+export const HomeSearchLayout = () => {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
@@ -26,3 +26,5 @@ export default function Both() {
     </Stack>
   )
 }
+
+export default HomeSearchLayout

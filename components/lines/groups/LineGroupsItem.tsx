@@ -15,7 +15,7 @@ interface Props extends TouchableOpacityProps {
   group: LineGroup
 }
 
-export function LineGroupsItem({ group, ...props }: Props) {
+export const LineGroupsItem = ({ group, ...props }: Props) => {
   const { dismiss } = useBottomSheetModal()
 
   const handleLongPress = useCallback(

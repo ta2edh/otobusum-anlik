@@ -6,7 +6,7 @@ import { colors } from '@/constants/colors'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
-export function SettingsCluster() {
+export const SettingsCluster = () => {
   const clusterStops = useSettingsStore(state => state.clusterStops)
 
   const handleClusterStops = () => {

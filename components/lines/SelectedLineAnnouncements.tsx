@@ -16,7 +16,7 @@ interface Props extends ViewProps {
   code: string
 }
 
-export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
+const SelectedLineAnnouncements = (props: Props) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const { query } = useAnnouncements()
@@ -59,7 +59,9 @@ export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements
       )}
     </>
   )
-})
+}
+
+export const SelectedLineAnnouncementsMemoized = memo(SelectedLineAnnouncements)
 
 const styles = StyleSheet.create({
   contentContainer: {

@@ -20,14 +20,14 @@ interface Button<T> {
   value: T
 }
 
-interface Props<T> extends TouchableOpacityProps {
+interface UiSegmentedButtonsProps<T> extends TouchableOpacityProps {
   buttons: Button<T>[]
   value?: T
   onValueChange?: (value: T) => void
   theme?: Theme
 }
 
-export function UiSegmentedButtons<T>({ buttons, value, style, onValueChange, theme }: Props<T>) {
+export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, theme }: UiSegmentedButtonsProps<T>) => {
   const { colorsTheme, getSchemeColorHex } = useTheme(theme)
 
   const baseStyle: StyleProp<ViewStyle> = {

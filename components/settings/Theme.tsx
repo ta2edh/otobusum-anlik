@@ -29,7 +29,7 @@ const options: {
   },
 ]
 
-export function SettingsTheme() {
+export const SettingsTheme = () => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const colorScheme = useSettingsStore(useShallow(state => state.colorScheme))
 

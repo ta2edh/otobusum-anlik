@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import { ForwardedRef, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import {
   FlatList,
   ListRenderItem,
@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 
-import { SelectedLine } from './SelectedLine'
+import { SelectedLineMemoized } from './SelectedLine'
 
 import { selectedLineWidth } from '@/constants/width'
 import { useLinesStore } from '@/stores/lines'
@@ -22,10 +22,7 @@ interface SelectedLinesProps {
 }
 
 // TODO: Some rerender issues are here.
-export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function SelectedLines(
-  props,
-  outerRef,
-) {
+const SelectedLines = (props: SelectedLinesProps, outerRef: ForwardedRef<FlatList>) => {
   const innerRef = useRef<FlatList>(null)
   useImperativeHandle(outerRef, () => innerRef.current!, [])
 
@@ -57,7 +54,7 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
   }, [items])
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <SelectedLine code={code} />
+    return <SelectedLineMemoized code={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, selectedGroup])
 
@@ -87,7 +84,9 @@ export const SelectedLines = forwardRef<FlatList, SelectedLinesProps>(function S
       />
     </View>
   )
-})
+}
+
+export const SelectedLinesFr = forwardRef<FlatList, SelectedLinesProps>(SelectedLines)
 
 const styles = StyleSheet.create({
   codes: {

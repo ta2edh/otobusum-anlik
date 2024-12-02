@@ -2,16 +2,16 @@ import { useCallback, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 
-import { SelectedLines } from '@/components/lines/SelectedLines'
+import { SelectedLinesFr } from '@/components/lines/SelectedLines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
-import { TheMap } from '@/components/TheMap'
+import { TheMapFr } from '@/components/TheMap'
 import { TheMapButtons } from '@/components/TheMapButtons'
 
 import { MapContext } from '@/hooks/useMap'
 
 import { useSettingsStore } from '@/stores/settings'
 
-export default function HomeScreen() {
+export const HomeScreen = () => {
   const map = useRef<MapView>(null)
 
   const handleReady = useCallback(() => {
@@ -31,14 +31,14 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <MapContext.Provider value={map}>
-        <TheMap ref={map} onMapReady={handleReady}>
+        <TheMapFr ref={map} onMapReady={handleReady}>
           <LineMarkers />
-        </TheMap>
+        </TheMapFr>
 
         <TheMapButtons />
 
         <View style={selectedLineContainer}>
-          <SelectedLines />
+          <SelectedLinesFr />
         </View>
       </MapContext.Provider>
     </View>
@@ -50,3 +50,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+export default HomeScreen

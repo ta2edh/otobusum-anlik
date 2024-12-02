@@ -14,7 +14,7 @@ import { getSearchResults } from '@/api/getSearchResults'
 import { i18n } from '@/translations/i18n'
 import { BusLine, BusStop } from '@/types/bus'
 
-export default function Search() {
+export const SearchScreen = () => {
   const paddings = usePaddings()
 
   const mutation = useMutation({
@@ -101,3 +101,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
+
+export default SearchScreen

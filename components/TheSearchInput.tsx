@@ -20,7 +20,7 @@ interface Props extends ViewProps {
   onSearch: (query: string) => void
 }
 
-export function TheSearchInput({ isLoading, debounce, onSearch, style, ...rest }: Props) {
+export const TheSearchInput = ({ isLoading, debounce, onSearch, style, ...rest }: Props) => {
   const queryValue = useRef('')
   const [queryDisabled, setQueryDisabled] = useState(() => true)
 

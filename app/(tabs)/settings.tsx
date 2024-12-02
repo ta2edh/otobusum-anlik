@@ -12,7 +12,7 @@ import { usePaddings } from '@/hooks/usePaddings'
 
 import { i18n } from '@/translations/i18n'
 
-export default function Settings() {
+export const SettingsScreen = () => {
   const paddings = usePaddings()
 
   return (
@@ -46,3 +46,5 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
 })
+
+export default SettingsScreen

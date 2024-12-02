@@ -16,7 +16,7 @@ const fontSizes: Record<FontSizes, number> = {
   xl: 22,
 }
 
-export function UiText({ style, info, size = 'md', ...rest }: Props) {
+export const UiText = ({ style, info, size = 'md', ...rest }: Props) => {
   const { colorsTheme } = useTheme()
 
   const baseStyle: StyleProp<TextStyle> = {

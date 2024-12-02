@@ -4,6 +4,7 @@ const stylistic = require('@stylistic/eslint-plugin')
 module.exports = {
   extends: [
     'expo',
+    'plugin:react/recommended',
   ],
   plugins: [
     '@stylistic',
@@ -30,6 +31,12 @@ module.exports = {
           position: 'after',
         },
       ],
+    }],
+    'react/react-in-jsx-scope': ['off'],
+    'react/prop-types': ['off'],
+    'react/function-component-definition': ['error', {
+      namedComponents: 'arrow-function',
+      unnamedComponents: 'arrow-function',
     }],
   },
 }

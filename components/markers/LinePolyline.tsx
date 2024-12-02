@@ -13,7 +13,7 @@ interface Props {
   code: string
 }
 
-export function LinePolyline(props: Props) {
+export const LinePolyline = (props: Props) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const routeCode = useFiltersStore(() => getRoute(props.code))
 

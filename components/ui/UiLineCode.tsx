@@ -14,7 +14,7 @@ interface Props extends TextProps {
   code: string
 }
 
-export function UiLineCode({ isLoading, code, ...props }: Props) {
+export const UiLineCode = ({ isLoading, code, ...props }: Props) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 

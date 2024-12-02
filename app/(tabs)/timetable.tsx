@@ -19,7 +19,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
-import { SelectedLines } from '@/components/lines/SelectedLines'
+import { SelectedLinesFr } from '@/components/lines/SelectedLines'
 import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
@@ -28,7 +28,7 @@ import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
-export default function TimetableScreen() {
+export const TimetableScreen = () => {
   const insets = useSafeAreaInsets()
   const linesHeight = useSharedValue(0)
   const linesRef = useAnimatedRef<FlatList>()
@@ -94,7 +94,7 @@ export default function TimetableScreen() {
 
   return (
     <View style={containerStyle}>
-      <SelectedLines
+      <SelectedLinesFr
         ref={linesRef}
         listProps={{
           onLayout,
@@ -141,3 +141,5 @@ const styles = StyleSheet.create({
     width: selectedLineWidth,
   },
 })
+
+export default TimetableScreen

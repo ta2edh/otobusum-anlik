@@ -31,7 +31,7 @@ const iconSizes: Record<IconSize, number> = {
   lg: 24,
 }
 
-export function UiButton({ style, square, iconSize = 'md', ...props }: UiButtonProps) {
+export const UiButton = ({ style, square, iconSize = 'md', ...props }: UiButtonProps) => {
   const { colorsTheme } = useTheme()
 
   const dynamicStyle: StyleProp<ViewStyle> = {

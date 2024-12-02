@@ -5,7 +5,7 @@ export interface MarkerLazyCalloutProps extends MapMarkerProps {
   calloutProps?: MapCalloutProps
 }
 
-export function MarkerLazyCallout({ calloutProps, ...props }: MarkerLazyCalloutProps) {
+export const MarkerLazyCallout = ({ calloutProps, ...props }: MarkerLazyCalloutProps) => {
   const markerRef = useRef<MapMarker>(null)
   const [renderCallout, setRenderCallout] = useState(false)
 

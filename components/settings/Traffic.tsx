@@ -7,7 +7,7 @@ import { colors } from '@/constants/colors'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
-export function SettingsTraffic() {
+export const SettingsTraffic = () => {
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const handleTrafficInformation = () => {

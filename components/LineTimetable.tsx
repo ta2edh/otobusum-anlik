@@ -39,7 +39,7 @@ interface Props {
   code: string
 }
 
-export const LineTimetable = memo(function LineTimetable(props: Props) {
+export const LineTimetable = (props: Props) => {
   const now = new Date()
   const day = now.getDay()
 
@@ -180,7 +180,9 @@ export const LineTimetable = memo(function LineTimetable(props: Props) {
       </View>
     </View>
   )
-})
+}
+
+export const LineTimetableMemoized = memo(LineTimetable)
 
 const styles = StyleSheet.create({
   wrapper: {

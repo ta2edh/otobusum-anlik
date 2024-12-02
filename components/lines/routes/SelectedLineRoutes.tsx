@@ -30,7 +30,7 @@ interface ItemProps extends Props {
   item: LineRoute
 }
 
-function SelectedLineRoutesItem(props: ItemProps) {
+const SelectedLineRoutesItem = (props: ItemProps) => {
   const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
   const isSelected = selectedRouteCode === props.item.route_code
 

@@ -19,7 +19,7 @@ interface Props {
   code: string
 }
 
-export function SelectedLineRoutesContainer(props: Props) {
+export const SelectedLineRoutesContainer = (props: Props) => {
   const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)

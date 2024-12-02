@@ -11,13 +11,11 @@ import { colors } from '@/constants/colors'
 import { deleteGroup, unSelectGroup, updateGroupTitle } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
-export default function GroupEdit() {
+export const GroupEditScreen = () => {
   const { groupId } = useLocalSearchParams()
   const navigation = useNavigation()
   const paddings = usePaddings(true)
   const title = useRef('')
-
-  // const group = typeof groupId === 'string' ? findGroupFromId(groupId) : undefined
 
   const handleQueryChange = useCallback(
     (text: string) => title.current = text,
@@ -77,3 +75,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 })
+
+export default GroupEditScreen

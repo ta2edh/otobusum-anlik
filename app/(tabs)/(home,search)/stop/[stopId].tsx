@@ -5,7 +5,7 @@ import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 
 import { LineBusStopMarkersItem } from '@/components/markers/LineBusStopMarkers'
-import { TheMap } from '@/components/TheMap'
+import { TheMapFr } from '@/components/TheMap'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiText } from '@/components/ui/UiText'
 
@@ -13,7 +13,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { getStop } from '@/api/getStop'
 
-export default function StopDetails() {
+export const StopDetailsScreen = () => {
   const { stopId } = useLocalSearchParams<{ stopId: string }>()
   const { colorsTheme } = useTheme()
   const map = useRef<MapView>(null)
@@ -42,11 +42,11 @@ export default function StopDetails() {
 
   return (
     <View style={styles.container}>
-      <TheMap ref={map}>
+      <TheMapFr ref={map}>
         {query.data?.stop && (
           <LineBusStopMarkersItem stop={query.data?.stop} />
         )}
-      </TheMap>
+      </TheMapFr>
 
       <View style={styles.content}>
         {query.isPending
@@ -108,3 +108,5 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 })
+
+export default StopDetailsScreen

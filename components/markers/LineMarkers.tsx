@@ -6,7 +6,7 @@ import { LineBusStopMarkers } from './LineBusStopMarkers'
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
-export function LineMarkers() {
+export const LineMarkers = () => {
   const invisibleLines = useMiscStore(state => state.invisibleLines)
   const lineCodes = useLinesStore(state => state.lines)
 

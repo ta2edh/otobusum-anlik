@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 interface Props extends BottomSheetModalProps {}
 
-export function BackdropComponent(props: BottomSheetBackdropProps) {
+export const BackdropComponent = (props: BottomSheetBackdropProps) => {
   return <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
 }
 

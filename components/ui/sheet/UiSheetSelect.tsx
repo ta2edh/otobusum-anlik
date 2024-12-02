@@ -22,9 +22,7 @@ interface UiSheetSelectProps<T> {
   onValueChange: (value: T) => void
 }
 
-export function UiSheetSelect<T>(
-  props: UiSheetSelectProps<T> & { cRef: RefObject<BottomSheetModal> },
-) {
+export const UiSheetSelect = <T,>(props: UiSheetSelectProps<T> & { cRef: RefObject<BottomSheetModal> }) => {
   const paddings = usePaddings(true)
 
   return (

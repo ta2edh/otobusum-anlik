@@ -14,7 +14,7 @@ import { i18n } from '@/translations/i18n'
 
 SplashScreen.preventAutoHideAsync()
 
-export default function RootLayout() {
+export const RootLayout = () => {
   const { colorsTheme, mode } = useTheme()
 
   const targetTheme = mode === 'dark' ? DarkTheme : DefaultTheme
@@ -65,3 +65,5 @@ export default function RootLayout() {
     </PersistQueryClientProvider>
   )
 }
+
+export default RootLayout

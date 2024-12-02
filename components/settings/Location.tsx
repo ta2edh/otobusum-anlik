@@ -8,7 +8,7 @@ import { colors } from '@/constants/colors'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
-export function SettingsLocation() {
+export const SettingsLocation = () => {
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
 
   const handleToggleLocation = async () => {
