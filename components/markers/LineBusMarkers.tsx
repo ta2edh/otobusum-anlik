@@ -12,8 +12,8 @@ import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { getRoute, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 interface Props {
@@ -29,7 +29,7 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
   location,
   lineCode,
 }: LineBusMarkersItemProps) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[lineCode]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const textColor = getSchemeColorHex('onPrimaryContainer')
@@ -84,7 +84,7 @@ export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
   const {
     query: { data: line },
   } = useLine(props.code)
-  const routeCode = useFilters(() => getRoute(props.code))
+  const routeCode = useFiltersStore(() => getRoute(props.code))
 
   const filtered = line?.filter(loc => loc.guzergahkodu === routeCode) || []
 

@@ -4,14 +4,14 @@ import { useShallow } from 'zustand/react/shallow'
 import { SettingContainer } from './Container'
 
 import { colors } from '@/constants/colors'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 export function SettingsTraffic() {
-  const showTraffic = useSettings(useShallow(state => state.showTraffic))
+  const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const handleTrafficInformation = () => {
-    useSettings.setState(state => ({
+    useSettingsStore.setState(state => ({
       showTraffic: !state.showTraffic,
     }))
   }

@@ -24,8 +24,8 @@ import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
 import { selectedLineWidth } from '@/constants/width'
-import { useLines } from '@/stores/lines'
-import { useMisc } from '@/stores/misc'
+import { useLinesStore } from '@/stores/lines'
+import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
 export default function TimetableScreen() {
@@ -34,9 +34,9 @@ export default function TimetableScreen() {
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const lines = useLines(state => state.lines)
-  const selectedGroup = useLines(useShallow(state => state.selectedGroup))
-  const selectedGroupLines = useLines(useShallow(state => selectedGroup ? state.lineGroups[selectedGroup] : undefined))
+  const lines = useLinesStore(state => state.lines)
+  const selectedGroup = useLinesStore(useShallow(state => state.selectedGroup))
+  const selectedGroupLines = useLinesStore(useShallow(state => selectedGroup ? state.lineGroups[selectedGroup] : undefined))
 
   const items = selectedGroupLines?.lineCodes || lines
 
@@ -52,7 +52,7 @@ export default function TimetableScreen() {
   useEffect(() => {
     setTimeout(() => {
       linesRef.current?.scrollToIndex({
-        index: useMisc.getState().selectedLineScrollIndex,
+        index: useMiscStore.getState().selectedLineScrollIndex,
         viewPosition: 0.5,
       })
     }, 200)

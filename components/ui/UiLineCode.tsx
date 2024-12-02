@@ -7,7 +7,7 @@ import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
 import { colors } from '@/constants/colors'
-import { useLines } from '@/stores/lines'
+import { useLinesStore } from '@/stores/lines'
 
 interface Props extends TextProps {
   isLoading?: boolean
@@ -15,7 +15,7 @@ interface Props extends TextProps {
 }
 
 export function UiLineCode({ isLoading, code, ...props }: Props) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const renderCodeContainer: StyleProp<TextStyle> = {

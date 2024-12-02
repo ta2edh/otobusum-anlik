@@ -4,14 +4,14 @@ import { useColorScheme } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { colors } from '@/constants/colors'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 
 type SchemeKeys = {
   [K in keyof Scheme]: Scheme[K] extends number ? K : never
 }[keyof Scheme]
 
 export function useTheme(theme?: Theme) {
-  const storedTheme = useSettings(useShallow(state => state.colorScheme))
+  const storedTheme = useSettingsStore(useShallow(state => state.colorScheme))
   const systemScheme = useColorScheme()
 
   const mode = storedTheme ?? systemScheme ?? 'dark'

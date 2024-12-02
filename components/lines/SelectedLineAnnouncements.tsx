@@ -10,7 +10,7 @@ import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { useLines } from '@/stores/lines'
+import { useLinesStore } from '@/stores/lines'
 
 interface Props extends ViewProps {
   code: string
@@ -18,7 +18,7 @@ interface Props extends ViewProps {
 
 export const SelectedLineAnnouncements = memo(function SelectedLineAnnouncements(props: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const { query } = useAnnouncements()
   const { getSchemeColorHex } = useTheme(lineTheme)
 

@@ -25,21 +25,21 @@ import { SelectedLineAnnouncements } from './SelectedLineAnnouncements'
 import { SelectedLineBusStops } from './SelectedLineBusStops'
 
 import { selectedLineWidth } from '@/constants/width'
-import { deleteLine, useLines } from '@/stores/lines'
-import { toggleLineVisibility, useMisc } from '@/stores/misc'
+import { deleteLine, useLinesStore } from '@/stores/lines'
+import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
 export interface SelectedLineProps extends AnimatedProps<ViewProps> {
   code: string
 }
 
 export const SelectedLine = memo(function SelectedLine({ style, ...props }: SelectedLineProps) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const isVisible = useSharedValue(true)
 
   useEffect(() => {
-    const unsub = useMisc.subscribe(
+    const unsub = useMiscStore.subscribe(
       state => state.invisibleLines,
       (newCodes) => {
         isVisible.value = !newCodes.includes(props.code)

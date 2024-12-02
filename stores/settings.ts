@@ -12,7 +12,7 @@ export interface SettingsStore {
   clusterStops: boolean
 }
 
-export const useSettings = create(
+export const useSettingsStore = create(
   subscribeWithSelector(
     persist<SettingsStore>(
       () => ({

@@ -5,14 +5,14 @@ import { useShallow } from 'zustand/react/shallow'
 import { SettingContainer } from './Container'
 
 import { colors } from '@/constants/colors'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 export function SettingsLocation() {
-  const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
+  const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
 
   const handleToggleLocation = async () => {
-    let showLocation = useSettings.getState().showMyLocation
+    let showLocation = useSettingsStore.getState().showMyLocation
     if (!showLocation) {
       const { granted } = await Location.requestForegroundPermissionsAsync()
       if (granted) {
@@ -22,7 +22,7 @@ export function SettingsLocation() {
       showLocation = false
     }
 
-    useSettings.setState(() => ({
+    useSettingsStore.setState(() => ({
       showMyLocation: showLocation,
     }))
   }

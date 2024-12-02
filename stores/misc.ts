@@ -7,7 +7,7 @@ export interface MiscStore {
   invisibleLines: string[]
 }
 
-export const useMisc = create(
+export const useMiscStore = create(
   subscribeWithSelector(
     persist<MiscStore>(
       () => ({
@@ -22,7 +22,7 @@ export const useMisc = create(
   ),
 )
 
-export const toggleLineVisibility = (lineCode: string) => useMisc.setState((state) => {
+export const toggleLineVisibility = (lineCode: string) => useMiscStore.setState((state) => {
   const index = state.invisibleLines.indexOf(lineCode)
 
   if (index === -1) {

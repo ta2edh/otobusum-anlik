@@ -21,7 +21,7 @@ export interface LinesStore {
   selectedGroup?: string
 }
 
-export const useLines = create(
+export const useLinesStore = create(
   subscribeWithSelector(
     persist<LinesStore>(
       () => ({
@@ -50,10 +50,10 @@ export const useLines = create(
 )
 
 // Line stuff
-export const deleteLine = (lineCode: string) => useLines.setState((state) => {
+export const deleteLine = (lineCode: string) => useLinesStore.setState((state) => {
   const index = state.lines.indexOf(lineCode)
 
-  const selectedGroup = useLines.getState().selectedGroup
+  const selectedGroup = useLinesStore.getState().selectedGroup
   if (selectedGroup) {
     deleteLineFromGroup(selectedGroup, lineCode)
   } else if (index !== -1) {
@@ -67,7 +67,7 @@ export const deleteLine = (lineCode: string) => useLines.setState((state) => {
   }
 })
 
-export const addLine = (lineCode: string) => useLines.setState((state) => {
+export const addLine = (lineCode: string) => useLinesStore.setState((state) => {
   if (state.lines.length > 3) {
     ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
     return state
@@ -85,7 +85,7 @@ export const addLine = (lineCode: string) => useLines.setState((state) => {
 // Line stuff end
 
 // Theme stuff
-export const addTheme = (lineCode: string) => useLines.setState((state) => {
+export const addTheme = (lineCode: string) => useLinesStore.setState((state) => {
   if (state.lineTheme[lineCode]) {
     return state
   }
@@ -98,7 +98,7 @@ export const addTheme = (lineCode: string) => useLines.setState((state) => {
   }
 })
 
-export const deleteTheme = (lineCode: string) => useLines.setState((state) => {
+export const deleteTheme = (lineCode: string) => useLinesStore.setState((state) => {
   const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
   const shouldDeleteTheme = !groupLinecodes.includes(lineCode) && state.lines.indexOf(lineCode) === -1
 
@@ -115,7 +115,7 @@ export const deleteTheme = (lineCode: string) => useLines.setState((state) => {
 // Theme stuff end
 
 // Group stuff
-export const createNewGroup = () => useLines.setState((state) => {
+export const createNewGroup = () => useLinesStore.setState((state) => {
   const id = randomUUID()
 
   return {
@@ -130,7 +130,7 @@ export const createNewGroup = () => useLines.setState((state) => {
   }
 })
 
-export const addLineToGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+export const addLineToGroup = (groupId: string, lineCode: string) => useLinesStore.setState((state) => {
   const group = state.lineGroups[groupId]
   if (!group) return state
 
@@ -161,7 +161,7 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLines.se
   }
 })
 
-export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.setState((state) => {
+export const updateGroupTitle = (groupId: string, newTitle: string) => useLinesStore.setState((state) => {
   const group = state.lineGroups[groupId]
   if (!group) return state
 
@@ -176,7 +176,7 @@ export const updateGroupTitle = (groupId: string, newTitle: string) => useLines.
   }
 })
 
-export const deleteGroup = (groupId: string) => useLines.setState((state) => {
+export const deleteGroup = (groupId: string) => useLinesStore.setState((state) => {
   const group = state.lineGroups[groupId]
   if (!group) return state
 
@@ -202,7 +202,7 @@ export const deleteGroup = (groupId: string) => useLines.setState((state) => {
   // }
 })
 
-export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLines.setState((state) => {
+export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLinesStore.setState((state) => {
   const lineIndex = state.lineGroups[groupId]?.lineCodes.indexOf(lineCode)
   if (lineIndex === undefined || lineIndex === -1) return state
 
@@ -220,13 +220,13 @@ export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLin
   }
 })
 
-export const selectGroup = (newGroupId?: string) => useLines.setState(() => {
+export const selectGroup = (newGroupId?: string) => useLinesStore.setState(() => {
   return {
     selectedGroup: newGroupId,
   }
 })
 
-export const unSelectGroup = () => useLines.setState(() => {
+export const unSelectGroup = () => useLinesStore.setState(() => {
   return {
     selectedGroup: undefined,
   }
@@ -252,15 +252,15 @@ const updateLines = (keys: string[]) => {
 
 let listener: NodeJS.Timeout
 const startUpdateLoop = () => {
-  useLines.subscribe(
+  useLinesStore.subscribe(
     state => state.selectedGroup,
     (selectedGroup) => {
       clearTimeout(listener)
 
       const loop = () => {
-        const groupLines = selectedGroup ? useLines.getState().lineGroups[selectedGroup]?.lineCodes : []
+        const groupLines = selectedGroup ? useLinesStore.getState().lineGroups[selectedGroup]?.lineCodes : []
 
-        updateLines(groupLines || useLines.getState().lines)
+        updateLines(groupLines || useLinesStore.getState().lines)
         return setTimeout(loop, 50_000)
       }
 
@@ -273,5 +273,5 @@ const startUpdateLoop = () => {
 }
 
 if (!__DEV__) {
-  useLines.persist.onFinishHydration(startUpdateLoop)
+  useLinesStore.persist.onFinishHydration(startUpdateLoop)
 }

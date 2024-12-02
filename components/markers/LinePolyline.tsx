@@ -5,8 +5,8 @@ import { useShallow } from 'zustand/react/shallow'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getLinePolyline } from '@/api/getLinePolyline'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { getRoute, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
@@ -14,8 +14,8 @@ interface Props {
 }
 
 export function LinePolyline(props: Props) {
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
-  const routeCode = useFilters(() => getRoute(props.code))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const routeCode = useFiltersStore(() => getRoute(props.code))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   // const { getRouteDirection, getCurrentOrDefaultRouteCode } = useRouteFilter(props.code)

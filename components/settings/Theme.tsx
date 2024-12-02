@@ -8,7 +8,7 @@ import { UiButton } from '../ui/UiButton'
 
 import { SettingContainer } from './Container'
 
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 const options: {
@@ -31,14 +31,14 @@ const options: {
 
 export function SettingsTheme() {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const colorScheme = useSettings(useShallow(state => state.colorScheme))
+  const colorScheme = useSettingsStore(useShallow(state => state.colorScheme))
 
   const handlePress = useCallback(() => {
     bottomSheetModal.current?.present()
   }, [])
 
   const handleValueChange = (newScheme: ColorSchemeName) => {
-    useSettings.setState(() => ({
+    useSettingsStore.setState(() => ({
       colorScheme: newScheme,
     }))
   }

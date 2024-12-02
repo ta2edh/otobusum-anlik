@@ -12,7 +12,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { LineGroupsItem } from './LineGroupsItem'
 
 import { colors } from '@/constants/colors'
-import { createNewGroup, useLines } from '@/stores/lines'
+import { createNewGroup, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
 
@@ -24,7 +24,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
   { onPressGroup, ...props },
   ref,
 ) {
-  const groups = useLines(useShallow(state => Object.values(state.lineGroups)))
+  const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups)))
   const { getSchemeColorHex } = useTheme()
 
   const buttonBackground: StyleProp<ViewStyle> = useMemo(

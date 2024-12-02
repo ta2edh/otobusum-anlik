@@ -13,15 +13,15 @@ import { UiButton } from './ui/UiButton'
 
 import { colors } from '@/constants/colors'
 import { changeRouteDirection } from '@/stores/filters'
-import { selectGroup, unSelectGroup, useLines } from '@/stores/lines'
-import { useMisc } from '@/stores/misc'
+import { selectGroup, unSelectGroup, useLinesStore } from '@/stores/lines'
+import { useMiscStore } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
 export function TheMapButtons() {
-  const lines = useLines(state => state.lines)
-  const lineGroups = useLines(useShallow(state => Object.keys(state.lineGroups)))
-  const selectedGroup = useLines(state => state.selectedGroup)
-  const selectedGroupLines = useLines(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
+  const lines = useLinesStore(state => state.lines)
+  const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
+  const selectedGroup = useLinesStore(state => state.selectedGroup)
+  const selectedGroupLines = useLinesStore(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
 
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue(colors.primary)
@@ -30,11 +30,11 @@ export function TheMapButtons() {
   const { mode } = useTheme()
 
   const updateColors = useCallback((index: number) => {
-    const lines = selectedGroupLines || useLines.getState().lines
+    const lines = selectedGroupLines || useLinesStore.getState().lines
     const lineCode = lines.at(index)
     if (lineCode === undefined) return
 
-    const theme = useLines.getState().lineTheme[lineCode]
+    const theme = useLinesStore.getState().lineTheme[lineCode]
     if (!theme) return
 
     const scheme = theme.schemes[mode]
@@ -47,7 +47,7 @@ export function TheMapButtons() {
   }, [bgColor, mode, selectedGroupLines, txtColor])
 
   useEffect(() => {
-    const unsub = useMisc.subscribe(
+    const unsub = useMiscStore.subscribe(
       state => state.selectedLineScrollIndex,
       (index) => {
         updateColors(index)
@@ -70,7 +70,7 @@ export function TheMapButtons() {
   }
 
   const handleChangeAllDirections = () => {
-    const group = selectedGroupLines || useLines.getState().lines
+    const group = selectedGroupLines || useLinesStore.getState().lines
 
     for (let index = 0; index < group.length; index++) {
       const lineCode = group[index]

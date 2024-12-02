@@ -3,14 +3,14 @@ import { Switch } from 'react-native'
 import { SettingContainer } from './Container'
 
 import { colors } from '@/constants/colors'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 export function SettingsCluster() {
-  const clusterStops = useSettings(state => state.clusterStops)
+  const clusterStops = useSettingsStore(state => state.clusterStops)
 
   const handleClusterStops = () => {
-    useSettings.setState(state => ({
+    useSettingsStore.setState(state => ({
       clusterStops: !state.clusterStops,
     }))
   }

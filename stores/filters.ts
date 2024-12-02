@@ -10,7 +10,7 @@ export interface FiltersStore {
   selectedRoutes: Record<string, string>
 }
 
-export const useFilters = create(
+export const useFiltersStore = create(
   subscribeWithSelector(
     persist<FiltersStore>(
       () => ({
@@ -24,7 +24,7 @@ export const useFilters = create(
   ),
 )
 
-export const selectRoute = (lineCode: string, routeCode: string) => useFilters.setState((state) => {
+export const selectRoute = (lineCode: string, routeCode: string) => useFiltersStore.setState((state) => {
   return {
     selectedRoutes: {
       ...state.selectedRoutes,
@@ -33,9 +33,9 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFilters.s
   }
 })
 
-export const getRoute = (lineCode: string) => useFilters.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
+export const getRoute = (lineCode: string) => useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
 
-export const changeRouteDirection = (lineCode: string) => useFilters.setState((state) => {
+export const changeRouteDirection = (lineCode: string) => useFiltersStore.setState((state) => {
   const routeCode = getRoute(lineCode)
 
   const [left, dir, right] = routeCode.split('_')
@@ -67,13 +67,13 @@ export const changeRouteDirection = (lineCode: string) => useFilters.setState((s
   }
 })
 
-// export const selectGroup = (newGroupId?: string) => useFilters.setState(() => {
+// export const selectGroup = (newGroupId?: string) => useFiltersStore.setState(() => {
 //   return {
 //     selectedGroup: newGroupId,
 //   }
 // })
 
-// export const unSelectGroup = () => useFilters.setState(() => {
+// export const unSelectGroup = () => useFiltersStore.setState(() => {
 //   return {
 //     selectedGroup: undefined,
 //   }

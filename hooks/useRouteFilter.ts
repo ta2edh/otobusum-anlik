@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { getAllRoutes } from '@/api/getAllRoutes'
-import { useFilters } from '@/stores/filters'
+import { useFiltersStore } from '@/stores/filters'
 
 export const getSelectedRouteCodeOrDefault = (lineCode: string) => {
-  return useFilters.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
+  return useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
 }
 
 export function useRouteFilter(lineCode: string) {

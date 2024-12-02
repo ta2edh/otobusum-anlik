@@ -3,15 +3,15 @@ import { View } from 'react-native'
 import { LineBusMarkers } from './LineBusMarkers'
 import { LineBusStopMarkers } from './LineBusStopMarkers'
 
-import { useLines } from '@/stores/lines'
-import { useMisc } from '@/stores/misc'
+import { useLinesStore } from '@/stores/lines'
+import { useMiscStore } from '@/stores/misc'
 
 export function LineMarkers() {
-  const invisibleLines = useMisc(state => state.invisibleLines)
-  const lineCodes = useLines(state => state.lines)
+  const invisibleLines = useMiscStore(state => state.invisibleLines)
+  const lineCodes = useLinesStore(state => state.lines)
 
-  const selectedGroup = useLines(state => state.selectedGroup)
-  const selectedGroupLines = useLines(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
+  const selectedGroup = useLinesStore(state => state.selectedGroup)
+  const selectedGroupLines = useLinesStore(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
 
   const codes = selectedGroupLines || lineCodes
   const filteredCodes = codes.filter(lineCode => !invisibleLines.includes(lineCode))

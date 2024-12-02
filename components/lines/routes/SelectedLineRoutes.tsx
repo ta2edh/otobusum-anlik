@@ -18,7 +18,7 @@ import { UiText } from '../../ui/UiText'
 
 import { LineRoute } from '@/api/getAllRoutes'
 import { colors } from '@/constants/colors'
-import { selectRoute, useFilters } from '@/stores/filters'
+import { selectRoute, useFiltersStore } from '@/stores/filters'
 import { i18n } from '@/translations/i18n'
 
 type MergedProps = TouchableOpacityProps & UiButtonProps
@@ -31,7 +31,7 @@ interface ItemProps extends Props {
 }
 
 function SelectedLineRoutesItem(props: ItemProps) {
-  const selectedRouteCode = useFilters(useShallow(state => state.selectedRoutes[props.code]))
+  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
   const isSelected = selectedRouteCode === props.item.route_code
 
   const selectedStyle: StyleProp<ViewStyle> = {

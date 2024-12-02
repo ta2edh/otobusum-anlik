@@ -10,8 +10,8 @@ import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 import { UiText } from './ui/UiText'
 
 import { PlannedDeparture, getPlannedDepartures } from '@/api/getPlannedDepartures'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { getRoute, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
@@ -50,8 +50,8 @@ export const LineTimetable = memo(function LineTimetable(props: Props) {
       : 'I'
 
   const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
-  const routeCode = useFilters(() => getRoute(props.code))
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const routeCode = useFiltersStore(() => getRoute(props.code))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { query: announcementsQuery } = useAnnouncements()
   const { getSchemeColorHex } = useTheme(lineTheme)

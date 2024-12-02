@@ -21,9 +21,9 @@ import { UiText } from '../ui/UiText'
 import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 import { colors } from '@/constants/colors'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
-import { useSettings } from '@/stores/settings'
+import { getRoute, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
+import { useSettingsStore } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
@@ -48,7 +48,7 @@ export function LineBusStopMarkersItem({
   coordinate,
   ...props
 }: LineBusStopMarkersItemProps) {
-  const lineTheme = useLines(useShallow(state => (code ? state.lineTheme[code] : undefined)))
+  const lineTheme = useLinesStore(useShallow(state => (code ? state.lineTheme[code] : undefined)))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
   const handleOnCalloutPress = useCallback(() => {
@@ -122,9 +122,9 @@ export function LineBusStopMarkersItem({
 }
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
-  const routeCode = useFilters(() => getRoute(props.code))
-  const initialLocation = useSettings(state => state.initialMapLocation)
-  const clusterStops = useSettings(state => state.clusterStops)
+  const routeCode = useFiltersStore(() => getRoute(props.code))
+  const initialLocation = useSettingsStore(state => state.initialMapLocation)
+  const clusterStops = useSettingsStore(state => state.clusterStops)
 
   const map = useMap()
   const { width, height } = useWindowDimensions()

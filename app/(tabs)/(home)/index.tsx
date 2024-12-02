@@ -9,14 +9,14 @@ import { TheMapButtons } from '@/components/TheMapButtons'
 
 import { MapContext } from '@/hooks/useMap'
 
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 
 export default function HomeScreen() {
   const map = useRef<MapView>(null)
 
   const handleReady = useCallback(() => {
     map.current?.animateCamera({
-      center: useSettings.getState().initialMapLocation,
+      center: useSettingsStore.getState().initialMapLocation,
       zoom: 13,
       heading: 0,
       pitch: 0,

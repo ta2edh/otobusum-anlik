@@ -8,17 +8,17 @@ import { useShallow } from 'zustand/react/shallow'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 
 export const TheMap = forwardRef<MapView, MapViewProps>(function TheMap(props, ref) {
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
-  const showMyLocation = useSettings(useShallow(state => state.showMyLocation))
-  const showTraffic = useSettings(useShallow(state => state.showTraffic))
+  const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
+  const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const handleRegionChangeComplete = (region: Region, details: Details) => {
     if (!details.isGesture) return
-    useSettings.setState(() => ({ initialMapLocation: { ...region } }))
+    useSettingsStore.setState(() => ({ initialMapLocation: { ...region } }))
   }
 
   const handleMapLoaded = () => {

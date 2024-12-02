@@ -3,7 +3,7 @@ import * as Location from 'expo-location'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { getLineBusStops } from '@/api/getLineBusStops'
-import { useSettings } from '@/stores/settings'
+import { useSettingsStore } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
 import { Direction } from '@/types/departure'
 import { getDistanceFromLatLon } from '@/utils/getDistanceFromLatLon'
@@ -71,7 +71,7 @@ export function useLineBusStops(
 
   useEffect(() => {
     let locationListener: Location.LocationSubscription | undefined
-    const unlisten = useSettings.subscribe(state => state.showMyLocation, async (showLocation) => {
+    const unlisten = useSettingsStore.subscribe(state => state.showMyLocation, async (showLocation) => {
       if (listenToUserLocation && showLocation && !locationListener) {
         locationListener = await setupListener()
       } else if (!showLocation && closestStop) {

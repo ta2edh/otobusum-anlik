@@ -25,8 +25,8 @@ import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
 import { BusLocation } from '@/api/getLineBusLocations'
-import { getRoute, useFilters } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { getRoute, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
@@ -43,7 +43,7 @@ const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export function SelectedLineBusStops(props: Props) {
-  const routeCode = useFilters(() => getRoute(props.code))
+  const routeCode = useFiltersStore(() => getRoute(props.code))
 
   const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
@@ -56,7 +56,7 @@ export function SelectedLineBusStops(props: Props) {
 
   const { query: { data: line } } = useLine(props.code)
 
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const direction = extractRouteCodeDirection(routeCode)
 
   const { filteredStops, query, closestStop } = useLineBusStops(props.code, direction, true)

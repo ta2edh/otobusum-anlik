@@ -13,7 +13,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { SelectedLineRoutes } from './SelectedLineRoutes'
 
 import { changeRouteDirection } from '@/stores/filters'
-import { useLines } from '@/stores/lines'
+import { useLinesStore } from '@/stores/lines'
 
 interface Props {
   code: string
@@ -21,7 +21,7 @@ interface Props {
 
 export function SelectedLineRoutesContainer(props: Props) {
   const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
-  const lineTheme = useLines(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
