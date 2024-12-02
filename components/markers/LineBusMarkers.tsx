@@ -1,6 +1,8 @@
 import { Ionicons } from '@expo/vector-icons'
-import { memo } from 'react'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { memo, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
+import { MapMarkerProps } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
@@ -20,15 +22,12 @@ interface Props {
   code: string
 }
 
-interface LineBusMarkersItemProps {
+interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
   location: BusLocation
   lineCode: string
 }
 
-export const LineBusMarkersItem = memo(function LineBusMarkersItem({
-  location,
-  lineCode,
-}: LineBusMarkersItemProps) {
+export const LineBusMarkersItem = ({ location, lineCode, ...props }: LineBusMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
@@ -37,12 +36,6 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
 
   return (
     <MarkerLazyCallout
-      coordinate={{
-        latitude: parseFloat(location.enlem),
-        longitude: parseFloat(location.boylam),
-      }}
-      tracksInfoWindowChanges={false}
-      tracksViewChanges={false}
       calloutProps={{
         children: (
           <View style={styles.calloutContainer}>
@@ -72,30 +65,50 @@ export const LineBusMarkersItem = memo(function LineBusMarkersItem({
           </View>
         ),
       }}
+      markerProps={{
+        coordinate: {
+          latitude: parseFloat(location.enlem),
+          longitude: parseFloat(location.boylam),
+        },
+        tracksInfoWindowChanges: false,
+        tracksViewChanges: false,
+      }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
     </MarkerLazyCallout>
   )
-})
+}
 
-export const LineBusMarkers = memo(function LineBusMarkers(props: Props) {
-  const {
-    query: { data: line },
-  } = useLine(props.code)
+export const LineBusMarkersItemMemoized = memo(LineBusMarkersItem)
+
+export const LineBusMarkers = (props: Props) => {
+  const { query } = useLine(props.code)
   const routeCode = useFiltersStore(() => getRoute(props.code))
 
-  const filtered = line?.filter(loc => loc.guzergahkodu === routeCode) || []
+  const modal = useRef<BottomSheetModal>(null)
+
+  const filtered = query.data?.filter(loc => loc.guzergahkodu === routeCode) || []
 
   return (
     <>
       {filtered?.map(loc => (
-        <LineBusMarkersItem key={loc.kapino} location={loc} lineCode={props.code} />
+        <LineBusMarkersItemMemoized
+          onPress={() => {
+            console.log('test')
+            modal.current?.present()
+          }}
+          key={loc.kapino}
+          location={loc}
+          lineCode={props.code}
+        />
       ))}
     </>
   )
-})
+}
+
+export const LineBusMarkersMemoized = memo(LineBusMarkers)
 
 const styles = StyleSheet.create({
   iconContainer: {

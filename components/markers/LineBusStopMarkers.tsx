@@ -97,9 +97,11 @@ export const LineBusStopMarkersItem = ({
 
   return (
     <MarkerLazyCallout
-      coordinate={coordinate || coordinateDefault}
-      tracksInfoWindowChanges={false}
-      tracksViewChanges={false}
+      markerProps={{
+        coordinate: coordinate || coordinateDefault,
+        tracksInfoWindowChanges: false,
+        tracksViewChanges: false,
+      }}
       calloutProps={{
         onPress: handleOnCalloutPress,
         children: (

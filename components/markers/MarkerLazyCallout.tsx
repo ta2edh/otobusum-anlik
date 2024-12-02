@@ -1,28 +1,32 @@
-import { useCallback, useRef, useState } from 'react'
-import { Callout, MapCalloutProps, MapMarker, MapMarkerProps, Marker } from 'react-native-maps'
+import { ReactNode, useCallback, useRef, useState } from 'react'
+import { Callout, MapCalloutProps, MapMarker, MapMarkerProps, Marker, MarkerPressEvent } from 'react-native-maps'
 
-export interface MarkerLazyCalloutProps extends MapMarkerProps {
+export interface MarkerLazyCalloutProps {
+  markerProps: MapMarkerProps
   calloutProps?: MapCalloutProps
+  children: ReactNode
 }
 
-export const MarkerLazyCallout = ({ calloutProps, ...props }: MarkerLazyCalloutProps) => {
+export const MarkerLazyCallout = ({ markerProps, calloutProps, children }: MarkerLazyCalloutProps) => {
   const markerRef = useRef<MapMarker>(null)
   const [renderCallout, setRenderCallout] = useState(false)
 
-  const handlePress = useCallback(() => {
+  const handlePress = useCallback((event: MarkerPressEvent) => {
+    markerProps?.onPress?.(event)
+
     setRenderCallout(true)
     setTimeout(() => {
       markerRef.current?.showCallout()
     })
-  }, [])
+  }, [markerProps])
 
   return (
     <Marker
       ref={markerRef}
       onPress={handlePress}
-      {...props}
+      {...markerProps}
     >
-      {props.children}
+      {children}
 
       {renderCallout && (
         <Callout tooltip {...calloutProps}>
