@@ -1,6 +1,13 @@
 import { router } from 'expo-router'
 import { memo, useCallback, useEffect, useMemo } from 'react'
-import { StyleProp, StyleSheet, useWindowDimensions, View, ViewStyle } from 'react-native'
+import {
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  useWindowDimensions,
+  View,
+  ViewStyle,
+} from 'react-native'
 import { Clusterer, isPointCluster, supercluster } from 'react-native-clusterer'
 import { LatLng, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
@@ -31,10 +38,17 @@ interface LineBusStopMarkersItemProps {
     latitude: number
     longitude: number
   }
+  viewStyle?: ViewStyle
+  label?: string
 }
 
-export function LineBusStopMarkersItem({ stop, code, coordinate }: LineBusStopMarkersItemProps) {
-  const lineTheme = useLines(useShallow(state => code ? state.lineTheme[code] : undefined))
+export function LineBusStopMarkersItem({
+  stop,
+  code,
+  coordinate,
+  ...props
+}: LineBusStopMarkersItemProps) {
+  const lineTheme = useLines(useShallow(state => (code ? state.lineTheme[code] : undefined)))
   const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
 
   const handleOnCalloutPress = useCallback(() => {
@@ -46,20 +60,36 @@ export function LineBusStopMarkersItem({ stop, code, coordinate }: LineBusStopMa
     })
   }, [stop?.stop_code])
 
-  const backgroundColor = useMemo(() => getSchemeColorHex('primary') || colors.primary, [getSchemeColorHex])
+  const backgroundColor = useMemo(
+    () => getSchemeColorHex('primary') || colors.primary,
+    [getSchemeColorHex],
+  )
 
-  const busStopStyle: StyleProp<ViewStyle> = useMemo(() => ({
-    borderColor: getSchemeColorHex('outlineVariant'),
-  }), [getSchemeColorHex])
+  const borderStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      borderColor: getSchemeColorHex('outlineVariant'),
+    }),
+    [getSchemeColorHex],
+  )
+
+  const textStyle: StyleProp<TextStyle> = useMemo(
+    () => ({
+      color: getSchemeColorHex('onPrimary'),
+    }),
+    [getSchemeColorHex],
+  )
 
   const calloutContainerBackground: StyleProp<ViewStyle> = {
     backgroundColor: colorsTheme.surfaceContainerLow,
   }
 
-  const coordinateDefault = useMemo(() => ({
-    latitude: stop.y_coord,
-    longitude: stop.x_coord,
-  }), [stop.x_coord, stop.y_coord])
+  const coordinateDefault = useMemo(
+    () => ({
+      latitude: stop.y_coord,
+      longitude: stop.x_coord,
+    }),
+    [stop.x_coord, stop.y_coord],
+  )
 
   return (
     <MarkerLazyCallout
@@ -80,7 +110,13 @@ export function LineBusStopMarkersItem({ stop, code, coordinate }: LineBusStopMa
         ),
       }}
     >
-      <View style={[styles.busStop, busStopStyle, { backgroundColor }]} />
+      <View style={[styles.busStop, borderStyle, { backgroundColor }, props.viewStyle]}>
+        {props.label && (
+          <UiText style={textStyle} size="sm" info>
+            {props.label}
+          </UiText>
+        )}
+      </View>
     </MarkerLazyCallout>
   )
 }
@@ -115,7 +151,8 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
   }, [query.data, map])
 
   const direction = extractRouteCodeDirection(routeCode)
-  const busStops = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
+  const busStops
+    = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
 
   if (!query.data) {
     return null
@@ -138,7 +175,8 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
         data={filteredParsed}
         region={initialLocation as Region}
         mapDimensions={{
-          width, height,
+          width,
+          height,
         }}
         options={{
           minPoints: 6,
@@ -157,6 +195,15 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
               latitude: point.geometry.coordinates[1]!,
               longitude: point.geometry.coordinates[0]!,
             }}
+            viewStyle={
+              isPointCluster(point)
+                ? {
+                    width: 24,
+                    height: 24,
+                  }
+                : undefined
+            }
+            label={point.properties.point_count}
           />
         )}
       />
@@ -187,6 +234,8 @@ const styles = StyleSheet.create({
     height: 14,
     borderWidth: 1,
     borderRadius: 1000,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   calloutText: {
     textAlign: 'center',
