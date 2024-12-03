@@ -37,9 +37,7 @@ export const HomeScreen = () => {
           <LinesMomoizedFr />
         </View>
 
-        {/* {stopId && ( */}
         <TheStopInfo />
-        {/* )} */}
       </MapContext.Provider>
     </View>
   )
