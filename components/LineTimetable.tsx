@@ -15,6 +15,7 @@ import { PlannedDeparture, getPlannedDepartures } from '@/api/getPlannedDepartur
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
+import { charactersToAscii } from '@/utils/charactersToAscii'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 function groupDeparturesByHour(obj: PlannedDeparture[]) {
@@ -96,7 +97,8 @@ export const LineTimetable = (props: Props) => {
       const from = msgSplit.at(0)
       if (!from) return
 
-      const isDirectionTrue = from.trim() === leftTitle?.trim()
+      const tLeftTitle = leftTitle ? charactersToAscii(leftTitle) : undefined
+      const isDirectionTrue = from.trim() === tLeftTitle?.trim()
       if (!isDirectionTrue) return
 
       const hour = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
