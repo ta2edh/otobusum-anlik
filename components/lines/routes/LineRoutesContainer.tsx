@@ -7,7 +7,7 @@ import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiButton } from '@/components/ui/UiButton'
 import { UiText } from '@/components/ui/UiText'
 
-import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useRoutes } from '@/hooks/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
 import { LineRoutes } from './LineRoutes'
@@ -20,7 +20,7 @@ interface Props {
 }
 
 export const LineRoutesContainer = (props: Props) => {
-  const { query, getRouteFromCode } = useRouteFilter(props.lineCode)
+  const { query, getRouteFromCode } = useRoutes(props.lineCode)
 
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)

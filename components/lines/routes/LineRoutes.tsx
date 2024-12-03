@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useRoutes } from '@/hooks/useRoutes'
 
 import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton, UiButtonProps } from '../../ui/UiButton'
@@ -55,7 +55,7 @@ const LineRoutesItem = (props: ItemProps) => {
 }
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
-  const { query: allRoutes, getRouteFromCode } = useRouteFilter(props.code)
+  const { query: allRoutes, getRouteFromCode } = useRoutes(props.code)
 
   const route = getRouteFromCode()
 

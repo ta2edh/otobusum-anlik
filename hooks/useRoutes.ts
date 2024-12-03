@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getAllRoutes } from '@/api/getAllRoutes'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
-export function useRouteFilter(lineCode: string) {
+export function useRoutes(lineCode: string) {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
 
   const query = useQuery({

@@ -4,7 +4,7 @@ import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'r
 import { useShallow } from 'zustand/react/shallow'
 
 import { useAnnouncements } from '@/hooks/useAnnouncements'
-import { useRouteFilter } from '@/hooks/useRouteFilter'
+import { useRoutes } from '@/hooks/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
@@ -55,7 +55,7 @@ export const LineTimetable = (props: Props) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { query: announcementsQuery } = useAnnouncements()
-  const { routeCode, getRouteFromCode } = useRouteFilter(props.code)
+  const { routeCode, getRouteFromCode } = useRoutes(props.code)
 
   const { getSchemeColorHex } = useTheme(lineTheme)
 
