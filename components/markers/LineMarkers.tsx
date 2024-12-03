@@ -1,7 +1,7 @@
 import { View } from 'react-native'
 
-import { LineBusMarkers } from './BusMarkers'
-import { LineBusStopMarkers } from './BusStopMarkers'
+import { LineBusMarkersMemoized } from './BusMarkers'
+import { LineBusStopMarkersMemoized } from './BusStopMarkers'
 
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
@@ -20,8 +20,8 @@ export const LineMarkers = () => {
     <>
       {filteredCodes.map(code => (
         <View key={code}>
-          <LineBusMarkers code={code} />
-          <LineBusStopMarkers code={code} />
+          <LineBusMarkersMemoized code={code} />
+          <LineBusStopMarkersMemoized code={code} />
         </View>
       ))}
     </>

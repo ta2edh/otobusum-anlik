@@ -93,7 +93,9 @@ export const LineBusStopMarkersItem = ({
   )
 }
 
-export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
+export const LineBusStopMarkersItemMemoized = memo(LineBusStopMarkersItem)
+
+export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
   const initialLocation = useSettingsStore(state => state.initialMapLocation)
   const clusterStops = useSettingsStore(state => state.clusterStops)
@@ -164,7 +166,7 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
           radius: 32,
         }}
         renderItem={(point, index) => (
-          <LineBusStopMarkersItem
+          <LineBusStopMarkersItemMemoized
             key={
               isPointCluster(point)
                 ? `cluster-${point.properties.cluster_id}`
@@ -198,7 +200,7 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
   return (
     <>
       {busStops.map(stop => (
-        <LineBusStopMarkersItem
+        <LineBusStopMarkersItemMemoized
           key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
           stop={stop}
           code={props.code}
@@ -207,7 +209,9 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
       ))}
     </>
   )
-})
+}
+
+export const LineBusStopMarkersMemoized = memo(LineBusStopMarkers)
 
 const styles = StyleSheet.create({
   calloutContainer: {

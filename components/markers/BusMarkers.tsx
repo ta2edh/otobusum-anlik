@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { memo, useRef } from 'react'
+import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MapMarkerProps } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
@@ -87,18 +86,12 @@ export const LineBusMarkers = (props: Props) => {
   const { query } = useLine(props.code)
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
 
-  const modal = useRef<BottomSheetModal>(null)
-
   const filtered = query.data?.filter(loc => loc.guzergahkodu === routeCode) || []
 
   return (
     <>
       {filtered?.map(loc => (
         <LineBusMarkersItemMemoized
-          onPress={() => {
-            console.log('test')
-            modal.current?.present()
-          }}
           key={loc.kapino}
           location={loc}
           lineCode={props.code}
