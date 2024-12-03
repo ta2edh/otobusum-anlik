@@ -18,7 +18,7 @@ export const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
-        name="(home)"
+        name="index"
         options={{
           tabBarLabel: i18n.t('map'),
           tabBarIcon: ({ focused }) => (
@@ -27,7 +27,7 @@ export const TabsLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="(search)"
+        name="search"
         options={{
           tabBarLabel: i18n.t('search'),
           tabBarIcon: ({ focused }) => (

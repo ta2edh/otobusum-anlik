@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import {
   FlatList,
   ListRenderItem,
@@ -86,7 +86,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   )
 }
 
-export const LinesFr = forwardRef<FlatList, LinesProps>(Lines)
+export const LinesMomoizedFr = memo(forwardRef<FlatList, LinesProps>(Lines))
 
 const styles = StyleSheet.create({
   codes: {

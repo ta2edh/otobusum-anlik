@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { getMapStyle } from '@/constants/mapStyles'
 import { useSettingsStore } from '@/stores/settings'
 
-export const TheMap = (props: MapViewProps, ref: ForwardedRef<MapView>) => {
+export const TheMap = ({ style, ...props }: MapViewProps, ref: ForwardedRef<MapView>) => {
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
@@ -28,7 +28,7 @@ export const TheMap = (props: MapViewProps, ref: ForwardedRef<MapView>) => {
   return (
     <MapView
       ref={ref}
-      style={styles.map}
+      style={[styles.map, style]}
       provider={PROVIDER_GOOGLE}
       initialCamera={{
         center: { latitude: 41.0082, longitude: 28.9784 },

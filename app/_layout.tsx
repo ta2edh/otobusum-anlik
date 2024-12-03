@@ -45,8 +45,8 @@ export const RootLayout = () => {
       <TheStatusBar />
 
       <GestureHandlerRootView>
-        <BottomSheetModalProvider>
-          <ThemeProvider value={modifiedTheme}>
+        <ThemeProvider value={modifiedTheme}>
+          <BottomSheetModalProvider>
             <Stack screenOptions={{ navigationBarColor: colorsTheme.surfaceContainerLow }}>
               <Stack.Screen
                 name="(tabs)"
@@ -59,8 +59,8 @@ export const RootLayout = () => {
                 options={{ presentation: 'modal', headerTitle: i18n.t('editGroupTitle') }}
               />
             </Stack>
-          </ThemeProvider>
-        </BottomSheetModalProvider>
+          </BottomSheetModalProvider>
+        </ThemeProvider>
       </GestureHandlerRootView>
     </PersistQueryClientProvider>
   )

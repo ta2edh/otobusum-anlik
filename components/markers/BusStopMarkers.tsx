@@ -1,5 +1,5 @@
 import { router } from 'expo-router'
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -9,7 +9,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import { Clusterer, isPointCluster, supercluster } from 'react-native-clusterer'
-import { LatLng, Region } from 'react-native-maps'
+import { LatLng, MapMarkerProps, Marker, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useLineBusStops } from '@/hooks/useLineBusStops'
@@ -17,8 +17,6 @@ import { useMap } from '@/hooks/useMap'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from '../ui/UiText'
-
-import { MarkerLazyCallout } from './MarkerLazyCallout'
 
 import { colors } from '@/constants/colors'
 import { getRoute, useFiltersStore } from '@/stores/filters'
@@ -31,38 +29,24 @@ interface Props {
   code: string
 }
 
-interface LineBusStopMarkersItemProps {
+interface LineBusStopMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
   code?: string
   stop: BusLineStop
-  coordinate?: {
-    latitude: number
-    longitude: number
-  }
+  coordinate?: LatLng
   viewStyle?: ViewStyle
   label?: string
-}
-
-export const Test = () => {
-  return <UiText>alsdhkj</UiText>
 }
 
 export const LineBusStopMarkersItem = ({
   stop,
   code,
   coordinate,
+  viewStyle,
+  label,
   ...props
 }: LineBusStopMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(state => (code ? state.lineTheme[code] : undefined)))
-  const { colorsTheme, getSchemeColorHex } = useTheme(lineTheme)
-
-  const handleOnCalloutPress = useCallback(() => {
-    router.navigate({
-      pathname: '/(tabs)/(home)/stop/[stopId]',
-      params: {
-        stopId: stop.stop_code,
-      },
-    })
-  }, [stop?.stop_code])
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const backgroundColor = useMemo(
     () => getSchemeColorHex('primary') || colors.primary,
@@ -83,10 +67,6 @@ export const LineBusStopMarkersItem = ({
     [getSchemeColorHex],
   )
 
-  const calloutContainerBackground: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
-  }
-
   const coordinateDefault = useMemo(
     () => ({
       latitude: stop.y_coord,
@@ -96,34 +76,20 @@ export const LineBusStopMarkersItem = ({
   )
 
   return (
-    <MarkerLazyCallout
-      markerProps={{
-        coordinate: coordinate || coordinateDefault,
-        tracksInfoWindowChanges: false,
-        tracksViewChanges: false,
-      }}
-      calloutProps={{
-        onPress: handleOnCalloutPress,
-        children: (
-          <View style={[styles.calloutContainer, calloutContainerBackground]}>
-            <UiText style={styles.calloutText}>
-              {stop.stop_code}
-              {' '}
-              -
-              {stop.stop_name}
-            </UiText>
-          </View>
-        ),
-      }}
+    <Marker
+      coordinate={coordinate || coordinateDefault}
+      tracksInfoWindowChanges={false}
+      tracksViewChanges={false}
+      {...props}
     >
-      <View style={[styles.busStop, borderStyle, { backgroundColor }, props.viewStyle]}>
-        {props.label && (
+      <View style={[styles.busStop, borderStyle, { backgroundColor }, viewStyle]}>
+        {label && (
           <UiText style={textStyle} size="sm" info>
-            {props.label}
+            {label}
           </UiText>
         )}
       </View>
-    </MarkerLazyCallout>
+    </Marker>
   )
 }
 
@@ -164,6 +130,15 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
     return null
   }
 
+  const handleOnPress = (stop: BusLineStop) => {
+    router.navigate({
+      pathname: '/(tabs)',
+      params: {
+        stopId: stop.stop_code,
+      },
+    })
+  }
+
   if (clusterStops) {
     const filteredParsed: supercluster.PointFeature<any>[] = busStops.map((item, index) => ({
       geometry: {
@@ -201,6 +176,10 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
               latitude: point.geometry.coordinates[1]!,
               longitude: point.geometry.coordinates[0]!,
             }}
+            onPress={() => {
+              if (isPointCluster(point)) return
+              handleOnPress(busStops[index]!)
+            }}
             viewStyle={
               isPointCluster(point)
                 ? {
@@ -223,6 +202,7 @@ export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props)
           key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
           stop={stop}
           code={props.code}
+          onPress={() => handleOnPress(stop)}
         />
       ))}
     </>
