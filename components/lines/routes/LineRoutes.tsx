@@ -55,16 +55,17 @@ const LineRoutesItem = (props: ItemProps) => {
 }
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
-  const { query: routes, getCurrentOrDefaultRoute } = useRouteFilter(props.code)
+  const { query: allRoutes, getRouteFromCode } = useRouteFilter(props.code)
+
+  const route = getRouteFromCode()
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const route = getCurrentOrDefaultRoute()
 
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []
 
-  for (let index = 0; index < (routes.data?.result.records.length || 0); index++) {
-    const element = routes.data?.result.records[index]
+  for (let index = 0; index < (allRoutes.data?.result.records.length || 0); index++) {
+    const element = allRoutes.data?.result.records[index]
     if (!element) continue
 
     if (element.route_code && element.route_code?.endsWith('D0')) {

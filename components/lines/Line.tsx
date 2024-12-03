@@ -129,7 +129,7 @@ const Line = ({ style, ...props }: LineProps) => {
       </View>
 
       <LineBusStops code={props.code} />
-      <LineRoutesContainer code={props.code} />
+      <LineRoutesContainer lineCode={props.code} />
     </Animated.View>
   )
 }

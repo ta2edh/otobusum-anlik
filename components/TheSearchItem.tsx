@@ -24,7 +24,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
   const handlePress = useCallback(() => {
     if (isStop(item)) {
       router.navigate({
-        pathname: '/(search)/stop/[stopId]',
+        pathname: '/(tabs)',
         params: {
           stopId: item.stop_code,
         },

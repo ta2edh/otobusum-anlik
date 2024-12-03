@@ -4,13 +4,14 @@ import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'r
 import { useShallow } from 'zustand/react/shallow'
 
 import { useAnnouncements } from '@/hooks/useAnnouncements'
+import { useRouteFilter } from '@/hooks/useRouteFilter'
 import { useTheme } from '@/hooks/useTheme'
 
+import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 import { UiText } from './ui/UiText'
 
 import { PlannedDeparture, getPlannedDepartures } from '@/api/getPlannedDepartures'
-import { getRoute, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
@@ -50,10 +51,12 @@ export const LineTimetable = (props: Props) => {
       : 'I'
 
   const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
-  const routeCode = useFiltersStore(() => getRoute(props.code))
+
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { query: announcementsQuery } = useAnnouncements()
+  const { routeCode, getRouteFromCode } = useRouteFilter(props.code)
+
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const query = useQuery({
@@ -62,26 +65,44 @@ export const LineTimetable = (props: Props) => {
   })
 
   const direction = extractRouteCodeDirection(routeCode)
+  const route = getRouteFromCode()
+
+  const [leftTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const filteredData = useMemo(
-    () =>
-      query.data?.filter(
-        it => (direction ? it.SYON === direction : true) && it.SGUNTIPI === dayType,
-      ),
+    () => query.data?.filter((item) => {
+      const dir = direction ? item.SYON === direction : true
+      return dir && item.SGUNTIPI === dayType
+    }),
     [dayType, direction, query.data],
   )
 
   const announcements = useMemo(
-    () => announcementsQuery.data?.filter(ann => ann.HATKODU === props.code),
+    () => announcementsQuery.data?.filter((ann) => {
+      return ann.HATKODU === props.code
+    }),
     [announcementsQuery.data, props.code],
   )
 
-  const cancelledHours
-    = announcements
-      ?.filter(ann => ann.MESAJ.includes('dan Saat'))
-      .map(ann =>
-        ann.MESAJ.split('dan Saat').at(1)?.split('de hareket etmesi planlanan').at(0)?.trim(),
-      ) || []
+  if (!query.data) {
+    return <UiActivityIndicator />
+  }
+
+  const cancelledHours = announcements
+    ? announcements.map((ann) => {
+      if (!ann.MESAJ.includes('dan Saat')) return
+
+      const msgSplit = ann.MESAJ.split('dan Saat')
+      const from = msgSplit.at(0)
+      if (!from) return
+
+      const isDirectionTrue = from.trim() === leftTitle?.trim()
+      if (!isDirectionTrue) return
+
+      const hour = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
+      return hour
+    })
+    : []
 
   const groupedByHour = groupDeparturesByHour(filteredData || [])
   const hours = Object.keys(groupedByHour).sort()
@@ -98,10 +119,6 @@ export const LineTimetable = (props: Props) => {
   const cellStyle: StyleProp<TextStyle> = {
     backgroundColor: getSchemeColorHex('primaryContainer'),
     color: getSchemeColorHex('onPrimaryContainer'),
-  }
-
-  if (!query.data) {
-    return <UiText>{i18n.t('loading')}</UiText>
   }
 
   const title = query.data.at(0)?.HATADI

@@ -19,7 +19,7 @@ import Animated, {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LinesFr } from '@/components/lines/Lines'
+import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
@@ -51,12 +51,20 @@ export const TimetableScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
+      const mx = Math.max(
+        0,
+        Math.min(
+          useMiscStore.getState().selectedLineScrollIndex,
+          items.length - 1,
+        ),
+      )
+
       linesRef.current?.scrollToIndex({
-        index: useMiscStore.getState().selectedLineScrollIndex,
+        index: mx,
         viewPosition: 0.5,
       })
     }, 200)
-  }, [linesRef])
+  }, [linesRef, items.length])
 
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top + 8,
@@ -71,9 +79,9 @@ export const TimetableScreen = () => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       return (
-        <Animated.View style={styles.childrenContainer}>
+        <View style={styles.childrenContainer}>
           <LineTimetable code={item} />
-        </Animated.View>
+        </View>
       )
     },
     [],
@@ -94,7 +102,7 @@ export const TimetableScreen = () => {
 
   return (
     <View style={containerStyle}>
-      <LinesFr
+      <LinesMomoizedFr
         ref={linesRef}
         listProps={{
           onLayout,

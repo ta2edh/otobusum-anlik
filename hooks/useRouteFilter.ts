@@ -1,26 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { getAllRoutes } from '@/api/getAllRoutes'
-import { useFiltersStore } from '@/stores/filters'
-
-export const getSelectedRouteCodeOrDefault = (lineCode: string) => {
-  return useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
-}
+import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
 export function useRouteFilter(lineCode: string) {
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
+
   const query = useQuery({
     queryKey: ['line-routes', lineCode],
     queryFn: () => getAllRoutes(lineCode),
     staleTime: 60_000 * 30,
   })
 
-  const getCurrentOrDefaultRoute = () => {
-    const routeCode = getSelectedRouteCodeOrDefault(lineCode)
+  const getRouteFromCode = () => {
     return query.data?.result.records.find(item => item.route_code === routeCode)
   }
 
   return {
     query,
-    getCurrentOrDefaultRoute,
+    routeCode,
+    getRouteFromCode,
   }
 }

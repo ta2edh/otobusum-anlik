@@ -16,12 +16,13 @@ import { changeRouteDirection } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 
 interface Props {
-  code: string
+  lineCode: string
 }
 
 export const LineRoutesContainer = (props: Props) => {
-  const { getCurrentOrDefaultRoute, query: { isPending } } = useRouteFilter(props.code)
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const { query, getRouteFromCode } = useRouteFilter(props.lineCode)
+
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
@@ -38,11 +39,11 @@ export const LineRoutesContainer = (props: Props) => {
     [getSchemeColorHex],
   )
 
-  if (isPending) {
+  if (query.isPending) {
     return <UiActivityIndicator size="small" />
   }
 
-  const route = getCurrentOrDefaultRoute()
+  const route = getRouteFromCode()
   const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const textStyle: StyleProp<TextStyle> = {
@@ -50,7 +51,7 @@ export const LineRoutesContainer = (props: Props) => {
   }
 
   const handleSwitchRoute = () => {
-    changeRouteDirection(props.code)
+    changeRouteDirection(props.lineCode)
   }
 
   return (
@@ -64,7 +65,7 @@ export const LineRoutesContainer = (props: Props) => {
         />
 
         <LineRoutes
-          code={props.code}
+          code={props.lineCode}
           style={[buttonContainerStyle, styles.grow]}
           textStyle={textContainerStyle}
         />

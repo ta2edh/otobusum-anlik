@@ -19,7 +19,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiText } from '../ui/UiText'
 
 import { colors } from '@/constants/colors'
-import { getRoute, useFiltersStore } from '@/stores/filters'
+import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
@@ -94,7 +94,7 @@ export const LineBusStopMarkersItem = ({
 }
 
 export const LineBusStopMarkers = memo(function LineBusStopMarkers(props: Props) {
-  const routeCode = useFiltersStore(() => getRoute(props.code))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
   const initialLocation = useSettingsStore(state => state.initialMapLocation)
   const clusterStops = useSettingsStore(state => state.clusterStops)
 
