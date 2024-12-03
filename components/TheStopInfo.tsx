@@ -13,6 +13,7 @@ import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
+import { i18n } from '@/translations/i18n'
 
 export const TheStopInfo = () => {
   const { colorsTheme } = useTheme()
@@ -74,7 +75,7 @@ export const TheStopInfo = () => {
                 </View>
 
                 <View style={styles.linesContainer}>
-                  <UiText info>Lines that use this stop</UiText>
+                  <UiText info>{i18n.t('linesThatUseStop')}</UiText>
 
                   <View style={styles.codeOuter}>
                     {query.data?.buses.map(lineCode => (

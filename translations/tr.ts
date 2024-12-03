@@ -38,4 +38,5 @@ export default {
   clusterBusStops: 'Otobüs duraklarını daha iyi performans için grupla',
   addedToGroup: '%{lineCode} Gruba eklendi',
   added: '%{lineCode} Eklendi',
+  linesThatUseStop: 'Bu durağı kullanan hatlar',
 }
