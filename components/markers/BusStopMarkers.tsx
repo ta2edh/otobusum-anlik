@@ -9,6 +9,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import { Clusterer, isPointCluster, supercluster } from 'react-native-clusterer'
+import { ClustererProps } from 'react-native-clusterer/lib/typescript/Clusterer'
 import { LatLng, MapMarkerProps, Marker, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -29,23 +30,41 @@ interface Props {
   code: string
 }
 
-interface LineBusStopMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
+interface LineBusStopMarkersItemPropsBase extends Omit<MapMarkerProps, 'coordinate'> {
   code?: string
-  stop: BusLineStop
+  stop?: BusLineStop
   coordinate?: LatLng
   viewStyle?: ViewStyle
-  label?: string
 }
+
+interface PointProps extends LineBusStopMarkersItemPropsBase {
+  type: 'point'
+  stop: BusLineStop
+  label?: string
+  coordinate?: LatLng
+}
+
+interface ClusterPoints extends LineBusStopMarkersItemPropsBase {
+  type: 'cluster'
+  stop?: BusLineStop
+  label: string
+  coordinate: LatLng
+}
+
+type LineBusStopMarkersItemProps = PointProps | ClusterPoints
 
 export const LineBusStopMarkersItem = ({
   stop,
   code,
-  coordinate,
   viewStyle,
   label,
+  coordinate,
+  type,
   ...props
 }: LineBusStopMarkersItemProps) => {
-  const lineTheme = useLinesStore(useShallow(state => (code ? state.lineTheme[code] : undefined)))
+  const lineTheme = useLinesStore(
+    useShallow(state => (code ? state.lineTheme[code] : undefined)),
+  )
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const backgroundColor = useMemo(
@@ -67,17 +86,17 @@ export const LineBusStopMarkersItem = ({
     [getSchemeColorHex],
   )
 
-  const coordinateDefault = useMemo(
-    () => ({
-      latitude: stop.y_coord,
-      longitude: stop.x_coord,
-    }),
-    [stop.x_coord, stop.y_coord],
-  )
+  const coords: LatLng
+    = type === 'cluster'
+      ? coordinate
+      : {
+          latitude: stop?.y_coord,
+          longitude: stop?.x_coord,
+        }
 
   return (
     <Marker
-      coordinate={coordinate || coordinateDefault}
+      coordinate={coords}
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       {...props}
@@ -153,6 +172,25 @@ export const LineBusStopMarkers = (props: Props) => {
       type: 'Feature',
     }))
 
+    const clusterItem: ClustererProps<any, supercluster.AnyProps>['renderItem'] = (point) => {
+      return (
+        <LineBusStopMarkersItemMemoized
+          type="cluster"
+          key={`cluster-${point.properties.cluster_id}`}
+          code={props.code}
+          coordinate={{
+            latitude: point.geometry.coordinates[1]!,
+            longitude: point.geometry.coordinates[0]!,
+          }}
+          viewStyle={{
+            width: 24,
+            height: 24,
+          }}
+          label={point.properties.point_count}
+        />
+      )
+    }
+
     return (
       <Clusterer
         data={filteredParsed}
@@ -165,34 +203,20 @@ export const LineBusStopMarkers = (props: Props) => {
           minPoints: 6,
           radius: 32,
         }}
-        renderItem={(point, index) => (
-          <LineBusStopMarkersItemMemoized
-            key={
-              isPointCluster(point)
-                ? `cluster-${point.properties.cluster_id}`
-                : `point-${point.properties.id}`
-            }
-            stop={busStops[index]!}
-            code={props.code}
-            coordinate={{
-              latitude: point.geometry.coordinates[1]!,
-              longitude: point.geometry.coordinates[0]!,
-            }}
-            onPress={() => {
-              if (isPointCluster(point)) return
-              handleOnPress(busStops[index]!)
-            }}
-            viewStyle={
-              isPointCluster(point)
-                ? {
-                    width: 24,
-                    height: 24,
-                  }
-                : undefined
-            }
-            label={point.properties.point_count}
-          />
-        )}
+        renderItem={(point, ...other) =>
+          isPointCluster(point)
+            ? (
+                clusterItem(point, ...other)
+              )
+            : (
+                <LineBusStopMarkersItemMemoized
+                  code={props.code}
+                  key={`point-${point.properties.id}`}
+                  type="point"
+                  stop={busStops[point.properties.id]!}
+                  onPress={() => handleOnPress(busStops[point.properties.id]!)}
+                />
+              )}
       />
     )
   }
@@ -201,6 +225,7 @@ export const LineBusStopMarkers = (props: Props) => {
     <>
       {busStops.map(stop => (
         <LineBusStopMarkersItemMemoized
+          type="point"
           key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
           stop={stop}
           code={props.code}
