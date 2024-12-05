@@ -13,7 +13,7 @@ export function useRoutes(lineCode: string) {
   })
 
   const getRouteFromCode = () => {
-    return query.data?.result.records.find(item => item.route_code === routeCode)
+    return query.data?.find(item => item.route_code === routeCode)
   }
 
   return {

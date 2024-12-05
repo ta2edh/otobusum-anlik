@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
 import { queryClient } from '@/api/client'
-import { GetAllRoutesResponse } from '@/api/getAllRoutes'
+import { LineRoute } from '@/api/getAllRoutes'
 import { Direction } from '@/types/departure'
 
 export interface FiltersStore {
@@ -41,7 +41,7 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
   const [left, dir, right] = routeCode.split('_')
   if (!right || !dir) return state
 
-  const allRoutes = queryClient.getQueryData<GetAllRoutesResponse>(['line-routes', lineCode])
+  const allRoutes = queryClient.getQueryData<LineRoute[]>(['line-routes', lineCode])
   if (!allRoutes) return state
 
   const dCode = parseInt(right.substring(1))
@@ -53,7 +53,7 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
   const equal = `${left}_${otherDirection}_D${dCode}`
   const oneMore = `${left}_${otherDirection}_D${dCode + 1}`
 
-  const otherRoute = allRoutes.result.records.find(
+  const otherRoute = allRoutes.find(
     route => route.route_code === oneLess || route.route_code === oneMore || route.route_code === equal,
   )
 
@@ -66,15 +66,3 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
     },
   }
 })
-
-// export const selectGroup = (newGroupId?: string) => useFiltersStore.setState(() => {
-//   return {
-//     selectedGroup: newGroupId,
-//   }
-// })
-
-// export const unSelectGroup = () => useFiltersStore.setState(() => {
-//   return {
-//     selectedGroup: undefined,
-//   }
-// })

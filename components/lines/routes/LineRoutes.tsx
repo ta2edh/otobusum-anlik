@@ -64,8 +64,8 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   const routesfiltered: LineRoute[] = []
   const routesDefaults: LineRoute[] = []
 
-  for (let index = 0; index < (allRoutes.data?.result.records.length || 0); index++) {
-    const element = allRoutes.data?.result.records[index]
+  for (let index = 0; index < (allRoutes.data?.length || 0); index++) {
+    const element = allRoutes.data?.[index]
     if (!element) continue
 
     if (element.route_code && element.route_code?.endsWith('D0')) {
@@ -86,7 +86,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
     return (
       <View>
         {routesDefaults.map(item => (
-          <LineRoutesItem key={item._id} code={props.code} item={item} />
+          <LineRoutesItem key={item.id} code={props.code} item={item} />
         ))}
       </View>
     )

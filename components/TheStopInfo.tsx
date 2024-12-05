@@ -63,7 +63,7 @@ export const TheStopInfo = () => {
                     zoom: 16,
                   }}
                 >
-                  <LineBusStopMarkersItem stop={query.data.stop} />
+                  <LineBusStopMarkersItem type="point" stop={query.data.stop} />
                 </TheMapFr>
               </View>
 
