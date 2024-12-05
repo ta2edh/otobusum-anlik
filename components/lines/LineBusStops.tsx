@@ -6,7 +6,6 @@ import Animated, {
   runOnJS,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -52,7 +51,6 @@ export const LineBusStops = (props: Props) => {
 
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
-  const scrollY = useSharedValue(0)
 
   const { query: { data: line } } = useLine(props.code)
 
@@ -140,10 +138,6 @@ export const LineBusStops = (props: Props) => {
     return {
       height: containerHeight.value,
     }
-  }, [])
-
-  const handleOnScroll = useAnimatedScrollHandler(({ contentOffset }) => {
-    scrollY.value = contentOffset.y
   }, [])
 
   const renderItem: ListRenderItem<BusLineStop> = useCallback(
@@ -236,14 +230,12 @@ export const LineBusStops = (props: Props) => {
         data={filteredStops}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
-        estimatedListSize={{ height: COLLAPSED, width: 358.7 }}
         keyExtractor={item => item.stop_code}
         overrideItemLayout={overrideItemLayout}
         fadingEdgeLength={40}
         onScrollBeginDrag={handleScrollDragStart}
         onMomentumScrollEnd={handleScrollMomentumEnd}
         onViewableItemsChanged={handleViewableItemsChanged}
-        onScroll={handleOnScroll}
         viewabilityConfig={{
           minimumViewTime: 200,
           waitForInteraction: true,
