@@ -138,7 +138,7 @@ export const LineMemoized = memo(Line)
 
 const styles = StyleSheet.create({
   container: {
-    padding: 14,
+    padding: 12,
     borderRadius: 8,
     gap: 8,
     flexShrink: 0,
