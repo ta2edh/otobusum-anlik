@@ -258,7 +258,7 @@ const startUpdateLoop = () => {
       clearTimeout(listener)
 
       const loop = () => {
-        const groupLines = selectedGroup ? useLinesStore.getState().lineGroups[selectedGroup]?.lineCodes : []
+        const groupLines = selectedGroup ? useLinesStore.getState().lineGroups[selectedGroup]?.lineCodes : undefined
 
         updateLines(groupLines || useLinesStore.getState().lines)
         return setTimeout(loop, 50_000)
