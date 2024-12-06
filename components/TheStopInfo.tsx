@@ -1,8 +1,9 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
-import { useEffect, useRef } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import MapView from 'react-native-maps'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -15,7 +16,11 @@ import { UiText } from './ui/UiText'
 import { getStop } from '@/api/getStop'
 import { i18n } from '@/translations/i18n'
 
-export const TheStopInfo = () => {
+interface TheStopInfoProps {
+  cRef: RefObject<MapView>
+}
+
+export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { colorsTheme } = useTheme()
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -29,7 +34,17 @@ export const TheStopInfo = () => {
 
   useEffect(() => {
     bottomSheetModal.current?.present()
-  }, [query.data, stopId])
+
+    if (query.data) {
+      cRef.current?.animateCamera({
+        center: {
+          latitude: query.data.stop.y_coord,
+          longitude: query.data.stop.x_coord,
+        },
+        zoom: 16,
+      })
+    }
+  }, [query.data, stopId, cRef])
 
   if (bottomSheetModal.current && stopId) {
     bottomSheetModal.current.present()
@@ -41,56 +56,67 @@ export const TheStopInfo = () => {
     backgroundColor: colorsTheme.surfaceContainer,
   }
 
+  if (query.isPending) {
+    return (
+      <UiSheetModal
+        ref={bottomSheetModal}
+        enableDynamicSizing
+      >
+        <UiActivityIndicator />
+      </UiSheetModal>
+    )
+  }
+
   return (
     <UiSheetModal
       ref={bottomSheetModal}
       enableDynamicSizing={true}
     >
-      {!query.isPending && query.data
-        ? (
-            <BottomSheetView style={styles.container}>
-              <View style={styles.mapContainer}>
-                <TheMapFr
-                  liteMode
-                  style={styles.map}
-                  initialCamera={{
-                    center: {
-                      latitude: query.data?.stop.y_coord,
-                      longitude: query.data?.stop.x_coord,
-                    },
-                    heading: 0,
-                    pitch: 0,
-                    zoom: 16,
-                  }}
-                >
-                  <LineBusStopMarkersItem type="point" stop={query.data.stop} />
-                </TheMapFr>
-              </View>
-
-              <View style={styles.content}>
-                <View>
-                  <UiText>{query.data.stop.stop_code}</UiText>
-                  <UiText size="lg" style={styles.title}>{query.data.stop.stop_name}</UiText>
-                  <UiText>{query.data.stop.province}</UiText>
-                </View>
-
-                <View style={styles.linesContainer}>
-                  <UiText info>{i18n.t('linesThatUseStop')}</UiText>
-
-                  <View style={styles.codeOuter}>
-                    {query.data?.buses.map(lineCode => (
-                      <View key={lineCode} style={[styles.code, lineCodeStyle]}>
-                        <UiText>{lineCode}</UiText>
-                      </View>
-                    ))}
-                  </View>
-                </View>
-              </View>
-            </BottomSheetView>
-          )
-        : (
-            <UiActivityIndicator />
+      <BottomSheetView style={styles.container}>
+        <View style={styles.mapContainer}>
+          {query.data && (
+            <TheMapFr
+              liteMode
+              style={styles.map}
+              initialCamera={{
+                center: {
+                  latitude: query.data?.stop.y_coord,
+                  longitude: query.data?.stop.x_coord,
+                },
+                heading: 0,
+                pitch: 0,
+                zoom: 16,
+              }}
+            >
+              <LineBusStopMarkersItem type="point" stop={query.data.stop} />
+            </TheMapFr>
           )}
+
+        </View>
+
+        {query.data && (
+          <View style={styles.content}>
+            <View>
+              <UiText>{query.data.stop.stop_code}</UiText>
+              <UiText size="lg" style={styles.title}>{query.data.stop.stop_name}</UiText>
+              <UiText>{query.data.stop.province}</UiText>
+            </View>
+
+            <View style={styles.linesContainer}>
+              <UiText info>{i18n.t('linesThatUseStop')}</UiText>
+
+              <View style={styles.codeOuter}>
+                {query.data?.buses.map(lineCode => (
+                  <View key={lineCode} style={[styles.code, lineCodeStyle]}>
+                    <UiText>{lineCode}</UiText>
+                  </View>
+                ))}
+              </View>
+            </View>
+          </View>
+        )}
+
+      </BottomSheetView>
     </UiSheetModal>
   )
 }

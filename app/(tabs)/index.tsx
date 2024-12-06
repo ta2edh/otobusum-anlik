@@ -48,7 +48,7 @@ export const HomeScreen = () => {
             <LinesMomoizedFr />
           </View>
 
-          <TheStopInfo />
+          <TheStopInfo cRef={map} />
         </SheetContext.Provider>
       </MapContext.Provider>
     </View>
