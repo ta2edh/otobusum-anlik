@@ -4,6 +4,7 @@ import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'r
 import { useShallow } from 'zustand/react/shallow'
 
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
+import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -58,6 +59,7 @@ export const LineTimetable = (props: Props) => {
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(props.code)
 
+  const { lineWidth } = useLine(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const query = useQuery({
@@ -112,6 +114,7 @@ export const LineTimetable = (props: Props) => {
   const containerStyle: StyleProp<ViewStyle> = {
     borderColor: getSchemeColorHex('primary'),
     backgroundColor: getSchemeColorHex('primary'),
+    width: lineWidth,
   }
 
   const textStyle: StyleProp<TextStyle> = {

@@ -1,9 +1,8 @@
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
 import {
   FlatList,
+  FlatListProps,
   ListRenderItem,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
   StyleSheet,
   View,
   ViewProps,
@@ -12,7 +11,6 @@ import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 
 import { LineMemoized } from './Line'
 
-import { lineWidth } from '@/constants/width'
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
@@ -58,10 +56,11 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, selectedGroup])
 
-  const handleMomentumScrollEnd = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const index = Math.ceil(event.nativeEvent.contentOffset.x / lineWidth)
-    useMiscStore.setState(() => ({ selectedLineScrollIndex: index }))
-  }, [])
+  type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
+  const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {
+    if (viewableItems.length < 1) return
+    useMiscStore.setState(() => ({ selectedLineScrollIndex: viewableItems.at(0)?.index || 0 }))
+  }
 
   const keyExtractor = useCallback((item: string) => `${item}-${selectedGroup}`, [selectedGroup])
 
@@ -72,7 +71,9 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         ref={innerRef}
         data={items}
         renderItem={renderItem}
-        onMomentumScrollEnd={handleMomentumScrollEnd}
+        // onMomentumScrollEnd={handleMomentumScrollEnd}
+        onViewableItemsChanged={handleOnViewChanged}
+        viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
         contentContainerStyle={styles.codes}
         keyExtractor={keyExtractor}
         onScrollToIndexFailed={() => {}}

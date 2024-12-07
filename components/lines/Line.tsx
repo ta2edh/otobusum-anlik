@@ -8,6 +8,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
+import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from '../ui/UiButton'
@@ -17,7 +18,6 @@ import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
 import { LineRoutesContainer } from './routes/LineRoutesContainer'
 
-import { lineWidth } from '@/constants/width'
 import { deleteLine, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
@@ -29,6 +29,8 @@ const Line = ({ style, ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
+  const { lineWidth } = useLine(props.code)
+
   const isVisible = useSharedValue(true)
 
   useEffect(() => {

@@ -23,7 +23,6 @@ import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetable } from '@/components/LineTimetable'
 import { UiText } from '@/components/ui/UiText'
 
-import { lineWidth } from '@/constants/width'
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
@@ -79,9 +78,7 @@ export const TimetableScreen = () => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       return (
-        <View style={styles.childrenContainer}>
-          <LineTimetable code={item} />
-        </View>
+        <LineTimetable code={item} />
       )
     },
     [],
@@ -146,7 +143,6 @@ const styles = StyleSheet.create({
   },
   childrenContainer: {
     flexShrink: 1,
-    width: lineWidth,
   },
 })
 
