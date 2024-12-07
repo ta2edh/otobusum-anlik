@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
 
-import { useLine } from '@/hooks/useLine'
+import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
 import { MarkerLazyCallout } from './MarkerLazyCallout'

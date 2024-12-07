@@ -7,7 +7,7 @@ import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useSheetModal } from '@/hooks/useSheetModal'
+import { useSheetModal } from '@/hooks/contexts/useSheetModal'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'

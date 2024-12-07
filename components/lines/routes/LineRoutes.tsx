@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useRoutes } from '@/hooks/useRoutes'
+import { useRoutes } from '@/hooks/queries/useRoutes'
 
 import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton, UiButtonProps } from '../../ui/UiButton'

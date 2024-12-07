@@ -3,8 +3,8 @@ import { memo, useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useAnnouncements } from '@/hooks/useAnnouncements'
-import { useRoutes } from '@/hooks/useRoutes'
+import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
+import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from './ui/UiActivityIndicator'

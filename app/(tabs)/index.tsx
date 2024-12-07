@@ -9,8 +9,8 @@ import { TheMapFr } from '@/components/TheMap'
 import { TheMapButtons } from '@/components/TheMapButtons'
 import { TheStopInfo } from '@/components/TheStopInfo'
 
-import { MapContext } from '@/hooks/useMap'
-import { SheetContext, sheetContextValues } from '@/hooks/useSheetModal'
+import { MapContext } from '@/hooks/contexts/useMap'
+import { SheetContext, sheetContextValues } from '@/hooks/contexts/useSheetModal'
 
 import { useSettingsStore } from '@/stores/settings'
 

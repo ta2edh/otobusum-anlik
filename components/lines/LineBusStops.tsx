@@ -14,9 +14,9 @@ import Animated, {
 import { useDebouncedCallback } from 'use-debounce'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useLine } from '@/hooks/useLine'
-import { useLineBusStops } from '@/hooks/useLineBusStops'
-import { useMap } from '@/hooks/useMap'
+import { useLine } from '@/hooks/queries/useLine'
+import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
+import { useMap } from '@/hooks/contexts/useMap'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'

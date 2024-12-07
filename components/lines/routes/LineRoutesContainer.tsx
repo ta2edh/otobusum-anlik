@@ -7,7 +7,7 @@ import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiButton } from '@/components/ui/UiButton'
 import { UiText } from '@/components/ui/UiText'
 
-import { useRoutes } from '@/hooks/useRoutes'
+import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
 import { LineRoutes } from './LineRoutes'

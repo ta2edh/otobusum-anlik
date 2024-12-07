@@ -6,7 +6,7 @@ import {
 } from '@gorhom/bottom-sheet'
 import { forwardRef } from 'react'
 
-import { useSheetModal } from '@/hooks/useSheetModal'
+import { useSheetModal } from '@/hooks/contexts/useSheetModal'
 import { useTheme } from '@/hooks/useTheme'
 
 export type UiSheetModalProps = BottomSheetModalProps

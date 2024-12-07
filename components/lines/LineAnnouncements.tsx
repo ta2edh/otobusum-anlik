@@ -3,7 +3,7 @@ import { memo, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, TextStyle, View, ViewProps } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useAnnouncements } from '@/hooks/useAnnouncements'
+import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiSheetModal } from '../ui/sheet/UiSheetModal'
