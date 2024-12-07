@@ -106,7 +106,6 @@ export const LineBusMarkersMemoized = memo(LineBusMarkers)
 const styles = StyleSheet.create({
   iconContainer: {
     borderRadius: 999,
-    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,

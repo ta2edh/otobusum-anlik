@@ -1,8 +1,8 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useCallback, useEffect, useRef } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import Animated, { useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -94,9 +94,11 @@ export const TheMapButtons = () => {
     borderRadius: 14,
   }), [])
 
-  const textStyle: StyleProp<TextStyle> = useMemo(() => ({
-    color: 'white',
-  }), [])
+  const iconProps = useAnimatedProps(() => {
+    return {
+      color: txtColor.value,
+    }
+  })
 
   return (
     <View style={[styles.container, insetStyle]}>
@@ -105,8 +107,8 @@ export const TheMapButtons = () => {
           <UiButton
             icon="repeat"
             onPress={handleChangeAllDirections}
-            textStyle={textStyle}
             square
+            iconProps={iconProps}
           />
         </Animated.View>
       )}
@@ -117,7 +119,7 @@ export const TheMapButtons = () => {
             <UiButton
               icon="albums"
               onPress={handleLineGroupsSelect}
-              textStyle={textStyle}
+              iconProps={iconProps}
               square
             />
           </Animated.View>
@@ -128,7 +130,7 @@ export const TheMapButtons = () => {
                 <UiButton
                   icon="close"
                   onPress={unSelectGroup}
-                  textStyle={textStyle}
+                  iconProps={iconProps}
                   square
                 />
               </Animated.View>

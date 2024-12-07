@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
+import { IconProps } from '@expo/vector-icons/build/createIconSet'
 import {
   StyleProp,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native'
+import Animated, { AnimatedProps } from 'react-native-reanimated'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -21,6 +23,7 @@ export interface UiButtonProps extends TouchableOpacityProps {
   disabled?: boolean
   textStyle?: StyleProp<TextStyle>
   square?: boolean
+  iconProps?: AnimatedProps<Omit<IconProps<keyof typeof Ionicons>, 'name'>>
 }
 
 type IconSize = 'sm' | 'md' | 'lg'
@@ -30,6 +33,8 @@ const iconSizes: Record<IconSize, number> = {
   md: 20,
   lg: 24,
 }
+
+const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
 export const UiButton = ({ style, square, iconSize = 'md', ...props }: UiButtonProps) => {
   const { colorsTheme } = useTheme()
@@ -49,6 +54,17 @@ export const UiButton = ({ style, square, iconSize = 'md', ...props }: UiButtonP
     }
 
     if (props.icon) {
+      if (props.iconProps) {
+        return (
+          <AnimatedIonIcons
+            name={props.icon}
+            size={iconSizes[iconSize]}
+            color={(props.textStyle as TextStyle)?.color}
+            animatedProps={props.iconProps}
+          />
+        )
+      }
+
       return (
         <Ionicons
           name={props.icon}
