@@ -25,6 +25,7 @@ export const UiSheetModal = forwardRef<BottomSheetModal, UiSheetModalProps>(func
       backdropComponent={BackdropComponent}
       animatedPosition={sheetHeight?.height}
       animatedIndex={sheetHeight?.index}
+      maxDynamicContentSize={350}
       {...bottomSheetStyle}
       {...props}
     >

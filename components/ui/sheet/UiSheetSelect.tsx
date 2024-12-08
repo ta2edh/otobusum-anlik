@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { RefObject } from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
@@ -18,36 +18,59 @@ interface Option<T> {
 interface UiSheetSelectProps<T> {
   title: string
   options: Option<T>[]
-  value: T
+  value?: T
   onValueChange: (value: T) => void
+  list?: boolean
 }
 
-export const UiSheetSelect = <T,>(props: UiSheetSelectProps<T> & { cRef: RefObject<BottomSheetModal> }) => {
+export const UiSheetSelect = <T,>(
+  props: UiSheetSelectProps<T> & { cRef: RefObject<BottomSheetModal> },
+) => {
   const paddings = usePaddings(true)
 
-  return (
-    <UiSheetModal ref={props.cRef}>
-      <BottomSheetView style={paddings}>
-        <UiText info style={styles.title}>
-          {props.title}
-        </UiText>
+  const SelectItem = ({ item }: { item: Option<T> }) => {
+    return (
+      <TouchableOpacity
+        key={`${item.label}-${item.value}`}
+        onPress={() => props.onValueChange?.(item.value)}
+        style={styles.item}
+      >
+        <UiText key={item.label}>{item.label}</UiText>
 
-        <View>
-          {props.options.map(option => (
-            <TouchableOpacity
-              key={`${option.label}-${option.value}`}
-              onPress={() => props.onValueChange?.(option.value)}
-              style={styles.item}
-            >
-              <UiText key={option.label}>{option.label}</UiText>
-
-              <View style={styles.outerCircle}>
-                {props.value === option.value && <View style={styles.innerCircle} />}
-              </View>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.outerCircle}>
+          {props.value === item.value && <View style={styles.innerCircle} />}
         </View>
-      </BottomSheetView>
+      </TouchableOpacity>
+    )
+  }
+
+  return (
+    <UiSheetModal ref={props.cRef} enableDynamicSizing={!props.list} snapPoints={['50%']}>
+      {props.list
+        ? (
+            <View style={styles.container}>
+              <UiText info style={styles.title}>
+                {props.title}
+              </UiText>
+
+              <BottomSheetFlashList
+                data={props.options}
+                renderItem={SelectItem}
+                estimatedItemSize={51}
+              />
+            </View>
+          )
+        : (
+            <BottomSheetView style={[paddings]}>
+              <UiText info style={styles.title}>
+                {props.title}
+              </UiText>
+
+              {props.options.map(option => (
+                <SelectItem key={option.label} item={option} />
+              ))}
+            </BottomSheetView>
+          )}
     </UiSheetModal>
   )
 }
@@ -66,6 +89,9 @@ const styles = StyleSheet.create({
     padding: 4,
     borderWidth: 2,
     borderColor: colors.primary,
+  },
+  container: {
+    flex: 1,
   },
   innerCircle: {
     borderRadius: 999,

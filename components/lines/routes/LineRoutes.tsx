@@ -1,22 +1,17 @@
-import { BottomSheetFlashList, BottomSheetModal } from '@gorhom/bottom-sheet'
-import { memo, useCallback, useRef } from 'react'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import { memo, useRef } from 'react'
 import {
-  StyleProp,
   StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewStyle,
 } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
+import { UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
+
 import { useRoutes } from '@/hooks/queries/useRoutes'
 
-import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton } from '../../ui/UiButton'
-import { UiText } from '../../ui/UiText'
 
 import { LineRoute } from '@/api/getAllRoutes'
-import { colors } from '@/constants/colors'
 import { selectRoute, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
@@ -25,36 +20,10 @@ interface Props {
   code: string
 }
 
-interface ItemProps extends Props {
-  item: LineRoute
-}
-
-const LineRoutesItem = (props: ItemProps) => {
-  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
-  const isSelected = selectedRouteCode === props.item.route_code
-
-  const selectedStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.primary,
-  }
-
-  const handlePress = () => {
-    if (props.item.route_code) {
-      selectRoute(props.code, props.item.route_code)
-    }
-  }
-
-  return (
-    <TouchableOpacity
-      style={[styles.item, isSelected ? selectedStyle : undefined]}
-      onPress={handlePress}
-    >
-      <UiText>{`${props.item.route_code} ${props.item.route_long_name}`}</UiText>
-    </TouchableOpacity>
-  )
-}
-
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.code)
+
+  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
 
   const route = getRouteFromCode()
@@ -75,21 +44,16 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
     }
   }
 
-  const renderItem = useCallback(
-    ({ item }: { item: LineRoute }) => {
-      return <LineRoutesItem code={props.code} item={item} />
-    },
-    [props.code],
-  )
+  const merged = [...routesDefaults, ...routesfiltered].map(x => ({
+    label: `${x.route_code} ${x.route_long_name}`,
+    value: x,
+  }))
 
-  const defaultRoutes = () => {
-    return (
-      <View>
-        {routesDefaults.map(item => (
-          <LineRoutesItem key={item.id} code={props.code} item={item} />
-        ))}
-      </View>
-    )
+  const selectedLineRoute = merged.find(m => m.value.route_code === selectedRouteCode)
+
+  const handleOnSelect = (value: LineRoute) => {
+    if (!value.route_code) return
+    selectRoute(props.code, value.route_code)
   }
 
   return (
@@ -102,23 +66,14 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
         icon="git-branch-outline"
       />
 
-      <UiSheetModal
-        ref={bottomSheetModal}
-        snapPoints={['50%']}
-        enableDynamicSizing={false}
-      >
-        <UiText info style={styles.title}>
-          {i18n.t('routes')}
-        </UiText>
-
-        <BottomSheetFlashList
-          data={routesfiltered}
-          renderItem={renderItem}
-          keyExtractor={item => item.route_code?.toString() || ''}
-          estimatedItemSize={35}
-          ListHeaderComponent={defaultRoutes}
-        />
-      </UiSheetModal>
+      <UiSheetSelect
+        cRef={bottomSheetModal}
+        title={i18n.t('routes')}
+        options={merged}
+        onValueChange={handleOnSelect}
+        value={selectedLineRoute?.value}
+        list
+      />
     </>
   )
 })
