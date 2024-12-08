@@ -2,18 +2,11 @@ import { StyleProp, Text, TextProps, TextStyle } from 'react-native'
 
 import { useTheme } from '@/hooks/useTheme'
 
-type FontSizes = 'sm' | 'md' | 'lg' | 'xl'
+import { FontSize, fontSizes } from '@/constants/uiSizes'
 
 interface Props extends TextProps {
   info?: boolean
-  size?: FontSizes
-}
-
-const fontSizes: Record<FontSizes, number> = {
-  sm: 12,
-  md: 14,
-  lg: 18,
-  xl: 22,
+  size?: FontSize
 }
 
 export const UiText = ({ style, info, size = 'md', ...rest }: Props) => {

@@ -14,9 +14,9 @@ import Animated, {
 import { useDebouncedCallback } from 'use-debounce'
 import { useShallow } from 'zustand/react/shallow'
 
+import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
-import { useMap } from '@/hooks/contexts/useMap'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiActivityIndicator } from '../ui/UiActivityIndicator'
@@ -188,14 +188,13 @@ export const LineBusStops = (props: Props) => {
             <UiButton
               icon="locate"
               onPress={handleZoomBus}
-              textStyle={{ color: getSchemeColorHex('onPrimaryContainer') }}
-              style={{ backgroundColor: getSchemeColorHex('primaryContainer') }}
+              theme={lineTheme}
             />
           )}
         </View>
       )
     },
-    [busses, closestStop, getSchemeColorHex, map],
+    [busses, closestStop?.stop_code, getSchemeColorHex, lineTheme, map],
   )
 
   const handleScrollDragStart = () => {
@@ -256,8 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: 4,
-    padding: 4,
-    paddingRight: 8,
+    paddingVertical: 4,
   },
   itemTitle: {
     flexDirection: 'row',

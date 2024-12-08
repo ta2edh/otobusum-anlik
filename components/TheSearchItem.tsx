@@ -4,6 +4,8 @@ import { router } from 'expo-router'
 import { memo, useCallback, useRef } from 'react'
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
 
+import { useTheme } from '@/hooks/useTheme'
+
 import { LineGroups } from './lines/groups/LineGroups'
 import { UiButton } from './ui/UiButton'
 import { UiLineCode } from './ui/UiLineCode'
@@ -20,6 +22,7 @@ interface Props extends TouchableOpacityProps {
 
 export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props) {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
+  const { colorsTheme } = useTheme()
 
   const handlePress = useCallback(() => {
     if (isStop(item)) {
@@ -73,7 +76,11 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
         !isStop(item)
         && (
           <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
-            <UiButton icon="add-circle-outline" onPress={handleAddPress} />
+            <UiButton
+              icon="add-circle-outline"
+              onPress={handleAddPress}
+              iconColor={colorsTheme.color}
+            />
           </LineGroups>
         )
       }

@@ -13,8 +13,8 @@ import { ClustererProps } from 'react-native-clusterer/lib/typescript/Clusterer'
 import { LatLng, MapMarkerProps, Marker, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useMap } from '@/hooks/contexts/useMap'
+import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from '../ui/UiText'

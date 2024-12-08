@@ -61,8 +61,7 @@ export const GroupEditScreen = () => {
       <UiButton
         title={i18n.t('deleteGroup')}
         icon="trash-outline"
-        style={{ backgroundColor: colors.rose }}
-        textStyle={{ color: 'white' }}
+        containerStyle={{ backgroundColor: colors.rose }}
         onPress={handleDeleteGroup}
       />
     </View>

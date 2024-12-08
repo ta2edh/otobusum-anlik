@@ -1,5 +1,5 @@
 import { memo, useEffect, useMemo } from 'react'
-import { StyleProp, StyleSheet, TextStyle, View, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   AnimatedProps,
   useAnimatedStyle,
@@ -71,13 +71,6 @@ const Line = ({ style, ...props }: LineProps) => {
     [getSchemeColorHex],
   )
 
-  const textContainerStyle: StyleProp<TextStyle> = useMemo(
-    () => ({
-      color: getSchemeColorHex('onSecondaryContainer'),
-    }),
-    [getSchemeColorHex],
-  )
-
   return (
     <Animated.View
       style={[containerStyle, containerAnimatedStyle, styles.container, style]}
@@ -114,18 +107,16 @@ const Line = ({ style, ...props }: LineProps) => {
         <View style={styles.titleContainer}>
           <UiButton
             onPress={handleVisibility}
-            style={buttonContainerStyle}
+            theme={lineTheme}
             icon="eye-outline"
-            textStyle={textContainerStyle}
           />
 
           <LineAnnouncementsMemoized code={props.code} style={buttonContainerStyle} />
 
           <UiButton
             onPress={handleDelete}
-            style={buttonContainerStyle}
             icon="trash-outline"
-            textStyle={textContainerStyle}
+            theme={lineTheme}
           />
         </View>
       </View>

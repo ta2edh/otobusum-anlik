@@ -60,13 +60,13 @@ export const TheSearchInput = ({ isLoading, debounce, onSearch, style, ...rest }
         multiline={false}
         returnKeyType="search"
       />
+
       <UiButton
         title={i18n.t('search')}
         isLoading={isLoading}
         disabled={queryDisabled}
         onPress={debounce ? handleDebouncedSearch : handleSearch}
-        style={{ backgroundColor: colors.primary }}
-        textStyle={{ color: 'white' }}
+        containerStyle={{ backgroundColor: colors.primary }}
         icon="search"
       />
     </View>

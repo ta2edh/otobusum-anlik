@@ -1,6 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { useMemo } from 'react'
-import { Pressable, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
+import { Pressable, StyleProp, StyleSheet, TextStyle, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
@@ -25,20 +24,6 @@ export const LineRoutesContainer = (props: Props) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
-    () => ({
-      backgroundColor: getSchemeColorHex('secondaryContainer'),
-    }),
-    [getSchemeColorHex],
-  )
-
-  const textContainerStyle: StyleProp<TextStyle> = useMemo(
-    () => ({
-      color: getSchemeColorHex('onSecondaryContainer'),
-    }),
-    [getSchemeColorHex],
-  )
-
   if (query.isPending) {
     return <UiActivityIndicator size="small" />
   }
@@ -57,29 +42,17 @@ export const LineRoutesContainer = (props: Props) => {
   return (
     <View style={styles.routeContainer}>
       <View style={styles.lineButtonsContainer}>
-        <UiButton
-          onPress={handleSwitchRoute}
-          icon="repeat"
-          style={buttonContainerStyle}
-          textStyle={textContainerStyle}
-        />
+        <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
 
-        <LineRoutes
-          code={props.lineCode}
-          style={[buttonContainerStyle, styles.grow]}
-          textStyle={textContainerStyle}
-        />
+        <LineRoutes code={props.lineCode} />
       </View>
 
-      <Pressable
-        onPress={handleSwitchRoute}
-        style={styles.lineButtonsContainer}
-      >
-        <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+      <Pressable onPress={handleSwitchRoute} style={styles.lineButtonsContainer}>
+        <UiText size="sm" style={[styles.directionText, textStyle]} numberOfLines={1}>
           {leftTitle}
         </UiText>
         <Ionicons name="arrow-forward" size={18} color={textStyle.color} />
-        <UiText style={[styles.directionText, textStyle]} numberOfLines={1}>
+        <UiText size="sm" style={[styles.directionText, textStyle]} numberOfLines={1}>
           {rightTitle}
         </UiText>
       </Pressable>
