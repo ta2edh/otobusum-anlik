@@ -1,7 +1,9 @@
 import { Ionicons } from '@expo/vector-icons'
+import { IconProps } from '@expo/vector-icons/build/createIconSet'
 import { Theme } from '@material/material-color-utilities'
 import { useMemo } from 'react'
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
+import Animated from 'react-native-reanimated'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -20,6 +22,7 @@ interface UiButtonPropsBase {
   containerStyle?: StyleProp<ViewStyle>
   iconColor?: string
   textStyle?: StyleProp<TextStyle>
+  animatedIconProps?: Partial<IconProps<keyof typeof Ionicons.glyphMap>>
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
@@ -33,6 +36,8 @@ interface UiButtonPropsWithTitle extends UiButtonPropsBase {
 }
 
 type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
+
+const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
 export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
   const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
@@ -60,6 +65,16 @@ export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
 
     if (!props.icon) return null
 
+    if (props.animatedIconProps) {
+      return (
+        <AnimatedIonIcons
+          name={props.icon}
+          size={iconSizes[iconSize]}
+          animatedProps={props.animatedIconProps}
+        />
+      )
+    }
+
     return (
       <Ionicons
         name={props.icon}
@@ -67,7 +82,7 @@ export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
         color={iconColor}
       />
     )
-  }, [iconColor, iconSize, props.icon, props.isLoading])
+  }, [iconColor, iconSize, props.animatedIconProps, props.icon, props.isLoading])
 
   return (
     <TouchableOpacity

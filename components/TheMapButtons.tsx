@@ -2,7 +2,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
 import { useCallback, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, { useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -94,6 +94,12 @@ export const TheMapButtons = () => {
     borderRadius: 14,
   }), [])
 
+  const animatedIconProps = useAnimatedProps(() => {
+    return {
+      color: txtColor.value,
+    }
+  })
+
   return (
     <View style={[styles.container, insetStyle]}>
       {lines.length > 0 && (
@@ -101,6 +107,7 @@ export const TheMapButtons = () => {
           <UiButton
             icon="repeat"
             onPress={handleChangeAllDirections}
+            animatedIconProps={animatedIconProps}
             square
           />
         </Animated.View>
@@ -112,6 +119,7 @@ export const TheMapButtons = () => {
             <UiButton
               icon="albums"
               onPress={handleLineGroupsSelect}
+              animatedIconProps={animatedIconProps}
               square
             />
           </Animated.View>
@@ -122,6 +130,7 @@ export const TheMapButtons = () => {
                 <UiButton
                   icon="close"
                   onPress={unSelectGroup}
+                  animatedIconProps={animatedIconProps}
                   square
                 />
               </Animated.View>
