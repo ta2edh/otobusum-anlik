@@ -34,7 +34,7 @@ interface UiButtonPropsWithTitle extends UiButtonPropsBase {
 type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
 
 export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
-  const { getSchemeColorHex } = useTheme(props.theme)
+  const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
 
   const dynamicContainer: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('secondaryContainer'),
@@ -42,7 +42,7 @@ export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
   }
 
   const dynamicText: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onSecondaryContainer'),
+    color: getSchemeColorHex('onSecondaryContainer') || colorsTheme.color,
   }
 
   const iconColor = dynamicText.color ?? props.iconColor
