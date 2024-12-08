@@ -52,7 +52,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   }, [items])
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <LineMemoized code={code} />
+    return <LineMemoized lineCode={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items, selectedGroup])
 

@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { useShallow } from 'zustand/react/shallow'
 
 import { getAllRoutes } from '@/api/getAllRoutes'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
 export function useRoutes(lineCode: string) {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
+  const routeCode = useFiltersStore(useShallow(() => getSelectedRouteCode(lineCode)))
+  console.log(routeCode)
 
   const query = useQuery({
     queryKey: ['line-routes', lineCode],
@@ -12,9 +15,9 @@ export function useRoutes(lineCode: string) {
     staleTime: 60_000 * 30,
   })
 
-  const getRouteFromCode = () => {
+  const getRouteFromCode = useCallback(() => {
     return query.data?.find(item => item.route_code === routeCode)
-  }
+  }, [query.data, routeCode])
 
   return {
     query,

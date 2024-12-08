@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   AnimatedProps,
@@ -16,20 +16,22 @@ import { UiText } from '../ui/UiText'
 
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
-import { LineRoutesContainer } from './routes/LineRoutesContainer'
+import { LineRouteDirection } from './routes/LineRouteDirection'
+import { LineRoutes } from './routes/LineRoutes'
 
+import { changeRouteDirection } from '@/stores/filters'
 import { deleteLine, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
 export interface LineProps extends AnimatedProps<ViewProps> {
-  code: string
+  lineCode: string
 }
 
 const Line = ({ style, ...props }: LineProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
-  const { lineWidth } = useLine(props.code)
+  const { lineWidth } = useLine(props.lineCode)
 
   const isVisible = useSharedValue(true)
 
@@ -37,7 +39,7 @@ const Line = ({ style, ...props }: LineProps) => {
     const unsub = useMiscStore.subscribe(
       state => state.invisibleLines,
       (newCodes) => {
-        isVisible.value = !newCodes.includes(props.code)
+        isVisible.value = !newCodes.includes(props.lineCode)
       },
       {
         fireImmediately: true,
@@ -45,14 +47,14 @@ const Line = ({ style, ...props }: LineProps) => {
     )
 
     return unsub
-  }, [props.code, isVisible])
+  }, [props.lineCode, isVisible])
 
   const handleVisibility = () => {
-    toggleLineVisibility(props.code)
+    toggleLineVisibility(props.lineCode)
   }
 
   const handleDelete = () => {
-    deleteLine(props.code)
+    deleteLine(props.lineCode)
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -71,10 +73,14 @@ const Line = ({ style, ...props }: LineProps) => {
     [getSchemeColorHex],
   )
 
+  const handleSwitchRoute = useCallback(() => {
+    changeRouteDirection(props.lineCode)
+  }, [props.lineCode])
+
   return (
     <Animated.View
       style={[containerStyle, containerAnimatedStyle, styles.container, style]}
-      key={props.code}
+      key={props.lineCode}
       {...props}
     >
       {/* {isRefetching && (
@@ -101,7 +107,7 @@ const Line = ({ style, ...props }: LineProps) => {
             color: getSchemeColorHex('onPrimary'),
           }}
         >
-          {props.code}
+          {props.lineCode}
         </UiText>
 
         <View style={styles.titleContainer}>
@@ -111,7 +117,7 @@ const Line = ({ style, ...props }: LineProps) => {
             icon="eye-outline"
           />
 
-          <LineAnnouncementsMemoized code={props.code} style={buttonContainerStyle} />
+          <LineAnnouncementsMemoized code={props.lineCode} style={buttonContainerStyle} />
 
           <UiButton
             onPress={handleDelete}
@@ -121,8 +127,14 @@ const Line = ({ style, ...props }: LineProps) => {
         </View>
       </View>
 
-      <LineBusStops code={props.code} />
-      <LineRoutesContainer lineCode={props.code} />
+      <LineBusStops code={props.lineCode} />
+
+      <View style={styles.lineButtonsContainer}>
+        <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
+        <LineRoutes lineCode={props.lineCode} />
+      </View>
+
+      <LineRouteDirection lineCode={props.lineCode} />
     </Animated.View>
   )
 }
@@ -141,5 +153,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: 8,
+  },
+  lineButtonsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    flexGrow: 1,
   },
 })

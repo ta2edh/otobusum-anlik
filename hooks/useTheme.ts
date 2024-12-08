@@ -14,9 +14,9 @@ export function useTheme(theme?: Theme) {
   const storedTheme = useSettingsStore(useShallow(state => state.colorScheme))
   const systemScheme = useColorScheme()
 
-  const mode = storedTheme ?? systemScheme ?? 'dark'
+  const mode = useMemo(() => storedTheme ?? systemScheme ?? 'dark', [storedTheme, systemScheme])
+  const scheme = useMemo(() => mode === 'dark' ? theme?.schemes.dark : theme?.schemes.light, [mode, theme?.schemes.dark, theme?.schemes.light])
 
-  const scheme = mode === 'dark' ? theme?.schemes.dark : theme?.schemes.light
   const colorsTheme = colors[mode]
 
   const bottomSheetStyle = useMemo(() => ({

@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Theme } from '@material/material-color-utilities'
+import { useMemo } from 'react'
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 
 import { useTheme } from '@/hooks/useTheme'
@@ -47,7 +48,7 @@ export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
 
   const iconColor = dynamicText.color ?? props.iconColor
 
-  const icon = () => {
+  const Icon = useMemo(() => {
     if (props.isLoading) {
       return (
         <UiActivityIndicator
@@ -66,14 +67,14 @@ export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
         color={iconColor}
       />
     )
-  }
+  }, [iconColor, iconSize, props.icon, props.isLoading])
 
   return (
     <TouchableOpacity
       style={[styles.container, dynamicContainer, props.containerStyle, props.square ? styles.square : undefined]}
       onPress={props.onPress}
     >
-      {icon()}
+      {Icon}
 
       {props.title && (
         <UiText

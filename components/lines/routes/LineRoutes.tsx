@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import { memo, useRef } from 'react'
+import { memo, useCallback, useMemo, useRef } from 'react'
 import {
   StyleSheet,
 } from 'react-native'
@@ -17,17 +17,16 @@ import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 interface Props {
-  code: string
+  lineCode: string
 }
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
-  const { query: allRoutes, getRouteFromCode } = useRoutes(props.code)
+  const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
-  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.code]))
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.lineCode]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
-  const route = getRouteFromCode()
-
+  const route = useMemo(() => getRouteFromCode(), [getRouteFromCode])
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
   const routesfiltered: LineRoute[] = []
@@ -50,17 +49,22 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   }))
 
   const selectedLineRoute = merged.find(m => m.value.route_code === selectedRouteCode)
+  const routeName = useMemo(() => route?.route_long_name || '', [route])
 
   const handleOnSelect = (value: LineRoute) => {
     if (!value.route_code) return
-    selectRoute(props.code, value.route_code)
+    selectRoute(props.lineCode, value.route_code)
   }
+
+  const handleOnPress = useCallback(() => {
+    bottomSheetModal.current?.present()
+  }, [])
 
   return (
     <>
       <UiButton
-        title={route?.route_long_name || ''}
-        onPress={() => bottomSheetModal.current?.present()}
+        title={routeName}
+        onPress={handleOnPress}
         theme={lineTheme}
         containerStyle={styles.grow}
         icon="git-branch-outline"

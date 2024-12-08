@@ -30,7 +30,7 @@ import { i18n } from '@/translations/i18n'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
-interface Props {
+interface LineBusStopsProps {
   code: string
 }
 
@@ -41,7 +41,7 @@ const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
-export const LineBusStops = (props: Props) => {
+export const LineBusStops = (props: LineBusStopsProps) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
 
   const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
