@@ -3,7 +3,6 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
 import { colors } from '@/constants/colors'
@@ -25,7 +24,6 @@ export const UiLineCode = ({ isLoading, code, ...props }: Props) => {
 
   return (
     <UiText style={[styles.renderCode, renderCodeContainer]}>
-      {isLoading ? <UiActivityIndicator /> : code}
       {props.children}
     </UiText>
   )

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { memo, useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
@@ -8,35 +8,16 @@ import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
-import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 import { UiText } from './ui/UiText'
 
-import { PlannedDeparture, getPlannedDepartures } from '@/api/getPlannedDepartures'
+import { getPlannedDepartures } from '@/api/getPlannedDepartures'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
 import { charactersToAscii } from '@/utils/charactersToAscii'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
-
-function groupDeparturesByHour(obj: PlannedDeparture[]) {
-  const res: Record<string, PlannedDeparture[]> = {}
-
-  for (let index = 0; index < obj.length; index++) {
-    const element = obj[index]
-    const hour = element?.['DT'].split(':').at(0)
-
-    if (!hour || !element) continue
-
-    if (!res[hour]) {
-      res[hour] = [element]
-    } else {
-      res[hour].push(element)
-    }
-  }
-
-  return res
-}
+import { groupDeparturesByHour } from '@/utils/groupDeparturesByHour'
 
 interface Props {
   code: string
@@ -62,7 +43,7 @@ export const LineTimetable = (props: Props) => {
   const { lineWidth } = useLine(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: [`timetable-${props.code}`],
     queryFn: () => getPlannedDepartures(props.code),
   })
@@ -86,10 +67,6 @@ export const LineTimetable = (props: Props) => {
     }),
     [announcementsQuery.data, props.code],
   )
-
-  if (!query.data) {
-    return <UiActivityIndicator />
-  }
 
   const cancelledHours = announcements
     ? announcements.map((ann) => {

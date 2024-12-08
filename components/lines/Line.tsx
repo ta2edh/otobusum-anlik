@@ -12,6 +12,7 @@ import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from '../ui/UiButton'
+import { UiSuspense } from '../ui/UiSuspense'
 import { UiText } from '../ui/UiText'
 
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
@@ -127,14 +128,18 @@ const Line = ({ style, ...props }: LineProps) => {
         </View>
       </View>
 
-      <LineBusStops code={props.lineCode} />
+      <UiSuspense>
+        <LineBusStops code={props.lineCode} />
+      </UiSuspense>
 
       <View style={styles.lineButtonsContainer}>
         <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
         <LineRoutes lineCode={props.lineCode} />
       </View>
 
-      <LineRouteDirection lineCode={props.lineCode} />
+      <UiSuspense>
+        <LineRouteDirection lineCode={props.lineCode} />
+      </UiSuspense>
     </Animated.View>
   )
 }

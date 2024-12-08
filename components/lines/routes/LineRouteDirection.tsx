@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { Pressable, StyleProp, StyleSheet, TextStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
 import { UiText } from '@/components/ui/UiText'
 
 import { useRoutes } from '@/hooks/queries/useRoutes'
@@ -17,7 +16,7 @@ interface Props {
 }
 
 export const LineRouteDirection = (props: Props) => {
-  const { query, getRouteFromCode } = useRoutes(props.lineCode)
+  const { getRouteFromCode } = useRoutes(props.lineCode)
 
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -25,10 +24,6 @@ export const LineRouteDirection = (props: Props) => {
   const handleSwitchRoute = useCallback(() => {
     changeRouteDirection(props.lineCode)
   }, [props.lineCode])
-
-  if (query.isPending) {
-    return <UiActivityIndicator size="small" />
-  }
 
   const route = getRouteFromCode()
   const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']

@@ -20,7 +20,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
-import { LineTimetable } from '@/components/LineTimetable'
+import { LineTimetableMemoized } from '@/components/LineTimetable'
+import { UiSuspense } from '@/components/ui/UiSuspense'
 import { UiText } from '@/components/ui/UiText'
 
 import { useLinesStore } from '@/stores/lines'
@@ -78,7 +79,9 @@ export const TimetableScreen = () => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       return (
-        <LineTimetable code={item} />
+        <UiSuspense>
+          <LineTimetableMemoized code={item} />
+        </UiSuspense>
       )
     },
     [],
