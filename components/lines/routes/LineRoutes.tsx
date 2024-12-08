@@ -1,8 +1,6 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { memo, useCallback, useMemo, useRef } from 'react'
-import {
-  StyleSheet,
-} from 'react-native'
+import { StyleSheet } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
@@ -23,32 +21,38 @@ interface Props {
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
-  const selectedRouteCode = useFiltersStore(useShallow(state => state.selectedRoutes[props.lineCode]))
+  const selectedRouteCode = useFiltersStore(
+    useShallow(state => state.selectedRoutes[props.lineCode]),
+  )
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
   const route = useMemo(() => getRouteFromCode(), [getRouteFromCode])
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
-  const routesfiltered: LineRoute[] = []
-  const routesDefaults: LineRoute[] = []
+  const routes = useMemo(() => {
+    const routesfiltered: LineRoute[] = []
+    const routesDefaults: LineRoute[] = []
 
-  for (let index = 0; index < (allRoutes.data?.length || 0); index++) {
-    const element = allRoutes.data?.[index]
-    if (!element) continue
+    for (let index = 0; index < (allRoutes.data?.length || 0); index++) {
+      const element = allRoutes.data?.[index]
+      if (!element) continue
 
-    if (element.route_code && element.route_code?.endsWith('D0')) {
-      routesDefaults.push(element)
-    } else {
-      routesfiltered.push(element)
+      if (element.route_code && element.route_code?.endsWith('D0')) {
+        routesDefaults.push(element)
+      } else {
+        routesfiltered.push(element)
+      }
     }
-  }
 
-  const merged = [...routesDefaults, ...routesfiltered].map(x => ({
-    label: `${x.route_code} ${x.route_long_name}`,
-    value: x,
-  }))
+    const merged = [...routesDefaults, ...routesfiltered].map(x => ({
+      label: `${x.route_code} ${x.route_long_name}`,
+      value: x,
+    }))
 
-  const selectedLineRoute = merged.find(m => m.value.route_code === selectedRouteCode)
+    return merged
+  }, [allRoutes.data])
+
+  const selectedLineRoute = routes.find(m => m.value.route_code === selectedRouteCode)
   const routeName = useMemo(() => route?.route_long_name || '', [route])
 
   const handleOnSelect = (value: LineRoute) => {
@@ -73,7 +77,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
       <UiSheetSelect
         cRef={bottomSheetModal}
         title={i18n.t('routes')}
-        options={merged}
+        options={routes}
         onValueChange={handleOnSelect}
         value={selectedLineRoute?.value}
         list

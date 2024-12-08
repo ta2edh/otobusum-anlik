@@ -67,8 +67,10 @@ export const LineBusStopMarkersItem = ({
   )
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const backgroundColor = useMemo(
-    () => getSchemeColorHex('primary') || colors.primary,
+  const backgroundStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      backgroundColor: getSchemeColorHex('primary') || colors.primary,
+    }),
     [getSchemeColorHex],
   )
 
@@ -101,7 +103,7 @@ export const LineBusStopMarkersItem = ({
       tracksViewChanges={false}
       {...props}
     >
-      <View style={[styles.busStop, borderStyle, { backgroundColor }, viewStyle]}>
+      <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>
         {label && (
           <UiText style={textStyle} size="sm" info>
             {label}
