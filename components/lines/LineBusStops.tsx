@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons'
-import { FlashList, FlashListProps, ListRenderItem, ViewToken } from '@shopify/flash-list'
+import { FlashList, FlashListProps, ViewToken, ListRenderItem } from '@shopify/flash-list'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
@@ -229,12 +229,12 @@ export const LineBusStops = (props: LineBusStopsProps) => {
         data={filteredStops}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
-        keyExtractor={item => item.stop_code}
         overrideItemLayout={overrideItemLayout}
         fadingEdgeLength={40}
         onScrollBeginDrag={handleScrollDragStart}
         onMomentumScrollEnd={handleScrollMomentumEnd}
         onViewableItemsChanged={handleViewableItemsChanged}
+        drawDistance={1}
         viewabilityConfig={{
           minimumViewTime: 200,
           waitForInteraction: true,

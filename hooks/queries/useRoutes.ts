@@ -7,7 +7,6 @@ import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
 export function useRoutes(lineCode: string) {
   const routeCode = useFiltersStore(useShallow(() => getSelectedRouteCode(lineCode)))
-  console.log(routeCode)
 
   const query = useQuery({
     queryKey: ['line-routes', lineCode],
