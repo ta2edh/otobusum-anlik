@@ -1,6 +1,6 @@
-import { useCallback, useRef } from 'react'
+import { useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, { Region } from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
@@ -22,14 +22,16 @@ export const HomeScreen = () => {
     index: useSharedValue(-1),
   }
 
-  const handleReady = useCallback(() => {
-    map.current?.animateCamera({
-      center: useSettingsStore.getState().initialMapLocation,
-      zoom: 13,
-      heading: 0,
-      pitch: 0,
-    })
-  }, [])
+  const handleReady = () => {
+    const loc = useSettingsStore.getState().initialMapLocation
+    if (!loc) return
+
+    map.current?.animateToRegion(loc)
+  }
+
+  const handleRegionChangeComplete = (region: Region) => {
+    useSettingsStore.setState(() => ({ initialMapLocation: region }))
+  }
 
   return (
     <View style={styles.container}>
@@ -38,6 +40,7 @@ export const HomeScreen = () => {
           <TheMap
             cRef={map}
             onMapReady={handleReady}
+            onRegionChangeComplete={handleRegionChangeComplete}
           >
             <LineMarkers />
           </TheMap>

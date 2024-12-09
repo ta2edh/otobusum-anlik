@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
 import { Linking, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, { Region } from 'react-native-maps'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -15,6 +15,7 @@ import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
+import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 interface TheStopInfoProps {
@@ -25,6 +26,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { colorsTheme } = useTheme()
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
+  const savedRegion = useRef<Region | undefined>(undefined)
 
   const query = useQuery({
     queryKey: ['stop', stopId],
@@ -34,6 +36,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   })
 
   useEffect(() => {
+    savedRegion.current = useSettingsStore.getState().initialMapLocation
     bottomSheetModal.current?.present()
 
     if (query.data) {
@@ -79,10 +82,16 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     }
   }
 
+  const handleOnDismiss = () => {
+    if (!savedRegion.current) return
+    cRef.current?.animateToRegion(savedRegion.current)
+  }
+
   return (
     <UiSheetModal
       ref={bottomSheetModal}
       enableDynamicSizing={true}
+      onDismiss={handleOnDismiss}
     >
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
