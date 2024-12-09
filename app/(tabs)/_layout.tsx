@@ -1,5 +1,6 @@
-import Ionicons from '@expo/vector-icons/Ionicons'
+import Ionicons from '@react-native-vector-icons/ionicons'
 import { Tabs } from 'expo-router'
+import { ComponentProps } from 'react'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -8,7 +9,7 @@ import { i18n } from '@/translations/i18n'
 export const TabsLayout = () => {
   const { colorsTheme } = useTheme()
 
-  const getName = (n: keyof typeof Ionicons.glyphMap, focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
+  const getName = (n: ComponentProps<typeof Ionicons>['name'], focused?: boolean): any => (focused ? `${n}` : `${n}-outline`)
 
   return (
     <Tabs

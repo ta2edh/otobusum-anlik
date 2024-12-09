@@ -1,8 +1,15 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { hexFromArgb } from '@material/material-color-utilities'
+import Ionicons from '@react-native-vector-icons/ionicons'
 import { useCallback, useEffect, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import Animated, { useAnimatedProps, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import Animated, {
+  AnimatedProps,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -21,7 +28,9 @@ export const TheMapButtons = () => {
   const lines = useLinesStore(state => state.lines)
   const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
   const selectedGroup = useLinesStore(state => state.selectedGroup)
-  const selectedGroupLines = useLinesStore(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
+  const selectedGroupLines = useLinesStore(state =>
+    selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined,
+  )
 
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue(colors.primary)
@@ -29,22 +38,25 @@ export const TheMapButtons = () => {
   const bottomSheetModalGroups = useRef<BottomSheetModal>(null)
   const { mode } = useTheme()
 
-  const updateColors = useCallback((index: number) => {
-    const lines = selectedGroupLines || useLinesStore.getState().lines
-    const lineCode = lines.at(index)
-    if (lineCode === undefined) return
+  const updateColors = useCallback(
+    (index: number) => {
+      const lines = selectedGroupLines || useLinesStore.getState().lines
+      const lineCode = lines.at(index)
+      if (lineCode === undefined) return
 
-    const theme = useLinesStore.getState().lineTheme[lineCode]
-    if (!theme) return
+      const theme = useLinesStore.getState().lineTheme[lineCode]
+      if (!theme) return
 
-    const scheme = theme.schemes[mode]
+      const scheme = theme.schemes[mode]
 
-    const targetBackground = hexFromArgb(scheme.primary)
-    const targetText = hexFromArgb(scheme.onPrimary)
+      const targetBackground = hexFromArgb(scheme.primary)
+      const targetText = hexFromArgb(scheme.onPrimary)
 
-    bgColor.value = withTiming(targetBackground)
-    txtColor.value = withTiming(targetText)
-  }, [bgColor, mode, selectedGroupLines, txtColor])
+      bgColor.value = withTiming(targetBackground)
+      txtColor.value = withTiming(targetText)
+    },
+    [bgColor, mode, selectedGroupLines, txtColor],
+  )
 
   useEffect(() => {
     const unsub = useMiscStore.subscribe(
@@ -89,15 +101,18 @@ export const TheMapButtons = () => {
     bottomSheetModalGroups.current?.close()
   }
 
-  const animatedContainerStyle = useAnimatedStyle(() => ({
-    backgroundColor: bgColor.value,
-    borderRadius: 14,
-  }), [])
+  const animatedContainerStyle = useAnimatedStyle(
+    () => ({
+      backgroundColor: bgColor.value,
+      borderRadius: 14,
+    }),
+    [],
+  )
 
   const animatedIconProps = useAnimatedProps(() => {
     return {
       color: txtColor.value,
-    }
+    } as Partial<AnimatedProps<typeof Ionicons>>
   })
 
   return (
@@ -113,7 +128,7 @@ export const TheMapButtons = () => {
         </Animated.View>
       )}
 
-      {(lineGroups.length > 0) && (
+      {lineGroups.length > 0 && (
         <>
           <Animated.View style={animatedContainerStyle}>
             <UiButton
@@ -137,13 +152,9 @@ export const TheMapButtons = () => {
             )
           }
 
-          <LineGroups
-            ref={bottomSheetModalGroups}
-            onPressGroup={handlePressGroup}
-          />
+          <LineGroups ref={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
         </>
       )}
-
     </View>
   )
 }

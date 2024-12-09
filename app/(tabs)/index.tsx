@@ -5,7 +5,7 @@ import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineMarkers } from '@/components/markers/LineMarkers'
-import { TheMapFr } from '@/components/TheMap'
+import { TheMap } from '@/components/TheMap'
 import { TheMapButtons } from '@/components/TheMapButtons'
 import { TheStopInfo } from '@/components/TheStopInfo'
 
@@ -35,12 +35,12 @@ export const HomeScreen = () => {
     <View style={styles.container}>
       <MapContext.Provider value={map}>
         <SheetContext.Provider value={sheetContext}>
-          <TheMapFr
-            ref={map}
+          <TheMap
+            cRef={map}
             onMapReady={handleReady}
           >
             <LineMarkers />
-          </TheMapFr>
+          </TheMap>
 
           <TheMapButtons />
 

@@ -1,9 +1,8 @@
-import { Ionicons } from '@expo/vector-icons'
-import { IconProps } from '@expo/vector-icons/build/createIconSet'
 import { Theme } from '@material/material-color-utilities'
-import { useMemo } from 'react'
+import Ionicons from '@react-native-vector-icons/ionicons'
+import { ComponentProps, useMemo } from 'react'
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
-import Animated from 'react-native-reanimated'
+import Animated, { AnimatedProps } from 'react-native-reanimated'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -22,20 +21,21 @@ interface UiButtonPropsBase {
   containerStyle?: StyleProp<ViewStyle>
   iconColor?: string
   textStyle?: StyleProp<TextStyle>
-  animatedIconProps?: Partial<IconProps<keyof typeof Ionicons.glyphMap>>
+  animatedIconProps?: Partial<AnimatedProps<typeof Ionicons>>
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
-  icon: keyof typeof Ionicons.glyphMap
+  icon: ComponentProps<typeof Ionicons>['name']
   title?: string
 }
 
 interface UiButtonPropsWithTitle extends UiButtonPropsBase {
-  icon?: keyof typeof Ionicons.glyphMap
+  icon?: ComponentProps<typeof Ionicons>['name']
   title: string
 }
 
 type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
+// type IconProps = TextProps & typeof Ionicons.name
 
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 

@@ -1,5 +1,5 @@
 import { SplashScreen } from 'expo-router'
-import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react'
+import { RefObject } from 'react'
 import { StyleSheet } from 'react-native'
 import MapView, { Details, MapViewProps, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { AnimatedMapView } from 'react-native-maps/lib/MapView'
@@ -13,10 +13,11 @@ import { useTheme } from '@/hooks/useTheme'
 import { getMapStyle } from '@/constants/mapStyles'
 import { useSettingsStore } from '@/stores/settings'
 
-export const TheMap = ({ style, ...props }: MapViewProps, ref: ForwardedRef<MapView>) => {
-  const innerRef = useRef<MapView>(null)
-  useImperativeHandle(ref, () => innerRef.current!, [])
+interface TheMapProps extends MapViewProps {
+  cRef?: RefObject<MapView>
+}
 
+export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
   const sheetContext = useSheetModal()
 
@@ -58,7 +59,7 @@ export const TheMap = ({ style, ...props }: MapViewProps, ref: ForwardedRef<MapV
   return (
     <Animated.View style={animatedStyle}>
       <AnimatedMapView
-        ref={ref}
+        ref={cRef}
         style={[styles.map, style]}
         provider={PROVIDER_GOOGLE}
         initialCamera={{
@@ -82,8 +83,6 @@ export const TheMap = ({ style, ...props }: MapViewProps, ref: ForwardedRef<MapV
     </Animated.View>
   )
 }
-
-export const TheMapFr = forwardRef<MapView, MapViewProps>(TheMap)
 
 const styles = StyleSheet.create({
   map: {

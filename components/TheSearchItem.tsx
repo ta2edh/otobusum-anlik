@@ -1,5 +1,5 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import Ionicons from '@react-native-vector-icons/ionicons'
 import { router } from 'expo-router'
 import { memo, useCallback, useRef } from 'react'
 import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
@@ -59,7 +59,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
           ? (
               <>
                 <UiLineCode code="">
-                  <MaterialCommunityIcons name="bus-stop" size={20} />
+                  <Ionicons name="flag-sharp" size={16} color="white" />
                 </UiLineCode>
                 <UiText>{item.stop_name}</UiText>
               </>

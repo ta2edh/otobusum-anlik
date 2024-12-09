@@ -1,4 +1,4 @@
-import { Ionicons } from '@expo/vector-icons'
+import Ionicons from '@react-native-vector-icons/ionicons'
 import { useCallback } from 'react'
 import { Pressable, StyleProp, StyleSheet, TextStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'

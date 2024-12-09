@@ -70,19 +70,19 @@ export const LineTimetable = (props: Props) => {
 
   const cancelledHours = announcements
     ? announcements.map((ann) => {
-      if (!ann.MESAJ.includes('dan Saat')) return
+        if (!ann.MESAJ.includes('dan Saat')) return
 
-      const msgSplit = ann.MESAJ.split('dan Saat')
-      const from = msgSplit.at(0)
-      if (!from) return
+        const msgSplit = ann.MESAJ.split('dan Saat')
+        const from = msgSplit.at(0)
+        if (!from) return
 
-      const tLeftTitle = leftTitle ? charactersToAscii(leftTitle) : undefined
-      const isDirectionTrue = from.trim() === tLeftTitle?.trim()
-      if (!isDirectionTrue) return
+        const tLeftTitle = leftTitle ? charactersToAscii(leftTitle) : undefined
+        const isDirectionTrue = from.trim() === tLeftTitle?.trim()
+        if (!isDirectionTrue) return
 
-      const hour = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
-      return hour
-    })
+        const hour = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
+        return hour
+      })
     : []
 
   const groupedByHour = groupDeparturesByHour(filteredData || [])

@@ -8,7 +8,7 @@ import MapView from 'react-native-maps'
 import { useTheme } from '@/hooks/useTheme'
 
 import { LineBusStopMarkersItem } from './markers/BusStopMarkers'
-import { TheMapFr } from './TheMap'
+import { TheMap } from './TheMap'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiText } from './ui/UiText'
@@ -75,7 +75,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (
-            <TheMapFr
+            <TheMap
               liteMode
               style={styles.map}
               initialCamera={{
@@ -89,7 +89,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
               }}
             >
               <LineBusStopMarkersItem type="point" stop={query.data.stop} />
-            </TheMapFr>
+            </TheMap>
           )}
 
         </View>
