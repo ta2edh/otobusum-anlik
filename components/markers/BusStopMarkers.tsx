@@ -228,7 +228,7 @@ export const LineBusStopMarkers = (props: Props) => {
       {busStops.map(stop => (
         <LineBusStopMarkersItemMemoized
           type="point"
-          key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}`}
+          key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}-${stop.stop_code}`}
           stop={stop}
           code={props.code}
           onPress={() => handleOnPress(stop)}
