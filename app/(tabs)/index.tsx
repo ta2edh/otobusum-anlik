@@ -41,6 +41,7 @@ export const HomeScreen = () => {
             cRef={map}
             onMapReady={handleReady}
             onRegionChangeComplete={handleRegionChangeComplete}
+            moveOnMarkerPress={false}
           >
             <LineMarkers />
           </TheMap>
