@@ -67,7 +67,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
           : (
               <>
                 <UiLineCode code={item.code} />
-                <UiText>{item.title}</UiText>
+                <UiText numberOfLines={2}>{item.title}</UiText>
               </>
             )}
       </View>
@@ -80,6 +80,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
               icon="add-circle-outline"
               onPress={handleAddPress}
               iconColor={colorsTheme.color}
+              variant="soft"
             />
           </LineGroups>
         )

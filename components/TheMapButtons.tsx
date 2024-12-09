@@ -123,6 +123,7 @@ export const TheMapButtons = () => {
             icon="repeat"
             onPress={handleChangeAllDirections}
             animatedIconProps={animatedIconProps}
+            variant="ghost"
             square
           />
         </Animated.View>
@@ -135,6 +136,7 @@ export const TheMapButtons = () => {
               icon="albums"
               onPress={handleLineGroupsSelect}
               animatedIconProps={animatedIconProps}
+              variant="ghost"
               square
             />
           </Animated.View>
@@ -146,6 +148,7 @@ export const TheMapButtons = () => {
                   icon="close"
                   onPress={unSelectGroup}
                   animatedIconProps={animatedIconProps}
+                  variant="ghost"
                   square
                 />
               </Animated.View>

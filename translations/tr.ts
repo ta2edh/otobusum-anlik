@@ -39,4 +39,5 @@ export default {
   addedToGroup: '%{lineCode} Gruba eklendi',
   added: '%{lineCode} Eklendi',
   linesThatUseStop: 'Bu durağı kullanan hatlar',
+  stopDirections: 'Bu durağa yol tarifi',
 }

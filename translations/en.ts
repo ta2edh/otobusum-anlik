@@ -39,4 +39,5 @@ export default {
   addedToGroup: 'Added %{lineCode} to group',
   added: 'Added %{lineCode}',
   linesThatUseStop: 'Lines that use this stop',
+  stopDirections: 'Directions to this stop',
 }

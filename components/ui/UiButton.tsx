@@ -9,7 +9,8 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
-import { IconSize, iconSizes } from '@/constants/uiSizes'
+import { colors } from '@/constants/colors'
+import { ButtonVariants, IconSize, iconSizes } from '@/constants/uiSizes'
 
 interface UiButtonPropsBase {
   theme?: Theme
@@ -22,6 +23,7 @@ interface UiButtonPropsBase {
   iconColor?: string
   textStyle?: StyleProp<TextStyle>
   animatedIconProps?: Partial<AnimatedProps<typeof Ionicons>>
+  variant?: ButtonVariants
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
@@ -35,15 +37,20 @@ interface UiButtonPropsWithTitle extends UiButtonPropsBase {
 }
 
 type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
-// type IconProps = TextProps & typeof Ionicons.name
 
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
-export const UiButton = ({ iconSize = 'md', ...props }: UiButtonProps) => {
+export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiButtonProps) => {
   const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
 
+  const defaultBackground = variant === 'solid'
+    ? colors.primary
+    : variant === 'soft'
+      ? colorsTheme.surfaceContainer
+      : undefined
+
   const dynamicContainer: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('secondaryContainer'),
+    backgroundColor: getSchemeColorHex('secondaryContainer') || defaultBackground,
     opacity: props.disabled ? 0.4 : 1,
   }
 

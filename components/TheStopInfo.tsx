@@ -2,7 +2,7 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Linking, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import MapView from 'react-native-maps'
 
 import { useTheme } from '@/hooks/useTheme'
@@ -11,6 +11,7 @@ import { LineBusStopMarkersItem } from './markers/BusStopMarkers'
 import { TheMap } from './TheMap'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
+import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
@@ -46,15 +47,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     }
   }, [query.data, stopId, cRef])
 
-  if (bottomSheetModal.current && stopId) {
-    bottomSheetModal.current.present()
-  }
-
   if (!stopId) return null
-
-  const lineCodeStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainer,
-  }
 
   if (query.isPending) {
     return (
@@ -65,6 +58,25 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
         <UiActivityIndicator />
       </UiSheetModal>
     )
+  }
+
+  if (bottomSheetModal.current && stopId) {
+    bottomSheetModal.current.present()
+  }
+
+  const lineCodeStyle: StyleProp<ViewStyle> = {
+    backgroundColor: colorsTheme.surfaceContainer,
+  }
+
+  const openStopDirections = async () => {
+    if (!query.data?.stop) return
+
+    const scheme = `geo:0,0?q=${query.data.stop.y_coord},${query.data.stop.x_coord}&label=${query.data.stop.stop_name}`
+    try {
+      await Linking.openURL(scheme)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -91,8 +103,14 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
               <LineBusStopMarkersItem type="point" stop={query.data.stop} />
             </TheMap>
           )}
-
         </View>
+
+        <UiButton
+          title={i18n.t('stopDirections')}
+          onPress={openStopDirections}
+          variant="solid"
+          icon="location-outline"
+        />
 
         {query.data && (
           <View style={styles.content}>

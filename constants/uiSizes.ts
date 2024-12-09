@@ -3,6 +3,8 @@ type Sizes = 'sm' | 'md' | 'lg'
 export type FontSize = Sizes | 'xl'
 export type IconSize = Sizes
 
+export type ButtonVariants = 'solid' | 'soft' | 'ghost'
+
 export const iconSizes: Record<IconSize, number> = {
   sm: 16,
   md: 18,
