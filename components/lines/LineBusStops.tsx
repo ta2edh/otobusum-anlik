@@ -170,7 +170,7 @@ export const LineBusStops = (props: LineBusStopsProps) => {
               )}
             </View>
 
-            <View>
+            <View style={styles.itemTitleInner}>
               <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
                 {item.stop_name}
               </UiText>
@@ -256,6 +256,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    flex: 1,
+  },
+  itemTitleInner: {
+    flex: 1,
   },
   itemCircle: {
     width: 38,
