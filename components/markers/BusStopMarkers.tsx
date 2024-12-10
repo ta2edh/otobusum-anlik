@@ -107,8 +107,6 @@ export const LineBusStopMarkersItem = ({
           longitude: stop?.x_coord,
         }
 
-  console.log(backgroundStyle)
-
   return (
     <Marker
       coordinate={coords}
