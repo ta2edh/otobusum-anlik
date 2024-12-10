@@ -1,4 +1,4 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import * as Location from 'expo-location'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -15,7 +15,7 @@ export function useLineBusStops(
 ) {
   const [closestStop, setClosestStop] = useState<BusLineStop>()
 
-  const query = useSuspenseQuery({
+  const query = useQuery({
     queryKey: [`${code}-stop-locations`],
     queryFn: () => getLineBusStops(code),
     staleTime: 60_000 * 30,

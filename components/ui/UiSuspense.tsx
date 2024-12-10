@@ -1,14 +1,10 @@
-import { Suspense } from 'react'
+import { Suspense, SuspenseProps } from 'react'
 
 import { UiActivityIndicator } from './UiActivityIndicator'
 
-interface UiSuspenseProps {
-  children?: React.ReactNode
-}
-
-export const UiSuspense = (props: UiSuspenseProps) => {
+export const UiSuspense = (props: SuspenseProps) => {
   return (
-    <Suspense fallback={<UiActivityIndicator />}>
+    <Suspense fallback={<UiActivityIndicator />} {...props}>
       {props.children}
     </Suspense>
   )

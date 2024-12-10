@@ -19,6 +19,7 @@ import { useLine } from '@/hooks/queries/useLine'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
+import { UiActivityIndicator } from '../ui/UiActivityIndicator'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
@@ -56,7 +57,7 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
   const direction = extractRouteCodeDirection(routeCode)
 
-  const { filteredStops, closestStop } = useLineBusStops(props.code, direction, true)
+  const { filteredStops, closestStop, query } = useLineBusStops(props.code, direction, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(
@@ -196,6 +197,14 @@ export const LineBusStops = (props: LineBusStopsProps) => {
     [busses, closestStop?.stop_code, getSchemeColorHex, lineTheme, map],
   )
 
+  if (query.isPending) {
+    return <UiActivityIndicator />
+  }
+
+  if (!filteredStops) {
+    return null
+  }
+
   const handleScrollDragStart = () => {
     isScrolling.value = true
     containerHeight.value = withTiming(EXPANDED)
@@ -207,10 +216,6 @@ export const LineBusStops = (props: LineBusStopsProps) => {
 
   const handleViewableItemsChanged = ({ viewableItems }: { viewableItems: ViewToken[] }) => {
     currentViewableItems.current = viewableItems
-  }
-
-  if (!filteredStops) {
-    return null
   }
 
   const overrideItemLayout = (layout: { size?: number }): void => {

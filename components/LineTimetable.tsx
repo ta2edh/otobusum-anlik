@@ -1,4 +1,3 @@
-import { useSuspenseQuery } from '@tanstack/react-query'
 import { memo, useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
@@ -6,12 +5,12 @@ import { useShallow } from 'zustand/react/shallow'
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
+import { useTimetable } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
 import { UiText } from './ui/UiText'
 
-import { getPlannedDepartures } from '@/api/getPlannedDepartures'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
@@ -39,14 +38,9 @@ export const LineTimetable = (props: Props) => {
 
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(props.code)
-
+  const { query } = useTimetable(props.code)
   const { lineWidth } = useLine(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
-
-  const query = useSuspenseQuery({
-    queryKey: [`timetable-${props.code}`],
-    queryFn: () => getPlannedDepartures(props.code),
-  })
 
   const direction = extractRouteCodeDirection(routeCode)
   const route = getRouteFromCode()
@@ -103,7 +97,7 @@ export const LineTimetable = (props: Props) => {
     color: getSchemeColorHex('onPrimaryContainer'),
   }
 
-  const title = query.data.at(0)?.HATADI
+  const title = query.data?.at(0)?.HATADI
 
   return (
     <View style={[styles.wrapper, containerStyle]}>
