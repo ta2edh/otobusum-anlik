@@ -1,8 +1,6 @@
-import { SplashScreen } from 'expo-router'
 import { RefObject } from 'react'
 import { StyleSheet } from 'react-native'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
-import { AnimatedMapView } from 'react-native-maps/lib/MapView'
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
@@ -24,10 +22,6 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const insets = useSafeAreaInsets()
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
-
-  const handleMapLoaded = () => {
-    SplashScreen.hideAsync()
-  }
 
   const animatedStyle = useAnimatedStyle(() => {
     if (!sheetContext) {
@@ -53,7 +47,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
 
   return (
     <Animated.View style={animatedStyle}>
-      <AnimatedMapView
+      <MapView
         ref={cRef}
         style={[styles.map, style]}
         provider={PROVIDER_GOOGLE}
@@ -65,8 +59,6 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
         }}
         customMapStyle={getMapStyle(mode)}
         mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
-        // onRegionChangeComplete={handleRegionChangeComplete}
-        onMapLoaded={handleMapLoaded}
         showsIndoors={false}
         toolbarEnabled={false}
         showsTraffic={showTraffic}
@@ -74,7 +66,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
         {...props}
       >
         {props.children}
-      </AnimatedMapView>
+      </MapView>
     </Animated.View>
   )
 }

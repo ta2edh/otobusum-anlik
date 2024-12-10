@@ -107,6 +107,8 @@ export const LineBusStopMarkersItem = ({
           longitude: stop?.x_coord,
         }
 
+  console.log(backgroundStyle)
+
   return (
     <Marker
       coordinate={coords}
@@ -142,14 +144,17 @@ export const LineBusStopMarkers = (props: Props) => {
       longitude: stop.x_coord,
     }))
 
-    map?.current?.fitToCoordinates(locs, {
-      edgePadding: {
-        top: 20,
-        bottom: 200,
-        left: 20,
-        right: 20,
-      },
-    })
+    setTimeout(() => {
+      map?.current?.fitToCoordinates(locs, {
+        animated: true,
+        edgePadding: {
+          top: 20,
+          bottom: 200,
+          left: 20,
+          right: 20,
+        },
+      })
+    }, 2_000)
   }, [query.data, map])
 
   const direction = extractRouteCodeDirection(routeCode)

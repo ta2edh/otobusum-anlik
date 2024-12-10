@@ -1,3 +1,4 @@
+import { SplashScreen } from 'expo-router'
 import { useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import MapView, { Region } from 'react-native-maps'
@@ -22,11 +23,13 @@ export const HomeScreen = () => {
     index: useSharedValue(-1),
   }
 
-  const handleReady = () => {
-    const loc = useSettingsStore.getState().initialMapLocation
-    if (!loc) return
+  const handleOnLoaded = () => {
+    SplashScreen.hideAsync()
+    // const loc = useSettingsStore.getState().initialMapLocation
+    // if (!loc) return
 
-    map.current?.animateToRegion(loc)
+    // console.log(loc)
+    // map.current?.animateToRegion(loc)
   }
 
   const handleRegionChangeComplete = (region: Region) => {
@@ -39,7 +42,7 @@ export const HomeScreen = () => {
         <SheetContext.Provider value={sheetContext}>
           <TheMap
             cRef={map}
-            onMapReady={handleReady}
+            onMapLoaded={handleOnLoaded}
             onRegionChangeComplete={handleRegionChangeComplete}
             moveOnMarkerPress={false}
           >
