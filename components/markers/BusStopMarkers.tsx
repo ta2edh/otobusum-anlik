@@ -88,6 +88,17 @@ export const LineBusStopMarkersItem = ({
     [getSchemeColorHex],
   )
 
+  const handleOnPress = () => {
+    if (!stop) return
+
+    router.navigate({
+      pathname: '/(tabs)',
+      params: {
+        stopId: stop.stop_code,
+      },
+    })
+  }
+
   const coords: LatLng
     = type === 'cluster'
       ? coordinate
@@ -101,6 +112,7 @@ export const LineBusStopMarkersItem = ({
       coordinate={coords}
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
+      onPress={handleOnPress}
       {...props}
     >
       <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>
@@ -114,15 +126,10 @@ export const LineBusStopMarkersItem = ({
   )
 }
 
-export const LineBusStopMarkersItemMemoized = memo(LineBusStopMarkersItem)
-
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
-  const initialLocation = useSettingsStore(state => state.initialMapLocation)
-  const clusterStops = useSettingsStore(state => state.clusterStops)
 
   const map = useMap()
-  const { width, height } = useWindowDimensions()
   const { query } = useLineBusStops(props.code)
 
   useEffect(() => {
@@ -149,96 +156,94 @@ export const LineBusStopMarkers = (props: Props) => {
   const busStops
     = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
 
-  if (!query.data) {
-    return null
-  }
-
-  const handleOnPress = (stop: BusLineStop) => {
-    router.navigate({
-      pathname: '/(tabs)',
-      params: {
-        stopId: stop.stop_code,
-      },
-    })
-  }
-
-  if (clusterStops) {
-    const filteredParsed: supercluster.PointFeature<any>[] = busStops.map((item, index) => ({
-      geometry: {
-        coordinates: [item.x_coord, item.y_coord],
-        type: 'Point',
-      },
-      properties: {
-        id: index,
-      },
-      type: 'Feature',
-    }))
-
-    const clusterItem: ClustererProps<any, supercluster.AnyProps>['renderItem'] = (point) => {
-      return (
-        <LineBusStopMarkersItemMemoized
-          type="cluster"
-          key={`cluster-${point.properties.cluster_id}`}
-          code={props.code}
-          coordinate={{
-            latitude: point.geometry.coordinates[1]!,
-            longitude: point.geometry.coordinates[0]!,
-          }}
-          viewStyle={{
-            width: 24,
-            height: 24,
-          }}
-          label={point.properties.point_count}
-        />
-      )
-    }
-
-    return (
-      <Clusterer
-        data={filteredParsed}
-        region={initialLocation as Region}
-        mapDimensions={{
-          width,
-          height,
-        }}
-        options={{
-          minPoints: 6,
-          radius: 32,
-        }}
-        renderItem={(point, ...other) =>
-          isPointCluster(point)
-            ? (
-                clusterItem(point, ...other)
-              )
-            : (
-                <LineBusStopMarkersItemMemoized
-                  code={props.code}
-                  key={`point-${point.properties.id}`}
-                  type="point"
-                  stop={busStops[point.properties.id]!}
-                  onPress={() => handleOnPress(busStops[point.properties.id]!)}
-                />
-              )}
-      />
-    )
-  }
-
   return (
     <>
       {busStops.map(stop => (
-        <LineBusStopMarkersItemMemoized
+        <LineBusStopMarkersItem
           type="point"
           key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}-${stop.stop_code}`}
           stop={stop}
           code={props.code}
-          onPress={() => handleOnPress(stop)}
         />
       ))}
     </>
   )
 }
 
+export const LineBusStopMarkersClustered = (props: Props) => {
+  const initialLocation = useSettingsStore(state => state.initialMapLocation)
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
+  const { width, height } = useWindowDimensions()
+
+  const { query } = useLineBusStops(props.code)
+
+  const direction = extractRouteCodeDirection(routeCode)
+  const busStops
+    = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
+
+  const filteredParsed: supercluster.PointFeature<any>[] = busStops.map((item, index) => ({
+    geometry: {
+      coordinates: [item.x_coord, item.y_coord],
+      type: 'Point',
+    },
+    properties: {
+      id: index,
+    },
+    type: 'Feature',
+  }))
+
+  const clusterItem: ClustererProps<any, supercluster.AnyProps>['renderItem'] = (point) => {
+    return (
+      <LineBusStopMarkersItem
+        type="cluster"
+        key={`cluster-${point.properties.cluster_id}`}
+        code={props.code}
+        coordinate={{
+          latitude: point.geometry.coordinates[1]!,
+          longitude: point.geometry.coordinates[0]!,
+        }}
+        viewStyle={{
+          width: 24,
+          height: 24,
+        }}
+        label={point.properties.point_count}
+      />
+    )
+  }
+
+  return (
+    <Clusterer
+      data={filteredParsed}
+      region={initialLocation as Region}
+      mapDimensions={{
+        width,
+        height,
+      }}
+      options={{
+        minPoints: 6,
+        radius: 32,
+      }}
+      renderItem={(point, ...other) =>
+        isPointCluster(point)
+          ? (
+              clusterItem(point, ...other)
+            )
+          : (
+              <LineBusStopMarkersItem
+                code={props.code}
+                key={`point-${point.properties.id}`}
+                type="point"
+                stop={busStops[point.properties.id]!}
+              />
+            )}
+    />
+  )
+}
+
+export const LineBusStopMarkersItemMemoized = memo(LineBusStopMarkersItem)
+
 export const LineBusStopMarkersMemoized = memo(LineBusStopMarkers)
+export const LineBusStopMarkersClusteredMemoized = memo(LineBusStopMarkersClustered)
 
 const styles = StyleSheet.create({
   calloutContainer: {
