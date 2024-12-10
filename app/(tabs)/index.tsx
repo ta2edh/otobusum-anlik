@@ -25,11 +25,6 @@ export const HomeScreen = () => {
 
   const handleOnLoaded = () => {
     SplashScreen.hideAsync()
-    // const loc = useSettingsStore.getState().initialMapLocation
-    // if (!loc) return
-
-    // console.log(loc)
-    // map.current?.animateToRegion(loc)
   }
 
   const handleRegionChangeComplete = (region: Region) => {
