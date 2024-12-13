@@ -7,7 +7,8 @@
         "./*"
       ]
     },
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "jsx": "react-jsx"
   },
   "include": [
     "**/*.ts",

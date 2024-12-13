@@ -51,12 +51,12 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
         ref={cRef}
         style={[styles.map, style]}
         provider={PROVIDER_GOOGLE}
-        initialCamera={{
-          center: { latitude: 41.0082, longitude: 28.9784 },
-          heading: 0,
-          pitch: 0,
-          zoom: 13,
-        }}
+        // initialCamera={{
+        //   center: { latitude: 41.0082, longitude: 28.9784 },
+        //   heading: 0,
+        //   pitch: 0,
+        //   zoom: 13,
+        // }}
         customMapStyle={getMapStyle(mode)}
         mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
         showsIndoors={false}

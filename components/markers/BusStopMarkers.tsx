@@ -1,5 +1,6 @@
 import { router } from 'expo-router'
-import { memo, useEffect, useMemo } from 'react'
+import { memo, useMemo } from 'react'
+import React from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -13,7 +14,6 @@ import { ClustererProps } from 'react-native-clusterer/lib/typescript/Clusterer'
 import { LatLng, MapMarkerProps, Marker, Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useMap } from '@/hooks/contexts/useMap'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
@@ -128,39 +128,30 @@ export const LineBusStopMarkersItem = ({
 
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
+  const initialRegion = useSettingsStore(state => state.initialMapLocation)
 
-  const map = useMap()
   const { query } = useLineBusStops(props.code)
 
-  useEffect(() => {
-    if (!query.data || query.data.length < 1) {
-      return
-    }
+  const zoom = initialRegion ? Math.round(Math.log(360 / initialRegion.longitudeDelta) / Math.LN2) : 0
+  const isStopsVisible = zoom > 12
 
-    const locs: LatLng[] = query.data?.map(stop => ({
-      latitude: stop.y_coord,
-      longitude: stop.x_coord,
-    }))
+  const stops = useMemo(
+    () => {
+      const direction = extractRouteCodeDirection(routeCode)
+      const busStops = direction ? query.data?.filter(stop => stop.direction === direction) : query.data
 
-    map?.current?.fitToCoordinates(locs, {
-      animated: true,
-      edgePadding: {
-        top: 20,
-        bottom: 200,
-        left: 20,
-        right: 20,
-      },
-    })
-  }, [query.data, map])
+      return busStops || []
+    },
+    [query.data, routeCode],
+  )
 
-  const direction = extractRouteCodeDirection(routeCode)
-  const busStops
-    = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
+  console.log(1)
+  if (!isStopsVisible) return null
 
   return (
     <>
-      {busStops.map(stop => (
-        <LineBusStopMarkersItem
+      {stops.map(stop => (
+        <LineBusStopMarkersItemMemoized
           type="point"
           key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}-${stop.stop_code}`}
           stop={stop}

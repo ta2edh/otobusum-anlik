@@ -1,7 +1,9 @@
+import { useMemo } from 'react'
 import { View } from 'react-native'
 
 import { LineBusMarkersMemoized } from './BusMarkers'
 import { LineBusStopMarkersClusteredMemoized, LineBusStopMarkersMemoized } from './BusStopMarkers'
+import { RouteLine } from './RouteLine'
 
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
@@ -15,17 +17,24 @@ export const LineMarkers = () => {
   const selectedGroup = useLinesStore(state => state.selectedGroup)
   const selectedGroupLines = useLinesStore(state => selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined)
 
-  const codes = selectedGroupLines || lineCodes
-  const filteredCodes = codes.filter(lineCode => !invisibleLines.includes(lineCode))
+  const filteredCodes = useMemo(() => {
+    const codes = selectedGroupLines || lineCodes
+    return codes.filter(lineCode => !invisibleLines.includes(lineCode))
+  }, [invisibleLines, lineCodes, selectedGroupLines])
 
   return (
     <>
       {filteredCodes.map(code => (
         <View key={code}>
           <LineBusMarkersMemoized code={code} />
-          {clusterStops
-            ? <LineBusStopMarkersClusteredMemoized code={code} />
-            : <LineBusStopMarkersMemoized code={code} />}
+
+          {
+            clusterStops
+              ? <LineBusStopMarkersClusteredMemoized code={code} />
+              : <LineBusStopMarkersMemoized code={code} />
+          }
+
+          <RouteLine code={code} />
         </View>
       ))}
     </>

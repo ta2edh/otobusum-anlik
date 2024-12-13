@@ -10,6 +10,7 @@ export interface LineRoute {
   route_type: string
   route_desc: string
   route_code?: `${string}_${Direction}_${string}`
+  route_path?: { lat: number, lng: number }[]
 }
 
 export async function getAllRoutes(lineCode: string) {

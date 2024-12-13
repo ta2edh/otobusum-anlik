@@ -39,6 +39,7 @@ export const HomeScreen = () => {
             cRef={map}
             onMapLoaded={handleOnLoaded}
             onRegionChangeComplete={handleRegionChangeComplete}
+            initialRegion={useSettingsStore.getState().initialMapLocation}
             moveOnMarkerPress={false}
           >
             <LineMarkers />
