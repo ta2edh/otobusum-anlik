@@ -145,7 +145,6 @@ export const LineBusStopMarkers = (props: Props) => {
     [query.data, routeCode],
   )
 
-  console.log(1)
   if (!isStopsVisible) return null
 
   return (
