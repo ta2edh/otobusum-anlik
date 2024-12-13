@@ -5,9 +5,11 @@ import {
   ListRenderItem,
   StyleSheet,
   View,
-  ViewProps,
+  ViewStyle,
 } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
+
+import { usePaddings } from '@/hooks/usePaddings'
 
 import { LineMemoized } from './Line'
 
@@ -15,7 +17,8 @@ import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
 interface LinesProps {
-  viewProps?: ViewProps
+  containerStyle?: ViewStyle
+  contentContainerStyle?: ViewStyle
   listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 }
 
@@ -23,6 +26,7 @@ interface LinesProps {
 const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const innerRef = useRef<FlatList>(null)
   useImperativeHandle(outerRef, () => innerRef.current!, [])
+  const paddings = usePaddings(true)
 
   const defaultLines = useLinesStore(state => state.lines)
   const selectedGroup = useLinesStore(state => state.selectedGroup)
@@ -65,7 +69,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const keyExtractor = useCallback((item: string) => `${item}-${selectedGroup}`, [selectedGroup])
 
   return (
-    <View style={[props.viewProps?.style]}>
+    <View style={props.containerStyle}>
       <Animated.FlatList
         {...props.listProps}
         ref={innerRef}
@@ -74,7 +78,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         // onMomentumScrollEnd={handleMomentumScrollEnd}
         onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
-        contentContainerStyle={styles.codes}
+        contentContainerStyle={[paddings, styles.codes, props.contentContainerStyle]}
         keyExtractor={keyExtractor}
         onScrollToIndexFailed={() => {}}
         initialNumToRender={2}
@@ -91,7 +95,6 @@ export const LinesMomoizedFr = memo(forwardRef<FlatList, LinesProps>(Lines))
 
 const styles = StyleSheet.create({
   codes: {
-    padding: 8,
     gap: 8,
     alignItems: 'flex-end',
   },

@@ -24,12 +24,15 @@ import { LineTimetableMemoized } from '@/components/LineTimetable'
 import { UiSuspense } from '@/components/ui/UiSuspense'
 import { UiText } from '@/components/ui/UiText'
 
+import { usePaddings } from '@/hooks/usePaddings'
+
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
 export const TimetableScreen = () => {
   const insets = useSafeAreaInsets()
+  const paddings = usePaddings(true)
   const linesHeight = useSharedValue(0)
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
@@ -67,7 +70,7 @@ export const TimetableScreen = () => {
   }, [linesRef, items.length])
 
   const containerStyle: StyleProp<ViewStyle> = {
-    paddingTop: insets.top + 8,
+    paddingTop: insets.top,
     flex: 1,
   }
 
@@ -108,8 +111,11 @@ export const TimetableScreen = () => {
           onLayout,
           onScroll: handleOnScroll,
         }}
-        viewProps={{
-          style: { flexShrink: 0 },
+        containerStyle={{
+          flexShrink: 0,
+        }}
+        contentContainerStyle={{
+          paddingBottom: 0,
         }}
       />
 
@@ -119,7 +125,7 @@ export const TimetableScreen = () => {
         renderItem={renderItem}
         style={styles.list}
         keyExtractor={keyExtractor}
-        contentContainerStyle={styles.listContent}
+        contentContainerStyle={[styles.listContent, paddings]}
         onScroll={handleOnScroll}
         pagingEnabled
         snapToAlignment="center"
@@ -141,7 +147,7 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   listContent: {
-    padding: 8,
+    // padding: 8,
     gap: 8,
   },
   childrenContainer: {

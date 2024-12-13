@@ -1,7 +1,7 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { ListRenderItem } from '@shopify/flash-list'
 import { forwardRef, useCallback } from 'react'
-import { StyleSheet, View, ViewProps } from 'react-native'
+import { StyleSheet, ViewProps } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
@@ -44,14 +44,12 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
         enableDynamicSizing={false}
       >
         <BottomSheetView style={styles.container}>
-          <View style={styles.listContainer}>
-            <BottomSheetFlashList
-              data={groups}
-              renderItem={renderItem}
-              estimatedItemSize={80}
-              fadingEdgeLength={40}
-            />
-          </View>
+          <BottomSheetFlashList
+            data={groups}
+            renderItem={renderItem}
+            estimatedItemSize={80}
+            fadingEdgeLength={40}
+          />
 
           <UiButton
             icon="add"
@@ -67,6 +65,8 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 12,
+    paddingTop: 0,
   },
   listContainer: {
     flex: 1,

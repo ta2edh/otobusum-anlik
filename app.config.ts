@@ -8,11 +8,7 @@ const config: ExpoConfig = {
   icon: './assets/icon.png',
   scheme: 'otobusum-anlik',
   userInterfaceStyle: 'automatic',
-  splash: {
-    image: './assets/splash.png',
-    resizeMode: 'cover',
-    backgroundColor: '#0a0a0a',
-  },
+  newArchEnabled: false,
   extra: {
     eas: {
       projectId: '2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
@@ -47,7 +43,18 @@ const config: ExpoConfig = {
     },
     package: 'com.anonymous.otobusumanlik',
   },
-  plugins: ['expo-router', 'expo-localization', 'expo-location'],
+  plugins: [
+    'expo-router',
+    'expo-localization',
+    'expo-location',
+    [
+      'expo-splash-screen',
+      {
+        image: './assets/icon.png',
+        backgroundColor: '#0a0a0a',
+      },
+    ],
+  ],
   experiments: {
     typedRoutes: true,
   },

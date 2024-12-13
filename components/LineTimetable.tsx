@@ -179,7 +179,7 @@ export const LineTimetableMemoized = memo(LineTimetable)
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 14,
+    padding: 12,
     gap: 8,
     borderRadius: 8,
     flexShrink: 1,

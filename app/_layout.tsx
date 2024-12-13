@@ -2,7 +2,9 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { DehydrateOptions } from '@tanstack/react-query'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { SplashScreen, Stack } from 'expo-router'
+import { Stack } from 'expo-router'
+import * as SplashScreen from 'expo-splash-screen'
+import { setBackgroundColorAsync } from 'expo-system-ui'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
 import { TheStatusBar } from '@/components/TheStatusBar'
@@ -13,6 +15,11 @@ import { persister, queryClient } from '@/api/client'
 import { i18n } from '@/translations/i18n'
 
 SplashScreen.preventAutoHideAsync()
+
+SplashScreen.setOptions({
+  duration: 150,
+  fade: true,
+})
 
 export const RootLayout = () => {
   const { colorsTheme, mode } = useTheme()
@@ -27,6 +34,8 @@ export const RootLayout = () => {
       card: colorsTheme.surfaceContainerLow,
     },
   }
+
+  setBackgroundColorAsync(modifiedTheme.colors.background)
 
   const dehydrateOptions: DehydrateOptions = {
     shouldDehydrateQuery: (query) => {
@@ -47,7 +56,12 @@ export const RootLayout = () => {
       <GestureHandlerRootView>
         <ThemeProvider value={modifiedTheme}>
           <BottomSheetModalProvider>
-            <Stack screenOptions={{ navigationBarColor: colorsTheme.surfaceContainerLow }}>
+            <Stack
+              screenOptions={{
+                navigationBarColor: colorsTheme.surfaceContainerLow,
+                animation: 'fade_from_bottom',
+              }}
+            >
               <Stack.Screen
                 name="(tabs)"
                 options={{
@@ -56,7 +70,7 @@ export const RootLayout = () => {
               />
               <Stack.Screen
                 name="group/[groupId]/edit"
-                options={{ presentation: 'modal', headerTitle: i18n.t('editGroupTitle') }}
+                options={{ headerTitle: i18n.t('editGroupTitle') }}
               />
             </Stack>
           </BottomSheetModalProvider>

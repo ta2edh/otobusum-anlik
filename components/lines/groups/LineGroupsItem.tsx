@@ -20,8 +20,11 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
 
   const handleLongPress = useCallback(
     () => {
-      router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId: group.id } })
       dismiss()
+
+      setTimeout(() => {
+        router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId: group.id } })
+      }, 150)
     },
     [dismiss, group.id],
   )
@@ -63,6 +66,7 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
       <UiButton
         icon="pencil"
         onPress={handleLongPress}
+        variant="ghost"
       />
     </TouchableOpacity>
   )
@@ -71,7 +75,8 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    padding: 14,
+    alignItems: 'flex-start',
+    padding: 12,
   },
   content: {
     flex: 1,

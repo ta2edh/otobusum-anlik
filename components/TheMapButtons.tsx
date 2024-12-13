@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'absolute',
-    padding: 14,
+    padding: 12,
     gap: 8,
   },
 })

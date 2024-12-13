@@ -44,6 +44,7 @@ export const GroupEditScreen = () => {
           <UiButton
             title={i18n.t('save')}
             onPress={handleOnPress}
+            variant="ghost"
           />
         ),
       })

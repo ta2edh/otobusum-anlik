@@ -16,6 +16,7 @@ export const TabsLayout = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        animation: 'shift',
       }}
     >
       <Tabs.Screen

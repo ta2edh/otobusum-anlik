@@ -1,16 +1,11 @@
-import { StatusBarProps } from 'expo-status-bar'
-import { StatusBar, StatusBarStyle } from 'react-native'
+import { StatusBarProps, StatusBar, StatusBarStyle } from 'expo-status-bar'
 
 import { useTheme } from '@/hooks/useTheme'
 
 export const TheStatusBar = (props: StatusBarProps) => {
   const { mode } = useTheme()
 
-  const style: StatusBarStyle = mode === 'dark' ? 'light-content' : 'dark-content'
+  const style: StatusBarStyle = mode === 'dark' ? 'light' : 'dark'
 
-  setTimeout(() => {
-    StatusBar.setBarStyle(style)
-  }, 0)
-
-  return <StatusBar barStyle={style} animated translucent {...props} />
+  return <StatusBar style={style} animated translucent {...props} />
 }
