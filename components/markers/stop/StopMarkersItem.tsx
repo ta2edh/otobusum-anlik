@@ -65,7 +65,7 @@ export const LineBusStopMarkersItem = ({
 
   const textStyle: StyleProp<TextStyle> = useMemo(
     () => ({
-      color: getSchemeColorHex('onPrimary'),
+      color: getSchemeColorHex('primary'),
     }),
     [getSchemeColorHex],
   )
