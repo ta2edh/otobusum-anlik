@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
-import { LineTimetableMemoized } from '@/components/LineTimetable'
+import { LineTimetableMemoized } from '@/components/lines/LineTimetable'
 import { UiSuspense } from '@/components/ui/UiSuspense'
 import { UiText } from '@/components/ui/UiText'
 

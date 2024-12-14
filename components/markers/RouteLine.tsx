@@ -7,7 +7,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
-import { VisibleMarkers } from './VisibleMarkers'
+import { MarkersInView } from './MarkersInView'
 
 import { useLinesStore } from '@/stores/lines'
 import { angleFromCoordinate } from '@/utils/angleFromCoordinate'
@@ -80,7 +80,7 @@ export const RouteLine = (props: RouteLineProps) => {
         strokeColor={getSchemeColorHex('primary')}
       />
 
-      <VisibleMarkers
+      <MarkersInView
         zoomLimit={14}
         data={arrows}
         renderItem={item => (

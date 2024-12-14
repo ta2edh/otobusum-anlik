@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { View } from 'react-native'
 
-import { LineBusMarkersMemoized } from './BusMarkers'
-import { LineBusStopMarkersClusteredMemoized, LineBusStopMarkersMemoized } from './BusStopMarkers'
+import { LineBusMarkersMemoized } from './bus/BusMarkers'
 import { RouteLine } from './RouteLine'
+import { LineBusStopMarkersMemoized } from './stop/StopMarkers'
+import { LineBusStopMarkersClusteredMemoized } from './stop/StopMarkersClustered'
 
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'

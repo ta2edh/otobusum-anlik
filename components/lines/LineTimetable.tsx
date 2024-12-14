@@ -2,14 +2,14 @@ import { memo, useMemo, useState } from 'react'
 import { ScrollView, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
+import { UiSegmentedButtons } from '@/components/ui/UiSegmentedButtons'
+import { UiText } from '@/components/ui/UiText'
+
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTimetable } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
-
-import { UiSegmentedButtons } from './ui/UiSegmentedButtons'
-import { UiText } from './ui/UiText'
 
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'

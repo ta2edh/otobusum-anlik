@@ -10,7 +10,7 @@ interface VisibleMarkersProps<T> {
   zoomLimit: number
 }
 
-export const VisibleMarkers = <T extends { coordinates: LatLng },>(props: VisibleMarkersProps<T>) => {
+export const MarkersInView = <T extends { coordinates: LatLng },>(props: VisibleMarkersProps<T>) => {
   const initialRegion = useSettingsStore(state => state.initialMapLocation)
   const currentZoom = initialRegion ? regionToZoom(initialRegion) : 0
 

@@ -7,7 +7,7 @@ import MapView, { Region } from 'react-native-maps'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { LineBusStopMarkersItem } from './markers/BusStopMarkers'
+import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
 import { TheMap } from './TheMap'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'

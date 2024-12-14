@@ -6,20 +6,14 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
 
-import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkerLazyCallout } from './MarkerLazyCallout'
+import { MarkerLazyCallout } from '../MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
-import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
-
-interface Props {
-  code: string
-}
 
 interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
   location: BusLocation
@@ -82,27 +76,6 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
 }
 
 export const LineBusMarkersItemMemoized = memo(LineBusMarkersItem)
-
-export const LineBusMarkers = (props: Props) => {
-  const { query } = useLine(props.code)
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
-
-  const filtered = query.data?.filter(loc => loc.guzergahkodu === routeCode) || []
-
-  return (
-    <>
-      {filtered?.map(loc => (
-        <LineBusMarkersItemMemoized
-          key={loc.kapino}
-          location={loc}
-          lineCode={props.code}
-        />
-      ))}
-    </>
-  )
-}
-
-export const LineBusMarkersMemoized = memo(LineBusMarkers)
 
 const styles = StyleSheet.create({
   iconContainer: {
