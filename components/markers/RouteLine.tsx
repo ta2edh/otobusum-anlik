@@ -62,6 +62,29 @@ export const RouteLine = (props: RouteLineProps) => {
     return arrows
   }, [transformed])
 
+  const arrowsFiltered = useMemo(() => {
+    if (!initialRegion) return []
+
+    // because longitude and latitude are center of screen
+    const startXOffset = initialRegion.longitudeDelta / 2
+    const startYOffset = initialRegion.latitudeDelta / 2
+
+    const x = initialRegion.longitude - startXOffset
+    const maxX = initialRegion.longitude + startXOffset
+
+    const y = initialRegion.latitude - startYOffset
+    const maxY = initialRegion.latitude + startYOffset
+
+    return arrows.filter((arr) => {
+      return (
+        arr.coordinate.longitude > x
+        && arr.coordinate.longitude < maxX
+        && arr.coordinate.latitude > y
+        && arr.coordinate.latitude < maxY
+      )
+    })
+  }, [arrows, initialRegion])
+
   if (query.isPending || !route) return
 
   const arrowBackground: StyleProp<ViewStyle> = {
@@ -82,7 +105,8 @@ export const RouteLine = (props: RouteLineProps) => {
         strokeColor={getSchemeColorHex('primary')}
       />
 
-      {zoom > 13 && arrows.map(arrow => (
+      {zoom > 13
+      && arrowsFiltered.map(arrow => (
         <Marker
           key={`${arrow.coordinate.latitude}-${arrow.coordinate.longitude}-${route.route_code}`}
           coordinate={arrow.coordinate}
