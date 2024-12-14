@@ -12,6 +12,7 @@ export function useRoutes(lineCode: string) {
     queryKey: ['line-routes', lineCode],
     queryFn: () => getAllRoutes(lineCode),
     staleTime: 60_000 * 30,
+    meta: { persist: true },
   })
 
   const getRouteFromCode = useCallback(() => {

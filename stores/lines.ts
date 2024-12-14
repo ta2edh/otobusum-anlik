@@ -11,7 +11,7 @@ import { LineGroup } from '@/types/lineGroup'
 import { createTheme } from '@/utils/createTheme'
 
 interface StoreV0 {
-  lines: Record<string, {}[]>
+  lines: Record<string, object[]>
 }
 
 export interface LinesStore {
