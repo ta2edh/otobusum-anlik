@@ -7,10 +7,10 @@ import { useShallow } from 'zustand/react/shallow'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
+import { VisibleMarkers } from './VisibleMarkers'
+
 import { useLinesStore } from '@/stores/lines'
-import { useSettingsStore } from '@/stores/settings'
 import { angleFromCoordinate } from '@/utils/angleFromCoordinate'
-import { regionToZoom } from '@/utils/regionToZoom'
 
 interface RouteLineProps {
   code: string
@@ -18,13 +18,11 @@ interface RouteLineProps {
 
 export const RouteLine = (props: RouteLineProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
-  const initialRegion = useSettingsStore(state => state.initialMapLocation)
 
   const { query, getRouteFromCode } = useRoutes(props.code)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const route = getRouteFromCode()
-  const zoom = initialRegion ? regionToZoom(initialRegion) : 0
 
   const transformed: LatLng[] = useMemo(
     () =>
@@ -37,7 +35,7 @@ export const RouteLine = (props: RouteLineProps) => {
 
   const arrows = useMemo(() => {
     const chunkSize = transformed.length / (transformed.length / 14)
-    const arrows: { coordinate: LatLng, angle: number }[] = []
+    const arrows: { coordinates: LatLng, angle: number }[] = []
 
     for (let index = 0; index < transformed.length; index += chunkSize) {
       const chunk = transformed.slice(index, index + chunkSize)
@@ -49,7 +47,7 @@ export const RouteLine = (props: RouteLineProps) => {
       if (!center || !next) continue
 
       arrows.push({
-        coordinate: center,
+        coordinates: center,
         angle: angleFromCoordinate(
           center.latitude,
           center.longitude,
@@ -61,29 +59,6 @@ export const RouteLine = (props: RouteLineProps) => {
 
     return arrows
   }, [transformed])
-
-  const arrowsFiltered = useMemo(() => {
-    if (!initialRegion) return []
-
-    // because longitude and latitude are center of screen
-    const startXOffset = initialRegion.longitudeDelta / 2
-    const startYOffset = initialRegion.latitudeDelta / 2
-
-    const x = initialRegion.longitude - startXOffset
-    const maxX = initialRegion.longitude + startXOffset
-
-    const y = initialRegion.latitude - startYOffset
-    const maxY = initialRegion.latitude + startYOffset
-
-    return arrows.filter((arr) => {
-      return (
-        arr.coordinate.longitude > x
-        && arr.coordinate.longitude < maxX
-        && arr.coordinate.latitude > y
-        && arr.coordinate.latitude < maxY
-      )
-    })
-  }, [arrows, initialRegion])
 
   if (query.isPending || !route) return
 
@@ -105,31 +80,35 @@ export const RouteLine = (props: RouteLineProps) => {
         strokeColor={getSchemeColorHex('primary')}
       />
 
-      {zoom > 13
-      && arrowsFiltered.map(arrow => (
-        <Marker
-          key={`${arrow.coordinate.latitude}-${arrow.coordinate.longitude}-${route.route_code}`}
-          coordinate={arrow.coordinate}
-          tracksViewChanges={false}
-          tracksInfoWindowChanges={false}
-          anchor={{ x: 0.5, y: 0.5 }}
-        >
-          <View
-            style={[
-              arrowBackground,
-              {
-                transform: [
-                  {
-                    rotate: `${arrow.angle}deg`,
-                  },
-                ],
-              },
-            ]}
+      <VisibleMarkers
+        zoomLimit={13}
+        data={arrows}
+        renderItem={item => (
+          <Marker
+            key={`${item.coordinates.latitude}-${item.coordinates.longitude}-${route.route_code}`}
+            coordinate={item.coordinates}
+            tracksViewChanges={false}
+            tracksInfoWindowChanges={false}
+            anchor={{ x: 0.5, y: 0.5 }}
           >
-            <Ionicons name="arrow-up" size={10} />
-          </View>
-        </Marker>
-      ))}
+            <View
+              style={[
+                arrowBackground,
+                {
+                  transform: [
+                    {
+                      rotate: `${item.angle}deg`,
+                    },
+                  ],
+                },
+              ]}
+            >
+              <Ionicons name="arrow-up" size={10} />
+            </View>
+          </Marker>
+
+        )}
+      />
     </>
   )
 }

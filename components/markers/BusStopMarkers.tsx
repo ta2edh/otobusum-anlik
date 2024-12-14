@@ -1,6 +1,5 @@
 import { router } from 'expo-router'
 import { memo, useMemo } from 'react'
-import React from 'react'
 import {
   StyleProp,
   StyleSheet,
@@ -19,13 +18,14 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from '../ui/UiText'
 
+import { VisibleMarkers } from './VisibleMarkers'
+
 import { colors } from '@/constants/colors'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
-import { regionToZoom } from '@/utils/regionToZoom'
 
 interface Props {
   code: string
@@ -130,34 +130,37 @@ export const LineBusStopMarkersItem = ({
 
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
-  const initialRegion = useSettingsStore(state => state.initialMapLocation)
-
   const { query } = useLineBusStops(props.code)
-  const zoom = initialRegion ? regionToZoom(initialRegion) : 0
 
   const stops = useMemo(
     () => {
       const direction = extractRouteCodeDirection(routeCode)
       const busStops = direction ? query.data?.filter(stop => stop.direction === direction) : query.data
 
-      return busStops || []
+      return busStops?.map(stop => ({
+        ...stop,
+        coordinates: {
+          longitude: stop.x_coord,
+          latitude: stop.y_coord,
+        } as LatLng,
+      })) || []
     },
     [query.data, routeCode],
   )
 
-  if (zoom < 13) return null
-
   return (
-    <>
-      {stops.map(stop => (
+    <VisibleMarkers
+      zoomLimit={13}
+      data={stops}
+      renderItem={item => (
         <LineBusStopMarkersItemMemoized
           type="point"
-          key={`${stop.x_coord}-${stop.y_coord}-${stop.direction}-${stop.stop_code}`}
-          stop={stop}
+          key={`${item.x_coord}-${item.y_coord}-${item.direction}-${item.stop_code}`}
+          stop={item}
           code={props.code}
         />
-      ))}
-    </>
+      )}
+    />
   )
 }
 
