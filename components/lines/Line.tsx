@@ -8,7 +8,9 @@ import Animated, {
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
+import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
+import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from '../ui/UiButton'
@@ -32,6 +34,9 @@ const Line = ({ style, ...props }: LineProps) => {
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { lineWidth } = useLine(props.lineCode)
+  const { query } = useLineBusStops(props.lineCode)
+
+  const map = useMap()
 
   const isVisible = useSharedValue(true)
 
@@ -40,6 +45,11 @@ const Line = ({ style, ...props }: LineProps) => {
       state => state.invisibleLines,
       (newCodes) => {
         isVisible.value = !newCodes.includes(props.lineCode)
+
+        if (!isVisible.value && query.data) {
+          const coords = query.data.map(x => ({ latitude: x.y_coord, longitude: x.x_coord }))
+          map?.current?.fitToCoordinates(coords)
+        }
       },
       {
         fireImmediately: true,
@@ -47,7 +57,7 @@ const Line = ({ style, ...props }: LineProps) => {
     )
 
     return unsub
-  }, [props.lineCode, isVisible])
+  }, [props.lineCode, isVisible, query.data, map])
 
   const handleVisibility = () => {
     toggleLineVisibility(props.lineCode)
