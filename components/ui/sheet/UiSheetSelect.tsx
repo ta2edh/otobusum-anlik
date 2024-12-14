@@ -48,7 +48,7 @@ export const UiSheetSelect = <T,>(
     <UiSheetModal ref={props.cRef} enableDynamicSizing={!props.list} snapPoints={['50%']}>
       {props.list
         ? (
-            <View style={styles.container}>
+            <View style={[styles.container, paddings]}>
               <UiText info style={styles.title}>
                 {props.title}
               </UiText>
