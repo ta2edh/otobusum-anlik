@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { LatLng } from 'react-native-maps'
 
 import { useSettingsStore } from '@/stores/settings'
@@ -14,23 +14,30 @@ export const VisibleMarkers = <T extends { coordinates: LatLng },>(props: Visibl
   const initialRegion = useSettingsStore(state => state.initialMapLocation)
   const currentZoom = initialRegion ? regionToZoom(initialRegion) : 0
 
+  const filteredItems = useMemo(
+    () => {
+      if (!initialRegion) return []
+
+      const startXOffset = initialRegion.longitudeDelta / 2
+      const startYOffset = initialRegion.latitudeDelta / 2
+
+      const x = initialRegion.longitude - startXOffset
+      const maxX = initialRegion.longitude + startXOffset
+
+      const y = initialRegion.latitude - startYOffset
+      const maxY = initialRegion.latitude + startYOffset
+
+      return props.data.filter(item => (
+        item.coordinates.longitude > x
+        && item.coordinates.longitude < maxX
+        && item.coordinates.latitude > y
+        && item.coordinates.latitude < maxY
+      ))
+    },
+    [initialRegion, props.data],
+  )
+
   if (!initialRegion || currentZoom < props.zoomLimit) return
-
-  const startXOffset = initialRegion.longitudeDelta / 2
-  const startYOffset = initialRegion.latitudeDelta / 2
-
-  const x = initialRegion.longitude - startXOffset
-  const maxX = initialRegion.longitude + startXOffset
-
-  const y = initialRegion.latitude - startYOffset
-  const maxY = initialRegion.latitude + startYOffset
-
-  const filteredItems = props.data.filter(item => (
-    item.coordinates.longitude > x
-    && item.coordinates.longitude < maxX
-    && item.coordinates.latitude > y
-    && item.coordinates.latitude < maxY
-  ))
 
   return (
     <>
