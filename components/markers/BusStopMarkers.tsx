@@ -25,6 +25,7 @@ import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { BusLineStop } from '@/types/bus'
 import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
+import { regionToZoom } from '@/utils/regionToZoom'
 
 interface Props {
   code: string
@@ -69,7 +70,7 @@ export const LineBusStopMarkersItem = ({
 
   const backgroundStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor: getSchemeColorHex('primary') || colors.primary,
+      backgroundColor: getSchemeColorHex('onPrimary') || colors.primary,
     }),
     [getSchemeColorHex],
   )
@@ -113,6 +114,7 @@ export const LineBusStopMarkersItem = ({
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       onPress={handleOnPress}
+      anchor={{ x: 0.5, y: 0.5 }}
       {...props}
     >
       <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>
@@ -131,9 +133,7 @@ export const LineBusStopMarkers = (props: Props) => {
   const initialRegion = useSettingsStore(state => state.initialMapLocation)
 
   const { query } = useLineBusStops(props.code)
-
-  const zoom = initialRegion ? Math.round(Math.log(360 / initialRegion.longitudeDelta) / Math.LN2) : 0
-  const isStopsVisible = zoom > 12
+  const zoom = initialRegion ? regionToZoom(initialRegion) : 0
 
   const stops = useMemo(
     () => {
@@ -145,7 +145,7 @@ export const LineBusStopMarkers = (props: Props) => {
     [query.data, routeCode],
   )
 
-  if (!isStopsVisible) return null
+  if (zoom < 13) return null
 
   return (
     <>
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   busStop: {
     width: 14,
     height: 14,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 1000,
     alignItems: 'center',
     justifyContent: 'center',

@@ -71,6 +71,7 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
         },
         tracksInfoWindowChanges: false,
         tracksViewChanges: false,
+        anchor: { x: 0.5, y: 0.5 },
       }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>
