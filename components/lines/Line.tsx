@@ -48,7 +48,14 @@ const Line = ({ style, ...props }: LineProps) => {
 
         if (!isVisible.value && query.data) {
           const coords = query.data.map(x => ({ latitude: x.y_coord, longitude: x.x_coord }))
-          map?.current?.fitToCoordinates(coords)
+          map?.current?.fitToCoordinates(coords, {
+            edgePadding: {
+              bottom: 200,
+              top: 0,
+              left: 0,
+              right: 0,
+            },
+          })
         }
       },
       {
