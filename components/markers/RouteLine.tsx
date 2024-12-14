@@ -81,7 +81,7 @@ export const RouteLine = (props: RouteLineProps) => {
       />
 
       <VisibleMarkers
-        zoomLimit={13}
+        zoomLimit={14}
         data={arrows}
         renderItem={item => (
           <Marker
