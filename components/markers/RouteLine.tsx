@@ -91,22 +91,20 @@ export const RouteLine = (props: RouteLineProps) => {
             tracksInfoWindowChanges={false}
             anchor={{ x: 0.5, y: 0.5 }}
           >
-            <View
-              style={[
-                arrowBackground,
-                {
+            <View style={arrowBackground}>
+              <Ionicons
+                name="arrow-up"
+                size={10}
+                style={{
                   transform: [
                     {
                       rotate: `${item.angle}deg`,
                     },
                   ],
-                },
-              ]}
-            >
-              <Ionicons name="arrow-up" size={10} />
+                }}
+              />
             </View>
           </Marker>
-
         )}
       />
     </>
