@@ -49,6 +49,13 @@ export const useLinesStore = create(
   ),
 )
 
+export const getLines = () => {
+  const state = useLinesStore.getState()
+
+  if (!state.selectedGroup) return state.lines
+  return state.lineGroups[state.selectedGroup]?.lineCodes || []
+}
+
 // Line stuff
 export const deleteLine = (lineCode: string) => useLinesStore.setState((state) => {
   const index = state.lines.indexOf(lineCode)

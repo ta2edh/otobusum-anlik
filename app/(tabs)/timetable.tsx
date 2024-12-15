@@ -17,7 +17,6 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetableMemoized } from '@/components/lines/LineTimetable'
@@ -26,7 +25,7 @@ import { UiText } from '@/components/ui/UiText'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
-import { useLinesStore } from '@/stores/lines'
+import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
@@ -37,11 +36,7 @@ export const TimetableScreen = () => {
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const lines = useLinesStore(state => state.lines)
-  const selectedGroup = useLinesStore(useShallow(state => state.selectedGroup))
-  const selectedGroupLines = useLinesStore(useShallow(state => selectedGroup ? state.lineGroups[selectedGroup] : undefined))
-
-  const items = selectedGroupLines?.lineCodes || lines
+  const lines = useLinesStore(() => getLines())
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
@@ -58,7 +53,7 @@ export const TimetableScreen = () => {
         0,
         Math.min(
           useMiscStore.getState().selectedLineScrollIndex,
-          items.length - 1,
+          lines.length - 1,
         ),
       )
 
@@ -67,7 +62,7 @@ export const TimetableScreen = () => {
         viewPosition: 0.5,
       })
     }, 200)
-  }, [linesRef, items.length])
+  }, [linesRef, lines.length])
 
   const containerStyle: StyleProp<ViewStyle> = {
     paddingTop: insets.top,
@@ -95,7 +90,7 @@ export const TimetableScreen = () => {
     [],
   )
 
-  if (items.length < 1) {
+  if (lines.length < 1) {
     return (
       <UiText style={styles.center} info>
         {i18n.t('timetableEmpty')}
@@ -121,7 +116,7 @@ export const TimetableScreen = () => {
 
       <Animated.FlatList
         ref={timetablesRef}
-        data={items}
+        data={lines}
         renderItem={renderItem}
         style={styles.list}
         keyExtractor={keyExtractor}

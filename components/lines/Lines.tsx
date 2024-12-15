@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useRef } from 'react'
+import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import {
   FlatList,
   FlatListProps,
@@ -13,7 +13,7 @@ import { usePaddings } from '@/hooks/usePaddings'
 
 import { LineMemoized } from './Line'
 
-import { useLinesStore } from '@/stores/lines'
+import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
 interface LinesProps {
@@ -28,37 +28,29 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   useImperativeHandle(outerRef, () => innerRef.current!, [])
   const paddings = usePaddings(true)
 
-  const defaultLines = useLinesStore(state => state.lines)
   const selectedGroup = useLinesStore(state => state.selectedGroup)
-  const selectedGroupLines = useLinesStore(state =>
-    selectedGroup ? state.lineGroups[selectedGroup]?.lineCodes : undefined,
-  )
+  const lines = useLinesStore(() => getLines())
 
-  const items = useMemo(
-    () => selectedGroupLines || defaultLines,
-    [defaultLines, selectedGroupLines],
-  )
-
-  const previousItems = useRef<string[]>(items)
+  const previouslines = useRef<string[]>(lines)
 
   useEffect(() => {
     const scrolledToIndex = useMiscStore.getState().selectedLineScrollIndex
-    if (items.length === 0 || scrolledToIndex !== items.length) return
+    if (lines.length === 0 || scrolledToIndex !== lines.length) return
 
     innerRef.current?.scrollToIndex({
-      index: items.length - 1,
+      index: lines.length - 1,
       animated: true,
     })
 
-    if (items.length !== previousItems.current.length) {
-      previousItems.current = items
+    if (lines.length !== previouslines.current.length) {
+      previouslines.current = lines
     }
-  }, [items])
+  }, [lines])
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
     return <LineMemoized lineCode={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [items, selectedGroup])
+  }, [lines, selectedGroup])
 
   type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
   const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {
@@ -73,9 +65,8 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
       <Animated.FlatList
         {...props.listProps}
         ref={innerRef}
-        data={items}
+        data={lines}
         renderItem={renderItem}
-        // onMomentumScrollEnd={handleMomentumScrollEnd}
         onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
         contentContainerStyle={[paddings, styles.codes, props.contentContainerStyle]}
