@@ -2,7 +2,7 @@ import Constants from 'expo-constants'
 import { ScrollView, StyleSheet } from 'react-native'
 
 import { SettingsCluster } from '@/components/settings/Cluster'
-import { GroupContainer } from '@/components/settings/Container'
+import { GroupContainer, SettingContainer } from '@/components/settings/Container'
 import { SettingsLocation } from '@/components/settings/Location'
 import { SettingsTheme } from '@/components/settings/Theme'
 import { SettingsTraffic } from '@/components/settings/Traffic'
@@ -28,6 +28,13 @@ export const SettingsScreen = () => {
 
       <GroupContainer title={i18n.t('theme')}>
         <SettingsTheme />
+      </GroupContainer>
+
+      <GroupContainer title={i18n.t('license')}>
+        <SettingContainer
+          title={i18n.t('license')}
+          href="https://data.ibb.gov.tr/license"
+        />
       </GroupContainer>
 
       <UiText info style={styles.version}>

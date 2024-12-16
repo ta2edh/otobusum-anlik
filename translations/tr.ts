@@ -40,4 +40,5 @@ export default {
   added: '%{lineCode} Eklendi',
   linesThatUseStop: 'Bu durağı kullanan hatlar',
   stopDirections: 'Bu durağa yol tarifi',
+  license: 'Lisans',
 }
