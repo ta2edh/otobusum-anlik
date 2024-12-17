@@ -2,11 +2,11 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
-import { Linking, StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { Linking, StyleSheet, View } from 'react-native'
 import MapView, { Region } from 'react-native-maps'
+import { useShallow } from 'zustand/react/shallow'
 
-import { useTheme } from '@/hooks/useTheme'
-
+import { LineGroups } from './lines/groups/LineGroups'
 import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
 import { TheMap } from './TheMap'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
@@ -15,6 +15,7 @@ import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
+import { addLine, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
@@ -22,8 +23,33 @@ interface TheStopInfoProps {
   cRef: RefObject<MapView>
 }
 
+const StopLine = ({ lineCode }: { lineCode: string }) => {
+  const bottomSheetModal = useRef<BottomSheetModal>(null)
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
+
+  const handlePress = (lineCode: string) => {
+    addLine(lineCode)
+  }
+
+  const handleLongPress = () => {
+    bottomSheetModal.current?.present()
+  }
+
+  return (
+    <LineGroups cRef={bottomSheetModal} lineCodeToAdd={lineCode}>
+      <UiButton
+        key={lineCode}
+        title={lineCode}
+        variant="soft"
+        theme={lineTheme}
+        onPress={() => handlePress(lineCode)}
+        onLongPress={() => handleLongPress()}
+      />
+    </LineGroups>
+  )
+}
+
 export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
-  const { colorsTheme } = useTheme()
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const savedRegion = useRef<Region | undefined>(undefined)
@@ -54,10 +80,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   if (query.isPending) {
     return (
-      <UiSheetModal
-        ref={bottomSheetModal}
-        enableDynamicSizing
-      >
+      <UiSheetModal ref={bottomSheetModal} enableDynamicSizing>
         <UiActivityIndicator />
       </UiSheetModal>
     )
@@ -65,10 +88,6 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   if (bottomSheetModal.current && stopId) {
     bottomSheetModal.current.present()
-  }
-
-  const lineCodeStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainer,
   }
 
   const openStopDirections = async () => {
@@ -88,11 +107,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   }
 
   return (
-    <UiSheetModal
-      ref={bottomSheetModal}
-      enableDynamicSizing={true}
-      onDismiss={handleOnDismiss}
-    >
+    <UiSheetModal ref={bottomSheetModal} enableDynamicSizing={true} onDismiss={handleOnDismiss}>
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (
@@ -125,7 +140,9 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
           <View style={styles.content}>
             <View>
               <UiText>{query.data.stop.stop_code}</UiText>
-              <UiText size="lg" style={styles.title}>{query.data.stop.stop_name}</UiText>
+              <UiText size="lg" style={styles.title}>
+                {query.data.stop.stop_name}
+              </UiText>
               <UiText>{query.data.stop.province}</UiText>
             </View>
 
@@ -134,15 +151,12 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
               <View style={styles.codeOuter}>
                 {query.data?.buses.map(lineCode => (
-                  <View key={lineCode} style={[styles.code, lineCodeStyle]}>
-                    <UiText>{lineCode}</UiText>
-                  </View>
+                  <StopLine key={lineCode} lineCode={lineCode} />
                 ))}
               </View>
             </View>
           </View>
         )}
-
       </BottomSheetView>
     </UiSheetModal>
   )

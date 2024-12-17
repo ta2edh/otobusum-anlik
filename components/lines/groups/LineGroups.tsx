@@ -1,6 +1,6 @@
 import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { ListRenderItem } from '@shopify/flash-list'
-import { forwardRef, useCallback } from 'react'
+import { RefObject, useCallback } from 'react'
 import { StyleSheet, ViewProps } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -9,29 +9,35 @@ import { UiButton } from '@/components/ui/UiButton'
 
 import { LineGroupsItem } from './LineGroupsItem'
 
-import { createNewGroup, useLinesStore } from '@/stores/lines'
+import { addLineToGroup, createNewGroup, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
 
 interface LineGroupsProps extends ViewProps {
   onPressGroup?: (group: LineGroup) => void
+  cRef?: RefObject<BottomSheetModal>
+  lineCodeToAdd?: string
 }
 
-export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function LineGroups(
-  { onPressGroup, ...props },
-  ref,
-) {
+export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroupsProps) => {
   const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups)))
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
   }, [])
 
+  const handlePressGroup = useCallback((group: LineGroup) => {
+    if (!lineCodeToAdd) return
+
+    addLineToGroup(group.id, lineCodeToAdd)
+    props.cRef?.current?.dismiss()
+  }, [lineCodeToAdd, props.cRef])
+
   const renderItem: ListRenderItem<LineGroup> = useCallback(
     ({ item }) => (
-      <LineGroupsItem group={item} onPress={() => onPressGroup?.(item)} />
+      <LineGroupsItem group={item} onPress={() => handlePressGroup(item)} />
     ),
-    [onPressGroup],
+    [handlePressGroup],
   )
 
   return (
@@ -39,7 +45,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
       {props.children}
 
       <UiSheetModal
-        ref={ref}
+        ref={props.cRef}
         snapPoints={['50%']}
         enableDynamicSizing={false}
       >
@@ -60,7 +66,7 @@ export const LineGroups = forwardRef<BottomSheetModal, LineGroupsProps>(function
       </UiSheetModal>
     </>
   )
-})
+}
 
 const styles = StyleSheet.create({
   container: {

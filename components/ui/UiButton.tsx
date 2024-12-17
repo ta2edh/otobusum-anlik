@@ -1,6 +1,6 @@
 import { Theme } from '@material/material-color-utilities'
 import Ionicons from '@react-native-vector-icons/ionicons'
-import { ComponentProps, useMemo } from 'react'
+import { ComponentProps, useCallback } from 'react'
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 import Animated, { AnimatedProps } from 'react-native-reanimated'
 
@@ -12,11 +12,14 @@ import { UiText } from './UiText'
 import { colors } from '@/constants/colors'
 import { ButtonVariants, IconSize, iconSizes } from '@/constants/uiSizes'
 
+type IconValues = ComponentProps<typeof Ionicons>['name']
+
 interface UiButtonPropsBase {
   theme?: Theme
   isLoading?: boolean
   square?: boolean
   onPress?: () => void
+  onLongPress?: () => void
   iconSize?: IconSize
   disabled?: boolean
   containerStyle?: StyleProp<ViewStyle>
@@ -24,15 +27,16 @@ interface UiButtonPropsBase {
   textStyle?: StyleProp<TextStyle>
   animatedIconProps?: Partial<AnimatedProps<typeof Ionicons>>
   variant?: ButtonVariants
+  iconTrail?: IconValues
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
-  icon: ComponentProps<typeof Ionicons>['name']
+  icon: IconValues
   title?: string
 }
 
 interface UiButtonPropsWithTitle extends UiButtonPropsBase {
-  icon?: ComponentProps<typeof Ionicons>['name']
+  icon?: IconValues
   title: string
 }
 
@@ -60,7 +64,7 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
 
   const iconColor = dynamicText.color ?? props.iconColor
 
-  const Icon = useMemo(() => {
+  const Icon = useCallback(({ icon }: { icon: IconValues }) => {
     if (props.isLoading) {
       return (
         <UiActivityIndicator
@@ -70,12 +74,10 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
       )
     }
 
-    if (!props.icon) return null
-
     if (props.animatedIconProps) {
       return (
         <AnimatedIonIcons
-          name={props.icon}
+          name={icon}
           size={iconSizes[iconSize]}
           animatedProps={props.animatedIconProps}
         />
@@ -84,19 +86,20 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
 
     return (
       <Ionicons
-        name={props.icon}
+        name={icon}
         size={iconSizes[iconSize]}
         color={iconColor}
       />
     )
-  }, [iconColor, iconSize, props.animatedIconProps, props.icon, props.isLoading])
+  }, [iconColor, iconSize, props.animatedIconProps, props.isLoading])
 
   return (
     <TouchableOpacity
       style={[styles.container, dynamicContainer, props.containerStyle, props.square ? styles.square : undefined]}
       onPress={props.onPress}
+      onLongPress={props.onLongPress}
     >
-      {Icon}
+      {props.icon && <Icon icon={props.icon} />}
 
       {props.title && (
         <UiText
@@ -106,6 +109,8 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
           {props.title}
         </UiText>
       )}
+
+      {props.iconTrail && <Icon icon={props.iconTrail} />}
     </TouchableOpacity>
   )
 }

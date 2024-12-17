@@ -135,21 +135,19 @@ export const TheMapButtons = () => {
             />
           </Animated.View>
 
-          {
-            !!selectedGroup && (
-              <Animated.View style={animatedContainerStyle}>
-                <UiButton
-                  icon="close"
-                  onPress={unSelectGroup}
-                  animatedIconProps={animatedIconProps}
-                  variant="ghost"
-                  square
-                />
-              </Animated.View>
-            )
-          }
+          {!!selectedGroup && (
+            <Animated.View style={animatedContainerStyle}>
+              <UiButton
+                icon="close"
+                onPress={unSelectGroup}
+                animatedIconProps={animatedIconProps}
+                variant="ghost"
+                square
+              />
+            </Animated.View>
+          )}
 
-          <LineGroups ref={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
+          <LineGroups cRef={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
         </>
       )}
     </View>

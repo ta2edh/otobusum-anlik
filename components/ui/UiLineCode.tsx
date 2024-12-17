@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { StyleProp, StyleSheet, TextProps, TextStyle } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -16,10 +17,10 @@ export const UiLineCode = ({ code, ...props }: Props) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[code]))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const renderCodeContainer: StyleProp<TextStyle> = {
+  const renderCodeContainer: StyleProp<TextStyle> = useMemo(() => ({
     backgroundColor: getSchemeColorHex('primary') || colors.primary,
     color: getSchemeColorHex('onPrimary') || 'white',
-  }
+  }), [getSchemeColorHex])
 
   return (
     <UiText style={[styles.renderCode, renderCodeContainer]}>

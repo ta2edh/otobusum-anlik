@@ -11,9 +11,8 @@ import { UiButton } from './ui/UiButton'
 import { UiLineCode } from './ui/UiLineCode'
 import { UiText } from './ui/UiText'
 
-import { addLine, addLineToGroup } from '@/stores/lines'
+import { addLine } from '@/stores/lines'
 import { BusLine, BusStop } from '@/types/bus'
-import { LineGroup } from '@/types/lineGroup'
 import { isStop } from '@/utils/isStop'
 
 interface Props extends TouchableOpacityProps {
@@ -40,13 +39,6 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
   const handleAddPress = () => {
     bottomSheetModal.current?.present()
   }
-
-  const handleGroupSelect = useCallback((group: LineGroup) => {
-    if (isStop(item)) return
-
-    addLineToGroup(group.id, item.code)
-    bottomSheetModal.current?.close()
-  }, [item])
 
   return (
     <TouchableOpacity
@@ -75,7 +67,10 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
       {
         !isStop(item)
         && (
-          <LineGroups ref={bottomSheetModal} onPressGroup={handleGroupSelect}>
+          <LineGroups
+            cRef={bottomSheetModal}
+            lineCodeToAdd={item.code}
+          >
             <UiButton
               icon="add-circle-outline"
               onPress={handleAddPress}

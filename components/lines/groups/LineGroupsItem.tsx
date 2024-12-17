@@ -16,17 +16,17 @@ interface Props extends TouchableOpacityProps {
 }
 
 export const LineGroupsItem = ({ group, ...props }: Props) => {
-  const { dismiss } = useBottomSheetModal()
+  const { dismissAll } = useBottomSheetModal()
 
   const handleLongPress = useCallback(
     () => {
-      dismiss()
+      dismissAll()
 
       setTimeout(() => {
         router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId: group.id } })
       }, 150)
     },
-    [dismiss, group.id],
+    [dismissAll, group.id],
   )
 
   const renderItem: ListRenderItem<string> = useCallback(
