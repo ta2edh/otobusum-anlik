@@ -74,7 +74,12 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
             style={[edgeStyle, baseStyle, selected ? selectedStyle : undefined]}
             onPress={() => onValueChange?.(button.value)}
           >
-            <UiText style={[styles.label, textStyle, selected ? selectedTextStyle : undefined]}>{button.label}</UiText>
+            <UiText
+              style={[styles.label, textStyle, selected ? selectedTextStyle : undefined]}
+              numberOfLines={1}
+            >
+              {button.label}
+            </UiText>
           </TouchableOpacity>
         )
       })}
