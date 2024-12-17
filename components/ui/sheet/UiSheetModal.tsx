@@ -4,31 +4,36 @@ import {
   BottomSheetModal,
   BottomSheetModalProps,
 } from '@gorhom/bottom-sheet'
-import { forwardRef } from 'react'
+import { RefObject } from 'react'
 
 import { useSheetModal } from '@/hooks/contexts/useSheetModal'
+import { useSheetBackHandler } from '@/hooks/useSheetBackHandler'
 import { useTheme } from '@/hooks/useTheme'
 
-export type UiSheetModalProps = BottomSheetModalProps
+export interface UiSheetModalProps extends BottomSheetModalProps {
+  cRef?: RefObject<BottomSheetModal>
+}
 
 export const BackdropComponent = (props: BottomSheetBackdropProps) => {
   return <BottomSheetBackdrop appearsOnIndex={0} disappearsOnIndex={-1} {...props} />
 }
 
-export const UiSheetModal = forwardRef<BottomSheetModal, UiSheetModalProps>(function UiSheetModal(props, ref) {
+export const UiSheetModal = (props: UiSheetModalProps) => {
   const { bottomSheetStyle } = useTheme()
+  const { handleSheetPositionChange } = useSheetBackHandler(props.cRef)
   const sheetHeight = useSheetModal()
 
   return (
     <BottomSheetModal
-      ref={ref}
+      ref={props.cRef}
       backdropComponent={BackdropComponent}
       animatedPosition={sheetHeight?.height}
       animatedIndex={sheetHeight?.index}
+      onChange={handleSheetPositionChange}
       {...bottomSheetStyle}
       {...props}
     >
       {props.children}
     </BottomSheetModal>
   )
-})
+}

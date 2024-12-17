@@ -80,7 +80,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   if (query.isPending) {
     return (
-      <UiSheetModal ref={bottomSheetModal} enableDynamicSizing>
+      <UiSheetModal cRef={bottomSheetModal} enableDynamicSizing>
         <UiActivityIndicator />
       </UiSheetModal>
     )
@@ -107,7 +107,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   }
 
   return (
-    <UiSheetModal ref={bottomSheetModal} enableDynamicSizing={true} onDismiss={handleOnDismiss}>
+    <UiSheetModal cRef={bottomSheetModal} enableDynamicSizing={true} onDismiss={handleOnDismiss}>
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (

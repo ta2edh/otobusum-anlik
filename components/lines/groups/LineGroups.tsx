@@ -45,7 +45,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
       {props.children}
 
       <UiSheetModal
-        ref={props.cRef}
+        cRef={props.cRef}
         snapPoints={['50%']}
         enableDynamicSizing={false}
       >

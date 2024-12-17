@@ -33,7 +33,7 @@ const LineAnnouncements = (props: Props) => {
 
       {announcements !== undefined && announcements.length > 0 && (
         <UiSheetModal
-          ref={bottomSheetModal}
+          cRef={bottomSheetModal}
           snapPoints={['50%']}
           enableDynamicSizing={false}
         >
