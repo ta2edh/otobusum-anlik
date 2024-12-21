@@ -61,17 +61,18 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(
-    () => line?.filter(bus => bus.guzergahkodu === routeCode),
+    () => line?.filter(bus => bus.route_code === routeCode),
     [line, routeCode],
   )
 
   const scrollToTrackedBus = useCallback(() => {
     if (!currentTrackedBus.current) return
 
-    const updatedBus = busses?.find(bus => bus.kapino === currentTrackedBus.current?.kapino)
+    const updatedBus = busses?.find(bus => bus.door_no === currentTrackedBus.current?.door_no)
     if (!updatedBus) return
 
-    const stopIndex = filteredStops?.findIndex(stop => stop.stop_code === updatedBus.yakinDurakKodu)
+    // TODO: to string won't be needed later
+    const stopIndex = filteredStops?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code.toString())
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -89,7 +90,8 @@ export const LineBusStops = (props: LineBusStopsProps) => {
 
     const trackedBus = busses?.find((bus) => {
       return currentViewableItems.current.find(({ item }: { item: BusLineStop }) => {
-        return item.stop_code === bus.yakinDurakKodu
+        // TODO: to string won't be needed later
+        return item.stop_code === bus.closest_stop_code.toString()
       })
     })
 
@@ -142,7 +144,8 @@ export const LineBusStops = (props: LineBusStopsProps) => {
 
   const renderItem: ListRenderItem<BusLineStop> = useCallback(
     ({ item }) => {
-      const closestBus = busses?.find(bus => bus.yakinDurakKodu === item.stop_code)
+      // TODO: to string won't be needed later
+      const closestBus = busses?.find(bus => bus.closest_stop_code.toString() === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),

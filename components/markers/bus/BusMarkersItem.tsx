@@ -34,25 +34,25 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
           <View style={styles.calloutContainer}>
             <View>
               <UiText>
-                {location.hatkodu}
+                {location.route_code}
                 {' '}
                 -
-                {location.hatad}
+                {location.line_name}
               </UiText>
               <UiText>
                 {i18n.t('doorNo')}
                 :
-                {location.kapino}
+                {location.door_no}
               </UiText>
               <UiText>
                 {i18n.t('direction')}
                 :
-                {location.yon}
+                {location.direction}
               </UiText>
               <UiText>
                 {i18n.t('lastUpdate')}
                 :
-                {location.son_konum_zamani}
+                {location.last_location_update}
               </UiText>
             </View>
           </View>
@@ -60,8 +60,8 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
       }}
       markerProps={{
         coordinate: {
-          latitude: parseFloat(location.enlem),
-          longitude: parseFloat(location.boylam),
+          latitude: location.lat,
+          longitude: location.lng,
         },
         tracksInfoWindowChanges: false,
         tracksViewChanges: false,
