@@ -9,6 +9,7 @@ import { queryClient } from '@/api/client'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
 import { createTheme } from '@/utils/createTheme'
+import { notify } from '@/utils/notify'
 
 interface StoreV0 {
   lines: Record<string, object[]>
@@ -83,7 +84,7 @@ export const addLine = (lineCode: string) => useLinesStore.setState((state) => {
   if (state.lines.includes(lineCode)) return state
 
   addTheme(lineCode)
-  ToastAndroid.show(i18n.t('added', { lineCode: lineCode }), ToastAndroid.SHORT)
+  notify(i18n.t('added', { lineCode: lineCode }))
 
   return {
     lines: [...state.lines, lineCode],

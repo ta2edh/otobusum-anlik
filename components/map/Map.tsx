@@ -15,7 +15,7 @@ interface TheMapProps extends MapViewProps {
   cRef?: RefObject<MapView>
 }
 
-export const TheMapOld = ({ style, cRef, ...props }: TheMapProps) => {
+export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
   const sheetContext = useSheetModal()
 
