@@ -30,7 +30,7 @@ import { i18n } from '@/translations/i18n'
 import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
-  code: string
+  lineCode: string
 }
 
 const AnimatedFlashList
@@ -41,7 +41,7 @@ const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export const LineBusStops = (props: LineBusStopsProps) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
   const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
@@ -51,11 +51,11 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
 
-  const { query: { data: line } } = useLine(props.code)
+  const { query: { data: line } } = useLine(props.lineCode)
 
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
-  const { closestStop, query } = useLineBusStops(props.code, true)
+  const { closestStop, query } = useLineBusStops(routeCode, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(

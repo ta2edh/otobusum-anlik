@@ -21,7 +21,7 @@ import { LineBusStops } from './LineBusStops'
 import { LineRouteDirection } from './routes/LineRouteDirection'
 import { LineRoutes } from './routes/LineRoutes'
 
-import { changeRouteDirection } from '@/stores/filters'
+import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { deleteLine, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
@@ -31,10 +31,11 @@ export interface LineProps extends AnimatedProps<ViewProps> {
 
 const Line = ({ style, ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { lineWidth } = useLine(props.lineCode)
-  const { query } = useLineBusStops(props.lineCode)
+  const { query } = useLineBusStops(routeCode)
 
   const map = useMap()
 
@@ -144,7 +145,7 @@ const Line = ({ style, ...props }: LineProps) => {
         </View>
       </View>
 
-      <LineBusStops code={props.lineCode} />
+      <LineBusStops lineCode={props.lineCode} />
 
       <View style={styles.lineButtonsContainer}>
         <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
