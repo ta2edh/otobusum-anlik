@@ -1,33 +1,31 @@
 import { useQuery } from '@tanstack/react-query'
 import * as Location from 'expo-location'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import { getLineBusStops } from '@/api/getLineBusStops'
 import { useSettingsStore } from '@/stores/settings'
-import { BusLineStop } from '@/types/bus'
-import { Direction } from '@/types/departure'
+import { BusStop } from '@/types/bus'
 import { getDistanceFromLatLon } from '@/utils/getDistanceFromLatLon'
 
 export function useLineBusStops(
-  code: string,
-  direction?: Direction,
+  routeCode: string,
   listenToUserLocation?: boolean,
 ) {
-  const [closestStop, setClosestStop] = useState<BusLineStop>()
+  const [closestStop, setClosestStop] = useState<BusStop>()
 
   const query = useQuery({
-    queryKey: [`${code}-stop-locations`],
-    queryFn: () => getLineBusStops(code),
+    queryKey: [`${routeCode}-stop-locations`],
+    queryFn: () => getLineBusStops(routeCode),
     staleTime: 60_000 * 30,
     meta: { persist: true },
   })
 
   // Closest stop dependency is here to cause rerender on flatlist usage
-  const filteredStops = useMemo(
-    () => query.data?.filter(stop => stop.direction === direction),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [query.data, direction, closestStop],
-  )
+  // const filteredStops = useMemo(
+  //   () => query.data?.filter(stop => stop.direction === direction),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [query.data, direction, closestStop],
+  // )
 
   // TODO: These location listeners should moved to their own provider like useMap()
   const handlePositionListener: Location.LocationCallback = useCallback(
@@ -35,8 +33,8 @@ export function useLineBusStops(
       let currentMinimumDistance
       let currentClosestStop
 
-      for (let index = 0; index < (filteredStops?.length || 0); index++) {
-        const stop = filteredStops?.at(index)
+      for (let index = 0; index < (query.data?.length || 0); index++) {
+        const stop = query.data?.at(index)
         if (!stop) continue
 
         const distance = getDistanceFromLatLon(
@@ -57,7 +55,7 @@ export function useLineBusStops(
         setClosestStop(currentClosestStop)
       }
     },
-    [filteredStops, closestStop],
+    [query.data, closestStop],
   )
 
   const setupListener = useCallback(async () => {
@@ -91,6 +89,5 @@ export function useLineBusStops(
   return {
     query,
     closestStop,
-    filteredStops,
   }
 }

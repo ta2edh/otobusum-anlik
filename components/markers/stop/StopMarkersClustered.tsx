@@ -10,24 +10,20 @@ import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
 
 import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
 import { useSettingsStore } from '@/stores/settings'
-import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
-  code: string
+  lineCode: string
 }
 
 export const LineBusStopMarkersClustered = (props: Props) => {
   const initialLocation = useSettingsStore(state => state.initialMapLocation)
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
   const { width, height } = useWindowDimensions()
 
-  const { query } = useLineBusStops(props.code)
+  const { query } = useLineBusStops(routeCode)
+  const data = query.data || []
 
-  const direction = extractRouteCodeDirection(routeCode)
-  const busStops
-    = (direction ? query.data?.filter(stop => stop.direction === direction) : query.data) || []
-
-  const filteredParsed: supercluster.PointFeature<any>[] = busStops.map((item, index) => ({
+  const filteredParsed: supercluster.PointFeature<any>[] = data.map((item, index) => ({
     geometry: {
       coordinates: [item.x_coord, item.y_coord],
       type: 'Point',
@@ -43,7 +39,7 @@ export const LineBusStopMarkersClustered = (props: Props) => {
       <LineBusStopMarkersItemMemoized
         type="cluster"
         key={`cluster-${point.properties.cluster_id}`}
-        code={props.code}
+        code={props.lineCode}
         coordinate={{
           latitude: point.geometry.coordinates[1]!,
           longitude: point.geometry.coordinates[0]!,
@@ -76,10 +72,10 @@ export const LineBusStopMarkersClustered = (props: Props) => {
             )
           : (
               <LineBusStopMarkersItemMemoized
-                code={props.code}
+                code={props.lineCode}
                 key={`point-${point.properties.id}`}
                 type="point"
-                stop={busStops[point.properties.id]!}
+                stop={data[point.properties.id]!}
               />
             )}
     />

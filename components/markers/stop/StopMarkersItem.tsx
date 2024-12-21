@@ -10,25 +10,25 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { colors } from '@/constants/colors'
 import { useLinesStore } from '@/stores/lines'
-import { BusLineStop } from '@/types/bus'
+import { BusStop } from '@/types/bus'
 
 interface LineBusStopMarkersItemPropsBase extends Omit<MapMarkerProps, 'coordinate'> {
   code?: string
-  stop?: BusLineStop
+  stop?: BusStop
   coordinate?: LatLng
   viewStyle?: ViewStyle
 }
 
 interface PointProps extends LineBusStopMarkersItemPropsBase {
   type: 'point'
-  stop: BusLineStop
+  stop: BusStop
   label?: string
   coordinate?: LatLng
 }
 
 interface ClusterPoints extends LineBusStopMarkersItemPropsBase {
   type: 'cluster'
-  stop?: BusLineStop
+  stop?: BusStop
   label: string
   coordinate: LatLng
 }
