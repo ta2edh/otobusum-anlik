@@ -11,6 +11,8 @@ type SchemeKeys = {
   [K in keyof Scheme]: Scheme[K] extends number ? K : never
 }[keyof Scheme]
 
+const defaultCreatedTheme = createTheme(colors.primary)
+
 export function useTheme(theme?: Theme) {
   const storedTheme = useSettingsStore(useShallow(state => state.colorScheme))
   const systemScheme = useColorScheme()
@@ -22,7 +24,7 @@ export function useTheme(theme?: Theme) {
 
   const scheme = useMemo(
     () => {
-      const th = theme ?? createTheme(colors.primary)
+      const th = theme ?? defaultCreatedTheme
       return mode === 'dark' ? th?.schemes.dark : th?.schemes.light
     },
     [mode, theme],
@@ -38,7 +40,6 @@ export function useTheme(theme?: Theme) {
 
   const getSchemeColorHex = useCallback((key: SchemeKeys) => {
     if (!scheme) return
-
     return hexFromArgb(scheme[key])
   }, [scheme])
 
