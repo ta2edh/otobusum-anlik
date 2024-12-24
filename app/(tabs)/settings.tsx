@@ -32,13 +32,18 @@ export const SettingsScreen = () => {
       </GroupContainer>
 
       <GroupContainer title={i18n.t('other')}>
+        <SettingCity />
+
         <SettingContainer
           type="link"
-          title={i18n.t('license')}
+          title={i18n.t('license', { city: 'istanbul' })}
           onPress={() => Linking.openURL('https://data.ibb.gov.tr/license')}
         />
-
-        <SettingCity />
+        <SettingContainer
+          type="link"
+          title={i18n.t('license', { city: 'izmir' })}
+          onPress={() => Linking.openURL('https://acikveri.bizizmir.com/tr/license')}
+        />
       </GroupContainer>
 
       <UiText info style={styles.version}>
