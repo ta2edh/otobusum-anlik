@@ -14,7 +14,7 @@ export const UiText = ({ style, info, size = 'md', error, ...rest }: Props) => {
   const { colorsTheme, getSchemeColorHex } = useTheme()
 
   const baseStyle: StyleProp<TextStyle> = {
-    color: error ? getSchemeColorHex('onError') : undefined,
+    color: error ? getSchemeColorHex('onError') : colorsTheme.color,
     fontSize: fontSizes[size],
     flexShrink: 1,
     backgroundColor: error ? getSchemeColorHex('error') : undefined,

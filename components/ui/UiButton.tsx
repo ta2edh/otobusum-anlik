@@ -9,7 +9,6 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
-import { colors } from '@/constants/colors'
 import { ButtonVariants, IconSize, iconSizes } from '@/constants/uiSizes'
 
 type IconValues = ComponentProps<typeof Ionicons>['name']
@@ -49,18 +48,18 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
   const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
 
   const defaultBackground = variant === 'solid'
-    ? colors.primary
+    ? getSchemeColorHex('primary')
     : variant === 'soft'
-      ? colorsTheme.surfaceContainer
+      ? getSchemeColorHex('surface')
       : undefined
 
   const dynamicContainer: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('secondaryContainer') || defaultBackground,
+    backgroundColor: props.theme ? getSchemeColorHex('secondaryContainer') : defaultBackground,
     opacity: props.disabled ? 0.4 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onSecondaryContainer') || colorsTheme.color,
+    color: props.theme ? getSchemeColorHex('onSecondaryContainer') : colorsTheme.color,
   }
 
   const iconColor = dynamicText.color ?? props.iconColor

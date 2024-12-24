@@ -23,7 +23,6 @@ export function useTheme(theme?: Theme) {
   const scheme = useMemo(
     () => {
       const th = theme ?? createTheme(colors.primary)
-
       return mode === 'dark' ? th?.schemes.dark : th?.schemes.light
     },
     [mode, theme],
