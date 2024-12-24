@@ -10,14 +10,13 @@ interface Props extends TextProps {
   error?: boolean
 }
 
-export const UiText = ({ style, info, size = 'md', error, ...rest }: Props) => {
-  const { colorsTheme, getSchemeColorHex } = useTheme()
+export const UiText = ({ style, info, size = 'md', ...rest }: Props) => {
+  const { colorsTheme } = useTheme()
 
   const baseStyle: StyleProp<TextStyle> = {
-    color: error ? getSchemeColorHex('onError') : colorsTheme.color,
+    color: colorsTheme.color,
     fontSize: fontSizes[size],
     flexShrink: 1,
-    backgroundColor: error ? getSchemeColorHex('error') : undefined,
   }
 
   if (info) {

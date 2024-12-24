@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native'
 import { TheSearchInput } from '@/components/TheSearchInput'
 import { TheSearchItem } from '@/components/TheSearchItem'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
+import { UiErrorContainer } from '@/components/ui/UiErrorContainer'
 import { UiText } from '@/components/ui/UiText'
 
 import { usePaddings } from '@/hooks/usePaddings'
@@ -43,7 +44,7 @@ export const SearchScreen = () => {
 
   const emptyItem = useCallback(() => {
     if (mutation.error) {
-      return <UiText error>{mutation.error.message}</UiText>
+      return <UiErrorContainer message={mutation.error.message} />
     }
 
     if (mutation.data) {

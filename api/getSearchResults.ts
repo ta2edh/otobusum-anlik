@@ -8,7 +8,7 @@ export interface SearchResponse {
 }
 
 export async function getSearchResults(query: string): Promise<SearchResponse> {
-  return await api(`/search`, {
+  return api(`/search`, {
     searchParams: {
       q: query,
     },
