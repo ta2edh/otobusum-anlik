@@ -12,6 +12,6 @@ export interface BusLocation {
   closest_stop_code: number
 }
 
-export async function getLineBusLocations(lineCode: string): Promise<BusLocation> {
+export async function getLineBusLocations(lineCode: string): Promise<BusLocation[]> {
   return api(`/bus-locations/${lineCode}`)
 }

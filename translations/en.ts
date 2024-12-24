@@ -41,4 +41,6 @@ export default {
   linesThatUseStop: 'Lines that use this stop',
   stopDirections: 'Directions to this stop',
   license: 'License',
+  other: 'Other',
+  city: 'City',
 }
