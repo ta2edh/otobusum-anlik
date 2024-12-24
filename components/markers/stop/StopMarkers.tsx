@@ -8,30 +8,28 @@ import { MarkersInView } from '../MarkersInView'
 import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
 
 import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
-import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 
 interface Props {
-  code: string
+  lineCode: string
 }
 
 export const LineBusStopMarkers = (props: Props) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
-  const { query } = useLineBusStops(props.code)
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+  const { query } = useLineBusStops(routeCode)
 
   const stops = useMemo(
     () => {
-      const direction = extractRouteCodeDirection(routeCode)
-      const busStops = direction ? query.data?.filter(stop => stop.direction === direction) : query.data
-
-      return busStops?.map(stop => ({
+      const results = query.data?.map(stop => ({
         ...stop,
         coordinates: {
           longitude: stop.x_coord,
           latitude: stop.y_coord,
         } as LatLng,
-      })) || []
+      }))
+
+      return results || []
     },
-    [query.data, routeCode],
+    [query.data],
   )
 
   return (
@@ -41,9 +39,9 @@ export const LineBusStopMarkers = (props: Props) => {
       renderItem={item => (
         <LineBusStopMarkersItemMemoized
           type="point"
-          key={`${item.x_coord}-${item.y_coord}-${item.direction}-${item.stop_code}`}
+          key={`${item.x_coord}-${item.y_coord}-${routeCode}-${item.stop_code}`}
           stop={item}
-          code={props.code}
+          code={routeCode}
         />
       )}
     />

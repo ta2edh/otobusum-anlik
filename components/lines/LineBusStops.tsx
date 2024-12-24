@@ -27,24 +27,23 @@ import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
-import { BusLineStop } from '@/types/bus'
-import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
+import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
-  code: string
+  lineCode: string
 }
 
 const AnimatedFlashList
-  = Animated.createAnimatedComponent<FlashListProps<BusLineStop>>(FlashList)
+  = Animated.createAnimatedComponent<FlashListProps<BusStop>>(FlashList)
 
 const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 export const LineBusStops = (props: LineBusStopsProps) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
-  const flashlistRef = useAnimatedRef<FlashList<BusLineStop>>()
+  const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
   const currentTrackedBus = useRef<BusLocation>()
   const map = useMap()
@@ -52,26 +51,26 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
 
-  const { query: { data: line } } = useLine(props.code)
+  const { query: { data: line } } = useLine(props.lineCode)
 
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
-  const direction = extractRouteCodeDirection(routeCode)
+  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
-  const { filteredStops, closestStop, query } = useLineBusStops(props.code, direction, true)
+  const { closestStop, query } = useLineBusStops(routeCode, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const busses = useMemo(
-    () => line?.filter(bus => bus.guzergahkodu === routeCode),
+    () => line?.filter(bus => bus.route_code === routeCode),
     [line, routeCode],
   )
 
   const scrollToTrackedBus = useCallback(() => {
     if (!currentTrackedBus.current) return
 
-    const updatedBus = busses?.find(bus => bus.kapino === currentTrackedBus.current?.kapino)
+    const updatedBus = busses?.find(bus => bus.door_no === currentTrackedBus.current?.door_no)
     if (!updatedBus) return
 
-    const stopIndex = filteredStops?.findIndex(stop => stop.stop_code === updatedBus.yakinDurakKodu)
+    // TODO: to string won't be needed later
+    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code.toString())
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -82,14 +81,15 @@ export const LineBusStops = (props: LineBusStopsProps) => {
         viewPosition: 0.5,
       })
     }
-  }, [busses, filteredStops, flashlistRef])
+  }, [busses, flashlistRef, query.data])
 
   const snapToBus = useCallback(() => {
     if (isScrolling.value) return
 
     const trackedBus = busses?.find((bus) => {
-      return currentViewableItems.current.find(({ item }: { item: BusLineStop }) => {
-        return item.stop_code === bus.yakinDurakKodu
+      return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
+        // TODO: to string won't be needed later
+        return item.stop_code === bus.closest_stop_code.toString()
       })
     })
 
@@ -110,15 +110,15 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const snapToBusDebounced = useDebouncedCallback(snapToBus, 400)
 
   useEffect(() => {
-    if (currentTrackedBus.current || !closestStop || !filteredStops) return
-    const closestIndex = filteredStops?.findIndex(stop => stop.stop_code === closestStop?.stop_code)
+    if (currentTrackedBus.current || !closestStop || !query.data) return
+    const closestIndex = query.data.findIndex(stop => stop.stop_code === closestStop?.stop_code)
 
     flashlistRef.current?.scrollToIndex({
       animated: true,
       index: closestIndex,
       viewPosition: 0.5,
     })
-  }, [closestStop, filteredStops, flashlistRef])
+  }, [closestStop, flashlistRef, query.data])
 
   useEffect(() => {
     scrollToTrackedBus()
@@ -140,9 +140,10 @@ export const LineBusStops = (props: LineBusStopsProps) => {
     }
   }, [])
 
-  const renderItem: ListRenderItem<BusLineStop> = useCallback(
+  const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
-      const closestBus = busses?.find(bus => bus.yakinDurakKodu === item.stop_code)
+      // TODO: to string won't be needed later
+      const closestBus = busses?.find(bus => bus.closest_stop_code.toString() === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),
@@ -201,10 +202,6 @@ export const LineBusStops = (props: LineBusStopsProps) => {
     return <UiActivityIndicator />
   }
 
-  if (!filteredStops) {
-    return null
-  }
-
   const handleScrollDragStart = () => {
     isScrolling.value = true
     containerHeight.value = withTiming(EXPANDED)
@@ -226,7 +223,7 @@ export const LineBusStops = (props: LineBusStopsProps) => {
     <Animated.View style={animatedContainerStyle}>
       <AnimatedFlashList
         ref={flashlistRef}
-        data={filteredStops}
+        data={query.data}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
         overrideItemLayout={overrideItemLayout}
