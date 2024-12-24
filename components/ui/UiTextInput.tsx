@@ -3,17 +3,18 @@ import { TextInput } from 'react-native-gesture-handler'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { colors } from '@/constants/colors'
-
 export const UiTextInput = ({ style, ...props }: TextInputProps) => {
-  const { colorsTheme } = useTheme()
+  const { getSchemeColorHex } = useTheme()
 
-  const dynamicStyle = { color: colorsTheme.color, backgroundColor: colorsTheme.surfaceContainerHigh }
+  const dynamicStyle = {
+    color: getSchemeColorHex('onSurface'),
+    backgroundColor: getSchemeColorHex('surface'),
+  }
 
   return (
     <TextInput
       style={[styles.input, dynamicStyle, style]}
-      placeholderTextColor={colors.light.surfaceContainerHighest}
+      placeholderTextColor={getSchemeColorHex('onSurface')} // should be less opacity
       {...props}
     />
   )

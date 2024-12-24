@@ -9,8 +9,6 @@ import { Option, UiSheetSelect } from '../ui/sheet/UiSheetSelect'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { colors } from '@/constants/colors'
-
 interface GroupContainerProps {
   title: string
   children?: React.ReactNode
@@ -52,7 +50,7 @@ type SettingProps<T> = SettingSwitchProps | SettingLinkProps | SettingSelectProp
 
 export const SettingContainer = <T,>(props: SettingProps<T>) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const { colorsTheme } = useTheme()
+  const { colorsTheme, getSchemeColorHex } = useTheme()
 
   const handlePress = useCallback(() => {
     props.onPress?.()
@@ -70,8 +68,8 @@ export const SettingContainer = <T,>(props: SettingProps<T>) => {
         <Switch
           value={props.value}
           onChange={props.onChange}
-          thumbColor={colors.primary}
-          trackColor={{ true: colors.primaryDarker }}
+          thumbColor={getSchemeColorHex('primary')}
+          trackColor={{ true: getSchemeColorHex('primary') }}
         />
       )
     }
@@ -102,7 +100,7 @@ export const SettingContainer = <T,>(props: SettingProps<T>) => {
     }
 
     return null
-  }, [props, colorsTheme.color])
+  }, [props, colorsTheme.color, getSchemeColorHex])
 
   return (
     <UiButton
