@@ -53,13 +53,19 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
       ? getSchemeColorHex('surface')
       : undefined
 
+  const defaultTextColor = variant === 'solid'
+    ? getSchemeColorHex('onPrimary')
+    : variant === 'soft'
+      ? getSchemeColorHex('onSurface')
+      : colorsTheme.color
+
   const dynamicContainer: StyleProp<ViewStyle> = {
     backgroundColor: props.theme ? getSchemeColorHex('secondaryContainer') : defaultBackground,
     opacity: props.disabled ? 0.4 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {
-    color: props.theme ? getSchemeColorHex('onSecondaryContainer') : colorsTheme.color,
+    color: props.theme ? getSchemeColorHex('onSecondaryContainer') : defaultTextColor,
   }
 
   const iconColor = dynamicText.color ?? props.iconColor
