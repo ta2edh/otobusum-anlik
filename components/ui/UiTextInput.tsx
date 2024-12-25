@@ -7,8 +7,8 @@ export const UiTextInput = ({ style, ...props }: TextInputProps) => {
   const { getSchemeColorHex } = useTheme()
 
   const dynamicStyle = {
-    color: getSchemeColorHex('onSurface'),
-    backgroundColor: getSchemeColorHex('surface'),
+    color: getSchemeColorHex('onSecondaryContainer'),
+    backgroundColor: getSchemeColorHex('secondaryContainer'),
   }
 
   return (
