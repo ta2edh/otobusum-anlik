@@ -17,6 +17,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetableMemoized } from '@/components/lines/LineTimetable'
@@ -36,7 +37,7 @@ export const TimetableScreen = () => {
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const lines = useLinesStore(() => getLines())
+  const lines = useLinesStore(useShallow(() => getLines()))
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {

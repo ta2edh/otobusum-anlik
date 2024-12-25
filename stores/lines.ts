@@ -77,7 +77,6 @@ export const getLines = () => {
   const filtersStore = useFiltersStore.getState()
 
   if (!filtersStore.selectedGroup) {
-    console.log(linesStore.lines[filtersStore.selectedCity])
     return linesStore.lines[filtersStore.selectedCity]
   }
 

@@ -27,7 +27,7 @@ import { LineGroup } from '@/types/lineGroup'
 export const TheMapButtons = () => {
   const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
   const selectedGroup = useFiltersStore(state => state.selectedGroup)
-  const lines = useLinesStore(() => getLines())
+  const lines = useLinesStore(useShallow(() => getLines()))
 
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue(colors.primary)

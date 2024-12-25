@@ -8,6 +8,7 @@ import {
   ViewStyle,
 } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
+import { useShallow } from 'zustand/react/shallow'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
@@ -30,7 +31,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const paddings = usePaddings(true)
 
   const selectedGroup = useFiltersStore(state => state.selectedGroup)
-  const lines = useLinesStore(() => getLines())
+  const lines = useLinesStore(useShallow(() => getLines()))
 
   const previouslines = useRef<string[]>(lines)
 
