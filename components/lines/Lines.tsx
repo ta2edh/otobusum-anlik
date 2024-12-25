@@ -31,6 +31,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const paddings = usePaddings(true)
 
   const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
   const lines = useLinesStore(() => getLines())
 
   const previouslines = useRef<string[]>(lines)
@@ -52,7 +53,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
     return <LineMemoized lineCode={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines, selectedGroup])
+  }, [lines, selectedGroup, selectedCity])
 
   type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
   const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {
