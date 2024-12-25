@@ -25,8 +25,10 @@ import { useMiscStore } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
 export const TheMapButtons = () => {
-  const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
   const selectedGroup = useFiltersStore(state => state.selectedGroup)
+
+  const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups[selectedCity])))
   const lines = useLinesStore(useShallow(() => getLines()))
 
   const insets = useSafeAreaInsets()
