@@ -15,7 +15,7 @@ import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
-import { addLine, useLinesStore } from '@/stores/lines'
+import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
@@ -25,7 +25,7 @@ interface TheStopInfoProps {
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const handlePress = (lineCode: string) => {
     addLine(lineCode)

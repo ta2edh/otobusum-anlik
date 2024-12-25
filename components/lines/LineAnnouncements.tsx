@@ -9,18 +9,18 @@ import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 
-interface Props extends ViewProps {
-  code: string
+interface LineAnnouncementsProps extends ViewProps {
+  lineCode: string
 }
 
-const LineAnnouncements = (props: Props) => {
+const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { query } = useAnnouncements()
 
-  const announcements = query.data?.filter(ann => ann.HATKODU === props.code)
+  const announcements = query.data?.filter(ann => ann.HATKODU === lineCode)
 
   return (
     <>

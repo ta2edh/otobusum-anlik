@@ -11,7 +11,7 @@ import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTimetable } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
 
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { DayType } from '@/types/departure'
 import { charactersToAscii } from '@/utils/charactersToAscii'
@@ -19,10 +19,10 @@ import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 import { groupDeparturesByHour } from '@/utils/groupDeparturesByHour'
 
 interface Props {
-  code: string
+  lineCode: string
 }
 
-export const LineTimetable = (props: Props) => {
+export const LineTimetable = ({ lineCode }: Props) => {
   const now = new Date()
   const day = now.getDay()
 
@@ -34,12 +34,12 @@ export const LineTimetable = (props: Props) => {
 
   const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
 
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const { query: announcementsQuery } = useAnnouncements()
-  const { routeCode, getRouteFromCode } = useRoutes(props.code)
-  const { query } = useTimetable(props.code)
-  const { lineWidth } = useLine(props.code)
+  const { routeCode, getRouteFromCode } = useRoutes(lineCode)
+  const { query } = useTimetable(lineCode)
+  const { lineWidth } = useLine(lineCode)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const direction = extractRouteCodeDirection(routeCode)
@@ -57,9 +57,9 @@ export const LineTimetable = (props: Props) => {
 
   const announcements = useMemo(
     () => announcementsQuery.data?.filter((ann) => {
-      return ann.HATKODU === props.code
+      return ann.HATKODU === lineCode
     }),
-    [announcementsQuery.data, props.code],
+    [announcementsQuery.data, lineCode],
   )
 
   const cancelledHours = announcements
@@ -106,7 +106,7 @@ export const LineTimetable = (props: Props) => {
           {routeCode}
           {' '}
           -
-          {props.code}
+          {lineCode}
         </UiText>
         <UiText style={[styles.title, textStyle]}>{title}</UiText>
       </View>
@@ -150,7 +150,7 @@ export const LineTimetable = (props: Props) => {
                 <View key={hour} style={styles.row}>
                   {groupedByHour[hour]?.map(departure => (
                     <UiText
-                      key={`${props.code}-${departure.SSERVISTIPI}-${
+                      key={`${lineCode}-${departure.SSERVISTIPI}-${
                         departure.SGUZERAH
                       }-${hour}-${departure.DT.split(':').at(-1)}`}
                       style={[

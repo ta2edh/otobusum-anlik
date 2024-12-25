@@ -25,7 +25,7 @@ import { UiText } from '../ui/UiText'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { BusStop } from '@/types/bus'
 
@@ -40,8 +40,8 @@ const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
-export const LineBusStops = (props: LineBusStopsProps) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
 
   const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
@@ -51,9 +51,9 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
 
-  const { query: { data: line } } = useLine(props.lineCode)
+  const { query: { data: line } } = useLine(lineCode)
 
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const { closestStop, query } = useLineBusStops(routeCode, true)
   const { getSchemeColorHex } = useTheme(lineTheme)

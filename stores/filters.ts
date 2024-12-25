@@ -38,7 +38,8 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFiltersSt
   }
 })
 
-export const getSelectedRouteCode = (lineCode: string) => useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
+export const getSelectedRouteCode = (lineCode: string) =>
+  useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
 
 export const changeRouteDirection = (lineCode: string) => useFiltersStore.setState((state) => {
   const routeCode = getSelectedRouteCode(lineCode)

@@ -6,14 +6,14 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from './UiText'
 
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 
 interface Props extends TextProps {
-  code: string
+  lineCode?: string
 }
 
-export const UiLineCode = ({ code, ...props }: Props) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[code]))
+export const UiLineCode = ({ lineCode, ...props }: Props) => {
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode || '')))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const renderCodeContainer: StyleProp<TextStyle> = useMemo(() => ({
@@ -23,7 +23,7 @@ export const UiLineCode = ({ code, ...props }: Props) => {
 
   return (
     <UiText style={[styles.renderCode, renderCodeContainer]}>
-      {code}
+      {lineCode}
       {props.children}
     </UiText>
   )

@@ -39,7 +39,7 @@ export const LineBusStopMarkersClustered = (props: Props) => {
       <LineBusStopMarkersItemMemoized
         type="cluster"
         key={`cluster-${point.properties.cluster_id}`}
-        code={props.lineCode}
+        lineCode={props.lineCode}
         coordinate={{
           latitude: point.geometry.coordinates[1]!,
           longitude: point.geometry.coordinates[0]!,
@@ -72,7 +72,7 @@ export const LineBusStopMarkersClustered = (props: Props) => {
             )
           : (
               <LineBusStopMarkersItemMemoized
-                code={props.lineCode}
+                lineCode={props.lineCode}
                 key={`point-${point.properties.id}`}
                 type="point"
                 stop={data[point.properties.id]!}

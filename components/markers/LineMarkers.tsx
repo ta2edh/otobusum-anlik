@@ -31,7 +31,7 @@ export const LineMarkers = () => {
               : <LineBusStopMarkersMemoized lineCode={lineCode} />
           }
 
-          <RouteLine code={lineCode} />
+          <RouteLine lineCode={lineCode} />
         </View>
       ))}
     </>

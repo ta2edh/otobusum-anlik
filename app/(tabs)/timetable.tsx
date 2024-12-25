@@ -78,7 +78,7 @@ export const TimetableScreen = () => {
     ({ item }) => {
       return (
         <UiSuspense>
-          <LineTimetableMemoized code={item} />
+          <LineTimetableMemoized lineCode={item} />
         </UiSuspense>
       )
     },

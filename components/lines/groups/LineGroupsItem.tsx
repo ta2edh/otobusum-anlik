@@ -32,7 +32,7 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: lineCode }) => (
       <View style={styles.itemContainer}>
-        <UiLineCode code={lineCode} />
+        <UiLineCode lineCode={lineCode} />
       </View>
     ),
     [],

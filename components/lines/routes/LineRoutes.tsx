@@ -11,7 +11,7 @@ import { UiButton } from '../../ui/UiButton'
 
 import { LineRoute } from '@/api/getAllRoutes'
 import { selectRoute, useFiltersStore } from '@/stores/filters'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 interface Props {
@@ -21,10 +21,11 @@ interface Props {
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
+  const lineTheme = useLinesStore(useShallow(() => getTheme(props.lineCode)))
   const selectedRouteCode = useFiltersStore(
     useShallow(state => state.selectedRoutes[props.lineCode]),
   )
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
+  // const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
 
   const route = useMemo(() => getRouteFromCode(), [getRouteFromCode])
   const bottomSheetModal = useRef<BottomSheetModal>(null)

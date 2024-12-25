@@ -22,19 +22,19 @@ import { LineRouteDirection } from './routes/LineRouteDirection'
 import { LineRoutes } from './routes/LineRoutes'
 
 import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { deleteLine, useLinesStore } from '@/stores/lines'
+import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 
 export interface LineProps extends AnimatedProps<ViewProps> {
   lineCode: string
 }
 
-const Line = ({ style, ...props }: LineProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+const Line = ({ style, lineCode, ...props }: LineProps) => {
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
-  const { lineWidth } = useLine(props.lineCode)
+  const { lineWidth } = useLine(lineCode)
   const { query } = useLineBusStops(routeCode)
 
   const map = useMap()
@@ -45,7 +45,7 @@ const Line = ({ style, ...props }: LineProps) => {
     const unsub = useMiscStore.subscribe(
       state => state.invisibleLines,
       (newCodes) => {
-        isVisible.value = !newCodes.includes(props.lineCode)
+        isVisible.value = !newCodes.includes(lineCode)
 
         if (!isVisible.value && query.data) {
           const coords = query.data.map(x => ({ latitude: x.y_coord, longitude: x.x_coord }))
@@ -65,14 +65,14 @@ const Line = ({ style, ...props }: LineProps) => {
     )
 
     return unsub
-  }, [props.lineCode, isVisible, query.data, map])
+  }, [isVisible, query.data, map, lineCode])
 
   const handleVisibility = () => {
-    toggleLineVisibility(props.lineCode)
+    toggleLineVisibility(lineCode)
   }
 
   const handleDelete = () => {
-    deleteLine(props.lineCode)
+    deleteLine(lineCode)
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -92,13 +92,13 @@ const Line = ({ style, ...props }: LineProps) => {
   )
 
   const handleSwitchRoute = useCallback(() => {
-    changeRouteDirection(props.lineCode)
-  }, [props.lineCode])
+    changeRouteDirection(lineCode)
+  }, [lineCode])
 
   return (
     <Animated.View
       style={[containerStyle, containerAnimatedStyle, styles.container, style]}
-      key={props.lineCode}
+      key={lineCode}
       {...props}
     >
       {/* {isRefetching && (
@@ -125,7 +125,7 @@ const Line = ({ style, ...props }: LineProps) => {
             color: getSchemeColorHex('onPrimary'),
           }}
         >
-          {props.lineCode}
+          {lineCode}
         </UiText>
 
         <View style={styles.titleContainer}>
@@ -135,7 +135,7 @@ const Line = ({ style, ...props }: LineProps) => {
             icon="eye-outline"
           />
 
-          <LineAnnouncementsMemoized code={props.lineCode} style={buttonContainerStyle} />
+          <LineAnnouncementsMemoized lineCode={lineCode} style={buttonContainerStyle} />
 
           <UiButton
             onPress={handleDelete}
@@ -145,14 +145,14 @@ const Line = ({ style, ...props }: LineProps) => {
         </View>
       </View>
 
-      <LineBusStops lineCode={props.lineCode} />
+      <LineBusStops lineCode={lineCode} />
 
       <View style={styles.lineButtonsContainer}>
         <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
-        <LineRoutes lineCode={props.lineCode} />
+        <LineRoutes lineCode={lineCode} />
       </View>
 
-      <LineRouteDirection lineCode={props.lineCode} />
+      <LineRouteDirection lineCode={lineCode} />
     </Animated.View>
   )
 }

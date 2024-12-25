@@ -20,7 +20,7 @@ import { UiButton } from './ui/UiButton'
 
 import { colors } from '@/constants/colors'
 import { changeRouteDirection, selectGroup, unSelectGroup, useFiltersStore } from '@/stores/filters'
-import { getLines, useLinesStore } from '@/stores/lines'
+import { getLines, getTheme, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
@@ -40,7 +40,7 @@ export const TheMapButtons = () => {
       const lineCode = lines.at(index)
       if (lineCode === undefined) return
 
-      const theme = useLinesStore.getState().lineTheme[lineCode]
+      const theme = getTheme(lineCode)
       if (!theme) return
 
       const scheme = theme.schemes[mode]
