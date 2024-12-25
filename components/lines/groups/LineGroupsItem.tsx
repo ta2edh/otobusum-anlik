@@ -23,7 +23,12 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
       dismissAll()
 
       setTimeout(() => {
-        router.navigate({ pathname: '/group/[groupId]/edit', params: { groupId: group.id } })
+        router.push({
+          pathname: '/group/[groupId]/edit',
+          params: {
+            groupId: group.id,
+          },
+        })
       }, 150)
     },
     [dismissAll, group.id],

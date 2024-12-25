@@ -139,7 +139,10 @@ export const addTheme = (lineCode: string) => useLinesStore.setState((state) => 
   return {
     lineTheme: {
       ...state.lineTheme,
-      [lineCode]: createTheme(),
+      [filtersStore.selectedCity]: {
+        ...state.lineTheme[filtersStore.selectedCity],
+        [lineCode]: createTheme(),
+      },
     },
   }
 })
@@ -180,15 +183,19 @@ export const getTheme = (lineCode: string) => {
 
 // Group stuff
 export const createNewGroup = () => useLinesStore.setState((state) => {
+  const filtersStore = useFiltersStore.getState()
   const id = randomUUID()
 
   return {
     lineGroups: {
       ...state.lineGroups,
-      [id]: {
-        id,
-        title: `new group ${Object.keys(state.lineGroups).length + 1}`,
-        lineCodes: [],
+      [filtersStore.selectedCity]: {
+        ...state.lineGroups[filtersStore.selectedCity],
+        [id]: {
+          id,
+          title: `new group ${Object.keys(state.lineGroups).length + 1}`,
+          lineCodes: [],
+        },
       },
     },
   }
