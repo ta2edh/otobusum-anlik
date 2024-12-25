@@ -91,6 +91,7 @@ export const TheMapButtons = () => {
   }
 
   const handlePressGroup = (group: LineGroup) => {
+    console.log(group)
     selectGroup(group.id)
     bottomSheetModalGroups.current?.close()
   }
@@ -111,7 +112,7 @@ export const TheMapButtons = () => {
 
   return (
     <View style={[styles.container, insetStyle]}>
-      {/* {lines.length > 0 && (
+      {lines.length > 0 && (
         <Animated.View style={animatedContainerStyle}>
           <UiButton
             icon="repeat"
@@ -121,9 +122,9 @@ export const TheMapButtons = () => {
             square
           />
         </Animated.View>
-      )} */}
+      )}
 
-      {/* {lineGroups.length > 0 && (
+      {lineGroups.length > 0 && (
         <>
           <Animated.View style={animatedContainerStyle}>
             <UiButton
@@ -149,7 +150,7 @@ export const TheMapButtons = () => {
 
           <LineGroups cRef={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
         </>
-      )} */}
+      )}
     </View>
   )
 }

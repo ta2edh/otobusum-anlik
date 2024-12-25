@@ -56,16 +56,22 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
 
   const handlePressGroup = useCallback(
     (group: LineGroup) => {
+      onPressGroup?.(group)
       if (!lineCodeToAdd) return
 
       addLineToGroup(group.id, selectedCity, lineCodeToAdd)
       props.cRef?.current?.dismiss()
     },
-    [lineCodeToAdd, props.cRef, selectedCity],
+    [lineCodeToAdd, props.cRef, selectedCity, onPressGroup],
   )
 
   const renderItem: ListRenderItem<LineGroup> = useCallback(
-    ({ item }) => <LineGroupsItem group={item} onPress={() => handlePressGroup(item)} />,
+    ({ item }) => (
+      <LineGroupsItem
+        group={item}
+        onPress={() => handlePressGroup(item)}
+      />
+    ),
     [handlePressGroup],
   )
 
@@ -91,6 +97,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
             renderItem={renderItem}
             fadingEdgeLength={40}
             renderSectionHeader={renderSectionHeader}
+            contentContainerStyle={styles.contentContainer}
           />
 
           <UiButton icon="add" title={i18n.t('createNewGroup')} onPress={handlePressNewGroup} />
@@ -106,7 +113,7 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingTop: 0,
   },
-  listContainer: {
-    flex: 1,
+  contentContainer: {
+    gap: 4,
   },
 })
