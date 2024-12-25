@@ -77,6 +77,7 @@ export const getLines = () => {
   const filtersStore = useFiltersStore.getState()
 
   if (!filtersStore.selectedGroup) {
+    console.log(linesStore.lines[filtersStore.selectedCity])
     return linesStore.lines[filtersStore.selectedCity]
   }
 
@@ -121,7 +122,7 @@ export const addLine = (lineCode: string) => useLinesStore.setState((state) => {
   return {
     lines: {
       ...state.lines,
-      [filtersStore.selectedCity]: [state.lines[filtersStore.selectedCity], lineCode],
+      [filtersStore.selectedCity]: [...state.lines[filtersStore.selectedCity], lineCode],
     },
   }
 })

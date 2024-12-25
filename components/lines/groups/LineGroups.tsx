@@ -1,11 +1,12 @@
-import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { ListRenderItem } from '@shopify/flash-list'
+import { BottomSheetFlashList, BottomSheetModal, BottomSheetSectionList, BottomSheetView } from '@gorhom/bottom-sheet'
+// import { ListRenderItem } from '@shopify/flash-list'
 import { RefObject, useCallback } from 'react'
-import { StyleSheet, ViewProps } from 'react-native'
+import { ListRenderItem, StyleSheet, ViewProps } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
 import { UiButton } from '@/components/ui/UiButton'
+import { UiText } from '@/components/ui/UiText'
 
 import { LineGroupsItem } from './LineGroupsItem'
 
@@ -20,7 +21,13 @@ interface LineGroupsProps extends ViewProps {
 }
 
 export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroupsProps) => {
-  const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups)))
+  const groups = useLinesStore(useShallow(state => state.lineGroups))
+
+  const data = Object.entries(groups)
+    .map(([key, value]) => ({
+      title: key,
+      data: Object.values(value),
+    }))
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
@@ -29,7 +36,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
   const handlePressGroup = useCallback((group: LineGroup) => {
     if (!lineCodeToAdd) return
 
-    addLineToGroup(group.id, lineCodeToAdd)
+    // addLineToGroup(group.id, lineCodeToAdd)
     props.cRef?.current?.dismiss()
   }, [lineCodeToAdd, props.cRef])
 
@@ -50,11 +57,19 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
         enableDynamicSizing={false}
       >
         <BottomSheetView style={styles.container}>
-          <BottomSheetFlashList
+          {/* <BottomSheetFlashList
             data={groups}
             renderItem={renderItem}
             estimatedItemSize={80}
             fadingEdgeLength={40}
+          /> */}
+
+          <BottomSheetSectionList
+            sections={data}
+            renderItem={renderItem}
+            renderSectionHeader={() => (
+              <UiText>aslkdhj</UiText>
+            )}
           />
 
           <UiButton

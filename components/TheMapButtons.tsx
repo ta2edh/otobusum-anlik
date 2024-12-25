@@ -111,7 +111,7 @@ export const TheMapButtons = () => {
 
   return (
     <View style={[styles.container, insetStyle]}>
-      {lines.length > 0 && (
+      {/* {lines.length > 0 && (
         <Animated.View style={animatedContainerStyle}>
           <UiButton
             icon="repeat"
@@ -121,9 +121,9 @@ export const TheMapButtons = () => {
             square
           />
         </Animated.View>
-      )}
+      )} */}
 
-      {lineGroups.length > 0 && (
+      {/* {lineGroups.length > 0 && (
         <>
           <Animated.View style={animatedContainerStyle}>
             <UiButton
@@ -149,7 +149,7 @@ export const TheMapButtons = () => {
 
           <LineGroups cRef={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
         </>
-      )}
+      )} */}
     </View>
   )
 }
