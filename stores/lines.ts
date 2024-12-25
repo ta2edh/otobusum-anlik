@@ -100,7 +100,9 @@ export const deleteLine = (lineCode: string) => useLinesStore.setState((state) =
   return {
     lines: {
       ...state.lines,
-      [filtersStore.selectedCity]: [...state.lines[filtersStore.selectedCity]],
+      [filtersStore.selectedCity]: [
+        ...state.lines[filtersStore.selectedCity],
+      ],
     },
   }
 })

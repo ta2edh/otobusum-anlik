@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import { View } from 'react-native'
-import { useShallow } from 'zustand/react/shallow'
 
 import { LineBusMarkersMemoized } from './bus/BusMarkers'
 import { RouteLine } from './RouteLine'
@@ -14,7 +13,7 @@ import { useSettingsStore } from '@/stores/settings'
 export const LineMarkers = () => {
   const invisibleLines = useMiscStore(state => state.invisibleLines)
   const clusterStops = useSettingsStore(state => state.clusterStops)
-  const lines = useLinesStore(useShallow(() => getLines()))
+  const lines = useLinesStore(() => getLines())
 
   const filteredCodes = useMemo(() => {
     return lines.filter(lineCode => !invisibleLines.includes(lineCode))

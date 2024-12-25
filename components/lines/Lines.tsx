@@ -30,8 +30,8 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   useImperativeHandle(outerRef, () => innerRef.current!, [])
   const paddings = usePaddings(true)
 
-  const selectedGroup = useFiltersStore(state => state.selectedGroup)
-  const lines = useLinesStore(useShallow(() => getLines()))
+  const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
+  const lines = useLinesStore(() => getLines())
 
   const previouslines = useRef<string[]>(lines)
 
