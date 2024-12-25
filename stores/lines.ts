@@ -5,6 +5,8 @@ import { ToastAndroid } from 'react-native'
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
+import { useFiltersStore } from './filters'
+
 import { queryClient } from '@/api/client'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
@@ -18,7 +20,6 @@ export interface LinesStore {
   lines: string[]
   lineTheme: Record<string, Theme>
   lineGroups: Record<string, LineGroup>
-  selectedGroup?: string
 }
 
 export const useLinesStore = create(
@@ -28,7 +29,6 @@ export const useLinesStore = create(
         lines: [],
         lineTheme: {},
         lineGroups: {},
-        selectedGroup: undefined,
       }),
       {
         name: 'line-storage',
@@ -51,16 +51,17 @@ export const useLinesStore = create(
 
 export const getLines = () => {
   const state = useLinesStore.getState()
+  const selectedGroup = useFiltersStore.getState().selectedGroup
 
-  if (!state.selectedGroup) return state.lines
-  return state.lineGroups[state.selectedGroup]?.lineCodes || []
+  if (!selectedGroup) return state.lines
+  return state.lineGroups[selectedGroup]?.lineCodes || []
 }
 
 // Line stuff
 export const deleteLine = (lineCode: string) => useLinesStore.setState((state) => {
   const index = state.lines.indexOf(lineCode)
 
-  const selectedGroup = useLinesStore.getState().selectedGroup
+  const selectedGroup = useFiltersStore.getState().selectedGroup
   if (selectedGroup) {
     deleteLineFromGroup(selectedGroup, lineCode)
   } else if (index !== -1) {
@@ -195,18 +196,6 @@ export const deleteGroup = (groupId: string) => useLinesStore.setState((state) =
       ...state.lineGroups,
     },
   }
-
-  // // Check if line in the deleted group are in other groups
-  // // If they are not in other groups delete their theme
-  // // This will probably cause rerenders that are not really needed
-  // for (const lineCode of group.lineCodes) {
-  //   const inOtherGroup = state.lineGroups.find(group => group.lineCodes.includes(lineCode))
-  //   if (state.lines.includes(lineCode) || inOtherGroup) {
-  //     continue
-  //   }
-
-  //   delete state.lineTheme[lineCode]
-  // }
 })
 
 export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLinesStore.setState((state) => {
@@ -227,17 +216,6 @@ export const deleteLineFromGroup = (groupId: string, lineCode: string) => useLin
   }
 })
 
-export const selectGroup = (newGroupId?: string) => useLinesStore.setState(() => {
-  return {
-    selectedGroup: newGroupId,
-  }
-})
-
-export const unSelectGroup = () => useLinesStore.setState(() => {
-  return {
-    selectedGroup: undefined,
-  }
-})
 // Group stuff end
 
 // UPDATER UPDATER UPDATER
@@ -259,7 +237,7 @@ const updateLines = (keys: string[]) => {
 
 let listener: NodeJS.Timeout
 const startUpdateLoop = () => {
-  useLinesStore.subscribe(
+  useFiltersStore.subscribe(
     state => state.selectedGroup,
     (selectedGroup) => {
       clearTimeout(listener)

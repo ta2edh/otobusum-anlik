@@ -13,6 +13,7 @@ import { usePaddings } from '@/hooks/usePaddings'
 
 import { LineMemoized } from './Line'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
@@ -28,7 +29,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   useImperativeHandle(outerRef, () => innerRef.current!, [])
   const paddings = usePaddings(true)
 
-  const selectedGroup = useLinesStore(state => state.selectedGroup)
+  const selectedGroup = useFiltersStore(state => state.selectedGroup)
   const lines = useLinesStore(() => getLines())
 
   const previouslines = useRef<string[]>(lines)

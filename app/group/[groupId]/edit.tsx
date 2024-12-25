@@ -7,7 +7,8 @@ import { UiTextInput } from '@/components/ui/UiTextInput'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
-import { deleteGroup, unSelectGroup, updateGroupTitle } from '@/stores/lines'
+import { unSelectGroup } from '@/stores/filters'
+import { deleteGroup, updateGroupTitle } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 export const GroupEditScreen = () => {

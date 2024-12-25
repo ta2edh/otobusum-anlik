@@ -9,6 +9,7 @@ import { Direction } from '@/types/departure'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>
+  selectedGroup?: string
   selectedCity: Cities
 }
 
@@ -17,6 +18,7 @@ export const useFiltersStore = create(
     persist<FiltersStore>(
       () => ({
         selectedRoutes: {},
+        selectedGroup: undefined,
         selectedCity: 'istanbul',
       }),
       {
@@ -67,5 +69,17 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
       ...state.selectedRoutes,
       [lineCode]: otherRoute.route_code || `${lineCode}_G_D0`,
     },
+  }
+})
+
+export const selectGroup = (newGroupId?: string) => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: newGroupId,
+  }
+})
+
+export const unSelectGroup = () => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: undefined,
   }
 })
