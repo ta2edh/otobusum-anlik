@@ -1,6 +1,6 @@
 import { api } from './api'
 
-import { Direction } from '@/types/departure'
+import { Direction } from '@/types/timetable'
 
 export interface LineRoute {
   id: number

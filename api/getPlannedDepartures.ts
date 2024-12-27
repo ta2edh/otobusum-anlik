@@ -1,39 +1,22 @@
-import { getBody } from './body'
+import { api } from './api'
 
-import { DayType, Direction } from '@/types/departure'
-import { extractInnerContentXml } from '@/utils/extractInnerContentXml'
+export type Time = `${number}:${number}:${number}`
 
-export interface PlannedDeparture {
-  SHATKODU: string
-  HATADI: string
-  SGUZERAH: string
-  SYON: Direction
-  SGUNTIPI: DayType
-  GUZERGAH_ISARETI: string
-  SSERVISTIPI: string
-  DT: `${number}:${number}`
+interface Days {
+  sunday: Time[]
+  monday: Time[]
+  tuesday: Time[]
+  wednesday: Time[]
+  thursday: Time[]
+  friday: Time[]
+  saturday: Time[]
 }
 
-export async function getPlannedDepartures(code: string) {
-  const body = getBody('HatKodu', 'GetPlanlananSeferSaati_json', code)
+export interface Timetable extends Days {
+  route_code: string
+  city: string
+}
 
-  const response = await fetch(
-    'https://api.ibb.gov.tr/iett/UlasimAnaVeri/PlanlananSeferSaati.asmx',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/xml; charset=UTF-8',
-        'SOAPAction': '"http://tempuri.org/GetPlanlananSeferSaati_json"',
-      },
-      body,
-    },
-  )
-
-  const key = 'GetPlanlananSeferSaati_jsonResult'
-
-  const innerContent = extractInnerContentXml(key, await response.text())
-  if (!innerContent) return []
-
-  const responseParsed: PlannedDeparture[] = JSON.parse(innerContent)
-  return responseParsed
+export async function getPlannedDepartures(routeCode: string): Promise<Timetable> {
+  return api(`/timetable/${routeCode}`)
 }

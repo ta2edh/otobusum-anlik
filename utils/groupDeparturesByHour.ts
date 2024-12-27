@@ -1,20 +1,22 @@
-import { PlannedDeparture } from '@/api/getPlannedDepartures'
+export const groupDeparturesByHour = (values: `${number}:${number}:${number}`[]) => {
+  const result = {} as Record<string, string[]>
 
-export const groupDeparturesByHour = (obj: PlannedDeparture[]) => {
-  const res: Record<string, PlannedDeparture[]> = {}
+  for (let index = 0; index < values.length; index++) {
+    const value = values[index]
+    if (!value) continue
 
-  for (let index = 0; index < obj.length; index++) {
-    const element = obj[index]
-    const hour = element?.['DT'].split(':').at(0)
+    const hour = value.split(':').at(0)
+    if (!hour) continue
 
-    if (!hour || !element) continue
+    const minute = value.split(':').at(1)
+    if (!minute) continue
 
-    if (!res[hour]) {
-      res[hour] = [element]
+    if (result[hour]) {
+      result[hour].push(minute)
     } else {
-      res[hour].push(element)
+      result[hour] = [minute]
     }
   }
 
-  return res
+  return result
 }

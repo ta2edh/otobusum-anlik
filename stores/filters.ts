@@ -5,7 +5,7 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 import { queryClient } from '@/api/client'
 import { LineRoute } from '@/api/getAllRoutes'
 import { Cities } from '@/types/cities'
-import { Direction } from '@/types/departure'
+import { Direction } from '@/types/timetable'
 
 export interface FiltersStore {
   selectedRoutes: Record<string, string>

@@ -93,7 +93,6 @@ export const TheMapButtons = () => {
   }
 
   const handlePressGroup = (group: LineGroup) => {
-    console.log(group)
     selectGroup(group.id)
     bottomSheetModalGroups.current?.close()
   }

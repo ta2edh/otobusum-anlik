@@ -8,14 +8,13 @@ import { UiText } from '@/components/ui/UiText'
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
-import { useTimetable } from '@/hooks/queries/useTimetable'
+import { useTimetable, weekdays } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
-import { DayType } from '@/types/departure'
 import { charactersToAscii } from '@/utils/charactersToAscii'
-import { extractRouteCodeDirection } from '@/utils/extractRouteCodeDirection'
 import { groupDeparturesByHour } from '@/utils/groupDeparturesByHour'
 
 interface Props {
@@ -26,44 +25,62 @@ export const LineTimetable = ({ lineCode }: Props) => {
   const now = new Date()
   const day = now.getDay()
 
-  const defaultDayType: DayType = day === 6
+  const defaultDayType = day === 6
     ? 'C'
     : day === 0
       ? 'P'
       : 'I'
 
-  const [dayType, setDayType] = useState<DayType>(() => defaultDayType)
+  const [dayType, setDayType] = useState(() => defaultDayType)
 
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
+  useFiltersStore(useShallow(state => state.selectedCity))
+
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(lineCode)
-  const { query } = useTimetable(lineCode)
   const { lineWidth } = useLine(lineCode)
-  const { getSchemeColorHex } = useTheme(lineTheme)
+  const { query } = useTimetable(routeCode)
 
-  const direction = extractRouteCodeDirection(routeCode)
   const route = getRouteFromCode()
 
   const [leftTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const filteredData = useMemo(
-    () => query.data?.filter((item) => {
-      const dir = direction ? item.SYON === direction : true
-      return dir && item.SGUNTIPI === dayType
-    }),
-    [dayType, direction, query.data],
+    () => {
+      if (!query.data) return []
+
+      if (dayType === 'C') {
+        return query.data.saturday
+      }
+
+      if (dayType === 'P') {
+        return query.data.sunday
+      }
+
+      const weekday = weekdays[day - 1]
+      if (!weekday) {
+        return []
+      }
+
+      return query.data[weekday]
+    },
+    [query.data, day, dayType],
   )
 
   const announcements = useMemo(
-    () => announcementsQuery.data?.filter((ann) => {
-      return ann.HATKODU === lineCode
-    }),
+    () => {
+      return announcementsQuery.data?.filter(
+        ann => ann.HATKODU = lineCode,
+      ) || []
+    },
     [announcementsQuery.data, lineCode],
   )
 
-  const cancelledHours = announcements
-    ? announcements.map((ann) => {
+  const cancelledTimes = useMemo(
+    () => announcements.map(
+      (ann) => {
         if (!ann.MESAJ.includes('dan Saat')) return
 
         const msgSplit = ann.MESAJ.split('dan Saat')
@@ -71,15 +88,16 @@ export const LineTimetable = ({ lineCode }: Props) => {
         if (!from) return
 
         const tLeftTitle = leftTitle ? charactersToAscii(leftTitle) : undefined
-        const isDirectionTrue = from.trim() === tLeftTitle?.trim()
-        if (!isDirectionTrue) return
+        if (from.trim() !== tLeftTitle?.trim()) return
 
-        const hour = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
-        return hour
-      })
-    : []
+        const time = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
+        return time
+      },
+    ),
+    [announcements, leftTitle],
+  )
 
-  const groupedByHour = groupDeparturesByHour(filteredData || [])
+  const groupedByHour = groupDeparturesByHour(filteredData)
   const hours = Object.keys(groupedByHour).sort()
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -97,7 +115,7 @@ export const LineTimetable = ({ lineCode }: Props) => {
     color: getSchemeColorHex('onPrimaryContainer'),
   }
 
-  const title = query.data?.at(0)?.HATADI
+  // const title = query.data?.at(0)?.HATADI
 
   return (
     <View style={[styles.wrapper, containerStyle]}>
@@ -108,7 +126,7 @@ export const LineTimetable = ({ lineCode }: Props) => {
           -
           {lineCode}
         </UiText>
-        <UiText style={[styles.title, textStyle]}>{title}</UiText>
+        <UiText style={[styles.title, textStyle]}>big title wow</UiText>
       </View>
 
       <View style={styles.filters}>
@@ -145,29 +163,25 @@ export const LineTimetable = ({ lineCode }: Props) => {
           </View>
 
           <ScrollView contentContainerStyle={{ flexDirection: 'column', gap: 4 }} horizontal>
-            {hours.map((hour) => {
-              return (
-                <View key={hour} style={styles.row}>
-                  {groupedByHour[hour]?.map(departure => (
-                    <UiText
-                      key={`${lineCode}-${departure.SSERVISTIPI}-${
-                        departure.SGUZERAH
-                      }-${hour}-${departure.DT.split(':').at(-1)}`}
-                      style={[
-                        styles.cell,
-                        textStyle,
-                        cancelledHours.includes(departure.DT) && {
-                          textDecorationLine: 'line-through',
-                          opacity: 0.5,
-                        },
-                      ]}
-                    >
-                      {departure.DT.split(':').at(-1)}
-                    </UiText>
-                  ))}
-                </View>
-              )
-            })}
+            {hours.map(hour => (
+              <View key={hour} style={styles.row}>
+                {groupedByHour[hour]?.map(time => (
+                  <UiText
+                    key={`${lineCode}-${time}-${routeCode}`}
+                    style={[
+                      styles.cell,
+                      textStyle,
+                      cancelledTimes.includes(`${hour}:${time}`) && {
+                        textDecorationLine: 'line-through',
+                        opacity: 0.5,
+                      },
+                    ]}
+                  >
+                    {time}
+                  </UiText>
+                ))}
+              </View>
+            ))}
           </ScrollView>
         </ScrollView>
       </View>
