@@ -20,7 +20,7 @@ export const LineBusMarkers = (props: Props) => {
     <>
       {filtered?.map(loc => (
         <LineBusMarkersItemMemoized
-          key={loc.door_no}
+          key={`${loc.door_no}-${loc.route_code}-${loc.lat}-${loc.lng}`}
           location={loc}
           lineCode={props.code}
         />
