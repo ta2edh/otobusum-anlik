@@ -115,8 +115,6 @@ export const LineTimetable = ({ lineCode }: Props) => {
     color: getSchemeColorHex('onPrimaryContainer'),
   }
 
-  // const title = query.data?.at(0)?.HATADI
-
   return (
     <View style={[styles.wrapper, containerStyle]}>
       <View>
@@ -126,7 +124,7 @@ export const LineTimetable = ({ lineCode }: Props) => {
           -
           {lineCode}
         </UiText>
-        <UiText style={[styles.title, textStyle]}>big title wow</UiText>
+        <UiText style={[styles.title, textStyle]}>{query.data?.route_long_name}</UiText>
       </View>
 
       <View style={styles.filters}>
