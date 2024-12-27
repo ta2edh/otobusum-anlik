@@ -25,6 +25,7 @@ import { UiText } from '@/components/ui/UiText'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
@@ -37,6 +38,7 @@ export const TimetableScreen = () => {
   const timetablesRef = useAnimatedRef<FlatList>()
 
   const lines = useLinesStore(useShallow(() => getLines()))
+  useFiltersStore(useShallow(state => state.selectedCity))
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
