@@ -13,6 +13,7 @@ interface Days {
 }
 
 export interface Timetable extends Days {
+  route_long_name?: string
   route_code: string
   city: string
 }

@@ -21,7 +21,6 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetableMemoized } from '@/components/lines/LineTimetable'
-import { UiSuspense } from '@/components/ui/UiSuspense'
 import { UiText } from '@/components/ui/UiText'
 
 import { usePaddings } from '@/hooks/usePaddings'
@@ -78,9 +77,7 @@ export const TimetableScreen = () => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       return (
-        <UiSuspense>
-          <LineTimetableMemoized lineCode={item} />
-        </UiSuspense>
+        <LineTimetableMemoized lineCode={item} />
       )
     },
     [],
