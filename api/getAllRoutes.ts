@@ -2,6 +2,8 @@ import { api } from './api'
 
 import { Direction } from '@/types/timetable'
 
+export type RouteCode = `${string}_${Direction}_${string}`
+
 export interface LineRoute {
   id: number
   agency_id: string
@@ -9,7 +11,7 @@ export interface LineRoute {
   route_long_name: string
   route_type: string
   route_desc: string
-  route_code?: `${string}_${Direction}_${string}`
+  route_code: RouteCode
   route_path?: { lat: number, lng: number }[]
 }
 

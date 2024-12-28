@@ -1,4 +1,4 @@
-import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModal, BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet'
 import { RefObject } from 'react'
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 
@@ -61,11 +61,11 @@ export const UiSheetSelect = <T,>(
                 {props.title}
               </UiText>
 
-              <BottomSheetFlashList
-                data={props.options}
-                renderItem={SelectItem}
-                estimatedItemSize={51}
-              />
+              <BottomSheetScrollView>
+                {props.options.map(option => (
+                  <SelectItem key={option.label} item={option} />
+                ))}
+              </BottomSheetScrollView>
             </View>
           )
         : (
