@@ -24,14 +24,14 @@ export const GroupEditScreen = () => {
 
   const handleOnPress = useCallback(() => {
     if (!groupId || typeof groupId !== 'string') return
-    // updateGroupTitle(groupId, title.current)
+    updateGroupTitle(groupId, title.current)
     navigation.goBack()
   }, [groupId, navigation])
 
   const handleDeleteGroup = () => {
     if (!groupId || typeof groupId !== 'string') return
 
-    // deleteGroup(groupId)
+    deleteGroup(groupId)
     unSelectGroup()
 
     navigation.goBack()

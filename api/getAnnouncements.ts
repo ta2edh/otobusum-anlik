@@ -1,3 +1,5 @@
+import ky from 'ky'
+
 export const extractInnerContentXml = (key: string, content: string) => {
   return content.split(`${key}>`).at(1)?.split(`</`).at(0)
 }
@@ -11,8 +13,7 @@ interface Announcement {
 }
 
 export async function getAnnouncements() {
-  const response = await fetch('https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl', {
-    method: 'POST',
+  const response = await ky.post('https://api.ibb.gov.tr/iett/UlasimDinamikVeri/Duyurular.asmx?wsdl', {
     headers: {
       'Content-Type': 'text/xml; charset=UTF-8',
       'SOAPAction': '"http://tempuri.org/GetDuyurular_json"',

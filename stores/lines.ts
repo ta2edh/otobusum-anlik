@@ -157,7 +157,6 @@ export const deleteTheme = (lineCode: string) => useLinesStore.setState((state) 
     .flat()
     .map(group => group.lineCodes)
     .flat()
-  // const groupLinecodes = Object.values(state.lineGroups).map(group => group.lineCodes).flat()
 
   const shouldDeleteTheme
     = !groupAllLineCodes.includes(lineCode)
@@ -203,8 +202,9 @@ export const createNewGroup = () => useLinesStore.setState((state) => {
   }
 })
 
-export const addLineToGroup = (groupId: string, city: Cities, lineCode: string) => useLinesStore.setState((state) => {
-  const group = state.lineGroups[city][groupId]
+export const addLineToGroup = (groupId: string, lineCode: string) => useLinesStore.setState((state) => {
+  const filtersStore = useFiltersStore.getState()
+  const group = state.lineGroups[filtersStore.selectedCity][groupId]
   if (!group) return state
 
   if (group.lineCodes.includes(lineCode)) {
@@ -223,12 +223,12 @@ export const addLineToGroup = (groupId: string, city: Cities, lineCode: string) 
   return {
     lineGroups: {
       ...state.lineGroups,
-      [city]: {
-        ...state.lineGroups[city],
+      [filtersStore.selectedCity]: {
+        ...state.lineGroups[filtersStore.selectedCity],
         [groupId]: {
-          ...state.lineGroups[city][groupId],
+          ...state.lineGroups[filtersStore.selectedCity][groupId],
           lineCodes: [
-            ...state.lineGroups[city][groupId]!.lineCodes,
+            ...state.lineGroups[filtersStore.selectedCity][groupId]!.lineCodes,
             lineCode,
           ],
         },
@@ -237,17 +237,18 @@ export const addLineToGroup = (groupId: string, city: Cities, lineCode: string) 
   }
 })
 
-export const updateGroupTitle = (groupId: string, city: Cities, newTitle: string) => useLinesStore.setState((state) => {
-  const group = state.lineGroups[city][groupId]
+export const updateGroupTitle = (groupId: string, newTitle: string) => useLinesStore.setState((state) => {
+  const filtersStore = useFiltersStore.getState()
+  const group = state.lineGroups[filtersStore.selectedCity][groupId]
   if (!group) return state
 
   return {
     lineGroups: {
       ...state.lineGroups,
-      [city]: {
-        ...state.lineGroups[city],
+      [filtersStore.selectedCity]: {
+        ...state.lineGroups[filtersStore.selectedCity],
         [groupId]: {
-          ...state.lineGroups[city][groupId],
+          ...state.lineGroups[filtersStore.selectedCity][groupId],
           title: newTitle,
         },
       },
@@ -255,12 +256,13 @@ export const updateGroupTitle = (groupId: string, city: Cities, newTitle: string
   }
 })
 
-export const deleteGroup = (groupId: string, city: Cities) => useLinesStore.setState((state) => {
-  const group = state.lineGroups[city][groupId]
+export const deleteGroup = (groupId: string) => useLinesStore.setState((state) => {
+  const filtersStore = useFiltersStore.getState()
+  const group = state.lineGroups[filtersStore.selectedCity][groupId]
   if (!group) return state
 
-  group.lineCodes.forEach(lineCode => deleteLineFromGroup(groupId, city, lineCode))
-  delete state.lineGroups[city][groupId]
+  group.lineCodes.forEach(lineCode => deleteLineFromGroup(groupId, filtersStore.selectedCity, lineCode))
+  delete state.lineGroups[filtersStore.selectedCity][groupId]
 
   return {
     lineGroups: {
@@ -271,6 +273,7 @@ export const deleteGroup = (groupId: string, city: Cities) => useLinesStore.setS
 
 export const deleteLineFromGroup = (groupId: string, city: Cities, lineCode: string) => useLinesStore.setState((state) => {
   const lineIndex = state.lineGroups[city][groupId]?.lineCodes.indexOf(lineCode)
+  const filtersStore = useFiltersStore.getState()
   if (lineIndex === undefined || lineIndex === -1) return state
 
   state.lineGroups[city][groupId]!.lineCodes.splice(lineIndex, 1)
@@ -279,12 +282,12 @@ export const deleteLineFromGroup = (groupId: string, city: Cities, lineCode: str
   return {
     lineGroups: {
       ...state.lineGroups,
-      [city]: {
-        ...state.lineGroups[city],
+      [filtersStore.selectedCity]: {
+        ...state.lineGroups[filtersStore.selectedCity],
         [groupId]: {
-          ...state.lineGroups[city][groupId],
+          ...state.lineGroups[filtersStore.selectedCity][groupId],
           lineCodes: {
-            ...state.lineGroups[city][groupId]?.lineCodes,
+            ...state.lineGroups[filtersStore.selectedCity][groupId]?.lineCodes,
           },
           // lineCodes: [...(state.lineGroups[groupId]!.lineCodes || [])],
         },
