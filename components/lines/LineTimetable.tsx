@@ -8,7 +8,7 @@ import { UiText } from '@/components/ui/UiText'
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
-import { useTimetable, weekdays } from '@/hooks/queries/useTimetable'
+import { useTimetable } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -59,14 +59,18 @@ export const LineTimetable = ({ lineCode }: Props) => {
         return query.data.sunday
       }
 
-      const weekday = weekdays[day - 1]
-      if (!weekday) {
-        return []
-      }
+      // for weekdays going to merge all weekday days
+      const timesSet = new Set([
+        ...query.data.monday,
+        ...query.data.tuesday,
+        ...query.data.wednesday,
+        ...query.data.thursday,
+        ...query.data.friday,
+      ])
 
-      return query.data[weekday]
+      return Array.from(timesSet)
     },
-    [query.data, day, dayType],
+    [query.data, dayType],
   )
 
   const announcements = useMemo(
