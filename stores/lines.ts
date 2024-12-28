@@ -64,9 +64,18 @@ export const useLinesStore = create(
             queryClient.clear()
 
             const oldStore = persistedStore as unknown as StoreV1
-            store.lines.istanbul = oldStore.lines
-            store.lineTheme.istanbul = oldStore.lineTheme
-            store.lineGroups.istanbul = oldStore.lineGroups
+            store.lines = {
+              istanbul: oldStore.lines,
+              izmir: [],
+            }
+            store.lineTheme = {
+              istanbul: oldStore.lineTheme,
+              izmir: {},
+            }
+            store.lineGroups = {
+              istanbul: oldStore.lineGroups,
+              izmir: {},
+            }
           }
 
           return persistedStore as LinesStore
