@@ -63,6 +63,8 @@ export const useLinesStore = create(
           if (version === 1) {
             const oldStore = persistedStore as unknown as StoreV1
             store.lines.istanbul = oldStore.lines
+            store.lineTheme.istanbul = oldStore.lineTheme
+            store.lineGroups.istanbul = oldStore.lineGroups
           }
 
           return persistedStore as LinesStore
