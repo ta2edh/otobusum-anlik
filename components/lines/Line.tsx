@@ -32,6 +32,7 @@ export interface LineProps extends AnimatedProps<ViewProps> {
 const Line = ({ style, lineCode, ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { lineWidth } = useLine(lineCode)
@@ -135,7 +136,9 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
             icon="eye-outline"
           />
 
-          <LineAnnouncementsMemoized lineCode={lineCode} style={buttonContainerStyle} />
+          {selectedCity === 'istanbul' && (
+            <LineAnnouncementsMemoized lineCode={lineCode} style={buttonContainerStyle} />
+          )}
 
           <UiButton
             onPress={handleDelete}
