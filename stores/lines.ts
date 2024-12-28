@@ -61,6 +61,8 @@ export const useLinesStore = create(
           }
 
           if (version === 1) {
+            queryClient.clear()
+
             const oldStore = persistedStore as unknown as StoreV1
             store.lines.istanbul = oldStore.lines
             store.lineTheme.istanbul = oldStore.lineTheme
