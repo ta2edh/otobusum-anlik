@@ -6,11 +6,6 @@ export interface BusLocation {
   lat: number
   route_code: string
   closest_stop_code?: number
-  // line_code?: string
-  // line_name?: string
-  // direction?: string
-  // last_location_update?: string
-  // closest_stop_code: number
 }
 
 export async function getLineBusLocations(lineCode: string): Promise<BusLocation[]> {
