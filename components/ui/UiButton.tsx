@@ -61,7 +61,7 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
 
   const dynamicContainer: StyleProp<ViewStyle> = {
     backgroundColor: props.theme ? getSchemeColorHex('secondaryContainer') : defaultBackground,
-    opacity: props.disabled ? 0.8 : 1,
+    opacity: props.disabled ? 0.4 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {
