@@ -18,7 +18,6 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { LineGroupsItem } from './LineGroupsItem'
 
-import { useFiltersStore } from '@/stores/filters'
 import { addLineToGroup, createNewGroup, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
@@ -33,7 +32,6 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
   const { getSchemeColorHex } = useTheme()
 
   const groups = useLinesStore(useShallow(state => state.lineGroups))
-  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const data = Object.entries(groups).map(([city, groupsObject]) => ({
     title: city,
@@ -59,10 +57,10 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
       onPressGroup?.(group)
       if (!lineCodeToAdd) return
 
-      addLineToGroup(group.id, selectedCity, lineCodeToAdd)
+      addLineToGroup(group.id, lineCodeToAdd)
       props.cRef?.current?.dismiss()
     },
-    [lineCodeToAdd, props.cRef, selectedCity, onPressGroup],
+    [lineCodeToAdd, props.cRef, onPressGroup],
   )
 
   const renderItem: ListRenderItem<LineGroup> = useCallback(

@@ -315,33 +315,42 @@ const updateLines = (keys: string[]) => {
   }
 }
 
+const loop = (selectedGroup?: string) => {
+  const linesStore = useLinesStore.getState()
+  const filtersStore = useFiltersStore.getState()
+
+  const lines = selectedGroup
+    ? linesStore.lineGroups[filtersStore.selectedCity][selectedGroup]?.lineCodes
+    : linesStore.lines[filtersStore.selectedCity]
+
+  updateLines(lines || [])
+  return setTimeout(loop, 50_000)
+}
+
 let listener: NodeJS.Timeout
+const handleStoreUpdate = (selectedGroup?: string) => {
+  clearTimeout(listener)
+  listener = loop(selectedGroup)
+}
+
 const startUpdateLoop = () => {
   useFiltersStore.subscribe(
-    state => state.selectedGroup,
-    (selectedGroup) => {
-      clearTimeout(listener)
-
-      const loop = () => {
-        const linesStore = useLinesStore.getState()
-        const filtersStore = useFiltersStore.getState()
-
-        const lines = selectedGroup
-          ? linesStore.lineGroups[filtersStore.selectedCity][selectedGroup]?.lineCodes
-          : linesStore.lines[filtersStore.selectedCity]
-
-        updateLines(lines || [])
-        return setTimeout(loop, 50_000)
-      }
-
-      listener = loop()
+    state => state.selectedCity,
+    () => {
+      const selectedGroup = useFiltersStore.getState().selectedGroup
+      handleStoreUpdate(selectedGroup)
     },
+  )
+
+  useFiltersStore.subscribe(
+    state => state.selectedGroup,
+    selectedGroup => handleStoreUpdate(selectedGroup),
     {
       fireImmediately: true,
     },
   )
 }
 
-if (!__DEV__) {
+if (__DEV__) {
   useLinesStore.persist.onFinishHydration(startUpdateLoop)
 }

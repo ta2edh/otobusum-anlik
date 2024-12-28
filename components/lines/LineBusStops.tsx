@@ -66,11 +66,10 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
   const scrollToTrackedBus = useCallback(() => {
     if (!currentTrackedBus.current) return
 
-    const updatedBus = busses?.find(bus => bus.door_no === currentTrackedBus.current?.door_no)
+    const updatedBus = busses?.find(bus => bus.bus_id === currentTrackedBus.current?.bus_id)
     if (!updatedBus) return
 
-    // TODO: to string won't be needed later
-    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code.toString())
+    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code?.toString())
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -88,8 +87,7 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
 
     const trackedBus = busses?.find((bus) => {
       return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
-        // TODO: to string won't be needed later
-        return item.stop_code === bus.closest_stop_code.toString()
+        return item.stop_code === bus.closest_stop_code?.toString()
       })
     })
 
@@ -142,8 +140,7 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
 
   const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
-      // TODO: to string won't be needed later
-      const closestBus = busses?.find(bus => bus.closest_stop_code.toString() === item.stop_code)
+      const closestBus = busses?.find(bus => bus.closest_stop_code?.toString() === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),

@@ -33,25 +33,25 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
         children: (
           <View style={styles.calloutContainer}>
             <View>
-              {location.line_name && (
+              {location.route_code && (
                 <UiText>
                   {location.route_code}
-                  {' '}
+                  {/* {' '}
                   -
-                  {location.line_name}
+                  {location.line_name} */}
                 </UiText>
               )}
 
               <UiText>
                 {i18n.t('doorNo')}
                 :
-                {location.door_no}
+                {location.bus_id}
               </UiText>
-              <UiText>
+              {/* <UiText>
                 {i18n.t('lastUpdate')}
                 :
                 {location.last_location_update}
-              </UiText>
+              </UiText> */}
             </View>
           </View>
         ),
