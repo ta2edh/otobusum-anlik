@@ -16,11 +16,11 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
-import { UiText } from '../ui/UiText'
 
 import { LineGroups } from './groups/LineGroups'
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
+import { LineName } from './LineName'
 import { LineRouteDirection } from './routes/LineRouteDirection'
 import { LineRoutes } from './routes/LineRoutes'
 
@@ -133,16 +133,7 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
       )} */}
 
       <View style={styles.titleContainer}>
-        <UiText
-          style={{
-            fontWeight: 'bold',
-            fontSize: 24,
-            letterSpacing: 2,
-            color: getSchemeColorHex('onPrimary'),
-          }}
-        >
-          {lineCode}
-        </UiText>
+        <LineName lineCode={lineCode} />
 
         <View style={styles.titleContainer}>
           <UiButton
