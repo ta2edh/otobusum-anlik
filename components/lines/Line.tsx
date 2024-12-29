@@ -88,7 +88,6 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
 
   const handleAddToGroup = () => {
     uiSheetLineGroupsModal.current?.present()
-    // console.log('add to group handle')
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
