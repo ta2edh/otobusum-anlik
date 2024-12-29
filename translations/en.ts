@@ -43,4 +43,6 @@ export default {
   license: 'License %{city}',
   other: 'Other',
   city: 'City',
+  deleteLine: 'Delete line',
+  addToGroup: 'Add to group',
 }

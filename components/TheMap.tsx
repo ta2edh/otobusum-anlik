@@ -37,7 +37,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
           translateY: interpolate(
             sheetContext?.index.value!,
             [-1, 0],
-            [0, -150],
+            [0, -80],
             'clamp',
           ),
         },

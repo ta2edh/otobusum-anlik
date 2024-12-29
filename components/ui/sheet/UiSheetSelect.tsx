@@ -9,10 +9,7 @@ import { UiText } from '../UiText'
 
 import { UiSheetModal } from './UiSheetModal'
 
-export interface Option<T> {
-  label: string
-  value: T
-}
+import { Option } from '@/types/sheet'
 
 interface UiSheetSelectProps<T> {
   title: string

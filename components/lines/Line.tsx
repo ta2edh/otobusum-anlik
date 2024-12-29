@@ -1,4 +1,5 @@
-import { memo, useCallback, useEffect, useMemo } from 'react'
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   AnimatedProps,
@@ -13,9 +14,11 @@ import { useLine } from '@/hooks/queries/useLine'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
+import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
 
+import { LineGroups } from './groups/LineGroups'
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
 import { LineRouteDirection } from './routes/LineRouteDirection'
@@ -24,6 +27,7 @@ import { LineRoutes } from './routes/LineRoutes'
 import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
+import { i18n } from '@/translations/i18n'
 
 export interface LineProps extends AnimatedProps<ViewProps> {
   lineCode: string
@@ -39,6 +43,8 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
   const { query } = useLineBusStops(routeCode)
 
   const map = useMap()
+  const uiSheetButtonModal = useRef<BottomSheetModal>(null)
+  const uiSheetLineGroupsModal = useRef<BottomSheetModal>(null)
 
   const isVisible = useSharedValue(true)
 
@@ -72,8 +78,17 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
     toggleLineVisibility(lineCode)
   }
 
+  const handleMenu = () => {
+    uiSheetButtonModal.current?.present()
+  }
+
   const handleDelete = () => {
     deleteLine(lineCode)
+  }
+
+  const handleAddToGroup = () => {
+    uiSheetLineGroupsModal.current?.present()
+    // console.log('add to group handle')
   }
 
   const containerStyle: StyleProp<ViewStyle> = {
@@ -141,9 +156,35 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
           )}
 
           <UiButton
-            onPress={handleDelete}
-            icon="trash-outline"
+            onPress={handleMenu}
+            icon="menu"
             theme={lineTheme}
+          />
+
+          <UiSheetModal cRef={uiSheetButtonModal}>
+            <BottomSheetView style={{ padding: 8, gap: 8 }}>
+              <UiButton
+                onPress={handleAddToGroup}
+                title={i18n.t('addToGroup')}
+                variant="soft"
+                icon="add-circle-outline"
+                square
+                align="left"
+              />
+              <UiButton
+                onPress={handleDelete}
+                title={i18n.t('deleteLine')}
+                variant="soft"
+                icon="trash-outline"
+                square
+                align="left"
+              />
+            </BottomSheetView>
+          </UiSheetModal>
+
+          <LineGroups
+            cRef={uiSheetLineGroupsModal}
+            lineCodeToAdd={lineCode}
           />
         </View>
       </View>

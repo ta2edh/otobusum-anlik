@@ -43,4 +43,6 @@ export default {
   license: 'Lisans',
   other: 'Diğer',
   city: 'Şehir',
+  deleteLine: 'Hattı sil',
+  addToGroup: 'Gruba ekle',
 }

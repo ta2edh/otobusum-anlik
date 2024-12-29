@@ -28,6 +28,7 @@ interface UiButtonPropsBase {
   variant?: ButtonVariants
   iconTrail?: IconValues
   children?: React.ReactNode
+  align?: 'left'
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
@@ -66,6 +67,16 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
 
   const dynamicText: StyleProp<TextStyle> = {
     color: props.theme ? getSchemeColorHex('onSecondaryContainer') : defaultTextColor,
+    ...(
+      props.align === 'left'
+        ? { flexGrow: 1, textAlign: 'left' }
+        : {}
+    ),
+
+    // ...(props.align === 'left')
+
+    // flexGrow: 1,
+    // textAlign: props.align,
   }
 
   const iconColor = dynamicText.color ?? props.iconColor
