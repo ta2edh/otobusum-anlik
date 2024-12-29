@@ -13,11 +13,13 @@ interface Days {
 }
 
 export interface Timetable extends Days {
-  route_long_name?: string
-  route_code: string
-  city: string
+  route_short_name?: string
 }
 
-export async function getPlannedDepartures(routeCode: string): Promise<Timetable> {
-  return api(`/timetable/${routeCode}`)
+export async function getPlannedDepartures(lineCode: string, routeDirection: string): Promise<Timetable> {
+  return api(`/timetable/${lineCode}`, {
+    searchParams: {
+      direction: routeDirection,
+    },
+  })
 }

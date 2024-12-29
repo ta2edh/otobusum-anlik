@@ -13,6 +13,7 @@ export const groupDeparturesByHour = (values: `${number}:${number}:${number}`[])
 
     if (result[hour]) {
       result[hour].push(minute)
+      result[hour].sort()
     } else {
       result[hour] = [minute]
     }

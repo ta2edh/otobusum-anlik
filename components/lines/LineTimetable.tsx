@@ -40,12 +40,12 @@ export const LineTimetable = ({ lineCode }: Props) => {
 
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(lineCode)
-  const { lineWidth } = useLine(lineCode)
-  const { query } = useTimetable(routeCode)
 
   const route = getRouteFromCode()
-
   const [leftTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
+
+  const { lineWidth } = useLine(lineCode)
+  const { query } = useTimetable(lineCode)
 
   const filteredData = useMemo(
     () => {
@@ -128,7 +128,9 @@ export const LineTimetable = ({ lineCode }: Props) => {
           -
           {lineCode}
         </UiText>
-        <UiText style={[styles.title, textStyle]}>{query.data?.route_long_name}</UiText>
+        <UiText style={[styles.title, textStyle]}>
+          {route?.route_long_name.trim()}
+        </UiText>
       </View>
 
       <View style={styles.filters}>
