@@ -74,30 +74,31 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
     return unsub
   }, [isVisible, query.data, map, lineCode])
 
-  const handleVisibility = () => {
+  const handleVisibility = useCallback(() => {
     toggleLineVisibility(lineCode)
-  }
+  }, [lineCode])
 
-  const handleMenu = () => {
+  const handleMenu = useCallback(() => {
     uiSheetButtonModal.current?.present()
-  }
+  }, [])
 
-  const handleDelete = () => {
+  const handleDelete = useCallback(() => {
     deleteLine(lineCode)
-  }
+  }, [lineCode])
 
-  const handleAddToGroup = () => {
+  const handleAddToGroup = useCallback(() => {
     uiSheetLineGroupsModal.current?.present()
-  }
+  }, [])
 
-  const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('primary'),
-    width: lineWidth,
-  }
+  const containerStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      backgroundColor: getSchemeColorHex('primary'),
+      width: lineWidth,
+    }), [getSchemeColorHex, lineWidth])
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isVisible.value ? 1 : 0.4),
-  }))
+  }), [])
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -161,7 +162,7 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
           />
 
           <UiSheetModal cRef={uiSheetButtonModal}>
-            <BottomSheetView style={{ padding: 8, gap: 8 }}>
+            <BottomSheetView style={styles.menuSheetContainer}>
               <UiButton
                 onPress={handleAddToGroup}
                 title={i18n.t('addToGroup')}
@@ -220,5 +221,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     flexGrow: 1,
+  },
+  menuSheetContainer: {
+    padding: 8,
+    gap: 8,
   },
 })
