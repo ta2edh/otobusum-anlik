@@ -21,13 +21,6 @@ export const LineName = ({ lineCode }: LineNameProps) => {
 
   return (
     <View style={styles.container}>
-      {query.isPending && (
-        <UiActivityIndicator
-          color={getSchemeColorHex('onPrimary')}
-          size={24}
-        />
-      )}
-
       <UiText
         style={{
           fontWeight: 'bold',
@@ -37,6 +30,13 @@ export const LineName = ({ lineCode }: LineNameProps) => {
       >
         {lineCode}
       </UiText>
+
+      {query.isFetching && (
+        <UiActivityIndicator
+          color={getSchemeColorHex('onPrimary')}
+          size={24}
+        />
+      )}
     </View>
   )
 }
@@ -45,5 +45,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 8,
   },
 })
