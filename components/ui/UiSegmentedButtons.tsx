@@ -13,8 +13,6 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from './UiText'
 
-import { colors } from '@/constants/colors'
-
 interface Button<T> {
   label: string
   value: T
@@ -49,11 +47,11 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   }
 
   const selectedStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('tertiaryContainer') || colors.primary,
+    backgroundColor: getSchemeColorHex('tertiaryContainer'),
   }
 
   const selectedTextStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onTertiaryContainer') || colors.primary,
+    color: getSchemeColorHex('onTertiaryContainer'),
   }
 
   const textStyle: StyleProp<TextStyle> = {

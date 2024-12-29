@@ -1,5 +1,5 @@
 import * as SplashScreen from 'expo-splash-screen'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import MapView, { Region } from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
@@ -13,10 +13,52 @@ import { TheStopInfo } from '@/components/TheStopInfo'
 import { MapContext } from '@/hooks/contexts/useMap'
 import { SheetContext, sheetContextValues } from '@/hooks/contexts/useSheetModal'
 
+import { queryClient } from '@/api/client'
+import { getLineBusStops } from '@/api/getLineBusStops'
+import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
   const map = useRef<MapView>(null)
+
+  useEffect(() => {
+    const unsub = useLinesStore.subscribe(
+      state => state.lines,
+      (state, prevState) => {
+        const city = useFiltersStore.getState().selectedCity
+        const newStateCity = state[city]
+        const oldStateCity = prevState[city]
+
+        if (newStateCity.length > oldStateCity.length) {
+          const newCode = newStateCity.at(-1)
+          if (!newCode) return
+
+          const routeCode = getSelectedRouteCode(newCode)
+          const busStops = queryClient
+            .getQueryCache()
+            .find<Awaited<ReturnType<typeof getLineBusStops>>>({ queryKey: [`${routeCode}-stop-locations`] })
+
+          map.current?.fitToCoordinates(
+            busStops?.state.data?.map(dt => ({
+              longitude: dt.x_coord,
+              latitude: dt.y_coord,
+            })),
+            {
+              edgePadding: {
+                bottom: 200,
+                left: 0,
+                right: 0,
+                top: 0,
+              },
+            },
+          )
+        }
+      },
+    )
+
+    return unsub
+  }, [])
 
   const sheetContext: sheetContextValues = {
     height: useSharedValue(0),

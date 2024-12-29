@@ -1,11 +1,20 @@
-import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { ListRenderItem } from '@shopify/flash-list'
-import { RefObject, useCallback } from 'react'
-import { StyleSheet, ViewProps } from 'react-native'
+import { BottomSheetModal, BottomSheetSectionList, BottomSheetView } from '@gorhom/bottom-sheet'
+import { RefObject, useCallback, useMemo } from 'react'
+import {
+  ListRenderItem,
+  SectionListData,
+  StyleProp,
+  StyleSheet,
+  TextStyle,
+  ViewProps,
+} from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
 import { UiButton } from '@/components/ui/UiButton'
+import { UiText } from '@/components/ui/UiText'
+
+import { useTheme } from '@/hooks/useTheme'
 
 import { LineGroupsItem } from './LineGroupsItem'
 
@@ -20,48 +29,76 @@ interface LineGroupsProps extends ViewProps {
 }
 
 export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroupsProps) => {
-  const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups)))
+  const { getSchemeColorHex } = useTheme()
+
+  const groups = useLinesStore(useShallow(state => state.lineGroups))
+
+  const data = Object.entries(groups).map(([city, groupsObject]) => ({
+    title: city,
+    data: Object.values(groupsObject),
+  }))
+
+  const headerStyle: StyleProp<TextStyle> = useMemo(
+    () => ({
+      backgroundColor: getSchemeColorHex('primary'),
+      color: getSchemeColorHex('onPrimary'),
+      borderRadius: 4,
+      padding: 4,
+    }),
+    [getSchemeColorHex],
+  )
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
   }, [])
 
-  const handlePressGroup = useCallback((group: LineGroup) => {
-    if (!lineCodeToAdd) return
+  const handlePressGroup = useCallback(
+    (group: LineGroup) => {
+      onPressGroup?.(group)
+      if (!lineCodeToAdd) return
 
-    addLineToGroup(group.id, lineCodeToAdd)
-    props.cRef?.current?.dismiss()
-  }, [lineCodeToAdd, props.cRef])
+      addLineToGroup(group.id, lineCodeToAdd)
+      props.cRef?.current?.dismiss()
+    },
+    [lineCodeToAdd, props.cRef, onPressGroup],
+  )
 
   const renderItem: ListRenderItem<LineGroup> = useCallback(
     ({ item }) => (
-      <LineGroupsItem group={item} onPress={() => handlePressGroup(item)} />
+      <LineGroupsItem
+        group={item}
+        onPress={() => handlePressGroup(item)}
+      />
     ),
     [handlePressGroup],
+  )
+
+  const renderSectionHeader = useCallback(
+    ({ section }: { section: SectionListData<LineGroup, (typeof data)[number]> }) => (
+      <UiText style={headerStyle}>
+        {section.title}
+        {' '}
+        groups
+      </UiText>
+    ),
+    [headerStyle],
   )
 
   return (
     <>
       {props.children}
 
-      <UiSheetModal
-        cRef={props.cRef}
-        snapPoints={['50%']}
-        enableDynamicSizing={false}
-      >
+      <UiSheetModal cRef={props.cRef} snapPoints={['50%']} enableDynamicSizing={false}>
         <BottomSheetView style={styles.container}>
-          <BottomSheetFlashList
-            data={groups}
+          <BottomSheetSectionList
+            sections={data}
             renderItem={renderItem}
-            estimatedItemSize={80}
             fadingEdgeLength={40}
+            renderSectionHeader={renderSectionHeader}
+            contentContainerStyle={styles.contentContainer}
           />
 
-          <UiButton
-            icon="add"
-            title={i18n.t('createNewGroup')}
-            onPress={handlePressNewGroup}
-          />
+          <UiButton icon="add" title={i18n.t('createNewGroup')} onPress={handlePressNewGroup} />
         </BottomSheetView>
       </UiSheetModal>
     </>
@@ -74,7 +111,7 @@ const styles = StyleSheet.create({
     padding: 12,
     paddingTop: 0,
   },
-  listContainer: {
-    flex: 1,
+  contentContainer: {
+    gap: 4,
   },
 })

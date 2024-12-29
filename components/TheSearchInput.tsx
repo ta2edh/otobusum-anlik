@@ -11,7 +11,6 @@ import { useDebouncedCallback } from 'use-debounce'
 import { UiButton } from './ui/UiButton'
 import { UiTextInput } from './ui/UiTextInput'
 
-import { colors } from '@/constants/colors'
 import { i18n } from '@/translations/i18n'
 
 interface Props extends ViewProps {
@@ -32,6 +31,11 @@ export const TheSearchInput = ({ isLoading, debounce, onSearch, style, ...rest }
     if (!queryValue.current) return
     onSearch(queryValue.current)
   }, 800)
+
+  const handleDebouncedButton = useDebouncedCallback(() => {
+    if (!queryValue.current) return
+    onSearch(queryValue.current)
+  }, 1000)
 
   const handleQueryChange = useCallback(
     (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
@@ -65,8 +69,7 @@ export const TheSearchInput = ({ isLoading, debounce, onSearch, style, ...rest }
         title={i18n.t('search')}
         isLoading={isLoading}
         disabled={queryDisabled}
-        onPress={debounce ? handleDebouncedSearch : handleSearch}
-        containerStyle={{ backgroundColor: colors.primary }}
+        onPress={debounce ? handleDebouncedButton : handleSearch}
         icon="search"
       />
     </View>

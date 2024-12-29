@@ -9,17 +9,17 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { MarkersInView } from './MarkersInView'
 
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { angleFromCoordinate } from '@/utils/angleFromCoordinate'
 
 interface RouteLineProps {
-  code: string
+  lineCode: string
 }
 
-export const RouteLine = (props: RouteLineProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+export const RouteLine = ({ lineCode }: RouteLineProps) => {
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
-  const { query, getRouteFromCode } = useRoutes(props.code)
+  const { query, getRouteFromCode } = useRoutes(lineCode)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const route = getRouteFromCode()

@@ -3,11 +3,14 @@ import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
 import { queryClient } from '@/api/client'
-import { LineRoute } from '@/api/getAllRoutes'
-import { Direction } from '@/types/departure'
+import { LineRoute, RouteCode } from '@/api/getAllRoutes'
+import { Cities } from '@/types/cities'
+import { Direction } from '@/types/timetable'
 
 export interface FiltersStore {
-  selectedRoutes: Record<string, string>
+  selectedRoutes: Record<string, RouteCode>
+  selectedGroup?: string
+  selectedCity: Cities
 }
 
 export const useFiltersStore = create(
@@ -15,6 +18,8 @@ export const useFiltersStore = create(
     persist<FiltersStore>(
       () => ({
         selectedRoutes: {},
+        selectedGroup: undefined,
+        selectedCity: 'istanbul',
       }),
       {
         name: 'filter-storage',
@@ -24,7 +29,7 @@ export const useFiltersStore = create(
   ),
 )
 
-export const selectRoute = (lineCode: string, routeCode: string) => useFiltersStore.setState((state) => {
+export const selectRoute = (lineCode: string, routeCode: RouteCode) => useFiltersStore.setState((state) => {
   return {
     selectedRoutes: {
       ...state.selectedRoutes,
@@ -33,7 +38,8 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFiltersSt
   }
 })
 
-export const getSelectedRouteCode = (lineCode: string) => useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
+export const getSelectedRouteCode = (lineCode: string) =>
+  useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0` as RouteCode
 
 export const changeRouteDirection = (lineCode: string) => useFiltersStore.setState((state) => {
   const routeCode = getSelectedRouteCode(lineCode)
@@ -64,5 +70,17 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
       ...state.selectedRoutes,
       [lineCode]: otherRoute.route_code || `${lineCode}_G_D0`,
     },
+  }
+})
+
+export const selectGroup = (newGroupId?: string) => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: newGroupId,
+  }
+})
+
+export const unSelectGroup = () => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: undefined,
   }
 })

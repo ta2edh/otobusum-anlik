@@ -1,6 +1,6 @@
 import { Theme } from '@material/material-color-utilities'
 import Ionicons from '@react-native-vector-icons/ionicons'
-import { ComponentProps, useCallback } from 'react'
+import React, { ComponentProps, useCallback } from 'react'
 import { StyleProp, StyleSheet, TextStyle, TouchableOpacity, ViewStyle } from 'react-native'
 import Animated, { AnimatedProps } from 'react-native-reanimated'
 
@@ -9,7 +9,6 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
-import { colors } from '@/constants/colors'
 import { ButtonVariants, IconSize, iconSizes } from '@/constants/uiSizes'
 
 type IconValues = ComponentProps<typeof Ionicons>['name']
@@ -28,6 +27,8 @@ interface UiButtonPropsBase {
   animatedIconProps?: Partial<AnimatedProps<typeof Ionicons>>
   variant?: ButtonVariants
   iconTrail?: IconValues
+  children?: React.ReactNode
+  align?: 'left'
 }
 
 interface UiButtonPropsWithIcon extends UiButtonPropsBase {
@@ -48,18 +49,34 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
   const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
 
   const defaultBackground = variant === 'solid'
-    ? colors.primary
+    ? getSchemeColorHex('primary')
     : variant === 'soft'
-      ? colorsTheme.surfaceContainer
+      ? getSchemeColorHex('surface')
       : undefined
 
+  const defaultTextColor = variant === 'solid'
+    ? getSchemeColorHex('onPrimary')
+    : variant === 'soft'
+      ? getSchemeColorHex('onSurface')
+      : colorsTheme.color
+
   const dynamicContainer: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('secondaryContainer') || defaultBackground,
-    opacity: props.disabled ? 0.4 : 1,
+    backgroundColor: props.theme ? getSchemeColorHex('secondaryContainer') : defaultBackground,
+    opacity: props.disabled ? 0.75 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onSecondaryContainer') || colorsTheme.color,
+    color: props.theme ? getSchemeColorHex('onSecondaryContainer') : defaultTextColor,
+    ...(
+      props.align === 'left'
+        ? { flexGrow: 1, textAlign: 'left' }
+        : {}
+    ),
+
+    // ...(props.align === 'left')
+
+    // flexGrow: 1,
+    // textAlign: props.align,
   }
 
   const iconColor = dynamicText.color ?? props.iconColor
@@ -111,6 +128,7 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
       )}
 
       {props.iconTrail && <Icon icon={props.iconTrail} />}
+      {props.children}
     </TouchableOpacity>
   )
 }

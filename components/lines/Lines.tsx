@@ -8,11 +8,13 @@ import {
   ViewStyle,
 } from 'react-native'
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
+import { useShallow } from 'zustand/react/shallow'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
 import { LineMemoized } from './Line'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
@@ -28,7 +30,8 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   useImperativeHandle(outerRef, () => innerRef.current!, [])
   const paddings = usePaddings(true)
 
-  const selectedGroup = useLinesStore(state => state.selectedGroup)
+  const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
   const lines = useLinesStore(() => getLines())
 
   const previouslines = useRef<string[]>(lines)
@@ -50,7 +53,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
     return <LineMemoized lineCode={code} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines, selectedGroup])
+  }, [lines, selectedGroup, selectedCity])
 
   type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
   const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {

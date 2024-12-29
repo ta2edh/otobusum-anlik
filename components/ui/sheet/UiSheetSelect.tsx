@@ -1,32 +1,37 @@
-import { BottomSheetFlashList, BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModal, BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet'
 import { RefObject } from 'react'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 
 import { usePaddings } from '@/hooks/usePaddings'
+import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from '../UiText'
 
 import { UiSheetModal } from './UiSheetModal'
 
-import { colors } from '@/constants/colors'
-
-interface Option<T> {
-  label: string
-  value: T
-}
+import { Option } from '@/types/sheet'
 
 interface UiSheetSelectProps<T> {
   title: string
   options: Option<T>[]
   value?: T
-  onValueChange: (value: T) => void
+  onValueChange?: (value: T) => void
   list?: boolean
 }
 
 export const UiSheetSelect = <T,>(
-  props: UiSheetSelectProps<T> & { cRef: RefObject<BottomSheetModal> },
+  props: UiSheetSelectProps<T> & { cRef?: RefObject<BottomSheetModal> },
 ) => {
   const paddings = usePaddings(true)
+  const { getSchemeColorHex } = useTheme()
+
+  const dynamicBackground: StyleProp<ViewStyle> = {
+    backgroundColor: getSchemeColorHex('primary'),
+  }
+
+  const dynamicBorder: StyleProp<ViewStyle> = {
+    borderColor: getSchemeColorHex('primary'),
+  }
 
   const SelectItem = ({ item }: { item: Option<T> }) => {
     return (
@@ -37,8 +42,8 @@ export const UiSheetSelect = <T,>(
       >
         <UiText key={item.label}>{item.label}</UiText>
 
-        <View style={styles.outerCircle}>
-          {props.value === item.value && <View style={styles.innerCircle} />}
+        <View style={[styles.outerCircle, dynamicBorder]}>
+          {props.value === item.value && <View style={[styles.innerCircle, dynamicBackground]} />}
         </View>
       </TouchableOpacity>
     )
@@ -53,11 +58,11 @@ export const UiSheetSelect = <T,>(
                 {props.title}
               </UiText>
 
-              <BottomSheetFlashList
-                data={props.options}
-                renderItem={SelectItem}
-                estimatedItemSize={51}
-              />
+              <BottomSheetScrollView>
+                {props.options.map(option => (
+                  <SelectItem key={option.label} item={option} />
+                ))}
+              </BottomSheetScrollView>
             </View>
           )
         : (
@@ -88,14 +93,12 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     padding: 4,
     borderWidth: 2,
-    borderColor: colors.primary,
   },
   container: {
     flex: 1,
   },
   innerCircle: {
     borderRadius: 999,
-    backgroundColor: colors.primary,
     flex: 1,
   },
   title: {

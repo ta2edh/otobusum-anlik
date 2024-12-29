@@ -1,11 +1,13 @@
 import { useMemo } from 'react'
 import { View } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
 
 import { LineBusMarkersMemoized } from './bus/BusMarkers'
 import { RouteLine } from './RouteLine'
 import { LineBusStopMarkersMemoized } from './stop/StopMarkers'
 import { LineBusStopMarkersClusteredMemoized } from './stop/StopMarkersClustered'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { useSettingsStore } from '@/stores/settings'
@@ -13,6 +15,8 @@ import { useSettingsStore } from '@/stores/settings'
 export const LineMarkers = () => {
   const invisibleLines = useMiscStore(state => state.invisibleLines)
   const clusterStops = useSettingsStore(state => state.clusterStops)
+
+  useFiltersStore(useShallow(state => state.selectedCity))
   const lines = useLinesStore(() => getLines())
 
   const filteredCodes = useMemo(() => {
@@ -31,7 +35,7 @@ export const LineMarkers = () => {
               : <LineBusStopMarkersMemoized lineCode={lineCode} />
           }
 
-          <RouteLine code={lineCode} />
+          <RouteLine lineCode={lineCode} />
         </View>
       ))}
     </>

@@ -6,6 +6,7 @@ import { StyleSheet, View } from 'react-native'
 import { TheSearchInput } from '@/components/TheSearchInput'
 import { TheSearchItem } from '@/components/TheSearchItem'
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
+import { UiErrorContainer } from '@/components/ui/UiErrorContainer'
 import { UiText } from '@/components/ui/UiText'
 
 import { usePaddings } from '@/hooks/usePaddings'
@@ -41,25 +42,28 @@ export const SearchScreen = () => {
     [],
   )
 
-  const emptyItem = useCallback(() => {
-    if (mutation.data) {
-      return (
-        <UiText info style={styles.empty}>
-          {i18n.t('emptySearch')}
-        </UiText>
-      )
-    }
+  const emptyItem = useCallback(() => (
+    <View style={styles.emptyContainer}>
+      {
+        mutation.error
+          ? <UiErrorContainer message={mutation.error?.message || ''} />
+          : mutation.data
+            ? (
+                <UiText info style={styles.empty}>
+                  {i18n.t('emptySearch')}
+                </UiText>
+              )
+            : mutation.isPending
+              ? <UiActivityIndicator size="large" />
+              : (
+                  <UiText info style={styles.empty}>
+                    {i18n.t('searchSomething')}
+                  </UiText>
+                )
 
-    if (mutation.isPending) {
-      return <UiActivityIndicator size="large" />
-    }
-
-    return (
-      <UiText info style={styles.empty}>
-        {i18n.t('searchSomething')}
-      </UiText>
-    )
-  }, [mutation.data, mutation.isPending])
+      }
+    </View>
+  ), [mutation.data, mutation.isPending, mutation.error])
 
   return (
     <View style={styles.container}>
@@ -71,15 +75,18 @@ export const SearchScreen = () => {
       />
 
       <View style={styles.list}>
-        <FlashList
-          data={data}
-          renderItem={renderItem}
-          estimatedItemSize={45}
-          fadingEdgeLength={20}
-          contentContainerStyle={styles.contentStyle}
-          keyboardDismissMode="on-drag"
-          ListEmptyComponent={emptyItem}
-        />
+        {!mutation.data
+          ? emptyItem()
+          : (
+              <FlashList
+                data={data}
+                renderItem={renderItem}
+                estimatedItemSize={45}
+                fadingEdgeLength={20}
+                contentContainerStyle={styles.contentStyle}
+                keyboardDismissMode="on-drag"
+              />
+            )}
       </View>
     </View>
   )
@@ -90,6 +97,11 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentStyle: {
     padding: 14,

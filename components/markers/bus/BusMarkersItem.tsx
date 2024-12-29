@@ -12,7 +12,7 @@ import { MarkerLazyCallout } from '../MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
@@ -21,7 +21,7 @@ interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
 }
 
 export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const textColor = getSchemeColorHex('onPrimaryContainer')
@@ -33,27 +33,25 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
         children: (
           <View style={styles.calloutContainer}>
             <View>
-              <UiText>
-                {location.route_code}
-                {' '}
-                -
-                {location.line_name}
-              </UiText>
+              {location.route_code && (
+                <UiText>
+                  {location.route_code}
+                  {/* {' '}
+                  -
+                  {location.line_name} */}
+                </UiText>
+              )}
+
               <UiText>
                 {i18n.t('doorNo')}
                 :
-                {location.door_no}
+                {location.bus_id}
               </UiText>
-              <UiText>
-                {i18n.t('direction')}
-                :
-                {location.direction}
-              </UiText>
-              <UiText>
+              {/* <UiText>
                 {i18n.t('lastUpdate')}
                 :
                 {location.last_location_update}
-              </UiText>
+              </UiText> */}
             </View>
           </View>
         ),

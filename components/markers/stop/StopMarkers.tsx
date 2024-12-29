@@ -39,9 +39,9 @@ export const LineBusStopMarkers = (props: Props) => {
       renderItem={item => (
         <LineBusStopMarkersItemMemoized
           type="point"
-          key={`${item.x_coord}-${item.y_coord}-${routeCode}-${item.stop_code}`}
+          key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
           stop={item}
-          code={routeCode}
+          lineCode={props.lineCode}
         />
       )}
     />

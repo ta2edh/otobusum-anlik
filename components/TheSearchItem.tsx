@@ -50,7 +50,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
         {isStop(item)
           ? (
               <>
-                <UiLineCode code="">
+                <UiLineCode>
                   <Ionicons name="flag-sharp" size={16} color="white" />
                 </UiLineCode>
                 <UiText>{item.stop_name}</UiText>
@@ -58,7 +58,7 @@ export const TheSearchItem = memo(function SearchItem({ item, ...props }: Props)
             )
           : (
               <>
-                <UiLineCode code={item.code} />
+                <UiLineCode lineCode={item.code} />
                 <UiText numberOfLines={2}>{item.title}</UiText>
               </>
             )}
