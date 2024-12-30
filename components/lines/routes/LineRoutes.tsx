@@ -3,7 +3,7 @@ import { memo, useCallback, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { Option, UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
+import { UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
 
 import { useRoutes } from '@/hooks/queries/useRoutes'
 
@@ -13,6 +13,7 @@ import { RouteCode } from '@/api/getAllRoutes'
 import { getSelectedRouteCode, selectRoute } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
+import { Option } from '@/types/sheet'
 
 interface Props {
   lineCode: string
