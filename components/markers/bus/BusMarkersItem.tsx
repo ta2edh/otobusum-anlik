@@ -1,11 +1,12 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { MapMarkerProps } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
 
+import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
 import { MarkerLazyCallout } from '../MarkerLazyCallout'
@@ -23,36 +24,41 @@ interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
 export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
+  const { query: { dataUpdatedAt } } = useLine(lineCode)
 
   const textColor = getSchemeColorHex('onPrimaryContainer')
   const backgroundColor = getSchemeColorHex('primaryContainer')
+
+  const dynamicCalloutContainer: StyleProp<ViewStyle> = {
+    backgroundColor: getSchemeColorHex('primary'),
+  }
+
+  const textStyle: StyleProp<TextStyle> = {
+    color: getSchemeColorHex('onPrimary'),
+    fontWeight: 'bold',
+  }
 
   return (
     <MarkerLazyCallout
       calloutProps={{
         children: (
-          <View style={styles.calloutContainer}>
-            <View>
-              {location.route_code && (
-                <UiText>
-                  {location.route_code}
-                  {/* {' '}
-                  -
-                  {location.line_name} */}
-                </UiText>
-              )}
-
-              <UiText>
-                {i18n.t('doorNo')}
-                :
-                {location.bus_id}
+          <View style={[styles.calloutContainer, dynamicCalloutContainer]}>
+            {location.route_code && (
+              <UiText style={textStyle}>
+                {location.route_code}
               </UiText>
-              {/* <UiText>
-                {i18n.t('lastUpdate')}
-                :
-                {location.last_location_update}
-              </UiText> */}
-            </View>
+            )}
+
+            <UiText style={textStyle}>
+              {i18n.t('doorNo')}
+              {': '}
+              {location.bus_id}
+            </UiText>
+            <UiText style={textStyle}>
+              {i18n.t('lastUpdate')}
+              {': '}
+              {new Date(dataUpdatedAt).toLocaleTimeString()}
+            </UiText>
           </View>
         ),
       }}
