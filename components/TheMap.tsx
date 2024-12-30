@@ -1,7 +1,8 @@
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { RefObject } from 'react'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
-import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -15,8 +16,11 @@ interface TheMapProps extends MapViewProps {
   cRef?: RefObject<MapView>
 }
 
+const screen = Dimensions.get('screen')
+
 export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
+  const bottomHeight = useBottomTabBarHeight()
   const sheetContext = useSheetModal()
 
   const insets = useSafeAreaInsets()
@@ -24,6 +28,8 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const animatedStyle = useAnimatedStyle(() => {
+    const heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + bottomHeight) - bottomHeight
+
     if (!sheetContext) {
       return {
         flex: 1,
@@ -37,13 +43,13 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
           translateY: interpolate(
             sheetContext?.index.value!,
             [-1, 0],
-            [0, -80],
-            'clamp',
+            [0, -heightFrombottom / 1.5],
+            Extrapolation.CLAMP,
           ),
         },
       ],
     }
-  })
+  }, [])
 
   return (
     <Animated.View style={animatedStyle}>
