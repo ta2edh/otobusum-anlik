@@ -141,8 +141,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     gap: 8,
-    padding: 12,
-    paddingTop: 8,
+    padding: 8,
   },
   childrenContainer: {
     flexShrink: 1,

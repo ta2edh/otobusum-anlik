@@ -10,8 +10,6 @@ import {
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { usePaddings } from '@/hooks/usePaddings'
-
 import { LineMemoized } from './Line'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -28,7 +26,6 @@ interface LinesProps {
 const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const innerRef = useRef<FlatList>(null)
   useImperativeHandle(outerRef, () => innerRef.current!, [])
-  const paddings = usePaddings(true)
 
   const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
@@ -72,7 +69,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         renderItem={renderItem}
         onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
-        contentContainerStyle={[paddings, styles.codes, props.contentContainerStyle]}
+        contentContainerStyle={[styles.codes, props.contentContainerStyle]}
         keyExtractor={keyExtractor}
         onScrollToIndexFailed={() => {}}
         initialNumToRender={2}
@@ -90,6 +87,7 @@ export const LinesMomoizedFr = memo(forwardRef<FlatList, LinesProps>(Lines))
 const styles = StyleSheet.create({
   codes: {
     gap: 8,
+    padding: 8,
     alignItems: 'flex-end',
   },
 })
