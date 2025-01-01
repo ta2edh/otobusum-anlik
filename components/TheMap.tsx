@@ -27,7 +27,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
 
   const animatedStyle = useAnimatedStyle(() => {
     let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + 49) - 49
-    heightFrombottom = clamp(heightFrombottom - 250, 0, screen.height)
+    heightFrombottom = clamp(heightFrombottom / 2, 0, screen.height)
 
     if (!sheetContext) {
       return {
