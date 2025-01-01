@@ -21,7 +21,6 @@ const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
   const { query } = useAnnouncements()
 
   const announcements = query.data?.filter(ann => ann.HATKODU === lineCode)
-  console.log(announcements)
 
   return (
     <>
