@@ -94,7 +94,7 @@ export const TheMapButtons = () => {
 
   const handlePressGroup = (group: LineGroup) => {
     selectGroup(group.id)
-    bottomSheetModalGroups.current?.close()
+    bottomSheetModalGroups.current?.dismiss()
   }
 
   const animatedContainerStyle = useAnimatedStyle(
