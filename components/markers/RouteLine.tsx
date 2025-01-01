@@ -98,6 +98,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
             tracksViewChanges={false}
             tracksInfoWindowChanges={false}
             anchor={{ x: 0.5, y: 0.5 }}
+            zIndex={1}
           >
             <View style={arrowBackground}>
               <Ionicons

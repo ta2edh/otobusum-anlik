@@ -94,6 +94,7 @@ export const LineBusStopMarkersItem = ({
       tracksViewChanges={false}
       onPress={handleOnPress}
       anchor={{ x: 0.5, y: 0.5 }}
+      zIndex={1}
       {...props}
     >
       <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>
