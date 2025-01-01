@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-export const extraPadding = 12
+export const extraPadding = 8
 
 export function usePaddings(removeInsetPaddings: boolean = false) {
   const insets = useSafeAreaInsets()
