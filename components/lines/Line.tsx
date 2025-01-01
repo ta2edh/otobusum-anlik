@@ -1,8 +1,7 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
-  AnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -29,11 +28,13 @@ import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
-export interface LineProps extends AnimatedProps<ViewProps> {
+export interface LineProps {
   lineCode: string
+  variant?: 'solid' | 'soft'
+  containerStyle?: StyleProp<ViewStyle>
 }
 
-const Line = ({ style, lineCode, ...props }: LineProps) => {
+const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
@@ -92,9 +93,9 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
 
   const containerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor: getSchemeColorHex('primary'),
+      backgroundColor: variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
       width: lineWidth,
-    }), [getSchemeColorHex, lineWidth])
+    }), [getSchemeColorHex, lineWidth, variant])
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isVisible.value ? 1 : 0.4),
@@ -113,12 +114,15 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
 
   return (
     <Animated.View
-      style={[containerStyle, containerAnimatedStyle, styles.container, style]}
+      style={[containerStyle, containerAnimatedStyle, styles.container, props.containerStyle]}
       key={lineCode}
       {...props}
     >
       <View style={styles.titleContainer}>
-        <LineName lineCode={lineCode} />
+        <LineName
+          lineCode={lineCode}
+          variant={variant}
+        />
 
         <View style={styles.titleContainer}>
           <UiButton
@@ -165,14 +169,17 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
         </View>
       </View>
 
-      <LineBusStops lineCode={lineCode} />
+      <LineBusStops lineCode={lineCode} variant={variant} />
 
       <View style={styles.lineButtonsContainer}>
         <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
         <LineRoutes lineCode={lineCode} />
       </View>
 
-      <LineRouteDirection lineCode={lineCode} />
+      <LineRouteDirection
+        lineCode={lineCode}
+        variant={variant}
+      />
     </Animated.View>
   )
 }

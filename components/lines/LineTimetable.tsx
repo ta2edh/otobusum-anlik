@@ -169,13 +169,12 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   const hours = Object.keys(groupedByHour).sort()
 
   const containerStyle: StyleProp<ViewStyle> = {
-    borderColor: getSchemeColorHex('primary'),
-    backgroundColor: getSchemeColorHex('primary'),
+    backgroundColor: getSchemeColorHex('surface'),
     width: lineWidth,
   }
 
   const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onPrimary'),
+    color: getSchemeColorHex('onSurface'),
   }
 
   const cellStyle: StyleProp<TextStyle> = {

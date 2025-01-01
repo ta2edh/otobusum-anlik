@@ -31,6 +31,7 @@ import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
   lineCode: string
+  variant?: 'solid' | 'soft'
 }
 
 const AnimatedFlashList
@@ -40,7 +41,7 @@ const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
-export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
+export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
 
   const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
@@ -138,6 +139,8 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
     }
   }, [])
 
+  const color = getSchemeColorHex(variant === 'solid' ? 'onPrimary' : 'onSurface')
+
   const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
       const closestBus = busses?.find(bus => bus.closest_stop_code?.toString() === item.stop_code)
@@ -170,12 +173,12 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
             </View>
 
             <View style={styles.itemTitleInner}>
-              <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
+              <UiText style={{ color }} numberOfLines={1}>
                 {item.stop_name}
               </UiText>
 
               {closestStop?.stop_code === item.stop_code && (
-                <UiText info style={{ color: getSchemeColorHex('onPrimary'), fontSize: 12 }}>
+                <UiText info style={{ color, fontSize: 12 }}>
                   {i18n.t('closeToThisStop')}
                 </UiText>
               )}
@@ -192,7 +195,7 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
         </View>
       )
     },
-    [busses, closestStop?.stop_code, getSchemeColorHex, lineTheme, map],
+    [busses, closestStop?.stop_code, color, getSchemeColorHex, lineTheme, map],
   )
 
   if (query.isPending) {

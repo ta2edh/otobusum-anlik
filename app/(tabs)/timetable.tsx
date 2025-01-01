@@ -110,6 +110,9 @@ export const TimetableScreen = () => {
         contentContainerStyle={{
           paddingBottom: 0,
         }}
+        lineProps={{
+          variant: 'soft',
+        }}
       />
 
       <Animated.FlatList

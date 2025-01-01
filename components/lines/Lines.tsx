@@ -10,7 +10,7 @@ import {
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LineMemoized } from './Line'
+import { LineMemoized, LineProps } from './Line'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
@@ -19,6 +19,8 @@ import { useMiscStore } from '@/stores/misc'
 interface LinesProps {
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
+  lineProps?: Partial<LineProps>
+
   listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 }
 
@@ -48,7 +50,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   }, [lines])
 
   const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <LineMemoized lineCode={code} />
+    return <LineMemoized lineCode={code} {...props.lineProps} />
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lines, selectedGroup, selectedCity])
 

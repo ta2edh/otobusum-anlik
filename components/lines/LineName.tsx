@@ -11,13 +11,16 @@ import { useLinesStore, getTheme } from '@/stores/lines'
 
 interface LineNameProps {
   lineCode: string
+  variant?: 'soft' | 'solid'
 }
 
-export const LineName = ({ lineCode }: LineNameProps) => {
+export const LineName = ({ lineCode, variant = 'solid' }: LineNameProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { query } = useLine(lineCode)
+
+  const color = getSchemeColorHex(variant === 'solid' ? 'onPrimary' : 'onSurface')
 
   return (
     <View style={styles.container}>
@@ -25,7 +28,7 @@ export const LineName = ({ lineCode }: LineNameProps) => {
         style={{
           fontWeight: 'bold',
           fontSize: 24,
-          color: getSchemeColorHex('onPrimary'),
+          color,
         }}
       >
         {lineCode}
@@ -33,7 +36,7 @@ export const LineName = ({ lineCode }: LineNameProps) => {
 
       {query.isFetching && (
         <UiActivityIndicator
-          color={getSchemeColorHex('onPrimary')}
+          color={color}
           size={24}
         />
       )}

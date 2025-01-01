@@ -13,9 +13,10 @@ import { getTheme, useLinesStore } from '@/stores/lines'
 
 interface Props {
   lineCode: string
+  variant?: 'solid' | 'soft'
 }
 
-export const LineRouteDirection = ({ lineCode }: Props) => {
+export const LineRouteDirection = ({ lineCode, variant = 'solid' }: Props) => {
   const { getRouteFromCode } = useRoutes(lineCode)
 
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
@@ -29,7 +30,7 @@ export const LineRouteDirection = ({ lineCode }: Props) => {
   const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onPrimary'),
+    color: getSchemeColorHex(variant === 'soft' ? 'onSurface' : 'onPrimary'),
   }
 
   return (

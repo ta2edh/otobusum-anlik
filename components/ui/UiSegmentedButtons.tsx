@@ -29,7 +29,7 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   const { colorsTheme, getSchemeColorHex } = useTheme(theme)
 
   const baseStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('primaryContainer') || colorsTheme.surfaceContainerHigh,
+    backgroundColor: getSchemeColorHex('secondaryContainer') || colorsTheme.surfaceContainerHigh,
     paddingVertical: 8,
     paddingHorizontal: 14,
     flexGrow: 1,
@@ -45,12 +45,12 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   }
 
   const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onPrimaryContainer'),
+    color: getSchemeColorHex('onSecondaryContainer'),
   }
 
   return (
     <View style={[styles.container, style]}>
-      {buttons.map((button, index) => {
+      {buttons.map((button) => {
         const selected = button.value === value
 
         return (
