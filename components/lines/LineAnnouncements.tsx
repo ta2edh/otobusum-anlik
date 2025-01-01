@@ -21,6 +21,7 @@ const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
   const { query } = useAnnouncements()
 
   const announcements = query.data?.filter(ann => ann.HATKODU === lineCode)
+  console.log(announcements)
 
   return (
     <>
@@ -34,7 +35,7 @@ const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
       {announcements !== undefined && announcements.length > 0 && (
         <UiSheetModal
           cRef={bottomSheetModal}
-          snapPoints={['50%']}
+          snapPoints={['50%', '90%']}
           enableDynamicSizing={false}
         >
           <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
