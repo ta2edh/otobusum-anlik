@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { MarkersInView } from './MarkersInView'
 
 import { getTheme, useLinesStore } from '@/stores/lines'
-import { radiansFromLatLng } from '@/utils/angleFromCoordinate'
+import { radiansFromToLatLng } from '@/utils/angleFromCoordinate'
 
 interface RouteLineProps {
   lineCode: string
@@ -50,12 +50,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
         const chunkItem = chunk[index]
         if (!chunkItem) continue
 
-        const [x, y] = radiansFromLatLng(
-          first.latitude,
-          first.longitude,
-          chunkItem.latitude,
-          chunkItem.longitude,
-        )
+        const [x, y] = radiansFromToLatLng(first, chunkItem)
 
         totalX += x
         totalY += y
@@ -69,28 +64,6 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
         angle: degrees,
       })
     }
-
-    console.log(arrows, transformed.length)
-
-    // for (let index = 0; index < transformed.length; index += chunkSize) {
-    //   const chunk = transformed.slice(index, index + chunkSize)
-    //   const centerIndex = chunk.length / 2
-
-    //   const center = chunk.at(centerIndex)
-    //   const next = chunk.at(centerIndex + 2)
-
-    //   if (!center || !next) continue
-
-    //   arrows.push({
-    //     coordinates: center,
-    //     angle: angleFromCoordinate(
-    //       center.latitude,
-    //       center.longitude,
-    //       next.latitude,
-    //       next.longitude,
-    //     ),
-    //   })
-    // }
 
     return arrows
   }, [transformed])

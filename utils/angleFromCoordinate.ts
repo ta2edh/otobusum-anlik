@@ -1,23 +1,10 @@
-export const radiansFromLatLng = (lat1: number, long1: number, lat2: number, long2: number): [number, number] => {
-  const longitudeDistance = long2 - long1
+import { LatLng } from 'react-native-maps'
 
-  const y = Math.sin(longitudeDistance) * Math.cos(lat2)
-  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(longitudeDistance)
+export const radiansFromToLatLng = (from: LatLng, to: LatLng): [number, number] => {
+  const longitudeDistance = to.longitude - from.longitude
+
+  const y = Math.sin(longitudeDistance) * Math.cos(to.latitude)
+  const x = Math.cos(from.latitude) * Math.sin(to.latitude) - Math.sin(from.latitude) * Math.cos(to.latitude) * Math.cos(longitudeDistance)
 
   return [x, y]
-
-  // const dLon = long2 - long1
-
-  // const y = Math.sin(dLon) * Math.cos(lat2)
-  // const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon)
-
-  // return [x, y]
-
-  // let brng = Math.atan2(y, x)
-
-  // brng = brng * (180 / Math.PI)
-  // brng = (brng + 360) % 360
-  // brng = 360 - brng // count degrees counter-clockwise - remove to make clockwise
-
-  // return brng
 }
