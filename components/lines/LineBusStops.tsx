@@ -70,7 +70,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
     const updatedBus = busses?.find(bus => bus.bus_id === currentTrackedBus.current?.bus_id)
     if (!updatedBus) return
 
-    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code?.toString())
+    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code)
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -88,7 +88,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
 
     const trackedBus = busses?.find((bus) => {
       return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
-        return item.stop_code === bus.closest_stop_code?.toString()
+        return item.stop_code === bus.closest_stop_code
       })
     })
 
@@ -143,7 +143,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
 
   const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
-      const closestBus = busses?.find(bus => bus.closest_stop_code?.toString() === item.stop_code)
+      const closestBus = busses?.find(bus => bus.closest_stop_code === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),

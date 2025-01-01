@@ -1,6 +1,6 @@
 export interface BusStop {
   id: number
-  stop_code: string
+  stop_code: number
   stop_name: string
   x_coord: number
   y_coord: number
