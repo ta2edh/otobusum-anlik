@@ -117,21 +117,6 @@ const Line = ({ style, lineCode, ...props }: LineProps) => {
       key={lineCode}
       {...props}
     >
-      {/* {isRefetching && (
-        <UiActivityIndicator
-          color={getSchemeColorHex('onPrimary')}
-          size={50}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            opacity: 0.2,
-          }}
-        />
-      )} */}
-
       <View style={styles.titleContainer}>
         <LineName lineCode={lineCode} />
 
@@ -196,7 +181,7 @@ export const LineMemoized = memo(Line)
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: 10,
     borderRadius: 8,
     gap: 8,
     flexShrink: 0,

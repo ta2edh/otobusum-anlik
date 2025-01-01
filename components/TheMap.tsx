@@ -29,7 +29,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
 
   const animatedStyle = useAnimatedStyle(() => {
     let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + bottomHeight) - bottomHeight
-    heightFrombottom = clamp(heightFrombottom, 0, screen.height)
+    heightFrombottom = clamp(heightFrombottom - 250, 0, screen.height)
 
     if (!sheetContext) {
       return {
@@ -44,7 +44,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
           translateY: interpolate(
             sheetContext?.index.value!,
             [-1, 0],
-            [0, -heightFrombottom / 1.5],
+            [0, -heightFrombottom],
             Extrapolation.CLAMP,
           ),
         },
