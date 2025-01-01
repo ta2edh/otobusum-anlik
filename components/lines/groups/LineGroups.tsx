@@ -45,6 +45,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
       color: getSchemeColorHex('onSurface'),
       borderRadius: 4,
       padding: 4,
+      textAlign: 'center',
     }),
     [getSchemeColorHex],
   )
@@ -71,7 +72,10 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
 
   const renderSectionHeader = useCallback(
     ({ section }: { section: SectionListData<LineGroup, (typeof data)[number]> }) => (
-      <UiText style={headerStyle}>
+      <UiText
+        style={headerStyle}
+        size="sm"
+      >
         {section.title}
         {' '}
         groups

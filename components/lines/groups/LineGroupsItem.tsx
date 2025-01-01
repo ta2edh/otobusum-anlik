@@ -44,7 +44,7 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
   )
 
   const emptyItem = useCallback(
-    () => <UiText info>{i18n.t('emptyGroup')}</UiText>,
+    () => <UiText info size="sm">{i18n.t('emptyGroup')}</UiText>,
     [],
   )
 
@@ -54,24 +54,21 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
       onLongPress={handleLongPress}
       {...props}
     >
-      <View style={styles.content}>
-        <UiText info>{group?.title}</UiText>
-
-        <View>
-          <FlashList
-            data={group?.lineCodes}
-            renderItem={renderItem}
-            estimatedItemSize={70}
-            ListEmptyComponent={emptyItem}
-            horizontal
-          />
-        </View>
+      <View style={styles.top}>
+        <UiText>{group.title}</UiText>
+        <UiButton
+          icon="pencil"
+          onPress={handleLongPress}
+          variant="soft"
+        />
       </View>
 
-      <UiButton
-        icon="pencil"
-        onPress={handleLongPress}
-        variant="ghost"
+      <FlashList
+        data={group?.lineCodes}
+        renderItem={renderItem}
+        estimatedItemSize={70}
+        ListEmptyComponent={emptyItem}
+        horizontal
       />
     </TouchableOpacity>
   )
@@ -79,9 +76,12 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
+    padding: 8,
+  },
+  top: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   content: {
     flex: 1,
