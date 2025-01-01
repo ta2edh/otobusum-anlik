@@ -1,4 +1,3 @@
-import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import { RefObject } from 'react'
 import { Dimensions, StyleSheet } from 'react-native'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
@@ -20,7 +19,6 @@ const screen = Dimensions.get('screen')
 
 export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
-  const bottomHeight = useBottomTabBarHeight()
   const sheetContext = useSheetModal()
 
   const insets = useSafeAreaInsets()
@@ -28,7 +26,7 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const animatedStyle = useAnimatedStyle(() => {
-    let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + bottomHeight) - bottomHeight
+    let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + 49) - 49
     heightFrombottom = clamp(heightFrombottom - 250, 0, screen.height)
 
     if (!sheetContext) {
