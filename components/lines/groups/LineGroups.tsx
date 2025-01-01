@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetSectionList, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModal, BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { RefObject, useCallback, useMemo } from 'react'
 import {
   ListRenderItem,
@@ -6,6 +6,7 @@ import {
   StyleProp,
   StyleSheet,
   TextStyle,
+  View,
   ViewProps,
 } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
@@ -40,8 +41,8 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
 
   const headerStyle: StyleProp<TextStyle> = useMemo(
     () => ({
-      backgroundColor: getSchemeColorHex('primary'),
-      color: getSchemeColorHex('onPrimary'),
+      backgroundColor: getSchemeColorHex('surface'),
+      color: getSchemeColorHex('onSurface'),
       borderRadius: 4,
       padding: 4,
     }),
@@ -64,12 +65,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
   )
 
   const renderItem: ListRenderItem<LineGroup> = useCallback(
-    ({ item }) => (
-      <LineGroupsItem
-        group={item}
-        onPress={() => handlePressGroup(item)}
-      />
-    ),
+    ({ item }) => <LineGroupsItem group={item} onPress={() => handlePressGroup(item)} />,
     [handlePressGroup],
   )
 
@@ -88,18 +84,27 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
     <>
       {props.children}
 
-      <UiSheetModal cRef={props.cRef} snapPoints={['50%']} enableDynamicSizing={false}>
-        <BottomSheetView style={styles.container}>
+      <UiSheetModal
+        cRef={props.cRef}
+        snapPoints={['70%']}
+        enableDynamicSizing={false}
+      >
+        <View style={styles.container}>
           <BottomSheetSectionList
             sections={data}
             renderItem={renderItem}
-            fadingEdgeLength={40}
             renderSectionHeader={renderSectionHeader}
             contentContainerStyle={styles.contentContainer}
           />
 
-          <UiButton icon="add" title={i18n.t('createNewGroup')} onPress={handlePressNewGroup} />
-        </BottomSheetView>
+          <View style={styles.buttonContainer}>
+            <UiButton
+              icon="add"
+              title={i18n.t('createNewGroup')}
+              onPress={handlePressNewGroup}
+            />
+          </View>
+        </View>
       </UiSheetModal>
     </>
   )
@@ -108,10 +113,13 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 12,
+  },
+  buttonContainer: {
+    padding: 8,
     paddingTop: 0,
   },
   contentContainer: {
     gap: 4,
+    padding: 8,
   },
 })
