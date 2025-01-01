@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -17,11 +16,10 @@ export const LineMarkers = () => {
   const clusterStops = useSettingsStore(state => state.clusterStops)
 
   useFiltersStore(useShallow(state => state.selectedCity))
+  useFiltersStore(useShallow(state => state.selectedGroup))
   const lines = useLinesStore(() => getLines())
 
-  const filteredCodes = useMemo(() => {
-    return lines.filter(lineCode => !invisibleLines.includes(lineCode))
-  }, [invisibleLines, lines])
+  const filteredCodes = lines.filter(lineCode => !invisibleLines.includes(lineCode))
 
   return (
     <>
