@@ -103,7 +103,6 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
       if (!query.data) return []
 
       const times: Time[] = []
-      console.log(selectedDay)
 
       if (selectedDay & sunday) {
         times.push(...query.data.sunday)
