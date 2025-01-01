@@ -11,7 +11,7 @@ export function useLine(lineCode: string) {
   const { width } = useWindowDimensions()
 
   const lineCount = useLinesStore(useShallow(() => getLines().length))
-  const lineWidth = width - extraPadding - extraPadding - (lineCount > 1 ? 24 : 0)
+  const lineWidth = width - extraPadding - extraPadding - (lineCount > 1 ? 8 : 0)
 
   const query = useQuery({
     queryKey: ['line', lineCode],
