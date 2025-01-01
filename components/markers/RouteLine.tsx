@@ -10,7 +10,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { MarkersInView } from './MarkersInView'
 
 import { getTheme, useLinesStore } from '@/stores/lines'
-import { angleFromCoordinate } from '@/utils/angleFromCoordinate'
+import { radiansFromLatLng } from '@/utils/angleFromCoordinate'
 
 interface RouteLineProps {
   lineCode: string
@@ -34,28 +34,63 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
   )
 
   const arrows = useMemo(() => {
-    const chunkSize = transformed.length / (transformed.length / 14)
+    const chunkSize = transformed.length / (transformed.length / 8)
     const arrows: { coordinates: LatLng, angle: number }[] = []
 
     for (let index = 0; index < transformed.length; index += chunkSize) {
       const chunk = transformed.slice(index, index + chunkSize)
-      const centerIndex = chunk.length / 2
+      const first = chunk.at(0)
 
-      const center = chunk.at(centerIndex)
-      const next = chunk.at(centerIndex + 2)
+      if (!first) continue
 
-      if (!center || !next) continue
+      let totalX = 0
+      let totalY = 0
+
+      for (let index = 0; index < chunk.length; index++) {
+        const chunkItem = chunk[index]
+        if (!chunkItem) continue
+
+        const [x, y] = radiansFromLatLng(
+          first.latitude,
+          first.longitude,
+          chunkItem.latitude,
+          chunkItem.longitude,
+        )
+
+        totalX += x
+        totalY += y
+      }
+
+      const result = Math.atan2(totalY, totalX)
+      const degrees = (result * 180 / Math.PI + 360) % 360
 
       arrows.push({
-        coordinates: center,
-        angle: angleFromCoordinate(
-          center.latitude,
-          center.longitude,
-          next.latitude,
-          next.longitude,
-        ),
+        coordinates: first,
+        angle: degrees,
       })
     }
+
+    console.log(arrows, transformed.length)
+
+    // for (let index = 0; index < transformed.length; index += chunkSize) {
+    //   const chunk = transformed.slice(index, index + chunkSize)
+    //   const centerIndex = chunk.length / 2
+
+    //   const center = chunk.at(centerIndex)
+    //   const next = chunk.at(centerIndex + 2)
+
+    //   if (!center || !next) continue
+
+    //   arrows.push({
+    //     coordinates: center,
+    //     angle: angleFromCoordinate(
+    //       center.latitude,
+    //       center.longitude,
+    //       next.latitude,
+    //       next.longitude,
+    //     ),
+    //   })
+    // }
 
     return arrows
   }, [transformed])
