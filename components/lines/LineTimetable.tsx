@@ -11,30 +11,81 @@ import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTimetable } from '@/hooks/queries/useTimetable'
 import { useTheme } from '@/hooks/useTheme'
 
+import { Time } from '@/api/getPlannedDepartures'
 import { useFiltersStore } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
+import { Cities } from '@/types/cities'
 import { charactersToAscii } from '@/utils/charactersToAscii'
 import { groupDeparturesByHour } from '@/utils/groupDeparturesByHour'
 
-interface Props {
+const sunday = 1 << 1
+const monday = 1 << 2
+const tuesday = 1 << 3
+const wednesday = 1 << 4
+const thursday = 1 << 5
+const friday = 1 << 6
+const saturday = 1 << 7
+
+const options: Record<Cities, any> = {
+  istanbul: [
+    {
+      value: monday | tuesday | wednesday | thursday | friday,
+      label: i18n.t('workday'),
+    },
+    {
+      value: saturday,
+      label: i18n.t('saturday'),
+    },
+    {
+      value: sunday,
+      label: i18n.t('sunday'),
+    },
+  ],
+  izmir: [
+    {
+      value: saturday,
+      label: i18n.t('saturday'),
+    },
+    {
+      value: monday,
+      label: i18n.t('monday'),
+    },
+    {
+      value: tuesday,
+      label: i18n.t('tuesday'),
+    },
+    {
+      value: wednesday,
+      label: i18n.t('wednesday'),
+    },
+    {
+      value: thursday,
+      label: i18n.t('thursday'),
+    },
+    {
+      value: friday,
+      label: i18n.t('friday'),
+    },
+    {
+      value: sunday,
+      label: i18n.t('sunday'),
+    },
+  ],
+}
+
+const now = new Date()
+const day = now.getDay()
+
+interface LineTimetableProps {
   lineCode: string
 }
 
-export const LineTimetable = ({ lineCode }: Props) => {
-  const now = new Date()
-  const day = now.getDay()
-
-  const defaultDayType = day === 6
-    ? 'C'
-    : day === 0
-      ? 'P'
-      : 'I'
-
-  const [dayType, setDayType] = useState(() => defaultDayType)
+export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
+  const [selectedDay, setSelectedDay] = useState(() => 1 << (day + 1))
 
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
-  useFiltersStore(useShallow(state => state.selectedCity))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
 
@@ -51,26 +102,59 @@ export const LineTimetable = ({ lineCode }: Props) => {
     () => {
       if (!query.data) return []
 
-      if (dayType === 'C') {
-        return query.data.saturday
+      const times: Time[] = []
+      console.log(selectedDay)
+
+      if (selectedDay & sunday) {
+        times.push(...query.data.sunday)
       }
 
-      if (dayType === 'P') {
-        return query.data.sunday
+      if (selectedDay & monday) {
+        times.push(...query.data.monday)
       }
 
-      // for weekdays going to merge all weekday days
-      const timesSet = new Set([
-        ...query.data.monday,
-        ...query.data.tuesday,
-        ...query.data.wednesday,
-        ...query.data.thursday,
-        ...query.data.friday,
-      ])
+      if (selectedDay & tuesday) {
+        times.push(...query.data.tuesday)
+      }
 
-      return Array.from(timesSet)
+      if (selectedDay & wednesday) {
+        times.push(...query.data.wednesday)
+      }
+
+      if (selectedDay & thursday) {
+        times.push(...query.data.thursday)
+      }
+
+      if (selectedDay & friday) {
+        times.push(...query.data.friday)
+      }
+
+      if (selectedDay & saturday) {
+        times.push(...query.data.saturday)
+      }
+
+      return Array.from(new Set(times))
+
+      // if (dayType === 'C') {
+      //   return query.data.saturday
+      // }
+
+      // if (dayType === 'P') {
+      //   return query.data.sunday
+      // }
+
+      // // for weekdays going to merge all weekday days
+      // const timesSet = new Set([
+      //   ...query.data.monday,
+      //   ...query.data.tuesday,
+      //   ...query.data.wednesday,
+      //   ...query.data.thursday,
+      //   ...query.data.friday,
+      // ])
+
+      // return Array.from(timesSet)
     },
-    [query.data, dayType],
+    [query.data, selectedDay],
   )
 
   const announcements = useMemo(
@@ -135,24 +219,11 @@ export const LineTimetable = ({ lineCode }: Props) => {
 
       <View style={styles.filters}>
         <UiSegmentedButtons
-          value={dayType}
-          onValueChange={setDayType}
+          value={selectedDay}
+          onValueChange={setSelectedDay}
           style={{ flexGrow: 1 }}
           theme={lineTheme}
-          buttons={[
-            {
-              value: 'I',
-              label: i18n.t('workday'),
-            },
-            {
-              value: 'C',
-              label: i18n.t('saturday'),
-            },
-            {
-              value: 'P',
-              label: i18n.t('sunday'),
-            },
-          ]}
+          buttons={options[selectedCity]}
         />
       </View>
 

@@ -36,16 +36,6 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
     flexBasis: 100,
   }
 
-  const leftEdge: StyleProp<ViewStyle> = {
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-  }
-
-  const rightEdge: StyleProp<ViewStyle> = {
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-  }
-
   const selectedStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('tertiaryContainer'),
   }
@@ -61,15 +51,12 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   return (
     <View style={[styles.container, style]}>
       {buttons.map((button, index) => {
-        const edgeStyle
-          = index === 0 ? leftEdge : index === buttons.length - 1 ? rightEdge : undefined
-
         const selected = button.value === value
 
         return (
           <TouchableOpacity
             key={button.label}
-            style={[edgeStyle, baseStyle, selected ? selectedStyle : undefined]}
+            style={[baseStyle, selected ? selectedStyle : undefined]}
             onPress={() => onValueChange?.(button.value)}
           >
             <UiText
@@ -88,6 +75,7 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   label: {
     textAlign: 'center',
