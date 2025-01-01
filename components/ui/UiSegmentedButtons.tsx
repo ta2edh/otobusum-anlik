@@ -51,7 +51,7 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   return (
     <View style={[styles.container, style]}>
       {buttons.map((button) => {
-        const selected = button.value === value
+        const selected = typeof value === 'number' ? ((button.value as number) & value) : button.value === value
 
         return (
           <TouchableOpacity
