@@ -35,7 +35,7 @@ const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
       {announcements !== undefined && announcements.length > 0 && (
         <UiSheetModal
           cRef={bottomSheetModal}
-          snapPoints={['50%', '90%']}
+          snapPoints={['50%']}
           enableDynamicSizing={false}
         >
           <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
