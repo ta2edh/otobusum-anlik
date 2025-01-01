@@ -1,24 +1,19 @@
-import { BottomSheetModal, BottomSheetSectionList } from '@gorhom/bottom-sheet'
-import { RefObject, useCallback, useMemo } from 'react'
+import { BottomSheetFlatList, BottomSheetModal } from '@gorhom/bottom-sheet'
+import { RefObject, useCallback } from 'react'
 import {
-  ListRenderItem,
-  SectionListData,
-  StyleProp,
   StyleSheet,
-  TextStyle,
   View,
   ViewProps,
+  ListRenderItem,
 } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetModal } from '@/components/ui/sheet/UiSheetModal'
 import { UiButton } from '@/components/ui/UiButton'
-import { UiText } from '@/components/ui/UiText'
-
-import { useTheme } from '@/hooks/useTheme'
 
 import { LineGroupsItem } from './LineGroupsItem'
 
+import { useFiltersStore } from '@/stores/filters'
 import { addLineToGroup, createNewGroup, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
@@ -30,25 +25,9 @@ interface LineGroupsProps extends ViewProps {
 }
 
 export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroupsProps) => {
-  const { getSchemeColorHex } = useTheme()
-
-  const groups = useLinesStore(useShallow(state => state.lineGroups))
-
-  const data = Object.entries(groups).map(([city, groupsObject]) => ({
-    title: city,
-    data: Object.values(groupsObject),
-  }))
-
-  const headerStyle: StyleProp<TextStyle> = useMemo(
-    () => ({
-      backgroundColor: getSchemeColorHex('surface'),
-      color: getSchemeColorHex('onSurface'),
-      borderRadius: 4,
-      padding: 4,
-      textAlign: 'center',
-    }),
-    [getSchemeColorHex],
-  )
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))!
+  const lineGroups = useLinesStore(useShallow(state => state.lineGroups))
+  const groups = Object.values(lineGroups[selectedCity])
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
@@ -70,35 +49,19 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
     [handlePressGroup],
   )
 
-  const renderSectionHeader = useCallback(
-    ({ section }: { section: SectionListData<LineGroup, (typeof data)[number]> }) => (
-      <UiText
-        style={headerStyle}
-        size="sm"
-      >
-        {section.title}
-        {' '}
-        groups
-      </UiText>
-    ),
-    [headerStyle],
-  )
-
   return (
     <>
       {props.children}
 
       <UiSheetModal
         cRef={props.cRef}
-        snapPoints={['70%']}
+        snapPoints={['50%']}
         enableDynamicSizing={false}
       >
         <View style={styles.container}>
-          <BottomSheetSectionList
-            sections={data}
+          <BottomSheetFlatList
+            data={groups}
             renderItem={renderItem}
-            renderSectionHeader={renderSectionHeader}
-            contentContainerStyle={styles.contentContainer}
           />
 
           <View style={styles.buttonContainer}>
