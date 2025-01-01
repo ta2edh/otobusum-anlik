@@ -133,25 +133,6 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
       }
 
       return Array.from(new Set(times))
-
-      // if (dayType === 'C') {
-      //   return query.data.saturday
-      // }
-
-      // if (dayType === 'P') {
-      //   return query.data.sunday
-      // }
-
-      // // for weekdays going to merge all weekday days
-      // const timesSet = new Set([
-      //   ...query.data.monday,
-      //   ...query.data.tuesday,
-      //   ...query.data.wednesday,
-      //   ...query.data.thursday,
-      //   ...query.data.friday,
-      // ])
-
-      // return Array.from(timesSet)
     },
     [query.data, selectedDay],
   )
