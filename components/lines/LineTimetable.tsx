@@ -185,7 +185,7 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
 
   return (
     <View style={[styles.wrapper, containerStyle]}>
-      <View>
+      <View style={styles.info}>
         <UiText style={textStyle}>
           {routeCode}
           {' '}
@@ -197,15 +197,13 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
         </UiText>
       </View>
 
-      <View style={styles.filters}>
-        <UiSegmentedButtons
-          value={selectedDay}
-          onValueChange={setSelectedDay}
-          style={{ flexGrow: 1 }}
-          theme={lineTheme}
-          buttons={options[selectedCity]}
-        />
-      </View>
+      <UiSegmentedButtons
+        value={selectedDay}
+        onValueChange={setSelectedDay}
+        style={{ flexGrow: 1 }}
+        theme={lineTheme}
+        buttons={options[selectedCity]}
+      />
 
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
@@ -217,7 +215,11 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
             ))}
           </View>
 
-          <ScrollView contentContainerStyle={{ flexDirection: 'column', gap: 4 }} horizontal>
+          <ScrollView
+            contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
+            horizontal
+            nestedScrollEnabled
+          >
             {hours.map(hour => (
               <View key={hour} style={styles.row}>
                 {groupedByHour[hour]?.map(time => (
@@ -248,16 +250,18 @@ export const LineTimetableMemoized = memo(LineTimetable)
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 12,
-    gap: 8,
     borderRadius: 8,
     flexShrink: 1,
+  },
+  info: {
+    padding: 8,
   },
   container: {
     flexShrink: 1,
   },
   innerScroll: {
     flexDirection: 'row',
+    padding: 8,
   },
   cell: {
     width: 30,
@@ -269,12 +273,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  filters: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 4,
-    marginTop: 8,
   },
   fixed: {
     gap: 4,
