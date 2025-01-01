@@ -25,35 +25,37 @@ export const HomeScreen = () => {
   useEffect(() => {
     const unsub = useLinesStore.subscribe(
       state => state.lines,
-      (state, prevState) => {
+      async (state, prevState) => {
         const city = useFiltersStore.getState().selectedCity
         const newStateCity = state[city]
         const oldStateCity = prevState[city]
+        if (newStateCity.length < oldStateCity.length) return
 
-        if (newStateCity.length > oldStateCity.length) {
-          const newCode = newStateCity.at(-1)
-          if (!newCode) return
+        const newCode = newStateCity.at(-1)
+        if (!newCode) return
 
-          const routeCode = getSelectedRouteCode(newCode)
-          const busStops = queryClient
-            .getQueryCache()
-            .find<Awaited<ReturnType<typeof getLineBusStops>>>({ queryKey: [`${routeCode}-stop-locations`] })
+        const routeCode = getSelectedRouteCode(newCode)
+        const queryKey = [`${routeCode}-stop-locations`]
 
-          map.current?.fitToCoordinates(
-            busStops?.state.data?.map(dt => ({
-              longitude: dt.x_coord,
-              latitude: dt.y_coord,
-            })),
-            {
-              edgePadding: {
-                bottom: 200,
-                left: 0,
-                right: 0,
-                top: 0,
-              },
+        const busStops = await queryClient.ensureQueryData<Awaited<ReturnType<typeof getLineBusStops>>>({
+          queryKey,
+          queryFn: () => getLineBusStops(routeCode),
+        })
+
+        map.current?.fitToCoordinates(
+          busStops?.map(stop => ({
+            longitude: stop.x_coord,
+            latitude: stop.y_coord,
+          })),
+          {
+            edgePadding: {
+              bottom: 200,
+              left: 0,
+              right: 0,
+              top: 0,
             },
-          )
-        }
+          },
+        )
       },
     )
 
