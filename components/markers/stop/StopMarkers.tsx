@@ -18,9 +18,9 @@ export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
   const { getRouteFromCode } = useRoutes(props.lineCode)
-  const route = getRouteFromCode()
+  const { query } = useLineBusStops(routeCode)
 
-  const { query } = useLineBusStops(route?.route_code || routeCode)
+  const route = getRouteFromCode()
 
   const stops = useMemo(
     () => {
