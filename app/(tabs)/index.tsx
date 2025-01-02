@@ -37,11 +37,12 @@ export const HomeScreen = () => {
         const routeCode = getSelectedRouteCode(newCode)
         const queryKey = [`stop-locations`, routeCode]
 
-        const busStops = await queryClient
-          .ensureQueryData<Awaited<ReturnType<typeof getLineBusStops>>>({
-            queryKey,
-            queryFn: () => getLineBusStops(routeCode),
-          })
+        const busStops = await queryClient.ensureQueryData<
+          Awaited<ReturnType<typeof getLineBusStops>>
+        >({
+          queryKey,
+          queryFn: () => getLineBusStops(routeCode),
+        })
 
         map.current?.fitToCoordinates(
           busStops?.map(stop => ({
@@ -84,7 +85,14 @@ export const HomeScreen = () => {
             cRef={map}
             onMapReady={handleOnMapReady}
             onRegionChangeComplete={handleRegionChangeComplete}
-            initialRegion={useSettingsStore.getState().initialMapLocation}
+            initialRegion={
+              useSettingsStore.getState().initialMapLocation || {
+                latitude: 39.66770141070046,
+                latitudeDelta: 4.746350767346861,
+                longitude: 28.17840663716197,
+                longitudeDelta: 2.978521026670929,
+              }
+            }
             moveOnMarkerPress={false}
           >
             <LineMarkers />
