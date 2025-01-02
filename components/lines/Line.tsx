@@ -10,7 +10,6 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
-import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiSheetModal } from '../ui/sheet/UiSheetModal'
@@ -23,6 +22,8 @@ import { LineName } from './LineName'
 import { LineRouteDirection } from './routes/LineRouteDirection'
 import { LineRoutes } from './routes/LineRoutes'
 
+import { queryClient } from '@/api/client'
+import { getLineBusStops } from '@/api/getLineBusStops'
 import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
@@ -36,12 +37,10 @@ export interface LineProps {
 
 const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { lineWidth } = useLine(lineCode)
-  const { query } = useLineBusStops(routeCode)
 
   const map = useMap()
   const uiSheetButtonModal = useRef<BottomSheetModal>(null)
@@ -54,18 +53,25 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
       state => state.invisibleLines,
       (newCodes) => {
         isVisible.value = !newCodes.includes(lineCode)
+        if (isVisible.value) return
 
-        if (!isVisible.value && query.data) {
-          const coords = query.data.map(x => ({ latitude: x.y_coord, longitude: x.x_coord }))
-          map?.current?.fitToCoordinates(coords, {
-            edgePadding: {
-              bottom: 200,
-              top: 0,
-              left: 0,
-              right: 0,
-            },
-          })
-        }
+        const routeCode = getSelectedRouteCode(lineCode)
+
+        const coords = queryClient
+          .getQueryData<Awaited<ReturnType<typeof getLineBusStops>>>([`${routeCode}-stop-locations`])
+          ?.map(coords => ({
+            latitude: coords.y_coord,
+            longitude: coords.x_coord,
+          }))
+
+        map?.current?.fitToCoordinates(coords, {
+          edgePadding: {
+            bottom: 250,
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        })
       },
       {
         fireImmediately: true,
@@ -73,7 +79,7 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     )
 
     return unsub
-  }, [isVisible, query.data, map, lineCode])
+  }, [isVisible, map, lineCode])
 
   const handleVisibility = useCallback(() => {
     toggleLineVisibility(lineCode)
