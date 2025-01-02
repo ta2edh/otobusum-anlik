@@ -6,7 +6,7 @@ import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { setBackgroundColorAsync } from 'expo-system-ui'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
-import { enableFreeze } from 'react-native-screens'
+import { enableFreeze, enableScreens } from 'react-native-screens'
 
 import { TheStatusBar } from '@/components/TheStatusBar'
 
@@ -23,6 +23,7 @@ SplashScreen.setOptions({
 })
 
 enableFreeze(true)
+enableScreens(true)
 
 export const RootLayout = () => {
   const { colorsTheme, mode } = useTheme()
