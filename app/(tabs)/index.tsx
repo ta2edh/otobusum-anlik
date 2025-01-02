@@ -35,7 +35,7 @@ export const HomeScreen = () => {
         if (!newCode) return
 
         const routeCode = getSelectedRouteCode(newCode)
-        const queryKey = [`${routeCode}-stop-locations`]
+        const queryKey = [`stop-locations`, routeCode]
 
         const busStops = await queryClient
           .ensureQueryData<Awaited<ReturnType<typeof getLineBusStops>>>({

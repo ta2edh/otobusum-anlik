@@ -58,7 +58,7 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
         const routeCode = getSelectedRouteCode(lineCode)
 
         const coords = queryClient
-          .getQueryData<Awaited<ReturnType<typeof getLineBusStops>>>([`${routeCode}-stop-locations`])
+          .getQueryData<Awaited<ReturnType<typeof getLineBusStops>>>([`stop-locations`, routeCode])
           ?.map(coords => ({
             latitude: coords.y_coord,
             longitude: coords.x_coord,

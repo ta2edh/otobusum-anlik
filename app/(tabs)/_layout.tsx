@@ -20,6 +20,7 @@ export const TabsLayout = () => {
           flex: 1,
         },
         animation: 'shift',
+        freezeOnBlur: true,
       }}
     >
       <Tabs.Screen
