@@ -217,7 +217,6 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
           <ScrollView
             contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
             horizontal
-            nestedScrollEnabled
           >
             {hours.map(hour => (
               <View key={hour} style={styles.row}>
