@@ -17,9 +17,10 @@ interface Props {
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
-  const { query } = useLineBusStops(routeCode)
   const { getRouteFromCode } = useRoutes(props.lineCode)
   const route = getRouteFromCode()
+
+  const { query } = useLineBusStops(route?.route_code || routeCode)
 
   const stops = useMemo(
     () => {
