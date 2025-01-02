@@ -36,7 +36,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
   )
 
   const arrows = useMemo(() => {
-    const chunkSize = transformed.length / (transformed.length / 8)
+    const chunkSize = transformed.length / (transformed.length / 14)
     const arrows: { coordinates: LatLng, angle: number }[] = []
 
     for (let index = 0; index < transformed.length; index += chunkSize) {
@@ -96,7 +96,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
       />
 
       <MarkersInView
-        zoomLimit={14}
+        zoomLimit={15}
         data={arrows}
         renderItem={item => (
           <Marker
