@@ -2,6 +2,7 @@ import { memo, useMemo } from 'react'
 import { LatLng } from 'react-native-maps'
 
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
+import { useRoutes } from '@/hooks/queries/useRoutes'
 
 import { MarkersInView } from '../MarkersInView'
 
@@ -15,7 +16,10 @@ interface Props {
 
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+
   const { query } = useLineBusStops(routeCode)
+  const { getRouteFromCode } = useRoutes(props.lineCode)
+  const route = getRouteFromCode()
 
   const stops = useMemo(
     () => {
@@ -34,7 +38,7 @@ export const LineBusStopMarkers = (props: Props) => {
 
   return (
     <MarkersInView
-      zoomLimit={13}
+      zoomLimit={route?.route_path ? 13 : 0}
       data={stops}
       renderItem={item => (
         <LineBusStopMarkersItemMemoized

@@ -13,8 +13,9 @@ export function useLineBusStops(
 ) {
   const [closestStop, setClosestStop] = useState<BusStop>()
 
+  const lineCode = routeCode.split('_').at(0)
   const query = useQuery({
-    queryKey: [`${routeCode}-stop-locations`],
+    queryKey: [`${lineCode}-stop-locations`],
     queryFn: () => getLineBusStops(routeCode),
     staleTime: 60_000 * 30,
     meta: { persist: true },
