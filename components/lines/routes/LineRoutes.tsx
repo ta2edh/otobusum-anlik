@@ -10,7 +10,7 @@ import { useRoutes } from '@/hooks/queries/useRoutes'
 import { UiButton } from '../../ui/UiButton'
 
 import { RouteCode } from '@/api/getAllRoutes'
-import { getSelectedRouteCode, selectRoute } from '@/stores/filters'
+import { selectRoute } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { Option } from '@/types/sheet'
@@ -23,9 +23,8 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
   const lineTheme = useLinesStore(useShallow(() => getTheme(props.lineCode)))
-  const selectedRouteCode = getSelectedRouteCode(props.lineCode)
+  const route = getRouteFromCode()
 
-  const route = useMemo(() => getRouteFromCode(), [getRouteFromCode])
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
   const routes = useMemo(() => {
@@ -48,8 +47,6 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
     return [...defaults, ...filtered]
   }, [allRoutes.data])
 
-  const routeName = useMemo(() => route?.route_long_name || '', [route])
-
   const handleOnSelect = (value: RouteCode) => {
     selectRoute(props.lineCode, value)
   }
@@ -61,7 +58,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   return (
     <>
       <UiButton
-        title={routeName}
+        title={route?.route_long_name}
         onPress={handleOnPress}
         theme={lineTheme}
         containerStyle={styles.grow}
@@ -73,7 +70,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
         title={i18n.t('routes')}
         options={routes}
         onValueChange={handleOnSelect}
-        value={selectedRouteCode}
+        value={route?.route_code}
         list
       />
     </>

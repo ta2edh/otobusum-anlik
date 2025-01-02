@@ -37,10 +37,11 @@ export const HomeScreen = () => {
         const routeCode = getSelectedRouteCode(newCode)
         const queryKey = [`${routeCode}-stop-locations`]
 
-        const busStops = await queryClient.ensureQueryData<Awaited<ReturnType<typeof getLineBusStops>>>({
-          queryKey,
-          queryFn: () => getLineBusStops(routeCode),
-        })
+        const busStops = await queryClient
+          .ensureQueryData<Awaited<ReturnType<typeof getLineBusStops>>>({
+            queryKey,
+            queryFn: () => getLineBusStops(routeCode),
+          })
 
         map.current?.fitToCoordinates(
           busStops?.map(stop => ({
