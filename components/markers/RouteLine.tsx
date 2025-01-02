@@ -9,6 +9,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { MarkersInView } from './MarkersInView'
 
+import { useFiltersStore } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
 import { radiansFromToLatLng } from '@/utils/angleFromCoordinate'
 
@@ -18,6 +19,7 @@ interface RouteLineProps {
 
 export const RouteLine = ({ lineCode }: RouteLineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { query, getRouteFromCode } = useRoutes(lineCode)
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -46,7 +48,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
       let totalX = 0
       let totalY = 0
 
-      for (let index = 0; index < chunk.length; index++) {
+      for (let index = 1; index < chunk.length; index++) {
         const chunkItem = chunk[index]
         if (!chunkItem) continue
 
@@ -57,7 +59,12 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
       }
 
       const result = Math.atan2(totalY, totalX)
-      const degrees = (result * 180 / Math.PI + 360) % 360
+      let degrees = (result * 180 / Math.PI + 360) % 360
+
+      // not sure why we need this
+      if (selectedCity === 'istanbul') {
+        degrees = 360 - degrees
+      }
 
       arrows.push({
         coordinates: first,
@@ -66,7 +73,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
     }
 
     return arrows
-  }, [transformed])
+  }, [transformed, selectedCity])
 
   if (query.isPending || !route) return
 
