@@ -12,13 +12,13 @@ import { useMiscStore } from '@/stores/misc'
 import { useSettingsStore } from '@/stores/settings'
 
 export const LineMarkers = () => {
-  const invisibleLines = useMiscStore(state => state.invisibleLines)
-  const clusterStops = useSettingsStore(state => state.clusterStops)
+  const invisibleLines = useMiscStore(useShallow(state => state.invisibleLines))
+  const clusterStops = useSettingsStore(useShallow(state => state.clusterStops))
 
   useFiltersStore(useShallow(state => state.selectedCity))
   useFiltersStore(useShallow(state => state.selectedGroup))
-  const lines = useLinesStore(() => getLines())
 
+  const lines = useLinesStore(() => getLines())
   const filteredCodes = lines.filter(lineCode => !invisibleLines.includes(lineCode))
 
   return (
