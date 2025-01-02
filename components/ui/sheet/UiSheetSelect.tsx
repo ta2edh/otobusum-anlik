@@ -2,7 +2,6 @@ import { BottomSheetModal, BottomSheetScrollView, BottomSheetView } from '@gorho
 import { RefObject } from 'react'
 import { StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 
-import { usePaddings } from '@/hooks/usePaddings'
 import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from '../UiText'
@@ -22,7 +21,6 @@ interface UiSheetSelectProps<T> {
 export const UiSheetSelect = <T,>(
   props: UiSheetSelectProps<T> & { cRef?: RefObject<BottomSheetModal> },
 ) => {
-  const paddings = usePaddings(true)
   const { getSchemeColorHex } = useTheme()
 
   const dynamicBackground: StyleProp<ViewStyle> = {
@@ -30,7 +28,7 @@ export const UiSheetSelect = <T,>(
   }
 
   const dynamicBorder: StyleProp<ViewStyle> = {
-    borderColor: getSchemeColorHex('primary'),
+    borderColor: getSchemeColorHex('secondaryContainer'),
   }
 
   const SelectItem = ({ item }: { item: Option<T> }) => {
@@ -50,10 +48,14 @@ export const UiSheetSelect = <T,>(
   }
 
   return (
-    <UiSheetModal cRef={props.cRef} enableDynamicSizing={!props.list} snapPoints={['50%']}>
+    <UiSheetModal
+      cRef={props.cRef}
+      enableDynamicSizing={!props.list}
+      snapPoints={['50%']}
+    >
       {props.list
         ? (
-            <View style={[styles.container, paddings]}>
+            <View style={[styles.container]}>
               <UiText info style={styles.title}>
                 {props.title}
               </UiText>
@@ -66,7 +68,7 @@ export const UiSheetSelect = <T,>(
             </View>
           )
         : (
-            <BottomSheetView style={[paddings]}>
+            <BottomSheetView style={styles.viewContainer}>
               <UiText info style={styles.title}>
                 {props.title}
               </UiText>
@@ -83,6 +85,7 @@ export const UiSheetSelect = <T,>(
 const styles = StyleSheet.create({
   item: {
     padding: 8,
+    gap: 4,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -96,6 +99,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  viewContainer: {
+    padding: 8,
   },
   innerCircle: {
     borderRadius: 999,
