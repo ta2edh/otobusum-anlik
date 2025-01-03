@@ -1,5 +1,4 @@
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
-import React from 'react'
 
 export const TheMap = () => {
   const { isLoaded } = useJsApiLoader({
@@ -25,6 +24,12 @@ export const TheMap = () => {
       mapContainerStyle={containerStyle}
       center={center}
       zoom={10}
+      options={{
+        fullscreenControl: false,
+        zoomControl: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+      }}
     />
   )
 }

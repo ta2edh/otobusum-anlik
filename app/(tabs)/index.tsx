@@ -1,6 +1,7 @@
 import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
+import MapView from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
@@ -80,7 +81,9 @@ export const HomeScreen = () => {
     <View style={styles.container}>
       <MapContext.Provider value={map}>
         <SheetContext.Provider value={sheetContext}>
-          <TheMap
+          <TheMap />
+
+          {/* <TheMap
             cRef={map}
             onMapReady={handleOnMapReady}
             onRegionChangeComplete={handleRegionChangeComplete}
@@ -95,17 +98,17 @@ export const HomeScreen = () => {
             moveOnMarkerPress={false}
           >
             <LineMarkers />
-          </TheMap>
+          </TheMap> */}
 
-        <TheMapButtons />
+          <TheMapButtons />
 
-        <View style={styles.linesContainer}>
-          <LinesMomoizedFr />
-        </View>
+          <View style={styles.linesContainer}>
+            <LinesMomoizedFr />
+          </View>
 
-        {/* <TheStopInfo cRef={map} /> */}
-      </SheetContext.Provider>
-      {/* </MapContext.Provider> */}
+          {/* <TheStopInfo cRef={map} /> */}
+        </SheetContext.Provider>
+      </MapContext.Provider>
     </View>
   )
 }
