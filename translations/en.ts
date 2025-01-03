@@ -50,4 +50,6 @@ export default {
   city: 'City',
   deleteLine: 'Delete line',
   addToGroup: 'Add to group',
+  errorGettingBusLocations: 'Error getting bus locations.',
+  errorGettingAnnouncements: 'Error getting announcements',
 }

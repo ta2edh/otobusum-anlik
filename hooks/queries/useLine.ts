@@ -6,6 +6,7 @@ import { extraPadding } from '../usePaddings'
 
 import { getLineBusLocations } from '@/api/getLineBusLocations'
 import { getLines, useLinesStore } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
 
 export function useLine(lineCode: string) {
   const { width } = useWindowDimensions()
@@ -17,6 +18,9 @@ export function useLine(lineCode: string) {
     queryKey: ['line', lineCode],
     queryFn: () => getLineBusLocations(lineCode),
     staleTime: 60_000 * 30,
+    meta: {
+      errorMessage: i18n.t('errorGettingBusLocations'),
+    },
   })
 
   return {

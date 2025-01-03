@@ -50,4 +50,6 @@ export default {
   city: 'Şehir',
   deleteLine: 'Hattı sil',
   addToGroup: 'Gruba ekle',
+  errorGettingBusLocations: 'Otobüs konumlarını alırken bir hata oluştu.',
+  errorGettingAnnouncements: 'Duyurulari alırken bir hata oluştu.',
 }
