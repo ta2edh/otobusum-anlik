@@ -1,11 +1,7 @@
 import { RefObject } from 'react'
-import { StyleSheet } from 'react-native'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
-import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useShallow } from 'zustand/react/shallow'
 
-import { useSheetModal } from '@/hooks/contexts/useSheetModal'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'
@@ -17,63 +13,25 @@ interface TheMapProps extends MapViewProps {
 
 export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
-  const sheetContext = useSheetModal()
 
   const insets = useSafeAreaInsets()
-  const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
-  const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
-
-  const animatedStyle = useAnimatedStyle(() => {
-    if (!sheetContext) {
-      return {
-        flex: 1,
-      }
-    }
-
-    return {
-      flex: 1,
-      transform: [
-        {
-          translateY: interpolate(
-            sheetContext?.index.value!,
-            [-1, 0],
-            [0, -150],
-            'clamp',
-          ),
-        },
-      ],
-    }
-  })
 
   return (
-    <Animated.View style={animatedStyle}>
-      <MapView
-        ref={cRef}
-        style={[styles.map, style]}
-        provider={PROVIDER_GOOGLE}
-        // initialCamera={{
-        //   center: { latitude: 41.0082, longitude: 28.9784 },
-        //   heading: 0,
-        //   pitch: 0,
-        //   zoom: 13,
-        // }}
-        customMapStyle={getMapStyle(mode)}
-        mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
-        showsIndoors={false}
-        toolbarEnabled={false}
-        showsTraffic={showTraffic}
-        showsUserLocation={showMyLocation}
-        {...props}
-      >
-        {props.children}
-      </MapView>
-    </Animated.View>
+    <MapView
+      provider={PROVIDER_GOOGLE}
+      customMapStyle={getMapStyle(mode)}
+      mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
+      initialRegion={useSettingsStore.getState().initialMapLocation || {
+        latitude: 39.66770141070046,
+        latitudeDelta: 4.746350767346861,
+        longitude: 28.17840663716197,
+        longitudeDelta: 2.978521026670929,
+      }}
+      showsIndoors={false}
+      toolbarEnabled={false}
+      {...props}
+    >
+      {props.children}
+    </MapView>
   )
 }
-
-const styles = StyleSheet.create({
-  map: {
-    flexGrow: 1,
-    flexShrink: 0,
-  },
-})
