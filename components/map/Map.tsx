@@ -1,3 +1,4 @@
+import { SplashScreen } from 'expo-router'
 import { RefObject } from 'react'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -16,10 +17,20 @@ export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
 
   const insets = useSafeAreaInsets()
 
+  const handleOnMapReady = () => {
+    SplashScreen.hideAsync()
+  }
+
+  const handleRegionChangeComplete = (region: any) => {
+    useSettingsStore.setState(() => ({ initialMapLocation: region }))
+  }
+
   return (
     <MapView
       provider={PROVIDER_GOOGLE}
       customMapStyle={getMapStyle(mode)}
+      onMapReady={handleOnMapReady}
+      onRegionChangeComplete={handleRegionChangeComplete}
       mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
       initialRegion={useSettingsStore.getState().initialMapLocation || {
         latitude: 39.66770141070046,

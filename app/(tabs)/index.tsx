@@ -1,4 +1,3 @@
-import * as SplashScreen from 'expo-splash-screen'
 import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import MapView from 'react-native-maps'
@@ -17,7 +16,6 @@ import { queryClient } from '@/api/client'
 import { getLineBusStops } from '@/api/getLineBusStops'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
-import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
   const map = useRef<MapView>(null)
@@ -67,14 +65,6 @@ export const HomeScreen = () => {
   const sheetContext: sheetContextValues = {
     height: useSharedValue(0),
     index: useSharedValue(-1),
-  }
-
-  const handleOnMapReady = () => {
-    SplashScreen.hideAsync()
-  }
-
-  const handleRegionChangeComplete = (region: any) => {
-    useSettingsStore.setState(() => ({ initialMapLocation: region }))
   }
 
   return (
