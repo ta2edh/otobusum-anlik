@@ -17,26 +17,25 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useShallow } from 'zustand/react/shallow'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { LineTimetableMemoized } from '@/components/lines/LineTimetable'
-import { UiSuspense } from '@/components/ui/UiSuspense'
 import { UiText } from '@/components/ui/UiText'
 
-import { usePaddings } from '@/hooks/usePaddings'
-
+import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
 export const TimetableScreen = () => {
   const insets = useSafeAreaInsets()
-  const paddings = usePaddings(true)
   const linesHeight = useSharedValue(0)
   const linesRef = useAnimatedRef<FlatList>()
   const timetablesRef = useAnimatedRef<FlatList>()
 
-  const lines = useLinesStore(() => getLines())
+  const lines = useLinesStore(useShallow(() => getLines()))
+  useFiltersStore(useShallow(state => state.selectedCity))
 
   const onLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
@@ -77,9 +76,7 @@ export const TimetableScreen = () => {
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item }) => {
       return (
-        <UiSuspense>
-          <LineTimetableMemoized code={item} />
-        </UiSuspense>
+        <LineTimetableMemoized lineCode={item} />
       )
     },
     [],
@@ -108,9 +105,13 @@ export const TimetableScreen = () => {
         }}
         containerStyle={{
           flexShrink: 0,
+          padding: 0,
         }}
         contentContainerStyle={{
           paddingBottom: 0,
+        }}
+        lineProps={{
+          variant: 'soft',
         }}
       />
 
@@ -120,7 +121,7 @@ export const TimetableScreen = () => {
         renderItem={renderItem}
         style={styles.list}
         keyExtractor={keyExtractor}
-        contentContainerStyle={[styles.listContent, paddings]}
+        contentContainerStyle={styles.listContent}
         onScroll={handleOnScroll}
         pagingEnabled
         snapToAlignment="center"
@@ -142,8 +143,8 @@ const styles = StyleSheet.create({
     maxHeight: '100%',
   },
   listContent: {
-    // padding: 8,
     gap: 8,
+    padding: 8,
   },
   childrenContainer: {
     flexShrink: 1,

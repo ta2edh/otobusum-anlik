@@ -3,7 +3,6 @@ const characterMap: Record<string, string> = {
   Ö: 'O',
   Ş: 'S',
   İ: 'I',
-  I: 'i',
   Ü: 'U',
   Ğ: 'G',
   ç: 'c',

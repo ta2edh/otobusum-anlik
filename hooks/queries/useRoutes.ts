@@ -19,9 +19,14 @@ export function useRoutes(lineCode: string) {
     return query.data?.find(item => item.route_code === routeCode)
   }, [query.data, routeCode])
 
+  const getRouteDirection = useCallback(() => {
+    return routeCode.split('_').at(1) || 'G'
+  }, [routeCode])
+
   return {
     query,
     routeCode,
     getRouteFromCode,
+    getRouteDirection,
   }
 }

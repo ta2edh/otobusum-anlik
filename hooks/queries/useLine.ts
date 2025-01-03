@@ -5,18 +5,22 @@ import { useShallow } from 'zustand/react/shallow'
 import { extraPadding } from '../usePaddings'
 
 import { getLineBusLocations } from '@/api/getLineBusLocations'
-import { useLinesStore } from '@/stores/lines'
+import { getLines, useLinesStore } from '@/stores/lines'
+import { i18n } from '@/translations/i18n'
 
 export function useLine(lineCode: string) {
   const { width } = useWindowDimensions()
 
-  const lineCount = useLinesStore(useShallow(state => Object.keys(state.lines).length))
-  const lineWidth = width - extraPadding - extraPadding - (lineCount > 1 ? 24 : 0)
+  const lineCount = useLinesStore(useShallow(() => getLines().length))
+  const lineWidth = width - (extraPadding * 2) - (lineCount > 1 ? 8 : 0)
 
   const query = useQuery({
     queryKey: ['line', lineCode],
     queryFn: () => getLineBusLocations(lineCode),
     staleTime: 60_000 * 30,
+    meta: {
+      errorMessage: i18n.t('errorGettingBusLocations'),
+    },
   })
 
   return {

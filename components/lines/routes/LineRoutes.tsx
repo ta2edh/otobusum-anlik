@@ -9,10 +9,11 @@ import { useRoutes } from '@/hooks/queries/useRoutes'
 
 import { UiButton } from '../../ui/UiButton'
 
-import { LineRoute } from '@/api/getAllRoutes'
-import { selectRoute, useFiltersStore } from '@/stores/filters'
-import { useLinesStore } from '@/stores/lines'
+import { RouteCode } from '@/api/getAllRoutes'
+import { selectRoute } from '@/stores/filters'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
+import { Option } from '@/types/sheet'
 
 interface Props {
   lineCode: string
@@ -21,43 +22,33 @@ interface Props {
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
-  const selectedRouteCode = useFiltersStore(
-    useShallow(state => state.selectedRoutes[props.lineCode]),
-  )
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(props.lineCode)))
+  const route = getRouteFromCode()
 
-  const route = useMemo(() => getRouteFromCode(), [getRouteFromCode])
   const bottomSheetModal = useRef<BottomSheetModal>(null)
 
   const routes = useMemo(() => {
-    const routesfiltered: LineRoute[] = []
-    const routesDefaults: LineRoute[] = []
+    if (!allRoutes.data) return []
 
-    for (let index = 0; index < (allRoutes.data?.length || 0); index++) {
-      const element = allRoutes.data?.[index]
+    const filtered: Option<RouteCode>[] = []
+    const defaults: Option<RouteCode>[] = []
+
+    for (let index = 0; index < allRoutes.data.length; index++) {
+      const element = allRoutes.data[index]
       if (!element) continue
 
-      if (element.route_code && element.route_code?.endsWith('D0')) {
-        routesDefaults.push(element)
-      } else {
-        routesfiltered.push(element)
-      }
+      (element.route_code.endsWith('D0') ? defaults : filtered)
+        .push({
+          label: `${element.route_code} ${element.route_long_name}`,
+          value: element.route_code,
+        })
     }
 
-    const merged = [...routesDefaults, ...routesfiltered].map(x => ({
-      label: `${x.route_code} ${x.route_long_name}`,
-      value: x,
-    }))
-
-    return merged
+    return [...defaults, ...filtered]
   }, [allRoutes.data])
 
-  const selectedLineRoute = routes.find(m => m.value.route_code === selectedRouteCode)
-  const routeName = useMemo(() => route?.route_long_name || '', [route])
-
-  const handleOnSelect = (value: LineRoute) => {
-    if (!value.route_code) return
-    selectRoute(props.lineCode, value.route_code)
+  const handleOnSelect = (value: RouteCode) => {
+    selectRoute(props.lineCode, value)
   }
 
   const handleOnPress = useCallback(() => {
@@ -67,7 +58,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   return (
     <>
       <UiButton
-        title={routeName}
+        title={route?.route_long_name}
         onPress={handleOnPress}
         theme={lineTheme}
         containerStyle={styles.grow}
@@ -79,7 +70,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
         title={i18n.t('routes')}
         options={routes}
         onValueChange={handleOnSelect}
-        value={selectedLineRoute?.value}
+        value={route?.route_code}
         list
       />
     </>

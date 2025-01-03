@@ -19,15 +19,17 @@ import { LineGroups } from './lines/groups/LineGroups'
 import { UiButton } from './ui/UiButton'
 
 import { colors } from '@/constants/colors'
-import { changeRouteDirection } from '@/stores/filters'
-import { getLines, selectGroup, unSelectGroup, useLinesStore } from '@/stores/lines'
+import { changeRouteDirection, selectGroup, unSelectGroup, useFiltersStore } from '@/stores/filters'
+import { getLines, getTheme, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { LineGroup } from '@/types/lineGroup'
 
 export const TheMapButtons = () => {
-  const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups)))
-  const selectedGroup = useLinesStore(state => state.selectedGroup)
-  const lines = useLinesStore(() => getLines())
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
+  const selectedGroup = useFiltersStore(state => state.selectedGroup)
+
+  const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups[selectedCity])))
+  const lines = useLinesStore(useShallow(() => getLines()))
 
   const insets = useSafeAreaInsets()
   const bgColor = useSharedValue(colors.primary)
@@ -40,7 +42,7 @@ export const TheMapButtons = () => {
       const lineCode = lines.at(index)
       if (lineCode === undefined) return
 
-      const theme = useLinesStore.getState().lineTheme[lineCode]
+      const theme = getTheme(lineCode)
       if (!theme) return
 
       const scheme = theme.schemes[mode]
@@ -92,7 +94,7 @@ export const TheMapButtons = () => {
 
   const handlePressGroup = (group: LineGroup) => {
     selectGroup(group.id)
-    bottomSheetModalGroups.current?.close()
+    bottomSheetModalGroups.current?.dismiss()
   }
 
   const animatedContainerStyle = useAnimatedStyle(

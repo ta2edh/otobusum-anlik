@@ -14,18 +14,11 @@ export function useLineBusStops(
   const [closestStop, setClosestStop] = useState<BusStop>()
 
   const query = useQuery({
-    queryKey: [`${routeCode}-stop-locations`],
+    queryKey: [`stop-locations`, routeCode],
     queryFn: () => getLineBusStops(routeCode),
     staleTime: 60_000 * 30,
     meta: { persist: true },
   })
-
-  // Closest stop dependency is here to cause rerender on flatlist usage
-  // const filteredStops = useMemo(
-  //   () => query.data?.filter(stop => stop.direction === direction),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [query.data, direction, closestStop],
-  // )
 
   // TODO: These location listeners should moved to their own provider like useMap()
   const handlePositionListener: Location.LocationCallback = useCallback(

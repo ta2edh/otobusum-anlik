@@ -20,7 +20,9 @@ export const TabsLayout = () => {
           flex: 1,
         },
         animation: 'shift',
+        freezeOnBlur: true,
       }}
+      detachInactiveScreens
     >
       <Tabs.Screen
         name="index"

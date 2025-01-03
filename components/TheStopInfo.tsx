@@ -6,16 +6,18 @@ import { Linking, StyleSheet, View } from 'react-native'
 import MapView, { Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
+import { useTheme } from '@/hooks/useTheme'
+
 import { LineGroups } from './lines/groups/LineGroups'
 import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
-import { TheMap } from './TheMap'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
-import { addLine, useLinesStore } from '@/stores/lines'
+import { getMapStyle } from '@/constants/mapStyles'
+import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
@@ -25,7 +27,7 @@ interface TheStopInfoProps {
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const handlePress = (lineCode: string) => {
     addLine(lineCode)
@@ -51,6 +53,7 @@ const StopLine = ({ lineCode }: { lineCode: string }) => {
 
 export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
+  const { mode } = useTheme()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const savedRegion = useRef<Region | undefined>(undefined)
 
@@ -111,9 +114,12 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (
-            <TheMap
+            <MapView
               liteMode
               style={styles.map}
+              customMapStyle={getMapStyle(mode)}
+              showsIndoors={false}
+              toolbarEnabled={false}
               initialCamera={{
                 center: {
                   latitude: query.data?.stop.y_coord,
@@ -125,7 +131,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
               }}
             >
               <LineBusStopMarkersItem type="point" stop={query.data.stop} />
-            </TheMap>
+            </MapView>
           )}
         </View>
 

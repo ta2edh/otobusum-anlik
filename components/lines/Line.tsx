@@ -1,7 +1,7 @@
-import { memo, useCallback, useEffect, useMemo } from 'react'
-import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native'
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
-  AnimatedProps,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -10,34 +10,41 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
-import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
+import { UiSheetModal } from '../ui/sheet/UiSheetModal'
 import { UiButton } from '../ui/UiButton'
-import { UiText } from '../ui/UiText'
 
+import { LineGroups } from './groups/LineGroups'
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
+import { LineName } from './LineName'
 import { LineRouteDirection } from './routes/LineRouteDirection'
 import { LineRoutes } from './routes/LineRoutes'
 
+import { queryClient } from '@/api/client'
+import { getLineBusStops } from '@/api/getLineBusStops'
 import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { deleteLine, useLinesStore } from '@/stores/lines'
+import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
+import { i18n } from '@/translations/i18n'
 
-export interface LineProps extends AnimatedProps<ViewProps> {
+export interface LineProps {
   lineCode: string
+  variant?: 'solid' | 'soft'
+  containerStyle?: StyleProp<ViewStyle>
 }
 
-const Line = ({ style, ...props }: LineProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { getSchemeColorHex } = useTheme(lineTheme)
-  const { lineWidth } = useLine(props.lineCode)
-  const { query } = useLineBusStops(routeCode)
+  const { lineWidth } = useLine(lineCode)
 
   const map = useMap()
+  const uiSheetButtonModal = useRef<BottomSheetModal>(null)
+  const uiSheetLineGroupsModal = useRef<BottomSheetModal>(null)
 
   const isVisible = useSharedValue(true)
 
@@ -45,19 +52,26 @@ const Line = ({ style, ...props }: LineProps) => {
     const unsub = useMiscStore.subscribe(
       state => state.invisibleLines,
       (newCodes) => {
-        isVisible.value = !newCodes.includes(props.lineCode)
+        isVisible.value = !newCodes.includes(lineCode)
+        if (isVisible.value) return
 
-        if (!isVisible.value && query.data) {
-          const coords = query.data.map(x => ({ latitude: x.y_coord, longitude: x.x_coord }))
-          map?.current?.fitToCoordinates(coords, {
-            edgePadding: {
-              bottom: 200,
-              top: 0,
-              left: 0,
-              right: 0,
-            },
-          })
-        }
+        const routeCode = getSelectedRouteCode(lineCode)
+
+        const coords = queryClient
+          .getQueryData<Awaited<ReturnType<typeof getLineBusStops>>>([`stop-locations`, routeCode])
+          ?.map(coords => ({
+            latitude: coords.y_coord,
+            longitude: coords.x_coord,
+          }))
+
+        map?.current?.fitToCoordinates(coords, {
+          edgePadding: {
+            bottom: 250,
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        })
       },
       {
         fireImmediately: true,
@@ -65,24 +79,33 @@ const Line = ({ style, ...props }: LineProps) => {
     )
 
     return unsub
-  }, [props.lineCode, isVisible, query.data, map])
+  }, [isVisible, map, lineCode])
 
-  const handleVisibility = () => {
-    toggleLineVisibility(props.lineCode)
-  }
+  const handleVisibility = useCallback(() => {
+    toggleLineVisibility(lineCode)
+  }, [lineCode])
 
-  const handleDelete = () => {
-    deleteLine(props.lineCode)
-  }
+  const handleMenu = useCallback(() => {
+    uiSheetButtonModal.current?.present()
+  }, [])
 
-  const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('primary'),
-    width: lineWidth,
-  }
+  const handleDelete = useCallback(() => {
+    deleteLine(lineCode)
+  }, [lineCode])
+
+  const handleAddToGroup = useCallback(() => {
+    uiSheetLineGroupsModal.current?.present()
+  }, [])
+
+  const containerStyle: StyleProp<ViewStyle> = useMemo(
+    () => ({
+      backgroundColor: variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
+      width: lineWidth,
+    }), [getSchemeColorHex, lineWidth, variant])
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
     opacity: withTiming(isVisible.value ? 1 : 0.4),
-  }))
+  }), [])
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -92,41 +115,20 @@ const Line = ({ style, ...props }: LineProps) => {
   )
 
   const handleSwitchRoute = useCallback(() => {
-    changeRouteDirection(props.lineCode)
-  }, [props.lineCode])
+    changeRouteDirection(lineCode)
+  }, [lineCode])
 
   return (
     <Animated.View
-      style={[containerStyle, containerAnimatedStyle, styles.container, style]}
-      key={props.lineCode}
+      style={[containerStyle, containerAnimatedStyle, styles.container, props.containerStyle]}
+      key={lineCode}
       {...props}
     >
-      {/* {isRefetching && (
-        <UiActivityIndicator
-          color={getSchemeColorHex('onPrimary')}
-          size={50}
-          style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            opacity: 0.2,
-          }}
-        />
-      )} */}
-
       <View style={styles.titleContainer}>
-        <UiText
-          style={{
-            fontWeight: 'bold',
-            fontSize: 24,
-            letterSpacing: 2,
-            color: getSchemeColorHex('onPrimary'),
-          }}
-        >
-          {props.lineCode}
-        </UiText>
+        <LineName
+          lineCode={lineCode}
+          variant={variant}
+        />
 
         <View style={styles.titleContainer}>
           <UiButton
@@ -135,24 +137,55 @@ const Line = ({ style, ...props }: LineProps) => {
             icon="eye-outline"
           />
 
-          <LineAnnouncementsMemoized code={props.lineCode} style={buttonContainerStyle} />
+          {selectedCity === 'istanbul' && (
+            <LineAnnouncementsMemoized lineCode={lineCode} style={buttonContainerStyle} />
+          )}
 
           <UiButton
-            onPress={handleDelete}
-            icon="trash-outline"
+            onPress={handleMenu}
+            icon="menu"
             theme={lineTheme}
+          />
+
+          <UiSheetModal cRef={uiSheetButtonModal}>
+            <BottomSheetView style={styles.menuSheetContainer}>
+              <UiButton
+                onPress={handleAddToGroup}
+                title={i18n.t('addToGroup')}
+                variant="soft"
+                icon="add-circle-outline"
+                square
+                align="left"
+              />
+              <UiButton
+                onPress={handleDelete}
+                title={i18n.t('deleteLine')}
+                variant="soft"
+                icon="trash-outline"
+                square
+                align="left"
+              />
+            </BottomSheetView>
+          </UiSheetModal>
+
+          <LineGroups
+            cRef={uiSheetLineGroupsModal}
+            lineCodeToAdd={lineCode}
           />
         </View>
       </View>
 
-      <LineBusStops lineCode={props.lineCode} />
+      <LineBusStops lineCode={lineCode} variant={variant} />
 
       <View style={styles.lineButtonsContainer}>
         <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
-        <LineRoutes lineCode={props.lineCode} />
+        <LineRoutes lineCode={lineCode} />
       </View>
 
-      <LineRouteDirection lineCode={props.lineCode} />
+      <LineRouteDirection
+        lineCode={lineCode}
+        variant={variant}
+      />
     </Animated.View>
   )
 }
@@ -161,7 +194,7 @@ export const LineMemoized = memo(Line)
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: 10,
     borderRadius: 8,
     gap: 8,
     flexShrink: 0,
@@ -177,5 +210,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     flexGrow: 1,
+  },
+  menuSheetContainer: {
+    padding: 8,
+    gap: 8,
   },
 })

@@ -9,17 +9,19 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { MarkersInView } from './MarkersInView'
 
-import { useLinesStore } from '@/stores/lines'
-import { angleFromCoordinate } from '@/utils/angleFromCoordinate'
+import { useFiltersStore } from '@/stores/filters'
+import { getTheme, useLinesStore } from '@/stores/lines'
+import { radiansFromToLatLng } from '@/utils/angleFromCoordinate'
 
 interface RouteLineProps {
-  code: string
+  lineCode: string
 }
 
-export const RouteLine = (props: RouteLineProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.code]))
+export const RouteLine = ({ lineCode }: RouteLineProps) => {
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
-  const { query, getRouteFromCode } = useRoutes(props.code)
+  const { query, getRouteFromCode } = useRoutes(lineCode)
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const route = getRouteFromCode()
@@ -39,26 +41,39 @@ export const RouteLine = (props: RouteLineProps) => {
 
     for (let index = 0; index < transformed.length; index += chunkSize) {
       const chunk = transformed.slice(index, index + chunkSize)
-      const centerIndex = chunk.length / 2
+      const first = chunk.at(0)
 
-      const center = chunk.at(centerIndex)
-      const next = chunk.at(centerIndex + 2)
+      if (!first) continue
 
-      if (!center || !next) continue
+      let totalX = 0
+      let totalY = 0
+
+      for (let index = 1; index < chunk.length; index++) {
+        const chunkItem = chunk[index]
+        if (!chunkItem) continue
+
+        const [x, y] = radiansFromToLatLng(first, chunkItem)
+
+        totalX += x
+        totalY += y
+      }
+
+      const result = Math.atan2(totalY, totalX)
+      let degrees = (result * 180 / Math.PI + 360) % 360
+
+      // not sure why we need this
+      if (selectedCity === 'istanbul') {
+        degrees = 360 - degrees
+      }
 
       arrows.push({
-        coordinates: center,
-        angle: angleFromCoordinate(
-          center.latitude,
-          center.longitude,
-          next.latitude,
-          next.longitude,
-        ),
+        coordinates: first,
+        angle: degrees,
       })
     }
 
     return arrows
-  }, [transformed])
+  }, [transformed, selectedCity])
 
   if (query.isPending || !route) return
 
@@ -81,7 +96,7 @@ export const RouteLine = (props: RouteLineProps) => {
       />
 
       <MarkersInView
-        zoomLimit={14}
+        zoomLimit={15}
         data={arrows}
         renderItem={item => (
           <Marker
@@ -90,6 +105,7 @@ export const RouteLine = (props: RouteLineProps) => {
             tracksViewChanges={false}
             tracksInfoWindowChanges={false}
             anchor={{ x: 0.5, y: 0.5 }}
+            zIndex={1}
           >
             <View style={arrowBackground}>
               <Ionicons

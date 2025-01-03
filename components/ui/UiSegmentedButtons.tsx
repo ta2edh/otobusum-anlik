@@ -13,8 +13,6 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiText } from './UiText'
 
-import { colors } from '@/constants/colors'
-
 interface Button<T> {
   label: string
   value: T
@@ -31,47 +29,34 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
   const { colorsTheme, getSchemeColorHex } = useTheme(theme)
 
   const baseStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('primaryContainer') || colorsTheme.surfaceContainerHigh,
+    backgroundColor: getSchemeColorHex('secondaryContainer') || colorsTheme.surfaceContainerHigh,
     paddingVertical: 8,
     paddingHorizontal: 14,
     flexGrow: 1,
     flexBasis: 100,
   }
 
-  const leftEdge: StyleProp<ViewStyle> = {
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-  }
-
-  const rightEdge: StyleProp<ViewStyle> = {
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-  }
-
   const selectedStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('tertiaryContainer') || colors.primary,
+    backgroundColor: getSchemeColorHex('tertiaryContainer'),
   }
 
   const selectedTextStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onTertiaryContainer') || colors.primary,
+    color: getSchemeColorHex('onTertiaryContainer'),
   }
 
   const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onPrimaryContainer'),
+    color: getSchemeColorHex('onSecondaryContainer'),
   }
 
   return (
     <View style={[styles.container, style]}>
-      {buttons.map((button, index) => {
-        const edgeStyle
-          = index === 0 ? leftEdge : index === buttons.length - 1 ? rightEdge : undefined
-
-        const selected = button.value === value
+      {buttons.map((button) => {
+        const selected = typeof value === 'number' ? ((button.value as number) & value) : button.value === value
 
         return (
           <TouchableOpacity
             key={button.label}
-            style={[edgeStyle, baseStyle, selected ? selectedStyle : undefined]}
+            style={[baseStyle, selected ? selectedStyle : undefined]}
             onPress={() => onValueChange?.(button.value)}
           >
             <UiText
@@ -90,6 +75,7 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
   },
   label: {
     textAlign: 'center',

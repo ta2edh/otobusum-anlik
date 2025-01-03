@@ -9,11 +9,11 @@ import { UiText } from '@/components/ui/UiText'
 import { useTheme } from '@/hooks/useTheme'
 
 import { colors } from '@/constants/colors'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { BusStop } from '@/types/bus'
 
 interface LineBusStopMarkersItemPropsBase extends Omit<MapMarkerProps, 'coordinate'> {
-  code?: string
+  lineCode?: string
   stop?: BusStop
   coordinate?: LatLng
   viewStyle?: ViewStyle
@@ -37,16 +37,14 @@ type LineBusStopMarkersItemProps = PointProps | ClusterPoints
 
 export const LineBusStopMarkersItem = ({
   stop,
-  code,
+  lineCode,
   viewStyle,
   label,
   coordinate,
   type,
   ...props
 }: LineBusStopMarkersItemProps) => {
-  const lineTheme = useLinesStore(
-    useShallow(state => (code ? state.lineTheme[code] : undefined)),
-  )
+  const lineTheme = useLinesStore(useShallow(() => lineCode ? getTheme(lineCode) : undefined))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
   const backgroundStyle: StyleProp<ViewStyle> = useMemo(
@@ -96,6 +94,7 @@ export const LineBusStopMarkersItem = ({
       tracksViewChanges={false}
       onPress={handleOnPress}
       anchor={{ x: 0.5, y: 0.5 }}
+      zIndex={1}
       {...props}
     >
       <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>

@@ -1,7 +1,7 @@
 import { RefObject } from 'react'
-import { StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet } from 'react-native'
 import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
-import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
+import Animated, { clamp, Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -15,7 +15,9 @@ interface TheMapProps extends MapViewProps {
   cRef?: RefObject<MapView>
 }
 
-export const TheMapOld = ({ style, cRef, ...props }: TheMapProps) => {
+const screen = Dimensions.get('screen')
+
+export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
   const { mode } = useTheme()
   const sheetContext = useSheetModal()
 
@@ -24,6 +26,9 @@ export const TheMapOld = ({ style, cRef, ...props }: TheMapProps) => {
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
 
   const animatedStyle = useAnimatedStyle(() => {
+    let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + 49) - 49
+    heightFrombottom = clamp(heightFrombottom / 2, 0, screen.height)
+
     if (!sheetContext) {
       return {
         flex: 1,
@@ -37,13 +42,13 @@ export const TheMapOld = ({ style, cRef, ...props }: TheMapProps) => {
           translateY: interpolate(
             sheetContext?.index.value!,
             [-1, 0],
-            [0, -150],
-            'clamp',
+            [0, -heightFrombottom],
+            Extrapolation.CLAMP,
           ),
         },
       ],
     }
-  })
+  }, [])
 
   return (
     <Animated.View style={animatedStyle}>
@@ -51,12 +56,6 @@ export const TheMapOld = ({ style, cRef, ...props }: TheMapProps) => {
         ref={cRef}
         style={[styles.map, style]}
         provider={PROVIDER_GOOGLE}
-        // initialCamera={{
-        //   center: { latitude: 41.0082, longitude: 28.9784 },
-        //   heading: 0,
-        //   pitch: 0,
-        //   zoom: 13,
-        // }}
         customMapStyle={getMapStyle(mode)}
         mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
         showsIndoors={false}

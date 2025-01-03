@@ -25,12 +25,13 @@ import { UiText } from '../ui/UiText'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
   lineCode: string
+  variant?: 'solid' | 'soft'
 }
 
 const AnimatedFlashList
@@ -40,8 +41,8 @@ const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
-export const LineBusStops = (props: LineBusStopsProps) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps) => {
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
 
   const flashlistRef = useAnimatedRef<FlashList<BusStop>>()
   const currentViewableItems = useRef<ViewToken[]>([])
@@ -51,9 +52,9 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const containerHeight = useSharedValue(COLLAPSED)
   const isScrolling = useSharedValue(false)
 
-  const { query: { data: line } } = useLine(props.lineCode)
+  const { query: { data: line } } = useLine(lineCode)
 
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[props.lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
 
   const { closestStop, query } = useLineBusStops(routeCode, true)
   const { getSchemeColorHex } = useTheme(lineTheme)
@@ -66,11 +67,10 @@ export const LineBusStops = (props: LineBusStopsProps) => {
   const scrollToTrackedBus = useCallback(() => {
     if (!currentTrackedBus.current) return
 
-    const updatedBus = busses?.find(bus => bus.door_no === currentTrackedBus.current?.door_no)
+    const updatedBus = busses?.find(bus => bus.bus_id === currentTrackedBus.current?.bus_id)
     if (!updatedBus) return
 
-    // TODO: to string won't be needed later
-    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code.toString())
+    const stopIndex = query.data?.findIndex(stop => stop.stop_code === updatedBus.closest_stop_code)
 
     if (stopIndex === undefined || stopIndex === -1) {
       currentTrackedBus.current = undefined
@@ -88,8 +88,7 @@ export const LineBusStops = (props: LineBusStopsProps) => {
 
     const trackedBus = busses?.find((bus) => {
       return currentViewableItems.current.find(({ item }: { item: BusStop }) => {
-        // TODO: to string won't be needed later
-        return item.stop_code === bus.closest_stop_code.toString()
+        return item.stop_code === bus.closest_stop_code
       })
     })
 
@@ -140,10 +139,11 @@ export const LineBusStops = (props: LineBusStopsProps) => {
     }
   }, [])
 
+  const color = getSchemeColorHex(variant === 'solid' ? 'onPrimary' : 'onSurface')
+
   const renderItem: ListRenderItem<BusStop> = useCallback(
     ({ item }) => {
-      // TODO: to string won't be needed later
-      const closestBus = busses?.find(bus => bus.closest_stop_code.toString() === item.stop_code)
+      const closestBus = busses?.find(bus => bus.closest_stop_code === item.stop_code)
 
       const colorStyle: ViewStyle = {
         borderColor: getSchemeColorHex('primaryContainer'),
@@ -173,12 +173,12 @@ export const LineBusStops = (props: LineBusStopsProps) => {
             </View>
 
             <View style={styles.itemTitleInner}>
-              <UiText style={{ color: getSchemeColorHex('onPrimary') }} numberOfLines={1}>
+              <UiText style={{ color }} numberOfLines={1}>
                 {item.stop_name}
               </UiText>
 
               {closestStop?.stop_code === item.stop_code && (
-                <UiText info style={{ color: getSchemeColorHex('onPrimary'), fontSize: 12 }}>
+                <UiText info style={{ color, fontSize: 12 }}>
                   {i18n.t('closeToThisStop')}
                 </UiText>
               )}
@@ -195,7 +195,7 @@ export const LineBusStops = (props: LineBusStopsProps) => {
         </View>
       )
     },
-    [busses, closestStop?.stop_code, getSchemeColorHex, lineTheme, map],
+    [busses, closestStop?.stop_code, color, getSchemeColorHex, lineTheme, map],
   )
 
   if (query.isPending) {

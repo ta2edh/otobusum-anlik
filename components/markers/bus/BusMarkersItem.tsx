@@ -1,18 +1,19 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { memo } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { MapMarkerProps } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
 
+import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
 import { MarkerLazyCallout } from '../MarkerLazyCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
-import { useLinesStore } from '@/stores/lines'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
 interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
@@ -21,40 +22,43 @@ interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
 }
 
 export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemProps) => {
-  const lineTheme = useLinesStore(useShallow(state => state.lineTheme[lineCode]))
+  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
+  const { query: { dataUpdatedAt } } = useLine(lineCode)
 
   const textColor = getSchemeColorHex('onPrimaryContainer')
   const backgroundColor = getSchemeColorHex('primaryContainer')
+
+  const dynamicCalloutContainer: StyleProp<ViewStyle> = {
+    backgroundColor: getSchemeColorHex('primary'),
+  }
+
+  const textStyle: StyleProp<TextStyle> = {
+    color: getSchemeColorHex('onPrimary'),
+    fontWeight: 'bold',
+  }
 
   return (
     <MarkerLazyCallout
       calloutProps={{
         children: (
-          <View style={styles.calloutContainer}>
-            <View>
-              <UiText>
+          <View style={[styles.calloutContainer, dynamicCalloutContainer]}>
+            {location.route_code && (
+              <UiText style={textStyle}>
                 {location.route_code}
-                {' '}
-                -
-                {location.line_name}
               </UiText>
-              <UiText>
-                {i18n.t('doorNo')}
-                :
-                {location.door_no}
-              </UiText>
-              <UiText>
-                {i18n.t('direction')}
-                :
-                {location.direction}
-              </UiText>
-              <UiText>
-                {i18n.t('lastUpdate')}
-                :
-                {location.last_location_update}
-              </UiText>
-            </View>
+            )}
+
+            <UiText style={textStyle}>
+              {i18n.t('doorNo')}
+              {': '}
+              {location.bus_id}
+            </UiText>
+            <UiText style={textStyle}>
+              {i18n.t('lastUpdate')}
+              {': '}
+              {new Date(dataUpdatedAt).toLocaleTimeString()}
+            </UiText>
           </View>
         ),
       }}
@@ -66,6 +70,7 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
         tracksInfoWindowChanges: false,
         tracksViewChanges: false,
         anchor: { x: 0.5, y: 0.5 },
+        zIndex: 2,
       }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>

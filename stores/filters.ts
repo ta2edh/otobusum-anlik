@@ -3,11 +3,15 @@ import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
 import { queryClient } from '@/api/client'
-import { LineRoute } from '@/api/getAllRoutes'
-import { Direction } from '@/types/departure'
+import { LineRoute, RouteCode } from '@/api/getAllRoutes'
+import { getLineBusLocations } from '@/api/getLineBusLocations'
+import { Cities } from '@/types/cities'
+import { Direction } from '@/types/timetable'
 
 export interface FiltersStore {
-  selectedRoutes: Record<string, string>
+  selectedRoutes: Record<string, RouteCode>
+  selectedGroup?: string
+  selectedCity: Cities
 }
 
 export const useFiltersStore = create(
@@ -15,6 +19,8 @@ export const useFiltersStore = create(
     persist<FiltersStore>(
       () => ({
         selectedRoutes: {},
+        selectedGroup: undefined,
+        selectedCity: 'istanbul',
       }),
       {
         name: 'filter-storage',
@@ -24,7 +30,7 @@ export const useFiltersStore = create(
   ),
 )
 
-export const selectRoute = (lineCode: string, routeCode: string) => useFiltersStore.setState((state) => {
+export const selectRoute = (lineCode: string, routeCode: RouteCode) => useFiltersStore.setState((state) => {
   return {
     selectedRoutes: {
       ...state.selectedRoutes,
@@ -33,7 +39,29 @@ export const selectRoute = (lineCode: string, routeCode: string) => useFiltersSt
   }
 })
 
-export const getSelectedRouteCode = (lineCode: string) => useFiltersStore.getState().selectedRoutes[lineCode] || `${lineCode}_G_D0`
+export const getSelectedRouteCode = (lineCode: string): RouteCode => {
+  const filtersStore = useFiltersStore.getState()
+  const selectedRouteCode = filtersStore.selectedRoutes[lineCode] as RouteCode | undefined
+
+  // by default we need to find route a that contains a bus
+  if (!selectedRouteCode) {
+    const busLocations = queryClient
+      .getQueryData<Awaited<ReturnType<typeof getLineBusLocations>>>(['line', lineCode])
+
+    const def = `${lineCode}_G_D0` as RouteCode
+    if (!busLocations || busLocations.length < 1) {
+      return def
+    }
+
+    const found = busLocations.find(loc => loc.route_code === def)
+    if (found) return def
+
+    const anotherRouteCodeWithLocation = busLocations.find(loc => loc.route_code.includes('_G_'))?.route_code as RouteCode | undefined
+    return anotherRouteCodeWithLocation || def
+  }
+
+  return selectedRouteCode
+}
 
 export const changeRouteDirection = (lineCode: string) => useFiltersStore.setState((state) => {
   const routeCode = getSelectedRouteCode(lineCode)
@@ -64,5 +92,17 @@ export const changeRouteDirection = (lineCode: string) => useFiltersStore.setSta
       ...state.selectedRoutes,
       [lineCode]: otherRoute.route_code || `${lineCode}_G_D0`,
     },
+  }
+})
+
+export const selectGroup = (newGroupId?: string) => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: newGroupId,
+  }
+})
+
+export const unSelectGroup = () => useFiltersStore.setState(() => {
+  return {
+    selectedGroup: undefined,
   }
 })
