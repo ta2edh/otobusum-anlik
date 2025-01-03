@@ -13,6 +13,8 @@ export const useTimetable = (lineCode: string) => {
   const query = useQuery({
     queryKey: [`timetable-${lineCode}`, direction],
     queryFn: () => getPlannedDepartures(lineCode, direction),
+    staleTime: 60_000 * 30,
+    meta: { persist: true },
   })
 
   return {
