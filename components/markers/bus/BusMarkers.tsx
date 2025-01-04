@@ -2,7 +2,7 @@ import { memo } from 'react'
 
 import { useLine } from '@/hooks/queries/useLine'
 
-import { LineBusMarkersItemMemoized } from './BusMarkersItem'
+import { LineBusMarkersItemMemoized } from './BusMarkersItem.web'
 
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
