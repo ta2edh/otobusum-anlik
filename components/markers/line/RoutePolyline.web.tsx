@@ -1,5 +1,6 @@
-import { Polyline } from '@react-google-maps/api'
+// import { Polyline } from '@react-google-maps/api'
 import { useShallow } from 'zustand/react/shallow'
+import { } from '@vis.gl/react-google-maps'
 
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
@@ -18,12 +19,13 @@ export const RoutePolyline = ({ lineCode }: PolylineProps) => {
   const route = getRouteFromCode()
 
   return (
-    <Polyline
-      path={route?.route_path || []}
-      options={{
-        strokeColor: getSchemeColorHex('primary'),
-        strokeWeight: 6,
-      }}
-    />
+    // <Polyline
+    //   path={route?.route_path || []}
+    //   options={{
+    //     strokeColor: getSchemeColorHex('primary'),
+    //     strokeWeight: 6,
+    //   }}
+    // />
+    <></>
   )
 }

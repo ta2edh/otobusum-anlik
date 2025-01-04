@@ -1,4 +1,4 @@
-import { Marker } from '@react-google-maps/api'
+import { Marker, AdvancedMarker } from '@vis.gl/react-google-maps'
 import { memo } from 'react'
 
 import { BusLocation } from '@/api/getLineBusLocations'
@@ -10,14 +10,13 @@ interface LineBusMarkersItemProps {
 
 export const LineBusMarkersItem = ({ location }: LineBusMarkersItemProps) => {
   return (
-    <Marker
+    <AdvancedMarker
       position={{
-        lat: location.lat,
         lng: location.lng,
+        lat: location.lat,
       }}
     >
-      <p>deneme</p>
-    </Marker>
+    </AdvancedMarker>
   )
 }
 
