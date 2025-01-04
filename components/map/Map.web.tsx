@@ -2,6 +2,9 @@ import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
 import { useRef } from 'react'
 import { Dimensions } from 'react-native'
 
+import { useTheme } from '@/hooks/useTheme'
+
+import { getMapStyle } from '@/constants/mapStyles'
 import { useSettingsStore } from '@/stores/settings'
 
 const dimensions = Dimensions.get('window')
@@ -39,6 +42,7 @@ function getBoundsZoomLevel(
 
 export const TheMap = () => {
   const map = useRef<google.maps.Map>()
+  const { mode } = useTheme()
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -62,10 +66,6 @@ export const TheMap = () => {
         longitudeDelta: ewDiff,
       },
     }))
-  }
-
-  const handleOnLoad = (_map: google.maps.Map) => {
-    map.current = _map
   }
 
   if (!isLoaded) {
@@ -109,13 +109,16 @@ export const TheMap = () => {
       mapContainerStyle={{ flex: 1 }}
       center={center}
       zoom={zoom}
-      onLoad={handleOnLoad}
+      onLoad={(_map) => {
+        map.current = _map
+      }}
       onDragEnd={handleDragEnd}
       options={{
         fullscreenControl: false,
         zoomControl: false,
         mapTypeControl: false,
         streetViewControl: false,
+        styles: getMapStyle(mode),
       }}
     />
   )
