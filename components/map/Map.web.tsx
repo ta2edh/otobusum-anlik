@@ -1,4 +1,4 @@
-import { GoogleMap, useJsApiLoader } from '@react-google-maps/api'
+import { GoogleMap, GoogleMapProps, useJsApiLoader } from '@react-google-maps/api'
 import { useRef } from 'react'
 import { Dimensions } from 'react-native'
 
@@ -40,7 +40,7 @@ function getBoundsZoomLevel(
   return Math.min(latZoom, lngZoom, ZOOM_MAX)
 }
 
-export const TheMap = () => {
+export const TheMap = (props: GoogleMapProps) => {
   const map = useRef<google.maps.Map>()
   const { mode } = useTheme()
 
@@ -120,6 +120,9 @@ export const TheMap = () => {
         streetViewControl: false,
         styles: getMapStyle(mode),
       }}
-    />
+      {...props}
+    >
+      {props.children}
+    </GoogleMap>
   )
 }

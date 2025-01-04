@@ -232,11 +232,11 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         onMomentumScrollEnd={handleScrollMomentumEnd}
         onViewableItemsChanged={handleViewableItemsChanged}
         drawDistance={1}
-        viewabilityConfig={{
-          minimumViewTime: 200,
-          waitForInteraction: true,
-          itemVisiblePercentThreshold: 100,
-        }}
+        // viewabilityConfig={{
+        //   minimumViewTime: 200,
+        //   waitForInteraction: true,
+        //   itemVisiblePercentThreshold: 100,
+        // }}
         snapToInterval={ITEM_SIZE}
       />
     </Animated.View>

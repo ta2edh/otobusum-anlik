@@ -1,13 +1,12 @@
-import Ionicons from '@react-native-vector-icons/ionicons'
 import { useMemo } from 'react'
-import { StyleProp, View, ViewStyle } from 'react-native'
-import { LatLng, Marker, Polyline } from 'react-native-maps'
+import { StyleProp, ViewStyle } from 'react-native'
+import { LatLng } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkersInView } from './MarkersInView'
+import { RoutePolyline } from './line/RoutePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
@@ -89,13 +88,13 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
 
   return (
     <>
-      <Polyline
-        coordinates={transformed}
-        strokeWidth={6}
-        strokeColor={getSchemeColorHex('primary')}
+      <RoutePolyline
+        lineCode={lineCode}
+        // strokeWidth={6}
+        // strokeColor={getSchemeColorHex('primary')}
       />
 
-      <MarkersInView
+      {/* <MarkersInView
         zoomLimit={15}
         data={arrows}
         renderItem={item => (
@@ -122,7 +121,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
             </View>
           </Marker>
         )}
-      />
+      /> */}
     </>
   )
 }

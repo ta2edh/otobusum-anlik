@@ -71,7 +71,9 @@ export const HomeScreen = () => {
     <View style={styles.container}>
       <MapContext.Provider value={map}>
         <SheetContext.Provider value={sheetContext}>
-          <TheMap />
+          <TheMap>
+            <LineMarkers />
+          </TheMap>
 
           {/* <TheMap
             cRef={map}

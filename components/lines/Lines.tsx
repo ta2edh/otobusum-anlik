@@ -69,7 +69,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         ref={innerRef}
         data={lines}
         renderItem={renderItem}
-        onViewableItemsChanged={handleOnViewChanged}
+        // onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
         contentContainerStyle={[styles.codes, props.contentContainerStyle]}
         keyExtractor={keyExtractor}
@@ -77,7 +77,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         initialNumToRender={2}
         maxToRenderPerBatch={2}
         snapToAlignment="center"
-        pagingEnabled
+        // pagingEnabled
         horizontal
       />
     </View>
