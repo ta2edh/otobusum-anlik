@@ -107,6 +107,7 @@ export const TheMap = (props: MapProps) => {
   return (
     <APIProvider apiKey={process.env.EXPO_PUBLIC_MAP_API || ''}>
       <Map
+        mapId='DEMO_MAP_ID'
         defaultCenter={center}
         defaultZoom={10}
         fullscreenControl={false}
