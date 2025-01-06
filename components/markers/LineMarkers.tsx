@@ -1,4 +1,4 @@
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LineBusMarkersMemoized } from './bus/BusMarkers'
@@ -27,11 +27,11 @@ export const LineMarkers = () => {
         <View key={lineCode}>
           <LineBusMarkersMemoized code={lineCode} />
 
-          {/* {
-            clusterStops
+          {
+            clusterStops && Platform.OS !== 'web'
               ? <LineBusStopMarkersClusteredMemoized lineCode={lineCode} />
               : <LineBusStopMarkersMemoized lineCode={lineCode} />
-          } */}
+          }
 
           <RouteLine lineCode={lineCode} />
         </View>
