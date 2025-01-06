@@ -1,13 +1,14 @@
-import { AdvancedMarker, AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { AdvancedMarker, AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
 import { memo } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
+
+import { useTheme } from '@/hooks/useTheme'
 
 import { BusLocation } from '@/api/getLineBusLocations'
-import { StyleSheet, View } from 'react-native'
 import { colors } from '@/constants/colors'
-import { useTheme } from '@/hooks/useTheme'
 import { useLinesStore, getTheme } from '@/stores/lines'
-import { useShallow } from 'zustand/react/shallow'
 
 interface LineBusMarkersItemProps {
   location: BusLocation

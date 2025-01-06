@@ -37,7 +37,14 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
         })
       },
       fitInsideCoordinates: (coordinates) => {
-        map.current?.fitToCoordinates(coordinates)
+        map.current?.fitToCoordinates(coordinates, {
+          edgePadding: {
+            bottom: 250,
+            top: 0,
+            left: 0,
+            right: 0,
+          },
+        })
       },
     }
   })
@@ -54,6 +61,7 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
         mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
         initialRegion={initialRegion}
         customMapStyle={getMapStyle(mode)}
+        style={{ flex: 1 }}
       >
         {props.children}
       </MapView>
