@@ -1,7 +1,6 @@
-import { APIProvider, Map, MapCameraChangedEvent, MapEvent } from "@vis.gl/react-google-maps";
+import { APIProvider, Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
 import { Dimensions } from "react-native";
 import { TheMapProps } from "./Map";
-import { useSettingsStore } from "@/stores/settings";
 import { useThrottledCallback } from "use-debounce";
 
 const dimensions = Dimensions.get("window");
@@ -35,37 +34,6 @@ const getBoundsZoomLevel = (
 };
 
 export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps) => {
-  // const initial = useSettingsStore.getState().initialMapLocation
-  // const center: { lat: number, lng: number } = initial
-  //   ? {
-  //       lat: initial.latitude,
-  //       lng: initial.longitude,
-  //     }
-  //   : {
-  //       lat: 39.66770141070046,
-  //       lng: 28.17840663716197,
-  //     }
-
-  // const zoom = getBoundsZoomLevel(
-  //   initial
-  //     ? {
-  //         north: center.lat + initial.latitudeDelta / 2,
-  //         west: center.lng - initial.longitudeDelta / 2,
-  //         east: initial.longitude + initial.longitudeDelta / 2,
-  //         south: initial.latitude + initial.latitudeDelta / 2,
-  //       }
-  //     : {
-  //         north: 39.66770141070046 + 4.746350767346861 / 2,
-  //         west: 28.17840663716197 - 2.978521026670929 / 2,
-  //         east: 28.17840663716197 + 2.978521026670929 / 2,
-  //         south: 39.66770141070046 + 4.746350767346861 / 2,
-  //       },
-  //   {
-  //     width: dimensions.width,
-  //     height: dimensions.height,
-  //   },
-  // )
-
   const handleCenterChanged = useThrottledCallback((event: MapCameraChangedEvent) => {
     const region = event.map.getBounds()?.toJSON();
     if (!region) return;
