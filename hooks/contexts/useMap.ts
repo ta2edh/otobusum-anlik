@@ -1,5 +1,6 @@
-import { TheMapRef } from '@/components/map/Map'
 import { RefObject, createContext, useContext } from 'react'
+
+import { TheMapRef } from '@/components/map/Map'
 
 export const MapContext = createContext<RefObject<TheMapRef> | null>(null)
 

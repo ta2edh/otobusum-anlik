@@ -1,49 +1,49 @@
-import { useEffect, useRef } from "react";
-import { StyleSheet, View } from "react-native";
-import { Region } from "react-native-maps";
-import { useSharedValue } from "react-native-reanimated";
+import { APIProvider } from '@vis.gl/react-google-maps'
+import { SplashScreen } from 'expo-router'
+import { useEffect, useRef } from 'react'
+import { StyleSheet, View } from 'react-native'
+import { Region } from 'react-native-maps'
+import { useSharedValue } from 'react-native-reanimated'
 
-import { LinesMomoizedFr } from "@/components/lines/Lines";
-import { TheMap, TheMapRef } from "@/components/map/Map";
-import { TheMapButtons } from "@/components/TheMapButtons";
-import { TheStopInfo } from "@/components/TheStopInfo";
+import { LinesMomoizedFr } from '@/components/lines/Lines'
+import { TheMap, TheMapRef } from '@/components/map/Map'
+import { LineMarkers } from '@/components/markers/LineMarkers'
+import { TheMapButtons } from '@/components/TheMapButtons'
+import { TheStopInfo } from '@/components/TheStopInfo'
 
-import { MapContext } from "@/hooks/contexts/useMap";
-import { SheetContext, sheetContextValues } from "@/hooks/contexts/useSheetModal";
+import { MapContext } from '@/hooks/contexts/useMap'
+import { SheetContext, sheetContextValues } from '@/hooks/contexts/useSheetModal'
 
-import { queryClient } from "@/api/client";
-import { getLineBusStops } from "@/api/getLineBusStops";
-import { getSelectedRouteCode, useFiltersStore } from "@/stores/filters";
-import { useLinesStore } from "@/stores/lines";
-import { LineMarkers } from "@/components/markers/LineMarkers";
-import { SplashScreen } from "expo-router";
-import { useSettingsStore } from "@/stores/settings";
-import { APIProvider } from "@vis.gl/react-google-maps";
+import { queryClient } from '@/api/client'
+import { getLineBusStops } from '@/api/getLineBusStops'
+import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
+import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
-  const map = useRef<TheMapRef>(null);
+  const map = useRef<TheMapRef>(null)
 
   useEffect(() => {
     const unsub = useLinesStore.subscribe(
-      (state) => state.lines,
+      state => state.lines,
       async (state, prevState) => {
-        const city = useFiltersStore.getState().selectedCity;
-        const newStateCity = state[city];
-        const oldStateCity = prevState[city];
-        if (newStateCity.length < oldStateCity.length) return;
+        const city = useFiltersStore.getState().selectedCity
+        const newStateCity = state[city]
+        const oldStateCity = prevState[city]
+        if (newStateCity.length < oldStateCity.length) return
 
-        const newCode = newStateCity.at(-1);
-        if (!newCode) return;
+        const newCode = newStateCity.at(-1)
+        if (!newCode) return
 
-        const routeCode = getSelectedRouteCode(newCode);
-        const queryKey = [`stop-locations`, routeCode];
+        const routeCode = getSelectedRouteCode(newCode)
+        const queryKey = [`stop-locations`, routeCode]
 
         const busStops = await queryClient.ensureQueryData<
           Awaited<ReturnType<typeof getLineBusStops>>
         >({
           queryKey,
           queryFn: () => getLineBusStops(routeCode),
-        });
+        })
 
         // map.current?.fitToCoordinates(
         //   busStops?.map(stop => ({
@@ -59,20 +59,20 @@ export const HomeScreen = () => {
         //     },
         //   },
         // )
-      }
-    );
+      },
+    )
 
-    return unsub;
-  }, []);
+    return unsub
+  }, [])
 
   const sheetContext: sheetContextValues = {
     height: useSharedValue(0),
     index: useSharedValue(-1),
-  };
+  }
 
   const handleRegionChangeComplete = (region: Region) => {
-    useSettingsStore.setState(() => ({ initialMapLocation: region }));
-  };
+    useSettingsStore.setState(() => ({ initialMapLocation: region }))
+  }
 
   return (
     <View style={styles.container}>
@@ -100,21 +100,21 @@ export const HomeScreen = () => {
             <LinesMomoizedFr />
           </View>
 
-          <TheStopInfo cRef={map} />
+          {/* <TheStopInfo cRef={map} /> */}
         </SheetContext.Provider>
       </MapContext.Provider>
     </View>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   linesContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
   },
-});
+})
 
-export default HomeScreen;
+export default HomeScreen

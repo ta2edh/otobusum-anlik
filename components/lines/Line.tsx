@@ -73,7 +73,7 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     )
 
     return unsub
-  }, [isVisible, lineCode])
+  }, [isVisible, lineCode, map])
 
   const handleVisibility = useCallback(() => {
     toggleLineVisibility(lineCode)
