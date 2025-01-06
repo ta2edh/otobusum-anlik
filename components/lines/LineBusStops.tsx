@@ -151,11 +151,9 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
       }
 
       const handleZoomBus = () => {
-        map?.current?.animateCamera({
-          center: {
-            latitude: item.y_coord,
-            longitude: item.x_coord,
-          },
+        map?.current?.moveTo({
+          latitude: item.y_coord,
+          longitude: item.x_coord
         })
       }
 
@@ -195,7 +193,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         </View>
       )
     },
-    [busses, closestStop?.stop_code, color, getSchemeColorHex, lineTheme, map],
+    [busses, closestStop?.stop_code, color, getSchemeColorHex, lineTheme],
   )
 
   if (query.isPending) {

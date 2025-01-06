@@ -64,14 +64,8 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
             longitude: coords.x_coord,
           }))
 
-        map?.current?.fitToCoordinates(coords, {
-          edgePadding: {
-            bottom: 250,
-            top: 0,
-            left: 0,
-            right: 0,
-          },
-        })
+        if (!coords) return
+        map?.current?.fitInsideCoordinates(coords)
       },
       {
         fireImmediately: true,
@@ -79,7 +73,7 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     )
 
     return unsub
-  }, [isVisible, map, lineCode])
+  }, [isVisible, lineCode])
 
   const handleVisibility = useCallback(() => {
     toggleLineVisibility(lineCode)

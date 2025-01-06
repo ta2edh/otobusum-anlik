@@ -222,16 +222,16 @@ export const addLineToGroup = (groupId: string, lineCode: string) => useLinesSto
   if (!group) return state
 
   if (group.lineCodes.includes(lineCode)) {
-    ToastAndroid.show(i18n.t('lineAlreadyInGroup'), ToastAndroid.SHORT)
+    notify(i18n.t('lineAlreadyInGroup'))
     return state
   }
 
   if (group.lineCodes.length > 3) {
-    ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
+    notify(i18n.t('lineLimitExceeded'))
     return state
   }
 
-  ToastAndroid.show(i18n.t('addedToGroup', { lineCode: lineCode }), ToastAndroid.SHORT)
+  notify(i18n.t('addedToGroup', { lineCode: lineCode }))
   addTheme(lineCode)
 
   return {

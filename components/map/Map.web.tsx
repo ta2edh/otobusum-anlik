@@ -1,7 +1,8 @@
-import { APIProvider, Map, MapCameraChangedEvent } from "@vis.gl/react-google-maps";
+import { APIProvider, Map, MapCameraChangedEvent, MapEvent } from "@vis.gl/react-google-maps";
 import { Dimensions } from "react-native";
-import { TheMapProps } from "./Map";
+import { TheMapProps, TheMapRef } from "./Map";
 import { useThrottledCallback } from "use-debounce";
+import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from "react";
 
 const dimensions = Dimensions.get("window");
 
@@ -33,7 +34,67 @@ const getBoundsZoomLevel = (
   return Math.min(latZoom, lngZoom, ZOOM_MAX);
 };
 
-export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps) => {
+export const _TheMap = (
+  { onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps,
+  ref: ForwardedRef<TheMapRef>
+) => {
+  const map = useRef<google.maps.Map | null>(null);
+
+  useImperativeHandle(ref, () => {
+    return {
+      animateCamera: (region) => {
+        map.current?.fitBounds({
+          north: region.latitude - region.latitudeDelta / 2,
+          west: region.longitude - region.longitudeDelta / 2,
+          east: region.longitude + region.longitudeDelta / 2,
+          south: region.latitude + region.latitudeDelta / 2,
+        });
+      },
+      moveTo: (latlng) => {
+        map.current?.moveCamera({
+          center: {
+            lat: latlng.latitude,
+            lng: latlng.longitude,
+          }
+        })
+      },
+      fitInsideCoordinates: (coordinates) => {
+        const def = coordinates.at(0)!
+
+        let highestLat = def.latitude
+        let highestLng = def.longitude
+        let minLat = def.latitude
+        let minLng = def.longitude
+
+        for (let index = 1; index < coordinates.length; index++) {
+          const coordinate = coordinates[index]
+          if (!coordinate) continue
+
+          if (coordinate.latitude > highestLat) {
+            highestLat = coordinate.latitude
+          } if (coordinate.latitude < minLat) {
+            minLat = coordinate.latitude
+          }
+
+          if (coordinate.longitude > highestLng) {
+            highestLng = coordinate.longitude
+          } if (coordinate.longitude < minLng) {
+            minLng = coordinate.longitude
+          }
+        }
+
+        map.current?.fitBounds({
+          north: highestLat,
+          west: minLng,
+          east: highestLng,
+          south: minLat
+        }, {
+          bottom: 250
+        })
+      }
+    };
+  });
+
   const handleCenterChanged = useThrottledCallback((event: MapCameraChangedEvent) => {
     const region = event.map.getBounds()?.toJSON();
     if (!region) return;
@@ -49,21 +110,31 @@ export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props 
     });
   }, 16);
 
-  const zoom = initialRegion ? getBoundsZoomLevel({
-      north: initialRegion.latitude + initialRegion.latitudeDelta / 2,
-      west: initialRegion.longitude - initialRegion.longitudeDelta / 2,
-      east: initialRegion.longitude + initialRegion.longitudeDelta / 2,
-      south: initialRegion.latitude + initialRegion.latitudeDelta / 2,
-  }, {
-    width: dimensions.width,
-    height: dimensions.height
-  }) : undefined
+  const zoom = initialRegion
+    ? getBoundsZoomLevel(
+        {
+          north: initialRegion.latitude + initialRegion.latitudeDelta / 2,
+          west: initialRegion.longitude - initialRegion.longitudeDelta / 2,
+          east: initialRegion.longitude + initialRegion.longitudeDelta / 2,
+          south: initialRegion.latitude + initialRegion.latitudeDelta / 2,
+        },
+        {
+          width: dimensions.width,
+          height: dimensions.height,
+        }
+      )
+    : undefined;
+
+  const handleLoaded = (event: MapEvent) => {
+    map.current = event.map;
+    onMapReady?.();
+  };
 
   return (
     <APIProvider apiKey={process.env.EXPO_PUBLIC_MAP_API || ""}>
       <Map
         mapId="2829e1226e1562f1"
-        onTilesLoaded={onMapReady}
+        onTilesLoaded={handleLoaded}
         onCenterChanged={handleCenterChanged}
         fullscreenControl={false}
         zoomControl={false}
@@ -84,3 +155,5 @@ export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props 
     </APIProvider>
   );
 };
+
+export const TheMap = forwardRef<TheMapRef, TheMapProps>(_TheMap);

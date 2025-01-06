@@ -1,7 +1,7 @@
+import { notify } from '@/utils/notify'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryCache, QueryClient } from '@tanstack/react-query'
-import { ToastAndroid } from 'react-native'
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +14,7 @@ export const queryClient = new QueryClient({
       let message = query.meta?.errorMessage as string | undefined
       if (!message) return
 
-      ToastAndroid.show(message, ToastAndroid.TOP)
+      notify(message)
     },
   }),
 })

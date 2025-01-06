@@ -18,10 +18,10 @@ import { getStop } from '@/api/getStop'
 import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
-import { TheMap } from './map/Map'
+import { TheMap, TheMapRef } from './map/Map'
 
 interface TheStopInfoProps {
-  cRef: RefObject<any>
+  cRef: RefObject<TheMapRef>
 }
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
@@ -52,7 +52,6 @@ const StopLine = ({ lineCode }: { lineCode: string }) => {
 
 export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
-  const { mode } = useTheme()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const savedRegion = useRef<any | undefined>(undefined)
 
@@ -66,16 +65,14 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   useEffect(() => {
     savedRegion.current = useSettingsStore.getState().initialMapLocation
     bottomSheetModal.current?.present()
+    if (!query.data) return
 
-    if (query.data) {
-      cRef.current?.animateCamera({
-        center: {
-          latitude: query.data.stop.y_coord,
-          longitude: query.data.stop.x_coord,
-        },
-        zoom: 16,
-      })
-    }
+    cRef.current?.animateCamera({
+      latitude: query.data.stop.y_coord,
+      longitude: query.data.stop.x_coord,
+      latitudeDelta: 0.010,
+      longitudeDelta: 0.010,
+    })
   }, [query.data, stopId, cRef])
 
   if (!stopId) return null
@@ -105,7 +102,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   const handleOnDismiss = () => {
     if (!savedRegion.current) return
-    cRef.current?.animateToRegion(savedRegion.current)
+    cRef.current?.animateCamera(savedRegion.current)
   }
 
   return (
