@@ -1,46 +1,31 @@
-import { SplashScreen } from 'expo-router'
-import { RefObject } from 'react'
-import MapView, { MapViewProps, PROVIDER_GOOGLE } from 'react-native-maps'
+import MapView, { PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'
-import { useSettingsStore } from '@/stores/settings'
 
-interface TheMapProps extends MapViewProps {
-  cRef?: RefObject<MapView>
+export interface TheMapProps {
+  children?: React.ReactNode
+  onMapReady?: () => void
+  onMapRegionUpdate?: (region: Region) => void
+  initialRegion?: Region
 }
 
-export const TheMap = ({ style, cRef, ...props }: TheMapProps) => {
+export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps) => {
   const { mode } = useTheme()
-
   const insets = useSafeAreaInsets()
-
-  const handleOnMapReady = () => {
-    SplashScreen.hideAsync()
-  }
-
-  const handleRegionChangeComplete = (region: any) => {
-    useSettingsStore.setState(() => ({ initialMapLocation: region }))
-  }
 
   return (
     <MapView
       provider={PROVIDER_GOOGLE}
-      customMapStyle={getMapStyle(mode)}
-      onMapReady={handleOnMapReady}
-      onRegionChangeComplete={handleRegionChangeComplete}
-      mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
-      initialRegion={useSettingsStore.getState().initialMapLocation || {
-        latitude: 39.66770141070046,
-        latitudeDelta: 4.746350767346861,
-        longitude: 28.17840663716197,
-        longitudeDelta: 2.978521026670929,
-      }}
-      showsIndoors={false}
+      onMapReady={onMapReady}
+      onRegionChangeComplete={onMapRegionUpdate}
       toolbarEnabled={false}
-      {...props}
+      showsIndoors={false}
+      mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
+      initialRegion={initialRegion}
+      customMapStyle={getMapStyle(mode)}
     >
       {props.children}
     </MapView>

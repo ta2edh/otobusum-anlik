@@ -2,8 +2,7 @@ import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
-import { Linking, StyleSheet, View } from 'react-native'
-import MapView, { Region } from 'react-native-maps'
+import { Linking, Platform, StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
@@ -20,9 +19,10 @@ import { getMapStyle } from '@/constants/mapStyles'
 import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
+import { TheMap } from './map/Map'
 
 interface TheStopInfoProps {
-  cRef: RefObject<MapView>
+  cRef: RefObject<any>
 }
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
@@ -55,7 +55,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
   const { mode } = useTheme()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const savedRegion = useRef<Region | undefined>(undefined)
+  const savedRegion = useRef<any | undefined>(undefined)
 
   const query = useQuery({
     queryKey: ['stop', stopId],
@@ -110,28 +110,27 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   }
 
   return (
-    <UiSheetModal cRef={bottomSheetModal} enableDynamicSizing={true} onDismiss={handleOnDismiss}>
+    <UiSheetModal
+      cRef={bottomSheetModal}
+      enableDynamicSizing={true}
+      onDismiss={handleOnDismiss}
+    >
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (
-            <MapView
-              liteMode
-              style={styles.map}
-              customMapStyle={getMapStyle(mode)}
-              showsIndoors={false}
-              toolbarEnabled={false}
-              initialCamera={{
-                center: {
-                  latitude: query.data?.stop.y_coord,
-                  longitude: query.data?.stop.x_coord,
-                },
-                heading: 0,
-                pitch: 0,
-                zoom: 16,
+            <TheMap
+              initialRegion={{
+                longitude: query.data.stop.x_coord,
+                latitude: query.data.stop.y_coord,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
               }}
             >
-              <LineBusStopMarkersItem type="point" stop={query.data.stop} />
-            </MapView>
+              <LineBusStopMarkersItem
+                type="point"
+                stop={query.data.stop}
+              />
+            </TheMap>
           )}
         </View>
 

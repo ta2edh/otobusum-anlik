@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
-import MapView from 'react-native-maps'
+import MapView, { Region } from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
+// import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMap } from '@/components/map/Map'
-import { LineMarkers } from '@/components/markers/LineMarkers'
 import { TheMapButtons } from '@/components/TheMapButtons'
 import { TheStopInfo } from '@/components/TheStopInfo'
 
@@ -16,6 +16,9 @@ import { queryClient } from '@/api/client'
 import { getLineBusStops } from '@/api/getLineBusStops'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { useLinesStore } from '@/stores/lines'
+import { LineMarkers } from '@/components/markers/LineMarkers'
+import { SplashScreen } from 'expo-router'
+import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
   const map = useRef<MapView>(null)
@@ -67,18 +70,17 @@ export const HomeScreen = () => {
     index: useSharedValue(-1),
   }
 
+  const handleRegionChangeComplete = (region: Region) => {
+    useSettingsStore.setState(() => ({ initialMapLocation: region }))
+  }
+
   return (
     <View style={styles.container}>
       <MapContext.Provider value={map}>
         <SheetContext.Provider value={sheetContext}>
-          <TheMap>
-            <LineMarkers />
-          </TheMap>
-
-          {/* <TheMap
-            cRef={map}
-            onMapReady={handleOnMapReady}
-            onRegionChangeComplete={handleRegionChangeComplete}
+          <TheMap
+            onMapReady={SplashScreen.hide}
+            onMapRegionUpdate={handleRegionChangeComplete}
             initialRegion={
               useSettingsStore.getState().initialMapLocation || {
                 latitude: 39.66770141070046,
@@ -87,10 +89,9 @@ export const HomeScreen = () => {
                 longitudeDelta: 2.978521026670929,
               }
             }
-            moveOnMarkerPress={false}
           >
             <LineMarkers />
-          </TheMap> */}
+          </TheMap>
 
           <TheMapButtons />
 
@@ -98,7 +99,7 @@ export const HomeScreen = () => {
             <LinesMomoizedFr />
           </View>
 
-          {/* <TheStopInfo cRef={map} /> */}
+          <TheStopInfo cRef={map} />
         </SheetContext.Provider>
       </MapContext.Provider>
     </View>

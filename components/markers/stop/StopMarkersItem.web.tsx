@@ -3,6 +3,7 @@ import { useTheme } from "@/hooks/useTheme"
 import { useLinesStore, getTheme } from "@/stores/lines"
 import { BusStop } from "@/types/bus"
 import { AdvancedMarker, AdvancedMarkerAnchorPoint } from "@vis.gl/react-google-maps"
+import { router } from "expo-router"
 import { memo, useMemo } from "react"
 import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
 import { useShallow } from "zustand/react/shallow"
@@ -15,6 +16,17 @@ interface StopMarkersItemProps {
 export const LineBusStopMarkersItem = ({ lineCode, stop }: StopMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
+
+  const handleOnPress = () => {
+    if (!stop) return
+
+    router.navigate({
+      pathname: '/(tabs)',
+      params: {
+        stopId: stop.stop_code,
+      },
+    })
+  }
 
   const backgroundStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -36,6 +48,7 @@ export const LineBusStopMarkersItem = ({ lineCode, stop }: StopMarkersItemProps)
         lng: stop.x_coord,
         lat: stop.y_coord,
       }}
+      onClick={handleOnPress}
       anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
     >
       <View style={[styles.busStop, borderStyle, backgroundStyle]} />
