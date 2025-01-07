@@ -99,13 +99,13 @@ export const getLines = () => {
 // Line stuff
 export const deleteLine = (lineCode: string) => useLinesStore.setState((state) => {
   const filtersStore = useFiltersStore.getState()
-  const index = state.lines[filtersStore.selectedCity].indexOf(lineCode)
+  const defaultLinesIndex = state.lines[filtersStore.selectedCity].indexOf(lineCode)
 
   const selectedGroup = useFiltersStore.getState().selectedGroup
   if (selectedGroup) {
     deleteLineFromGroup(selectedGroup, filtersStore.selectedCity, lineCode)
-  } else if (index !== -1) {
-    state.lines[filtersStore.selectedCity].splice(index, 1)
+  } else if (defaultLinesIndex !== -1) {
+    state.lines[filtersStore.selectedCity].splice(defaultLinesIndex, 1)
   }
 
   deleteTheme(lineCode)
@@ -299,10 +299,9 @@ export const deleteLineFromGroup = (groupId: string, city: Cities, lineCode: str
         ...state.lineGroups[filtersStore.selectedCity],
         [groupId]: {
           ...state.lineGroups[filtersStore.selectedCity][groupId],
-          lineCodes: {
-            ...state.lineGroups[filtersStore.selectedCity][groupId]?.lineCodes,
-          },
-          // lineCodes: [...(state.lineGroups[groupId]!.lineCodes || [])],
+          lineCodes: [
+            ...(state.lineGroups[filtersStore.selectedCity][groupId]?.lineCodes || []),
+          ],
         },
       },
     },
