@@ -7,6 +7,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { useTheme } from '@/hooks/useTheme'
 
 import { MarkerWithCallout } from '../callout/MarkerWithCallout'
+import { MarkersFiltersZoom } from '../filters/MarkersFiltersZoom'
 
 import { BusMarkersCallout } from './BusMarkersCallout'
 

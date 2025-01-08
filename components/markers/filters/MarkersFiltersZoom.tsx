@@ -1,3 +1,5 @@
+import { memo } from 'react'
+
 import { useSettingsStore } from '@/stores/settings'
 import { regionToZoom } from '@/utils/regionToZoom'
 
@@ -14,3 +16,5 @@ export const MarkersFiltersZoom = ({ limit, children }: MarkersFiltersZoomProps)
 
   return children
 }
+
+export const MarkersFiltersZoomMemoized = memo(MarkersFiltersZoom)

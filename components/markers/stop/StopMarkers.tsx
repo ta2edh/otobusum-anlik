@@ -5,6 +5,7 @@ import { LatLng } from 'react-native-maps'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 
 import { MarkersFiltersInView } from '../filters/MarkersFiltersInView'
+import { MarkersFiltersZoomMemoized } from '../filters/MarkersFiltersZoom'
 
 import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
 
@@ -49,12 +50,16 @@ export const LineBusStopMarkers = (props: Props) => {
     <MarkersFiltersInView
       data={stops}
       renderItem={item => (
-        <LineBusStopMarkersItemMemoized
-          type="point"
+        <MarkersFiltersZoomMemoized
           key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
-          stop={item}
-          lineCode={props.lineCode}
-        />
+          limit={11}
+        >
+          <LineBusStopMarkersItemMemoized
+            type="point"
+            stop={item}
+            lineCode={props.lineCode}
+          />
+        </MarkersFiltersZoomMemoized>
       )}
     />
   )
