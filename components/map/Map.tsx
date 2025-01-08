@@ -29,7 +29,11 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
   useImperativeHandle(ref, () => {
     return {
       animateCamera: (region) => {
-        map.current?.animateToRegion(region)
+        let re = { ...region }
+
+        re.latitude -= 0.004
+
+        map.current?.animateToRegion(re)
       },
       moveTo: (latlng) => {
         map.current?.animateCamera({
@@ -62,6 +66,7 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
         initialRegion={initialRegion}
         customMapStyle={getMapStyle(mode)}
         style={{ flex: 1 }}
+        moveOnMarkerPress={false}
       >
         {props.children}
       </MapView>
