@@ -24,7 +24,7 @@ export const SettingsScreen = () => {
       <GroupContainer title={i18n.t('map')}>
         <SettingsLocation />
         <SettingsTraffic />
-        
+
         {Platform.OS !== 'web' && (
           <SettingsCluster />
         )}

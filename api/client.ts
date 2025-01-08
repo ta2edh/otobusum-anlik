@@ -1,7 +1,8 @@
-import { notify } from '@/utils/notify'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { QueryCache, QueryClient } from '@tanstack/react-query'
+
+import { notify } from '@/utils/notify'
 
 export const queryClient = new QueryClient({
   defaultOptions: {

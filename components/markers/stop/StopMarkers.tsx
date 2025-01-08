@@ -1,44 +1,44 @@
-import { memo, useMemo } from "react";
-import { LatLng } from "react-native-maps";
+import { memo, useMemo } from 'react'
+import { Platform } from 'react-native'
+import { LatLng } from 'react-native-maps'
 
-import { useLineBusStops } from "@/hooks/queries/useLineBusStops";
-import { useRoutes } from "@/hooks/queries/useRoutes";
+import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
+import { useRoutes } from '@/hooks/queries/useRoutes'
 
-import { MarkersInView } from "../MarkersInView";
+import { MarkersInView } from '../MarkersInView'
 
-import { LineBusStopMarkersItemMemoized } from "./StopMarkersItem";
+import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
 
-import { useFiltersStore, getSelectedRouteCode } from "@/stores/filters";
-import { Platform } from "react-native";
+import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
 
 interface Props {
-  lineCode: string;
+  lineCode: string
 }
 
 export const LineBusStopMarkers = (props: Props) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode));
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
 
-  const { getRouteFromCode } = useRoutes(props.lineCode);
-  const { query } = useLineBusStops(routeCode);
+  const { getRouteFromCode } = useRoutes(props.lineCode)
+  const { query } = useLineBusStops(routeCode)
 
-  const route = getRouteFromCode();
+  const route = getRouteFromCode()
 
   const stops = useMemo(() => {
-    const results = query.data?.map((stop) => ({
+    const results = query.data?.map(stop => ({
       ...stop,
       coordinates: {
         longitude: stop.x_coord,
         latitude: stop.y_coord,
       } as LatLng,
-    }));
+    }))
 
-    return results || [];
-  }, [query.data]);
+    return results || []
+  }, [query.data])
 
-  if (Platform.OS === "web") {
+  if (Platform.OS === 'web') {
     return (
       <>
-        {stops.map((item) => (
+        {stops.map(item => (
           <LineBusStopMarkersItemMemoized
             type="point"
             key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
@@ -47,14 +47,14 @@ export const LineBusStopMarkers = (props: Props) => {
           />
         ))}
       </>
-    );
+    )
   }
 
   return (
     <MarkersInView
       zoomLimit={route?.route_path ? 13 : 0}
       data={stops}
-      renderItem={(item) => (
+      renderItem={item => (
         <LineBusStopMarkersItemMemoized
           type="point"
           key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
@@ -63,7 +63,7 @@ export const LineBusStopMarkers = (props: Props) => {
         />
       )}
     />
-  );
-};
+  )
+}
 
-export const LineBusStopMarkersMemoized = memo(LineBusStopMarkers);
+export const LineBusStopMarkersMemoized = memo(LineBusStopMarkers)

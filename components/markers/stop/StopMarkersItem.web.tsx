@@ -1,12 +1,14 @@
-import { colors } from "@/constants/colors"
-import { useTheme } from "@/hooks/useTheme"
-import { useLinesStore, getTheme } from "@/stores/lines"
-import { BusStop } from "@/types/bus"
-import { AdvancedMarker, AdvancedMarkerAnchorPoint } from "@vis.gl/react-google-maps"
-import { router } from "expo-router"
-import { memo, useMemo } from "react"
-import { StyleProp, StyleSheet, View, ViewStyle } from "react-native"
-import { useShallow } from "zustand/react/shallow"
+import { AdvancedMarker, AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
+import { router } from 'expo-router'
+import { memo, useMemo } from 'react'
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
+import { useShallow } from 'zustand/react/shallow'
+
+import { useTheme } from '@/hooks/useTheme'
+
+import { colors } from '@/constants/colors'
+import { useLinesStore, getTheme } from '@/stores/lines'
+import { BusStop } from '@/types/bus'
 
 interface StopMarkersItemProps {
   lineCode: string
