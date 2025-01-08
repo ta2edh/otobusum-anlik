@@ -1,8 +1,17 @@
-import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
+import {
+  ForwardedRef,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
 import {
   FlatList,
   FlatListProps,
   ListRenderItem,
+  Platform,
   StyleSheet,
   View,
   ViewStyle,
@@ -27,10 +36,11 @@ interface LinesProps {
 // TODO: Some rerender issues are here.
 const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   const innerRef = useRef<FlatList>(null)
+
   useImperativeHandle(outerRef, () => innerRef.current!, [])
+  useFiltersStore(useShallow(state => state.selectedCity))
 
   const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
-  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
   const lines = useLinesStore(() => getLines())
 
   const previouslines = useRef<string[]>(lines)
@@ -49,14 +59,17 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
     }
   }, [lines])
 
-  const renderItem: ListRenderItem<string> = useCallback(({ item: code }) => {
-    return <LineMemoized lineCode={code} {...props.lineProps} />
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lines, selectedGroup, selectedCity])
+  const renderItem: ListRenderItem<string> = useCallback(
+    ({ item: code }) => {
+      return <LineMemoized lineCode={code} {...props.lineProps} />
+    },
+    [props.lineProps],
+  )
 
   type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
   const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {
-    if (viewableItems.length < 1) return
+    if (viewableItems.length < 1 || Platform.OS === 'web') return
+
     useMiscStore.setState(() => ({ selectedLineScrollIndex: viewableItems.at(0)?.index || 0 }))
   }
 
@@ -69,7 +82,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         ref={innerRef}
         data={lines}
         renderItem={renderItem}
-        // onViewableItemsChanged={handleOnViewChanged}
+        onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
         contentContainerStyle={[styles.codes, props.contentContainerStyle]}
         keyExtractor={keyExtractor}
@@ -77,7 +90,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         initialNumToRender={2}
         maxToRenderPerBatch={2}
         snapToAlignment="center"
-        // pagingEnabled
+        pagingEnabled
         horizontal
       />
     </View>
