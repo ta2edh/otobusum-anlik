@@ -1,4 +1,3 @@
-import { APIProvider } from '@vis.gl/react-google-maps'
 import { SplashScreen } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
@@ -45,20 +44,12 @@ export const HomeScreen = () => {
           queryFn: () => getLineBusStops(routeCode),
         })
 
-        // map.current?.fitToCoordinates(
-        //   busStops?.map(stop => ({
-        //     longitude: stop.x_coord,
-        //     latitude: stop.y_coord,
-        //   })),
-        //   {
-        //     edgePadding: {
-        //       bottom: 200,
-        //       left: 0,
-        //       right: 0,
-        //       top: 0,
-        //     },
-        //   },
-        // )
+        map.current?.fitInsideCoordinates(
+          busStops?.map(stop => ({
+            longitude: stop.x_coord,
+            latitude: stop.y_coord,
+          })),
+        )
       },
     )
 
