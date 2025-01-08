@@ -6,6 +6,8 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
+import { MarkersFiltersZoom } from '../filters/MarkersFiltersZoom'
+
 import { colors } from '@/constants/colors'
 import { useLinesStore, getTheme } from '@/stores/lines'
 import { BusStop } from '@/types/bus'
@@ -45,16 +47,18 @@ export const LineBusStopMarkersItem = ({ lineCode, stop }: StopMarkersItemProps)
   )
 
   return (
-    <AdvancedMarker
-      position={{
-        lng: stop.x_coord,
-        lat: stop.y_coord,
-      }}
-      onClick={handleOnPress}
-      anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
-    >
-      <View style={[styles.busStop, borderStyle, backgroundStyle]} />
-    </AdvancedMarker>
+    <MarkersFiltersZoom limit={12}>
+      <AdvancedMarker
+        position={{
+          lng: stop.x_coord,
+          lat: stop.y_coord,
+        }}
+        onClick={handleOnPress}
+        anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+      >
+        <View style={[styles.busStop, borderStyle, backgroundStyle]} />
+      </AdvancedMarker>
+    </MarkersFiltersZoom>
   )
 }
 
