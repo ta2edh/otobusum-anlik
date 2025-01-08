@@ -22,6 +22,8 @@ export const BusMarkersCallout = ({ busLocation, lineCode }: BusMarkersCalloutPr
 
   const dynamicCalloutContainer: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('primary'),
+    padding: 8,
+    borderRadius: 4,
   }
 
   const textStyle: StyleProp<TextStyle> = {

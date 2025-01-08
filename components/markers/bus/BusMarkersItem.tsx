@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkerLazyCallout } from '../MarkerLazyCallout'
+import { MarkerWithCallout } from '../callout/MarkerWithCallout'
 
 import { BusMarkersCallout } from './BusMarkersCallout'
 
@@ -27,7 +27,7 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
   const backgroundColor = getSchemeColorHex('primaryContainer')
 
   return (
-    <MarkerLazyCallout
+    <MarkerWithCallout
       calloutProps={{
         children: <BusMarkersCallout busLocation={location} lineCode={lineCode} />,
       }}
@@ -45,7 +45,7 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
-    </MarkerLazyCallout>
+    </MarkerWithCallout>
   )
 }
 

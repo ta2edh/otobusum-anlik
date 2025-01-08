@@ -1,10 +1,14 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
-import { AdvancedMarker, AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
+import { AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
 import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
+
+import { MarkerWithCallout } from '../callout/MarkerWithCallout.web'
+
+import { BusMarkersCallout } from './BusMarkersCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
@@ -23,17 +27,34 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
   const backgroundColor = getSchemeColorHex('primaryContainer')
 
   return (
-    <AdvancedMarker
-      position={{
-        lng: location.lng,
-        lat: location.lat,
+    <MarkerWithCallout
+      markerProps={{
+        position: {
+          lng: location.lng,
+          lat: location.lat,
+        },
+        anchorPoint: AdvancedMarkerAnchorPoint.CENTER,
       }}
-      anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+      calloutProps={{
+        children: <BusMarkersCallout busLocation={location} lineCode={lineCode} />,
+      }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
-    </AdvancedMarker>
+    </MarkerWithCallout>
+
+  // <AdvancedMarker
+  //   position={{
+  //     lng: location.lng,
+  //     lat: location.lat,
+  //   }}
+  //   anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+  // >
+  //   <View style={[styles.iconContainer, { backgroundColor }]}>
+  //     <Ionicons name="bus" color={textColor} />
+  //   </View>
+  // </AdvancedMarker>
   )
 }
 
