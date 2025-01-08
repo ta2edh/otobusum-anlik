@@ -49,6 +49,8 @@ export const _TheMap = (
           west: region.longitude - region.longitudeDelta / 2,
           east: region.longitude + region.longitudeDelta / 2,
           south: region.latitude + region.latitudeDelta / 2,
+        }, {
+          bottom: 250,
         })
       },
       moveTo: (latlng) => {

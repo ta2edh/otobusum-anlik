@@ -5,9 +5,8 @@ import { RefObject, useEffect, useRef } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useTheme } from '@/hooks/useTheme'
-
 import { LineGroups } from './lines/groups/LineGroups'
+import { TheMap, TheMapRef } from './map/Map'
 import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
@@ -18,7 +17,6 @@ import { getStop } from '@/api/getStop'
 import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
-import { TheMap, TheMapRef } from './map/Map'
 
 interface TheStopInfoProps {
   cRef: RefObject<TheMapRef>

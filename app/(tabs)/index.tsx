@@ -100,7 +100,7 @@ export const HomeScreen = () => {
             <LinesMomoizedFr />
           </View>
 
-          {/* <TheStopInfo cRef={map} /> */}
+          <TheStopInfo cRef={map} />
         </SheetContext.Provider>
       </MapContext.Provider>
     </View>
