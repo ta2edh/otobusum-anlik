@@ -24,6 +24,7 @@ export const BusMarkersCallout = ({ busLocation, lineCode }: BusMarkersCalloutPr
     backgroundColor: getSchemeColorHex('primary'),
     padding: 8,
     borderRadius: 4,
+    width: 250,
   }
 
   const textStyle: StyleProp<TextStyle> = {

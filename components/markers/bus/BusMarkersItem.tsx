@@ -11,7 +11,6 @@ import { MarkerWithCallout } from '../callout/MarkerWithCallout'
 import { BusMarkersCallout } from './BusMarkersCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
-import { colors } from '@/constants/colors'
 import { getTheme, useLinesStore } from '@/stores/lines'
 
 interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
@@ -57,15 +56,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
-  },
-  icon: {
-    width: 10,
-    height: 10,
-  },
-  calloutContainer: {
-    backgroundColor: colors.dark.surfaceContainer,
-    padding: 8,
-    width: 250,
-    borderRadius: 8,
   },
 })
