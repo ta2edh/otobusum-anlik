@@ -5,16 +5,18 @@ import { StyleSheet, Switch, View } from 'react-native'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { Option, UiSheetSelect } from '../ui/sheet/UiSheetSelect'
+import { UiSheetSelect } from '../ui/sheet/UiSheetSelect'
 import { UiButton } from '../ui/UiButton'
 import { UiText } from '../ui/UiText'
+
+import { Option } from '@/types/sheet'
 
 interface GroupContainerProps {
   title: string
   children?: React.ReactNode
 }
 
-export const GroupContainer = (props: GroupContainerProps) => {
+export const SettingsGroupContainer = (props: GroupContainerProps) => {
   return (
     <View style={styles.outerContainer}>
       <UiText style={styles.title}>{props.title}</UiText>
@@ -48,7 +50,7 @@ type SettingSelectProps<T> = SettingContainerBaseProps & {
 
 type SettingProps<T> = SettingSwitchProps | SettingLinkProps | SettingSelectProps<T>
 
-export const SettingContainer = <T,>(props: SettingProps<T>) => {
+export const SettingsContainer = <T,>(props: SettingProps<T>) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
   const { colorsTheme, getSchemeColorHex } = useTheme()
 

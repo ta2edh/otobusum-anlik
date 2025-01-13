@@ -1,4 +1,4 @@
-import { SettingContainer } from './Container'
+import { SettingContainer } from './SettingsContainer'
 
 import { useFiltersStore } from '@/stores/filters'
 import { i18n } from '@/translations/i18n'
