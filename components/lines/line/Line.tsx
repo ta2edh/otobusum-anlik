@@ -14,10 +14,10 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton } from '../../ui/UiButton'
-import { LineGroups } from './LineGroups'
 
 import { LineAnnouncementsMemoized } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
+import { LineGroups } from './LineGroups'
 import { LineName } from './LineName'
 import { LineRouteDirection } from './LineRouteDirection'
 import { LineRoutes } from './LineRoutes'
