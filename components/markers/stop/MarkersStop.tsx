@@ -52,7 +52,7 @@ export const MarkersStop = (props: Props) => {
       renderItem={item => (
         <MarkersFiltersZoomMemoized
           key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
-          limit={11}
+          limit={13}
         >
           <MarkersStopItemMemoized
             type="point"
