@@ -1,17 +1,18 @@
 import { Platform, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LineBusMarkersMemoized } from './bus/BusMarkers'
-import { RouteLine } from './RouteLine'
-import { LineBusStopMarkersMemoized } from './stop/StopMarkers'
-import { LineBusStopMarkersClusteredMemoized } from './stop/StopMarkersClustered'
+import { LineBusMarkersMemoized } from '../bus/BusMarkers'
+import { LineBusStopMarkersMemoized } from '../stop/MarkersStop'
+import { LineBusStopMarkersClusteredMemoized } from '../stop/MarkersStopClustered'
+
+import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { useSettingsStore } from '@/stores/settings'
 
-export const LineMarkers = () => {
+export const MarkersLine = () => {
   const invisibleLines = useMiscStore(state => state.invisibleLines)
   const clusterStops = useSettingsStore(useShallow(state => state.clusterStops))
 
@@ -25,7 +26,7 @@ export const LineMarkers = () => {
     <>
       {filteredCodes.map(lineCode => (
         <View key={lineCode}>
-          <RouteLine lineCode={lineCode} />
+          <MarkersLinePolyline lineCode={lineCode} />
 
           {
             clusterStops && Platform.OS !== 'web'

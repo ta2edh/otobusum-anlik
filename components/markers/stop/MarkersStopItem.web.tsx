@@ -17,7 +17,7 @@ interface StopMarkersItemProps {
   stop: BusStop
 }
 
-export const LineBusStopMarkersItem = ({ lineCode, stop }: StopMarkersItemProps) => {
+export const MarkersStopItem = ({ lineCode, stop }: StopMarkersItemProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
@@ -62,7 +62,7 @@ export const LineBusStopMarkersItem = ({ lineCode, stop }: StopMarkersItemProps)
   )
 }
 
-export const LineBusStopMarkersItemMemoized = memo(LineBusStopMarkersItem)
+export const MarkersStopItemMemoized = memo(MarkersStopItem)
 
 const styles = StyleSheet.create({
   busStop: {

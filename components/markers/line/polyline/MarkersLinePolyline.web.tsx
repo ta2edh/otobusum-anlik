@@ -136,7 +136,7 @@ export const _Polyline = (props: PolylineProps, ref: PolylineRef) => {
  */
 export const Polyline = forwardRef(_Polyline)
 
-export const RoutePolyline = ({ lineCode }: { lineCode: string }) => {
+export const MarkersLinePolyline = ({ lineCode }: { lineCode: string }) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 

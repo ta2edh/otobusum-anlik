@@ -6,7 +6,7 @@ import { Region } from 'react-native-maps'
 
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 
-import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
+import { MarkersStopItemMemoized } from './MarkersStopItem'
 
 import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
 import { useSettingsStore } from '@/stores/settings'
@@ -15,7 +15,7 @@ interface Props {
   lineCode: string
 }
 
-export const LineBusStopMarkersClustered = (props: Props) => {
+export const MarkersStopClustered = (props: Props) => {
   const initialLocation = useSettingsStore(state => state.initialMapLocation)
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
   const { width, height } = useWindowDimensions()
@@ -36,7 +36,7 @@ export const LineBusStopMarkersClustered = (props: Props) => {
 
   const clusterItem: ClustererProps<any, supercluster.AnyProps>['renderItem'] = (point) => {
     return (
-      <LineBusStopMarkersItemMemoized
+      <MarkersStopItemMemoized
         type="cluster"
         key={`cluster-${point.properties.cluster_id}`}
         lineCode={props.lineCode}
@@ -71,7 +71,7 @@ export const LineBusStopMarkersClustered = (props: Props) => {
               clusterItem(point, ...other)
             )
           : (
-              <LineBusStopMarkersItemMemoized
+              <MarkersStopItemMemoized
                 lineCode={props.lineCode}
                 key={`point-${point.properties.id}`}
                 type="point"
@@ -82,4 +82,4 @@ export const LineBusStopMarkersClustered = (props: Props) => {
   )
 }
 
-export const LineBusStopMarkersClusteredMemoized = memo(LineBusStopMarkersClustered)
+export const LineBusStopMarkersClusteredMemoized = memo(MarkersStopClustered)

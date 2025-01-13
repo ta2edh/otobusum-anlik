@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTheme } from '@/hooks/useTheme'
 
-import { RoutePolyline } from './line/RoutePolyline'
+import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getTheme, useLinesStore } from '@/stores/lines'
@@ -16,7 +16,7 @@ interface RouteLineProps {
   lineCode: string
 }
 
-export const RouteLine = ({ lineCode }: RouteLineProps) => {
+export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
@@ -88,7 +88,7 @@ export const RouteLine = ({ lineCode }: RouteLineProps) => {
 
   return (
     <>
-      <RoutePolyline
+      <MarkersLinePolyline
         lineCode={lineCode}
         // strokeWidth={6}
         // strokeColor={getSchemeColorHex('primary')}

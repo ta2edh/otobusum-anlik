@@ -11,7 +11,7 @@ interface PolylineProps {
   lineCode: string
 }
 
-export const RoutePolyline = ({ lineCode }: PolylineProps) => {
+export const MarkersLinePolyline = ({ lineCode }: PolylineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 

@@ -6,7 +6,7 @@ import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
 import { TheMap, TheMapRef } from '@/components/map/Map'
-import { LineMarkers } from '@/components/markers/LineMarkers'
+import { MarkersLine } from '@/components/markers/line/MarkersLine'
 import { TheMapButtons } from '@/components/TheMapButtons'
 import { TheStopInfo } from '@/components/TheStopInfo'
 
@@ -82,7 +82,7 @@ export const HomeScreen = () => {
               }
             }
           >
-            <LineMarkers />
+            <MarkersLine />
           </TheMap>
 
           <TheMapButtons />

@@ -7,7 +7,7 @@ import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { MarkersFiltersInView } from '../filters/MarkersFiltersInView'
 import { MarkersFiltersZoomMemoized } from '../filters/MarkersFiltersZoom'
 
-import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
+import { MarkersStopItemMemoized } from './MarkersStopItem'
 
 import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
 
@@ -15,7 +15,7 @@ interface Props {
   lineCode: string
 }
 
-export const LineBusStopMarkers = (props: Props) => {
+export const MarkersStop = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
   const { query } = useLineBusStops(routeCode)
 
@@ -35,7 +35,7 @@ export const LineBusStopMarkers = (props: Props) => {
     return (
       <>
         {stops.map(item => (
-          <LineBusStopMarkersItemMemoized
+          <MarkersStopItemMemoized
             type="point"
             key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
             stop={item}
@@ -54,7 +54,7 @@ export const LineBusStopMarkers = (props: Props) => {
           key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
           limit={11}
         >
-          <LineBusStopMarkersItemMemoized
+          <MarkersStopItemMemoized
             type="point"
             stop={item}
             lineCode={props.lineCode}
@@ -65,4 +65,4 @@ export const LineBusStopMarkers = (props: Props) => {
   )
 }
 
-export const LineBusStopMarkersMemoized = memo(LineBusStopMarkers)
+export const LineBusStopMarkersMemoized = memo(MarkersStop)
