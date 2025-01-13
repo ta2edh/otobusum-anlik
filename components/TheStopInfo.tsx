@@ -7,7 +7,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { LineGroups } from './lines/line/LineGroups'
 import { TheMap, TheMapRef } from './map/Map'
-import { LineBusStopMarkersItem } from './markers/stop/MarkersStopItem'
+import { MarkersStopItem } from './markers/stop/MarkersStopItem'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
 import { UiButton } from './ui/UiButton'
@@ -120,7 +120,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
                 longitudeDelta: 0.005,
               }}
             >
-              <LineBusStopMarkersItem
+              <MarkersStopItem
                 type="point"
                 stop={query.data.stop}
               />
