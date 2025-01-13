@@ -5,7 +5,7 @@ import { RefObject, useEffect, useRef } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LineGroups } from './lines/groups/LineGroups'
+import { LineGroups } from './lines/line/LineGroups'
 import { TheMap, TheMapRef } from './map/Map'
 import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'

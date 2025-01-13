@@ -4,8 +4,8 @@ import { useShallow } from 'zustand/react/shallow'
 import { useLine } from '@/hooks/queries/useLine'
 import { useTheme } from '@/hooks/useTheme'
 
-import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { UiText } from '../ui/UiText'
+import { UiActivityIndicator } from '../../ui/UiActivityIndicator'
+import { UiText } from '../../ui/UiText'
 
 import { useLinesStore, getTheme } from '@/stores/lines'
 

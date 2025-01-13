@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { LineGroups } from './lines/groups/LineGroups'
+import { LineGroups } from './lines/line/LineGroups'
 import { UiButton } from './ui/UiButton'
 import { UiLineCode } from './ui/UiLineCode'
 import { UiText } from './ui/UiText'

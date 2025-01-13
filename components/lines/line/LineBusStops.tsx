@@ -19,9 +19,9 @@ import { useLine } from '@/hooks/queries/useLine'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
 
-import { UiActivityIndicator } from '../ui/UiActivityIndicator'
-import { UiButton } from '../ui/UiButton'
-import { UiText } from '../ui/UiText'
+import { UiActivityIndicator } from '../../ui/UiActivityIndicator'
+import { UiButton } from '../../ui/UiButton'
+import { UiText } from '../../ui/UiText'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'

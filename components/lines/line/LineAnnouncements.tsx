@@ -5,9 +5,9 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 
-import { UiSheetModal } from '../ui/sheet/UiSheetModal'
-import { UiButton } from '../ui/UiButton'
-import { UiText } from '../ui/UiText'
+import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
+import { UiButton } from '../../ui/UiButton'
+import { UiText } from '../../ui/UiText'
 
 import { getTheme, useLinesStore } from '@/stores/lines'
 

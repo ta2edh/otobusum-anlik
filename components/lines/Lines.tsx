@@ -19,7 +19,7 @@ import {
 import Animated, { FlatListPropsWithLayout } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
-import { LineMemoized, LineProps } from './Line'
+import { LineMemoized, LineProps } from './line/Line'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
