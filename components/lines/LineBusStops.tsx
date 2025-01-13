@@ -151,11 +151,9 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
       }
 
       const handleZoomBus = () => {
-        map?.current?.animateCamera({
-          center: {
-            latitude: item.y_coord,
-            longitude: item.x_coord,
-          },
+        map?.current?.moveTo({
+          latitude: item.y_coord,
+          longitude: item.x_coord,
         })
       }
 
@@ -232,11 +230,11 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         onMomentumScrollEnd={handleScrollMomentumEnd}
         onViewableItemsChanged={handleViewableItemsChanged}
         drawDistance={1}
-        viewabilityConfig={{
-          minimumViewTime: 200,
-          waitForInteraction: true,
-          itemVisiblePercentThreshold: 100,
-        }}
+        // viewabilityConfig={{
+        //   minimumViewTime: 200,
+        //   waitForInteraction: true,
+        //   itemVisiblePercentThreshold: 100,
+        // }}
         snapToInterval={ITEM_SIZE}
       />
     </Animated.View>

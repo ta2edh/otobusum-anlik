@@ -2,17 +2,14 @@ import React, { useMemo } from 'react'
 import { LatLng } from 'react-native-maps'
 
 import { useSettingsStore } from '@/stores/settings'
-import { regionToZoom } from '@/utils/regionToZoom'
 
 interface VisibleMarkersProps<T> {
   data: T[]
   renderItem: (item: T) => React.ReactNode
-  zoomLimit: number
 }
 
-export const MarkersInView = <T extends { coordinates: LatLng },>(props: VisibleMarkersProps<T>) => {
+export const MarkersFiltersInView = <T extends { coordinates: LatLng },>(props: VisibleMarkersProps<T>) => {
   const initialRegion = useSettingsStore(state => state.initialMapLocation)
-  const currentZoom = initialRegion ? regionToZoom(initialRegion) : 0
 
   const filteredItems = useMemo(
     () => {
@@ -37,7 +34,7 @@ export const MarkersInView = <T extends { coordinates: LatLng },>(props: Visible
     [initialRegion, props.data],
   )
 
-  if (!initialRegion || currentZoom < props.zoomLimit) return
+  if (!initialRegion) return
 
   return (
     <>

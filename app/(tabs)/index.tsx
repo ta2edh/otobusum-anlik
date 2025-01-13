@@ -1,12 +1,12 @@
-import * as SplashScreen from 'expo-splash-screen'
+import { SplashScreen } from 'expo-router'
 import { useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
-import MapView, { Region } from 'react-native-maps'
+import { Region } from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
 
 import { LinesMomoizedFr } from '@/components/lines/Lines'
+import { TheMap, TheMapRef } from '@/components/map/Map'
 import { LineMarkers } from '@/components/markers/LineMarkers'
-import { TheMap } from '@/components/TheMap'
 import { TheMapButtons } from '@/components/TheMapButtons'
 import { TheStopInfo } from '@/components/TheStopInfo'
 
@@ -20,7 +20,7 @@ import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
-  const map = useRef<MapView>(null)
+  const map = useRef<TheMapRef>(null)
 
   useEffect(() => {
     const unsub = useLinesStore.subscribe(
@@ -44,19 +44,11 @@ export const HomeScreen = () => {
           queryFn: () => getLineBusStops(routeCode),
         })
 
-        map.current?.fitToCoordinates(
+        map.current?.fitInsideCoordinates(
           busStops?.map(stop => ({
             longitude: stop.x_coord,
             latitude: stop.y_coord,
           })),
-          {
-            edgePadding: {
-              bottom: 200,
-              left: 0,
-              right: 0,
-              top: 0,
-            },
-          },
         )
       },
     )
@@ -69,10 +61,6 @@ export const HomeScreen = () => {
     index: useSharedValue(-1),
   }
 
-  const handleOnMapReady = () => {
-    SplashScreen.hideAsync()
-  }
-
   const handleRegionChangeComplete = (region: Region) => {
     useSettingsStore.setState(() => ({ initialMapLocation: region }))
   }
@@ -82,9 +70,9 @@ export const HomeScreen = () => {
       <MapContext.Provider value={map}>
         <SheetContext.Provider value={sheetContext}>
           <TheMap
-            cRef={map}
-            onMapReady={handleOnMapReady}
-            onRegionChangeComplete={handleRegionChangeComplete}
+            ref={map}
+            onMapReady={SplashScreen.hide}
+            onMapRegionUpdate={handleRegionChangeComplete}
             initialRegion={
               useSettingsStore.getState().initialMapLocation || {
                 latitude: 39.66770141070046,
@@ -93,7 +81,6 @@ export const HomeScreen = () => {
                 longitudeDelta: 2.978521026670929,
               }
             }
-            moveOnMarkerPress={false}
           >
             <LineMarkers />
           </TheMap>
@@ -118,6 +105,8 @@ const styles = StyleSheet.create({
   linesContainer: {
     position: 'absolute',
     bottom: 0,
+    left: 0,
+    right: 0,
   },
 })
 

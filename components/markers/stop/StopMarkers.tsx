@@ -1,10 +1,11 @@
 import { memo, useMemo } from 'react'
+import { Platform } from 'react-native'
 import { LatLng } from 'react-native-maps'
 
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
-import { useRoutes } from '@/hooks/queries/useRoutes'
 
-import { MarkersInView } from '../MarkersInView'
+import { MarkersFiltersInView } from '../filters/MarkersFiltersInView'
+import { MarkersFiltersZoomMemoized } from '../filters/MarkersFiltersZoom'
 
 import { LineBusStopMarkersItemMemoized } from './StopMarkersItem'
 
@@ -16,38 +17,49 @@ interface Props {
 
 export const LineBusStopMarkers = (props: Props) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
-
-  const { getRouteFromCode } = useRoutes(props.lineCode)
   const { query } = useLineBusStops(routeCode)
 
-  const route = getRouteFromCode()
+  const stops = useMemo(() => {
+    const results = query.data?.map(stop => ({
+      ...stop,
+      coordinates: {
+        longitude: stop.x_coord,
+        latitude: stop.y_coord,
+      } as LatLng,
+    }))
 
-  const stops = useMemo(
-    () => {
-      const results = query.data?.map(stop => ({
-        ...stop,
-        coordinates: {
-          longitude: stop.x_coord,
-          latitude: stop.y_coord,
-        } as LatLng,
-      }))
+    return results || []
+  }, [query.data])
 
-      return results || []
-    },
-    [query.data],
-  )
+  if (Platform.OS === 'web') {
+    return (
+      <>
+        {stops.map(item => (
+          <LineBusStopMarkersItemMemoized
+            type="point"
+            key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
+            stop={item}
+            lineCode={props.lineCode}
+          />
+        ))}
+      </>
+    )
+  }
 
   return (
-    <MarkersInView
-      zoomLimit={route?.route_path ? 13 : 0}
+    <MarkersFiltersInView
       data={stops}
       renderItem={item => (
-        <LineBusStopMarkersItemMemoized
-          type="point"
+        <MarkersFiltersZoomMemoized
           key={`${item.x_coord}-${item.y_coord}-${props.lineCode}-${item.stop_code}`}
-          stop={item}
-          lineCode={props.lineCode}
-        />
+          limit={11}
+        >
+          <LineBusStopMarkersItemMemoized
+            type="point"
+            stop={item}
+            lineCode={props.lineCode}
+          />
+        </MarkersFiltersZoomMemoized>
       )}
     />
   )

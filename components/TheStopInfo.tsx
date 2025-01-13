@@ -3,12 +3,10 @@ import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
-import MapView, { Region } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
-import { useTheme } from '@/hooks/useTheme'
-
 import { LineGroups } from './lines/groups/LineGroups'
+import { TheMap, TheMapRef } from './map/Map'
 import { LineBusStopMarkersItem } from './markers/stop/StopMarkersItem'
 import { UiSheetModal } from './ui/sheet/UiSheetModal'
 import { UiActivityIndicator } from './ui/UiActivityIndicator'
@@ -16,13 +14,12 @@ import { UiButton } from './ui/UiButton'
 import { UiText } from './ui/UiText'
 
 import { getStop } from '@/api/getStop'
-import { getMapStyle } from '@/constants/mapStyles'
 import { addLine, getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 interface TheStopInfoProps {
-  cRef: RefObject<MapView>
+  cRef: RefObject<TheMapRef>
 }
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
@@ -53,9 +50,8 @@ const StopLine = ({ lineCode }: { lineCode: string }) => {
 
 export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
-  const { mode } = useTheme()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const savedRegion = useRef<Region | undefined>(undefined)
+  const savedRegion = useRef<any | undefined>(undefined)
 
   const query = useQuery({
     queryKey: ['stop', stopId],
@@ -67,16 +63,14 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   useEffect(() => {
     savedRegion.current = useSettingsStore.getState().initialMapLocation
     bottomSheetModal.current?.present()
+    if (!query.data) return
 
-    if (query.data) {
-      cRef.current?.animateCamera({
-        center: {
-          latitude: query.data.stop.y_coord,
-          longitude: query.data.stop.x_coord,
-        },
-        zoom: 16,
-      })
-    }
+    cRef.current?.animateCamera({
+      latitude: query.data.stop.y_coord,
+      longitude: query.data.stop.x_coord,
+      latitudeDelta: 0.010,
+      longitudeDelta: 0.010,
+    })
   }, [query.data, stopId, cRef])
 
   if (!stopId) return null
@@ -106,32 +100,31 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   const handleOnDismiss = () => {
     if (!savedRegion.current) return
-    cRef.current?.animateToRegion(savedRegion.current)
+    cRef.current?.animateCamera(savedRegion.current)
   }
 
   return (
-    <UiSheetModal cRef={bottomSheetModal} enableDynamicSizing={true} onDismiss={handleOnDismiss}>
+    <UiSheetModal
+      cRef={bottomSheetModal}
+      enableDynamicSizing={true}
+      onDismiss={handleOnDismiss}
+    >
       <BottomSheetView style={styles.container}>
         <View style={styles.mapContainer}>
           {query.data && (
-            <MapView
-              liteMode
-              style={styles.map}
-              customMapStyle={getMapStyle(mode)}
-              showsIndoors={false}
-              toolbarEnabled={false}
-              initialCamera={{
-                center: {
-                  latitude: query.data?.stop.y_coord,
-                  longitude: query.data?.stop.x_coord,
-                },
-                heading: 0,
-                pitch: 0,
-                zoom: 16,
+            <TheMap
+              initialRegion={{
+                longitude: query.data.stop.x_coord,
+                latitude: query.data.stop.y_coord,
+                latitudeDelta: 0.005,
+                longitudeDelta: 0.005,
               }}
             >
-              <LineBusStopMarkersItem type="point" stop={query.data.stop} />
-            </MapView>
+              <LineBusStopMarkersItem
+                type="point"
+                stop={query.data.stop}
+              />
+            </TheMap>
           )}
         </View>
 

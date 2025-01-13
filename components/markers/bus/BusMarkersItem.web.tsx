@@ -1,20 +1,20 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { AdvancedMarkerAnchorPoint } from '@vis.gl/react-google-maps'
 import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
-import { MapMarkerProps } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkerWithCallout } from '../callout/MarkerWithCallout'
-import { MarkersFiltersZoom } from '../filters/MarkersFiltersZoom'
+import { MarkerWithCallout } from '../callout/MarkerWithCallout.web'
 
 import { BusMarkersCallout } from './BusMarkersCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
-import { getTheme, useLinesStore } from '@/stores/lines'
+import { colors } from '@/constants/colors'
+import { useLinesStore, getTheme } from '@/stores/lines'
 
-interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
+interface LineBusMarkersItemProps {
   location: BusLocation
   lineCode: string
 }
@@ -28,24 +28,33 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
 
   return (
     <MarkerWithCallout
+      markerProps={{
+        position: {
+          lng: location.lng,
+          lat: location.lat,
+        },
+        anchorPoint: AdvancedMarkerAnchorPoint.CENTER,
+      }}
       calloutProps={{
         children: <BusMarkersCallout busLocation={location} lineCode={lineCode} />,
-      }}
-      markerProps={{
-        coordinate: {
-          latitude: location.lat,
-          longitude: location.lng,
-        },
-        tracksInfoWindowChanges: false,
-        tracksViewChanges: false,
-        anchor: { x: 0.5, y: 0.5 },
-        zIndex: 2,
       }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
     </MarkerWithCallout>
+
+  // <AdvancedMarker
+  //   position={{
+  //     lng: location.lng,
+  //     lat: location.lat,
+  //   }}
+  //   anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
+  // >
+  //   <View style={[styles.iconContainer, { backgroundColor }]}>
+  //     <Ionicons name="bus" color={textColor} />
+  //   </View>
+  // </AdvancedMarker>
   )
 }
 
@@ -57,5 +66,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 8,
+  },
+  icon: {
+    width: 10,
+    height: 10,
+  },
+  calloutContainer: {
+    backgroundColor: colors.dark.surfaceContainer,
+    padding: 8,
+    width: 250,
+    borderRadius: 8,
   },
 })

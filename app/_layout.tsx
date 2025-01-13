@@ -1,3 +1,5 @@
+import '@/assets/styles.css'
+
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { DarkTheme, DefaultTheme, Theme, ThemeProvider } from '@react-navigation/native'
 import { DehydrateOptions } from '@tanstack/react-query'
