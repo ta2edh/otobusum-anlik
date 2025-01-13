@@ -5,6 +5,7 @@ import { MarkersBusesMemoized } from '../buses/MarkersBuses'
 import { MarkersStop } from '../stop/MarkersStop'
 import { MarkersStopClusteredMemoized } from '../stop/MarkersStopClustered'
 
+import { MarkersLineRouteLine } from './MarkersLineRouteLine'
 import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -26,7 +27,8 @@ export const MarkersLine = () => {
     <>
       {filteredCodes.map(lineCode => (
         <View key={lineCode}>
-          <MarkersLinePolyline lineCode={lineCode} />
+          {/* <MarkersLinePolyline lineCode={lineCode} /> */}
+          <MarkersLineRouteLine lineCode={lineCode} />
 
           {
             clusterStops && Platform.OS !== 'web'

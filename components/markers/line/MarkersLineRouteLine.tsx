@@ -1,11 +1,10 @@
 import { useMemo } from 'react'
-import { StyleProp, ViewStyle } from 'react-native'
 import { LatLng } from 'react-native-maps'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useRoutes } from '@/hooks/queries/useRoutes'
-import { useTheme } from '@/hooks/useTheme'
 
+import { MarkersLineArrows } from './arrows/MarkersLineArrows'
 import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -21,7 +20,6 @@ export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { query, getRouteFromCode } = useRoutes(lineCode)
-  const { getSchemeColorHex } = useTheme(lineTheme)
 
   const route = getRouteFromCode()
 
@@ -35,7 +33,7 @@ export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
   )
 
   const arrows = useMemo(() => {
-    const chunkSize = transformed.length / (transformed.length / 14)
+    const chunkSize = transformed.length / (transformed.length / 20)
     const arrows: { coordinates: LatLng, angle: number }[] = []
 
     for (let index = 0; index < transformed.length; index += chunkSize) {
@@ -76,52 +74,16 @@ export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
 
   if (query.isPending || !route) return
 
-  const arrowBackground: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('primary'),
-    borderRadius: 999,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 14,
-    height: 14,
-  }
-
   return (
     <>
       <MarkersLinePolyline
         lineCode={lineCode}
-        // strokeWidth={6}
-        // strokeColor={getSchemeColorHex('primary')}
       />
 
-      {/* <MarkersInView
-        zoomLimit={15}
-        data={arrows}
-        renderItem={item => (
-          <Marker
-            key={`${item.coordinates.latitude}-${item.coordinates.longitude}-${route.route_code}`}
-            coordinate={item.coordinates}
-            tracksViewChanges={false}
-            tracksInfoWindowChanges={false}
-            anchor={{ x: 0.5, y: 0.5 }}
-            zIndex={1}
-          >
-            <View style={arrowBackground}>
-              <Ionicons
-                name="arrow-up"
-                size={10}
-                style={{
-                  transform: [
-                    {
-                      rotate: `${item.angle}deg`,
-                    },
-                  ],
-                }}
-              />
-            </View>
-          </Marker>
-        )}
-      /> */}
+      <MarkersLineArrows
+        arrows={arrows}
+        lineTheme={lineTheme}
+      />
     </>
   )
 }
