@@ -95,6 +95,7 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     () => ({
       backgroundColor: variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
       width: lineWidth,
+      maxWidth: 800,
     }), [getSchemeColorHex, lineWidth, variant])
 
   const containerAnimatedStyle = useAnimatedStyle(() => ({
