@@ -2,8 +2,8 @@ import { Platform, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
 import { MarkersBusesMemoized } from '../buses/MarkersBuses'
-import { LineBusStopMarkersMemoized } from '../stop/MarkersStop'
-import { LineBusStopMarkersClusteredMemoized } from '../stop/MarkersStopClustered'
+import { MarkersStop } from '../stop/MarkersStop'
+import { MarkersStopClusteredMemoized } from '../stop/MarkersStopClustered'
 
 import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
@@ -30,8 +30,8 @@ export const MarkersLine = () => {
 
           {
             clusterStops && Platform.OS !== 'web'
-              ? <LineBusStopMarkersClusteredMemoized lineCode={lineCode} />
-              : <LineBusStopMarkersMemoized lineCode={lineCode} />
+              ? <MarkersStopClusteredMemoized lineCode={lineCode} />
+              : <MarkersStop lineCode={lineCode} />
           }
 
           <MarkersBusesMemoized code={lineCode} />

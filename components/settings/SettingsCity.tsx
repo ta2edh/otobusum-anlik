@@ -1,4 +1,4 @@
-import { SettingContainer } from './SettingsContainer'
+import { SettingsContainer } from './SettingsContainer'
 
 import { useFiltersStore } from '@/stores/filters'
 import { i18n } from '@/translations/i18n'
@@ -28,7 +28,7 @@ export const SettingCity = () => {
   }
 
   return (
-    <SettingContainer
+    <SettingsContainer
       title={i18n.t('city')}
       type="select"
       options={options}

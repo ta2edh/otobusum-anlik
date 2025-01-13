@@ -65,4 +65,4 @@ export const MarkersStop = (props: Props) => {
   )
 }
 
-export const LineBusStopMarkersMemoized = memo(MarkersStop)
+export const MarkersStopMemoized = memo(MarkersStop)

@@ -82,4 +82,4 @@ export const MarkersStopClustered = (props: Props) => {
   )
 }
 
-export const LineBusStopMarkersClusteredMemoized = memo(MarkersStopClustered)
+export const MarkersStopClusteredMemoized = memo(MarkersStopClustered)

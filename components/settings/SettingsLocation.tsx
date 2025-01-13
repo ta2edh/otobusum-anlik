@@ -1,7 +1,7 @@
 import * as Location from 'expo-location'
 import { useShallow } from 'zustand/react/shallow'
 
-import { SettingContainer } from './SettingsContainer'
+import { SettingsContainer } from './SettingsContainer'
 
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
@@ -26,7 +26,7 @@ export const SettingsLocation = () => {
   }
 
   return (
-    <SettingContainer
+    <SettingsContainer
       type="switch"
       title={i18n.t('showMyLocation')}
       value={showMyLocation}

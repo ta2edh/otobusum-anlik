@@ -1,7 +1,7 @@
 import { ColorSchemeName } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { SettingContainer } from './SettingsContainer'
+import { SettingsContainer } from './SettingsContainer'
 
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
@@ -34,7 +34,7 @@ export const SettingsTheme = () => {
   }
 
   return (
-    <SettingContainer
+    <SettingsContainer
       title={i18n.t('changeTheme')}
       options={options}
       type="select"
