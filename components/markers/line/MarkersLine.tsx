@@ -6,7 +6,6 @@ import { MarkersStop } from '../stop/MarkersStop'
 import { MarkersStopClusteredMemoized } from '../stop/MarkersStopClustered'
 
 import { MarkersLineRouteLine } from './MarkersLineRouteLine'
-import { MarkersLinePolyline } from './polyline/MarkersLinePolyline'
 
 import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
@@ -27,7 +26,6 @@ export const MarkersLine = () => {
     <>
       {filteredCodes.map(lineCode => (
         <View key={lineCode}>
-          {/* <MarkersLinePolyline lineCode={lineCode} /> */}
           <MarkersLineRouteLine lineCode={lineCode} />
 
           {
