@@ -6,20 +6,20 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkerWithCallout } from '../callout/MarkerWithCallout.web'
+import { MarkersCallout } from '../callout/MarkersCallout.web'
 
-import { BusMarkersCallout } from './BusMarkersCallout'
+import { MarkersBusesItemCallout } from './MarkersBusesItemCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { colors } from '@/constants/colors'
 import { useLinesStore, getTheme } from '@/stores/lines'
 
-interface LineBusMarkersItemProps {
+interface MarkersBusesItemProps {
   location: BusLocation
   lineCode: string
 }
 
-export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemProps) => {
+export const MarkersBusesItem = ({ location, lineCode }: MarkersBusesItemProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
@@ -27,7 +27,7 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
   const backgroundColor = getSchemeColorHex('primaryContainer')
 
   return (
-    <MarkerWithCallout
+    <MarkersCallout
       markerProps={{
         position: {
           lng: location.lng,
@@ -36,29 +36,17 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
         anchorPoint: AdvancedMarkerAnchorPoint.CENTER,
       }}
       calloutProps={{
-        children: <BusMarkersCallout busLocation={location} lineCode={lineCode} />,
+        children: <MarkersBusesItemCallout busLocation={location} lineCode={lineCode} />,
       }}
     >
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
-    </MarkerWithCallout>
-
-  // <AdvancedMarker
-  //   position={{
-  //     lng: location.lng,
-  //     lat: location.lat,
-  //   }}
-  //   anchorPoint={AdvancedMarkerAnchorPoint.CENTER}
-  // >
-  //   <View style={[styles.iconContainer, { backgroundColor }]}>
-  //     <Ionicons name="bus" color={textColor} />
-  //   </View>
-  // </AdvancedMarker>
+    </MarkersCallout>
   )
 }
 
-export const LineBusMarkersItemMemoized = memo(LineBusMarkersItem)
+export const MarkersBusesItemMemoized = memo(MarkersBusesItem)
 
 const styles = StyleSheet.create({
   iconContainer: {

@@ -6,17 +6,17 @@ import {
 } from '@vis.gl/react-google-maps'
 import React, { useCallback, useState } from 'react'
 
-interface MarkerWithCalloutProps {
+interface MarkersCalloutProps {
   markerProps: AdvancedMarkerProps
   calloutProps?: InfoWindowProps & { children: React.ReactNode }
   children: React.ReactNode
 }
 
-export const MarkerWithCallout = ({
+export const MarkersCallout = ({
   markerProps,
   calloutProps,
   children,
-}: MarkerWithCalloutProps) => {
+}: MarkersCalloutProps) => {
   const [markerRef] = useAdvancedMarkerRef()
 
   const [infoWindowShown, setInfoWindowShown] = useState(false)

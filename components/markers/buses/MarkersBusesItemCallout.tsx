@@ -10,12 +10,12 @@ import { BusLocation } from '@/api/getLineBusLocations'
 import { useLinesStore, getTheme } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 
-interface BusMarkersCalloutProps {
+interface MarkersBusesItemCalloutProps {
   busLocation: BusLocation
   lineCode: string
 }
 
-export const BusMarkersCallout = ({ busLocation, lineCode }: BusMarkersCalloutProps) => {
+export const MarkersBusesItemCallout = ({ busLocation, lineCode }: MarkersBusesItemCalloutProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
   const { query: { dataUpdatedAt } } = useLine(lineCode)

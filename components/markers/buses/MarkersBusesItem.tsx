@@ -6,19 +6,19 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { MarkerWithCallout } from '../callout/MarkerWithCallout'
+import { MarkersCallout } from '../callout/MarkersCallout'
 
-import { BusMarkersCallout } from './BusMarkersCallout'
+import { MarkersBusesItemCallout } from './MarkersBusesItemCallout'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getTheme, useLinesStore } from '@/stores/lines'
 
-interface LineBusMarkersItemProps extends Omit<MapMarkerProps, 'coordinate'> {
+interface MarkersBusesItemProps extends Omit<MapMarkerProps, 'coordinate'> {
   location: BusLocation
   lineCode: string
 }
 
-export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemProps) => {
+export const MarkersBusesItem = ({ location, lineCode }: MarkersBusesItemProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
@@ -26,9 +26,9 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
   const backgroundColor = getSchemeColorHex('primaryContainer')
 
   return (
-    <MarkerWithCallout
+    <MarkersCallout
       calloutProps={{
-        children: <BusMarkersCallout busLocation={location} lineCode={lineCode} />,
+        children: <MarkersBusesItemCallout busLocation={location} lineCode={lineCode} />,
       }}
       markerProps={{
         coordinate: {
@@ -44,11 +44,11 @@ export const LineBusMarkersItem = ({ location, lineCode }: LineBusMarkersItemPro
       <View style={[styles.iconContainer, { backgroundColor }]}>
         <Ionicons name="bus" color={textColor} />
       </View>
-    </MarkerWithCallout>
+    </MarkersCallout>
   )
 }
 
-export const LineBusMarkersItemMemoized = memo(LineBusMarkersItem)
+export const MarkersBusesItemMemoized = memo(MarkersBusesItem)
 
 const styles = StyleSheet.create({
   iconContainer: {

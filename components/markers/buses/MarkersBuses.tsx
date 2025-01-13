@@ -2,7 +2,7 @@ import { memo } from 'react'
 
 import { useLine } from '@/hooks/queries/useLine'
 
-import { LineBusMarkersItemMemoized } from './BusMarkersItem'
+import { MarkersBusesItemMemoized } from './MarkersBusesItem'
 
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 
@@ -10,7 +10,7 @@ interface Props {
   code: string
 }
 
-export const LineBusMarkers = (props: Props) => {
+export const MarkersBuses = (props: Props) => {
   const { query } = useLine(props.code)
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.code))
 
@@ -19,7 +19,7 @@ export const LineBusMarkers = (props: Props) => {
   return (
     <>
       {filtered?.map(loc => (
-        <LineBusMarkersItemMemoized
+        <MarkersBusesItemMemoized
           key={`${loc.bus_id}-${loc.route_code}-${loc.lat}-${loc.lng}`}
           location={loc}
           lineCode={props.code}
@@ -29,4 +29,4 @@ export const LineBusMarkers = (props: Props) => {
   )
 }
 
-export const LineBusMarkersMemoized = memo(LineBusMarkers)
+export const MarkersBusesMemoized = memo(MarkersBuses)

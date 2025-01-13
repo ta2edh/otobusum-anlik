@@ -1,13 +1,13 @@
 import React, { useCallback, useRef, useState } from 'react'
 import { Callout, MapCalloutProps, MapMarker, MapMarkerProps, Marker, MarkerPressEvent } from 'react-native-maps'
 
-interface MarkerWithCalloutProps {
+interface MarkersCalloutProps {
   markerProps: MapMarkerProps
   calloutProps?: MapCalloutProps
   children: React.ReactNode
 }
 
-export const MarkerWithCallout = ({ markerProps, calloutProps, children }: MarkerWithCalloutProps) => {
+export const MarkersCallout = ({ markerProps, calloutProps, children }: MarkersCalloutProps) => {
   const markerRef = useRef<MapMarker>(null)
   const [renderCallout, setRenderCallout] = useState(false)
 
