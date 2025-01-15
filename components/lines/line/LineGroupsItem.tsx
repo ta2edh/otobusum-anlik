@@ -2,7 +2,8 @@ import { useBottomSheetModal } from '@gorhom/bottom-sheet'
 import { FlashList, ListRenderItem } from '@shopify/flash-list'
 import { router } from 'expo-router'
 import { useCallback } from 'react'
-import { StyleSheet, TouchableOpacity, TouchableOpacityProps, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { RectButton, RectButtonProps } from 'react-native-gesture-handler'
 
 import { UiButton } from '@/components/ui/UiButton'
 import { UiLineCode } from '@/components/ui/UiLineCode'
@@ -11,7 +12,7 @@ import { UiText } from '@/components/ui/UiText'
 import { i18n } from '@/translations/i18n'
 import { LineGroup } from '@/types/lineGroup'
 
-interface Props extends TouchableOpacityProps {
+interface Props extends RectButtonProps {
   group: LineGroup
 }
 
@@ -49,7 +50,7 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
   )
 
   return (
-    <TouchableOpacity
+    <RectButton
       style={styles.container}
       onLongPress={handleLongPress}
       {...props}
@@ -70,7 +71,7 @@ export const LineGroupsItem = ({ group, ...props }: Props) => {
         ListEmptyComponent={emptyItem}
         horizontal
       />
-    </TouchableOpacity>
+    </RectButton>
   )
 }
 

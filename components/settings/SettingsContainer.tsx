@@ -109,7 +109,6 @@ export const SettingsContainer = <T,>(props: SettingProps<T>) => {
       title={props.title}
       variant="soft"
       square
-      containerStyle={styles.settingContainer}
       innerContainerStyle={styles.settingInnerContainer}
       onPress={handlePress}
     >
@@ -119,15 +118,7 @@ export const SettingsContainer = <T,>(props: SettingProps<T>) => {
 }
 
 const styles = StyleSheet.create({
-  settingContainer: {
-    padding: 12,
-    paddingHorizontal: 14,
-    borderRadius: 8,
-    minHeight: 52,
-  },
   settingInnerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
   },
   title: {

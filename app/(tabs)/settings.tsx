@@ -1,5 +1,6 @@
 import Constants from 'expo-constants'
-import { Linking, Platform, ScrollView, StyleSheet } from 'react-native'
+import { Linking, Platform, StyleSheet } from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
 
 import { SettingCity } from '@/components/settings/SettingsCity'
 import { SettingsCluster } from '@/components/settings/SettingsCluster'
