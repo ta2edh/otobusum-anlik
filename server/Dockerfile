@@ -7,8 +7,8 @@ FROM node:lts-alpine as node-builder
 WORKDIR /usr/src/otobusum-anlik
 COPY . .
 
-ENV EXPO_PUBLIC_MAP_API=${EXPO_PUBLIC_MAP_API}
-ENV EXPO_PUBLIC_BASE_URL=${EXPO_PUBLIC_BASE_URL}
+ARG EXPO_PUBLIC_MAP_API=${EXPO_PUBLIC_MAP_API}
+ARG EXPO_PUBLIC_BASE_URL=${EXPO_PUBLIC_BASE_URL}
 
 RUN npm install
 RUN npx expo export -p web
