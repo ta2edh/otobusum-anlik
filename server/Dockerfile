@@ -1,3 +1,5 @@
+ARG PORT
+
 FROM node:lts-alpine as node-builder
 
 WORKDIR /usr/src/otobusum-anlik
@@ -13,5 +15,5 @@ WORKDIR /usr/src/otobusum-anlik/server
 
 RUN cargo build --release
 
-EXPOSE 3000
+EXPOSE ${PORT}
 ENTRYPOINT [ "./target/release/server" ]
