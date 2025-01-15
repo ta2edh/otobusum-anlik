@@ -23,6 +23,7 @@ interface UiButtonPropsBase {
   iconSize?: IconSize
   disabled?: boolean
   containerStyle?: StyleProp<ViewStyle>
+  innerContainerStyle?: StyleProp<ViewStyle>
   iconColor?: string
   textStyle?: StyleProp<TextStyle>
   animatedIconProps?: Partial<AnimatedProps<typeof Ionicons>>
@@ -113,7 +114,7 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
       onLongPress={props.onLongPress}
       rippleColor="black"
     >
-      <View style={styles.innerContainer}>
+      <View style={[styles.innerContainer, props.innerContainerStyle]}>
         {props.icon && <Icon icon={props.icon} />}
 
         {props.title && (
@@ -134,16 +135,13 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiBut
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    alignItems: 'center',
     minWidth: 48,
-    flexShrink: 1,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 999,
   },
   innerContainer: {
-    flex: 1,
+    flexGrow: 1,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',

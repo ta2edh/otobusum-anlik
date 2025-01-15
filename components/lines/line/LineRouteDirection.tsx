@@ -1,6 +1,7 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { useCallback } from 'react'
-import { Pressable, StyleProp, StyleSheet, TextStyle } from 'react-native'
+import { StyleProp, StyleSheet, TextStyle } from 'react-native'
+import { RectButton } from 'react-native-gesture-handler'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
@@ -34,7 +35,7 @@ export const LineRouteDirection = ({ lineCode, variant = 'solid' }: Props) => {
   }
 
   return (
-    <Pressable onPress={handleSwitchRoute} style={styles.lineButtonsContainer}>
+    <RectButton onPress={handleSwitchRoute} style={styles.lineButtonsContainer}>
       <UiText size="sm" style={[styles.directionText, textStyle]} numberOfLines={1}>
         {leftTitle}
       </UiText>
@@ -42,7 +43,7 @@ export const LineRouteDirection = ({ lineCode, variant = 'solid' }: Props) => {
       <UiText size="sm" style={[styles.directionText, textStyle]} numberOfLines={1}>
         {rightTitle}
       </UiText>
-    </Pressable>
+    </RectButton>
   )
 }
 
