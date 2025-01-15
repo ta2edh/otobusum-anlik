@@ -26,6 +26,6 @@ async fn main() {
         .await
         .unwrap();
 
-    info!("listening on port 3000");
+    info!("listening on port {:?}", &port);
     serve(listener, router).await.unwrap();
 }
