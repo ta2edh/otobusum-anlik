@@ -15,5 +15,7 @@ WORKDIR /usr/src/otobusum-anlik/server
 
 RUN cargo build --release
 
+ENV PORT=${PORT}
+
 EXPOSE ${PORT}
 ENTRYPOINT [ "./target/release/server" ]
