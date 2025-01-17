@@ -1,7 +1,7 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { FlashList, FlashListProps, ViewToken, ListRenderItem } from '@shopify/flash-list'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { Platform, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
   runOnJS,
   useAnimatedReaction,
@@ -228,8 +228,15 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         fadingEdgeLength={40}
         onScrollBeginDrag={handleScrollDragStart}
         onMomentumScrollEnd={handleScrollMomentumEnd}
-        onViewableItemsChanged={handleViewableItemsChanged}
         drawDistance={1}
+        {
+          ...Platform.OS === 'web'
+            ? {
+                onViewableItemsChanged: handleViewableItemsChanged,
+              }
+            : {}
+        }
+
         // viewabilityConfig={{
         //   minimumViewTime: 200,
         //   waitForInteraction: true,
