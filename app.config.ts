@@ -14,6 +14,9 @@ const config: ExpoConfig = {
       projectId: '2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
     },
   },
+  web: {
+    favicon: './assets/icon.png',
+  },
   ios: {
     supportsTablet: true,
   },

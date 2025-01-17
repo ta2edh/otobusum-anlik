@@ -64,6 +64,7 @@ export const RootLayout = () => {
           <BottomSheetModalProvider>
             <Stack
               screenOptions={{
+                title: 'Otobüsüm Anlık',
                 navigationBarColor: colorsTheme.surfaceContainerLow,
                 animation: 'fade_from_bottom',
               }}
