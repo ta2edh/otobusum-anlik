@@ -34,9 +34,11 @@ export const MarkersLineArrows = ({ arrows, lineTheme }: MarkersLineArrowsProps)
     <MarkersFiltersInView
       data={arrows}
       renderItem={item => (
-        <MarkersFiltersZoom limit={13}>
+        <MarkersFiltersZoom
+          key={`${item.coordinates.latitude}-${item.coordinates.longitude}`}
+          limit={13}
+        >
           <AdvancedMarker
-            key={`${item.coordinates.latitude}-${item.coordinates.longitude}`}
             position={{
               lat: item.coordinates.latitude,
               lng: item.coordinates.longitude,

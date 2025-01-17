@@ -67,7 +67,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
   )
 
   type ViewableItems = FlatListProps<string>['onViewableItemsChanged']
-  const handleOnViewChanged: ViewableItems = ({ viewableItems }) => {
+  const handleViewableItemsChanged: ViewableItems = ({ viewableItems }) => {
     if (viewableItems.length < 1 || Platform.OS === 'web') return
 
     useMiscStore.setState(() => ({ selectedLineScrollIndex: viewableItems.at(0)?.index || 0 }))
@@ -82,7 +82,6 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         ref={innerRef}
         data={lines}
         renderItem={renderItem}
-        onViewableItemsChanged={handleOnViewChanged}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
         contentContainerStyle={[styles.codes, props.contentContainerStyle]}
         keyExtractor={keyExtractor}
@@ -92,6 +91,14 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
         snapToAlignment="center"
         pagingEnabled
         horizontal
+
+        {
+          ...Platform.OS !== 'web'
+            ? {
+                onViewableItemsChanged: handleViewableItemsChanged,
+              }
+            : {}
+        }
       />
     </View>
   )

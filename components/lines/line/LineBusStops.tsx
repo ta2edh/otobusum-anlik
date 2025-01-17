@@ -230,7 +230,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         onMomentumScrollEnd={handleScrollMomentumEnd}
         drawDistance={1}
         {
-          ...Platform.OS === 'web'
+          ...Platform.OS !== 'web'
             ? {
                 onViewableItemsChanged: handleViewableItemsChanged,
               }
