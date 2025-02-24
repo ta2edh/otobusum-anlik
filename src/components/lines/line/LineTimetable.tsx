@@ -9,7 +9,7 @@ import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTimetable } from '@/hooks/queries/useTimetable'
-import { useTheme } from '@/hooks/useTheme'
+import { ThemeContext, useTheme } from '@/hooks/useTheme'
 
 import { Time } from '@/api/getPlannedDepartures'
 import { useFiltersStore } from '@/stores/filters'
@@ -183,64 +183,65 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   }
 
   return (
-    <View style={[styles.wrapper, containerStyle]}>
-      <View style={styles.info}>
-        <UiText style={textStyle}>
-          {routeCode}
-          {' '}
-          -
-          {lineCode}
-        </UiText>
-        <UiText style={[styles.title, textStyle]}>
-          {route?.route_long_name.trim()}
-        </UiText>
-      </View>
+    <ThemeContext.Provider value={lineTheme}>
+      <View style={[styles.wrapper, containerStyle]}>
+        <View style={styles.info}>
+          <UiText style={textStyle}>
+            {routeCode}
+            {' '}
+            -
+            {lineCode}
+          </UiText>
+          <UiText style={[styles.title, textStyle]}>
+            {route?.route_long_name.trim()}
+          </UiText>
+        </View>
 
-      <UiSegmentedButtons
-        value={selectedDay}
-        onValueChange={setSelectedDay}
-        style={{ flexGrow: 1 }}
-        theme={lineTheme}
-        buttons={options[selectedCity]}
-      />
+        <UiSegmentedButtons
+          value={selectedDay}
+          onValueChange={setSelectedDay}
+          // theme={lineTheme}
+          buttons={options[selectedCity]}
+        />
 
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
-          <View style={styles.fixed}>
-            {hours.map(hour => (
-              <UiText key={hour} style={[styles.cell, cellStyle]}>
-                {hour}
-              </UiText>
-            ))}
-          </View>
+        <View style={styles.container}>
+          <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
+            <View style={styles.fixed}>
+              {hours.map(hour => (
+                <UiText key={hour} style={[styles.cell, cellStyle]}>
+                  {hour}
+                </UiText>
+              ))}
+            </View>
 
-          <ScrollView
-            contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
-            horizontal
-          >
-            {hours.map(hour => (
-              <View key={hour} style={styles.row}>
-                {groupedByHour[hour]?.map(time => (
-                  <UiText
-                    key={`${lineCode}-${time}-${routeCode}`}
-                    style={[
-                      styles.cell,
-                      textStyle,
-                      cancelledTimes.includes(`${hour}:${time}`) && {
-                        textDecorationLine: 'line-through',
-                        opacity: 0.5,
-                      },
-                    ]}
-                  >
-                    {time}
-                  </UiText>
-                ))}
-              </View>
-            ))}
+            <ScrollView
+              contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
+              horizontal
+            >
+              {hours.map(hour => (
+                <View key={hour} style={styles.row}>
+                  {groupedByHour[hour]?.map(time => (
+                    <UiText
+                      key={`${lineCode}-${time}-${routeCode}`}
+                      style={[
+                        styles.cell,
+                        textStyle,
+                        cancelledTimes.includes(`${hour}:${time}`) && {
+                          textDecorationLine: 'line-through',
+                          opacity: 0.5,
+                        },
+                      ]}
+                    >
+                      {time}
+                    </UiText>
+                  ))}
+                </View>
+              ))}
+            </ScrollView>
           </ScrollView>
-        </ScrollView>
+        </View>
       </View>
-    </View>
+    </ThemeContext.Provider>
   )
 }
 
