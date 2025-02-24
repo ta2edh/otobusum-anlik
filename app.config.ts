@@ -5,7 +5,7 @@ const config: ExpoConfig = {
   slug: 'otobusum-anlik',
   version: '1.2.3',
   orientation: 'portrait',
-  icon: './assets/icon.png',
+  icon: './src/assets/icon.png',
   scheme: 'otobusum-anlik',
   userInterfaceStyle: 'automatic',
   newArchEnabled: false,
