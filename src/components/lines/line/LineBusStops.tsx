@@ -103,6 +103,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
         scrollToTrackedBus()
       }, 300)
     }
+    // eslint-disable-next-line react-compiler/react-compiler
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [busses, scrollToTrackedBus])
 
@@ -187,13 +188,12 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
             <UiButton
               icon="locate"
               onPress={handleZoomBus}
-              theme={lineTheme}
             />
           )}
         </View>
       )
     },
-    [busses, closestStop?.stop_code, color, getSchemeColorHex, lineTheme, map],
+    [busses, closestStop?.stop_code, color, getSchemeColorHex, map],
   )
 
   if (query.isPending) {

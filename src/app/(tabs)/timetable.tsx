@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LineTimetableMemoized } from '@/components/lines/line/LineTimetable'
-import { LinesMomoizedFr } from '@/components/lines/Lines'
+import { Lines } from '@/components/lines/Lines'
 import { UiText } from '@/components/ui/UiText'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -74,9 +74,9 @@ export const TimetableScreen = () => {
   })
 
   const renderItem: ListRenderItem<string> = useCallback(
-    ({ item }) => {
+    ({ item: lineCode }) => {
       return (
-        <LineTimetableMemoized lineCode={item} />
+        <LineTimetableMemoized lineCode={lineCode} />
       )
     },
     [],
@@ -97,8 +97,8 @@ export const TimetableScreen = () => {
 
   return (
     <View style={containerStyle}>
-      <LinesMomoizedFr
-        ref={linesRef}
+      <Lines
+        cRef={linesRef}
         listProps={{
           onLayout,
           onScroll: handleOnScroll,

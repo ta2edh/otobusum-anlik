@@ -16,8 +16,6 @@ export const MarkersBuses = (props: Props) => {
 
   const filtered = query.data?.filter(loc => loc.route_code === routeCode) || []
 
-  console.log('bus markers rerender', props.code)
-
   return (
     <>
       {filtered?.map(loc => (

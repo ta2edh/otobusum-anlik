@@ -12,7 +12,7 @@ export interface TheMapProps {
   onMapReady?: () => void
   onMapRegionUpdate?: (region: Region) => void
   initialRegion?: Region
-  cRef: ForwardedRef<TheMapRef>
+  cRef?: ForwardedRef<TheMapRef>
 }
 
 export interface TheMapRef {

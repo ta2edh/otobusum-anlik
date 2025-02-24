@@ -24,8 +24,8 @@ interface UiSegmentedButtonsProps<T> extends TouchableOpacityProps {
   theme?: Theme
 }
 
-export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, theme }: UiSegmentedButtonsProps<T>) => {
-  const { getSchemeColorHex } = useTheme(theme)
+export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange }: UiSegmentedButtonsProps<T>) => {
+  const { getSchemeColorHex } = useTheme()
 
   const selectedStyle: StyleProp<ViewStyle> = {
     backgroundColor: getSchemeColorHex('tertiaryContainer'),
@@ -49,7 +49,6 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange, t
             key={button.label}
             title={button.label}
             variant="ghost"
-            theme={theme}
             containerStyle={[styles.buttonContainer, selected ? selectedStyle : undefined]}
             textStyle={selected ? selectedTextStyle : textStyle}
             onPress={() => onValueChange?.(button.value)}

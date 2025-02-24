@@ -48,27 +48,32 @@ type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
 export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiButtonProps) => {
-  const { getSchemeColorHex, colorsTheme } = useTheme(props.theme)
+  const { getSchemeColorHex, colorsTheme, contextTheme } = useTheme()
 
-  const defaultBackground = variant === 'solid'
-    ? getSchemeColorHex('primary')
-    : variant === 'soft'
-      ? getSchemeColorHex('surface')
-      : undefined
+  const defaultBackground = contextTheme
+    ? getSchemeColorHex('secondaryContainer')
+    : variant === 'solid'
+      ? getSchemeColorHex('primary')
+      : variant === 'soft'
+        ? getSchemeColorHex('surface')
+        : undefined
 
-  const defaultTextColor = variant === 'solid'
-    ? getSchemeColorHex('onPrimary')
-    : variant === 'soft'
-      ? getSchemeColorHex('onSurface')
-      : colorsTheme.color
+  const defaultTextColor
+    = contextTheme
+      ? getSchemeColorHex('onSecondaryContainer')
+      : variant === 'solid'
+        ? getSchemeColorHex('onPrimary')
+        : variant === 'soft'
+          ? getSchemeColorHex('onSurface')
+          : colorsTheme.color
 
   const dynamicContainer: StyleProp<ViewStyle> = {
-    backgroundColor: props.theme ? getSchemeColorHex('secondaryContainer') : defaultBackground,
+    backgroundColor: defaultBackground,
     opacity: props.disabled ? 0.75 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {
-    color: props.theme ? getSchemeColorHex('onSecondaryContainer') : defaultTextColor,
+    color: defaultTextColor,
     ...(
       props.align === 'left'
         ? { flexGrow: 1, textAlign: 'left' }

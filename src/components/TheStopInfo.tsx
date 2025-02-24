@@ -83,9 +83,9 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     )
   }
 
-  if (bottomSheetModal.current && stopId) {
-    bottomSheetModal.current.present()
-  }
+  // if (bottomSheetModal.current && stopId) {
+  //   bottomSheetModal.current.present()
+  // }
 
   const openStopDirections = async () => {
     if (!query.data?.stop) return
