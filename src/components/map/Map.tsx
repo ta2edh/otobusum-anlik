@@ -1,4 +1,4 @@
-import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react'
+import { ForwardedRef, useImperativeHandle, useRef } from 'react'
 import { View } from 'react-native'
 import MapView, { LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -12,6 +12,7 @@ export interface TheMapProps {
   onMapReady?: () => void
   onMapRegionUpdate?: (region: Region) => void
   initialRegion?: Region
+  cRef: ForwardedRef<TheMapRef>
 }
 
 export interface TheMapRef {
@@ -20,13 +21,13 @@ export interface TheMapRef {
   fitInsideCoordinates: (coordinates: LatLng[]) => void
 }
 
-export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps, ref: ForwardedRef<TheMapRef>) => {
+export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...props }: TheMapProps) => {
   const map = useRef<MapView>(null)
 
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(cRef, () => {
     return {
       animateCamera: (region) => {
         let re = { ...region }
@@ -73,5 +74,3 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
     </View>
   )
 }
-
-export const TheMap = forwardRef<TheMapRef, TheMapProps>(_TheMap)

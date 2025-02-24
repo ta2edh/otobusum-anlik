@@ -1,7 +1,5 @@
 import {
   ForwardedRef,
-  forwardRef,
-  memo,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -26,18 +24,18 @@ import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 
 interface LinesProps {
+  cRef?: ForwardedRef<FlatList>
   containerStyle?: ViewStyle
   contentContainerStyle?: ViewStyle
   lineProps?: Partial<LineProps>
-
   listProps?: Omit<FlatListPropsWithLayout<string>, 'data' | 'renderItem'>
 }
 
 // TODO: Some rerender issues are here.
-const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
+export const Lines = ({ cRef, ...props }: LinesProps) => {
   const innerRef = useRef<FlatList>(null)
 
-  useImperativeHandle(outerRef, () => innerRef.current!, [])
+  useImperativeHandle(cRef, () => innerRef.current!, [])
   useFiltersStore(useShallow(state => state.selectedCity))
 
   const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
@@ -57,7 +55,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
     if (lines.length !== previouslines.current.length) {
       previouslines.current = lines
     }
-  }, [lines])
+  }, [cRef, lines])
 
   const renderItem: ListRenderItem<string> = useCallback(
     ({ item: code }) => {
@@ -79,7 +77,7 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
     <View style={props.containerStyle}>
       <Animated.FlatList
         {...props.listProps}
-        ref={innerRef}
+        ref={cRef}
         data={lines}
         renderItem={renderItem}
         viewabilityConfig={{ itemVisiblePercentThreshold: 70 }}
@@ -103,8 +101,6 @@ const Lines = (props: LinesProps, outerRef: ForwardedRef<FlatList>) => {
     </View>
   )
 }
-
-export const LinesMomoizedFr = memo(forwardRef<FlatList, LinesProps>(Lines))
 
 const styles = StyleSheet.create({
   codes: {

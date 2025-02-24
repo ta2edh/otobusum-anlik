@@ -1,7 +1,7 @@
 import { Platform, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { MarkersBusesMemoized } from '../buses/MarkersBuses'
+import { MarkersBuses, MarkersBusesMemoized } from '../buses/MarkersBuses'
 import { MarkersStop } from '../stop/MarkersStop'
 import { MarkersStopClusteredMemoized } from '../stop/MarkersStopClustered'
 
@@ -34,7 +34,7 @@ export const MarkersLine = () => {
               : <MarkersStop lineCode={lineCode} />
           }
 
-          <MarkersBusesMemoized code={lineCode} />
+          <MarkersBuses code={lineCode} />
         </View>
       ))}
     </>
