@@ -143,7 +143,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
   const color = getSchemeColorHex(variant === 'solid' ? 'onPrimary' : 'onSurface')
 
   const renderItem: ListRenderItem<BusStop> = useCallback(
-    ({ item }) => {
+    ({ item, index }) => {
       const closestBus = busses?.find(bus => bus.closest_stop_code === item.stop_code)
 
       const colorStyle: ViewStyle = {
@@ -160,6 +160,8 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
 
       return (
         <View style={styles.item}>
+          <UiText style={[{ color }, styles.itemIndex]}>{index + 1}</UiText>
+
           <View style={styles.itemTitle}>
             <View style={[styles.itemCircle, colorStyle]}>
               {closestBus && (
@@ -275,5 +277,10 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  itemIndex: {
+    fontWeight: 'bold',
+    minWidth: 24,
+    textAlign: 'center',
   },
 })
