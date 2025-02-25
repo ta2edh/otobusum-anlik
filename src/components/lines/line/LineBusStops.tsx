@@ -1,31 +1,19 @@
-// import { FlashList, FlashListProps, ViewToken, ListRenderItem } from '@shopify/flash-list'
-// import { useCallback, useEffect, useMemo, useRef } from 'react'
-// import { Platform, StyleSheet, View, ViewStyle } from 'react-native'
-// import Animated, {
-//   runOnJS,
-//   useAnimatedReaction,
-//   useAnimatedRef,
-//   useAnimatedStyle,
-//   useSharedValue,
-//   withDelay,
-//   withTiming,
-// } from 'react-native-reanimated'
-// import { useDebouncedCallback } from 'use-debounce'
-// import { useShallow } from 'zustand/react/shallow'
-
 import Ionicons from '@react-native-vector-icons/ionicons'
-import { FlashList, ListRenderItem } from '@shopify/flash-list'
-import { useCallback, useMemo } from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { FlashList, ListRenderItem, ViewToken } from '@shopify/flash-list'
+import { useCallback, useMemo, useRef } from 'react'
+import { Platform, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, {
   withTiming,
   useSharedValue,
   useAnimatedStyle,
+  runOnJS,
 } from 'react-native-reanimated'
 
 import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
+import { UiButton } from '@/components/ui/UiButton'
 import { UiText } from '@/components/ui/UiText'
 
+import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
 import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { useTheme } from '@/hooks/useTheme'
@@ -33,21 +21,6 @@ import { useTheme } from '@/hooks/useTheme'
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
 import { BusStop } from '@/types/bus'
-
-// import { useMap } from '@/hooks/contexts/useMap'
-// import { useLine } from '@/hooks/queries/useLine'
-// import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
-// import { useTheme } from '@/hooks/useTheme'
-
-// import { UiActivityIndicator } from '../../ui/UiActivityIndicator'
-// import { UiButton } from '../../ui/UiButton'
-// import { UiText } from '../../ui/UiText'
-
-// import { BusLocation } from '@/api/getLineBusLocations'
-// import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-// import { getTheme, useLinesStore } from '@/stores/lines'
-// import { i18n } from '@/translations/i18n'
-// import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
   lineCode: string
@@ -60,15 +33,14 @@ interface LineBusStopsItemProps {
   busses: BusLocation[]
 }
 
-// const AnimatedFlashList
-//   = Animated.createAnimatedComponent<FlashListProps<BusStop>>(FlashList)
-
 const ITEM_SIZE = 46
 const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
 const EXPANDED = COLLAPSED * 2
 
 const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
   const { getSchemeColorHex } = useTheme()
+  const map = useMap()
+
   const color = getSchemeColorHex('onPrimary')
 
   const showBusIcon = busses.find(bus => bus.closest_stop_code === stop.stop_code)
@@ -78,21 +50,37 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
     backgroundColor: showBusIcon ? getSchemeColorHex('primaryContainer') : undefined,
   }
 
+  const handleZoomBus = () => {
+    map?.current?.moveTo({
+      latitude: stop.y_coord,
+      longitude: stop.x_coord,
+    })
+  }
+
   return (
     <View style={styles.item}>
-      <UiText style={[{ color }, styles.itemIndex]}>{index + 1}</UiText>
+      <View style={styles.itemInner}>
+        <UiText style={[{ color }, styles.itemIndex]}>{index + 1}</UiText>
 
-      <View style={[styles.itemCircle, colorStyle]}>
-        {showBusIcon && (
-          <Ionicons
-            name="bus-outline"
-            color={getSchemeColorHex('onPrimaryContainer')}
-            size={20}
-          />
-        )}
+        <View style={[styles.itemCircle, colorStyle]}>
+          {showBusIcon && (
+            <Ionicons
+              name="bus-outline"
+              color={getSchemeColorHex('onPrimaryContainer')}
+              size={20}
+            />
+          )}
+        </View>
+
+        <UiText style={{ color }}>{stop.stop_name}</UiText>
       </View>
 
-      <UiText style={{ color }}>{stop.stop_name}</UiText>
+      {showBusIcon && map && (
+        <UiButton
+          icon="locate"
+          onPress={handleZoomBus}
+        />
+      )}
     </View>
   )
 }
@@ -100,6 +88,8 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
 export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
   const containerHeight = useSharedValue(COLLAPSED)
+  const currentViewableItems = useRef<ViewToken[]>([])
+  const flashlistRef = useRef<FlashList<BusStop>>(null)
 
   const { getSchemeColorHex } = useTheme()
   const { query: stops, closestStop } = useLineBusStops(routeCode, true)
@@ -131,9 +121,26 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
     return <UiActivityIndicator color={getSchemeColorHex('onPrimary')} />
   }
 
+  const handleScrollToBus = () => {
+    const busInView = line.data?.find(
+      bus => currentViewableItems.current.find(item => item.item.stop_code === bus.closest_stop_code),
+    )
+
+    const stopIndex = stops.data?.findIndex(stop => stop.stop_code === busInView?.closest_stop_code)
+
+    if (stopIndex !== undefined) {
+      flashlistRef.current?.scrollToIndex({
+        animated: true,
+        index: stopIndex,
+        viewPosition: 0.5,
+      })
+    }
+  }
+
   return (
     <Animated.View style={animatedStyle}>
       <FlashList
+        ref={flashlistRef}
         data={stops.data}
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
@@ -145,10 +152,21 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
           containerHeight.value = withTiming(EXPANDED)
         }}
         onMomentumScrollEnd={() => {
-          containerHeight.value = withTiming(COLLAPSED)
+          containerHeight.value = withTiming(COLLAPSED, undefined, () => {
+            runOnJS(handleScrollToBus)()
+          })
         }}
         fadingEdgeLength={40}
         drawDistance={1}
+        {
+          ...Platform.OS !== 'web'
+            ? {
+                onViewableItemsChanged: ({ viewableItems }) => {
+                  currentViewableItems.current = viewableItems
+                },
+              }
+            : {}
+        }
       />
     </Animated.View>
   )
@@ -364,24 +382,18 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
 // }
 
 const styles = StyleSheet.create({
-  // content: {
-  //   gap: 4,
-  // },
   item: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     gap: 4,
     paddingVertical: 4,
   },
-  // itemTitle: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   gap: 4,
-  //   flex: 1,
-  // },
-  // itemTitleInner: {
-  //   flex: 1,
-  // },
+  itemInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   itemCircle: {
     width: 38,
     height: 38,
