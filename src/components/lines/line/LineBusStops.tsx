@@ -197,7 +197,7 @@ export const LineBusStops = ({ lineCode, variant = 'solid' }: LineBusStopsProps)
   )
 
   if (query.isPending) {
-    return <UiActivityIndicator />
+    return <UiActivityIndicator color={getSchemeColorHex('onPrimary')} />
   }
 
   const handleScrollDragStart = () => {
