@@ -51,7 +51,7 @@ export const SearchScreen = () => {
     [],
   )
 
-  const emptyItem = useCallback(() => (
+  const EmptyItem = useMemo(() => (
     <View style={styles.emptyContainer}>
       {
         mutation.error
@@ -66,7 +66,7 @@ export const SearchScreen = () => {
               ? <UiActivityIndicator size="large" />
               : (
                   <UiText info style={styles.empty}>
-                    {i18n.t('searchSomething')}
+                    {i18n.t('searchMessage')}
                   </UiText>
                 )
 
@@ -85,7 +85,7 @@ export const SearchScreen = () => {
 
       <View style={styles.list}>
         {!mutation.data
-          ? emptyItem()
+          ? EmptyItem
           : (
               <FlashList
                 data={data}
