@@ -1,21 +1,17 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { memo, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated'
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
 import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
-import { useTheme } from '@/hooks/useTheme'
+import { ThemeContext, useTheme } from '@/hooks/useTheme'
 
 import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton } from '../../ui/UiButton'
 
-import { LineAnnouncementsMemoized } from './LineAnnouncements'
+import { LineAnnouncements } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
 import { LineGroups } from './LineGroups'
 import { LineName } from './LineName'
@@ -75,32 +71,29 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     return unsub
   }, [isVisible, lineCode, map])
 
-  const handleVisibility = useCallback(() => {
-    toggleLineVisibility(lineCode)
-  }, [lineCode])
+  const handleVisibility = () => toggleLineVisibility(lineCode)
+  const handleDelete = () => deleteLine(lineCode)
+  const handleRouteChange = () => changeRouteDirection(lineCode)
 
-  const handleMenu = useCallback(() => {
-    uiSheetButtonModal.current?.present()
-  }, [])
-
-  const handleDelete = useCallback(() => {
-    deleteLine(lineCode)
-  }, [lineCode])
-
-  const handleAddToGroup = useCallback(() => {
-    uiSheetLineGroupsModal.current?.present()
-  }, [])
+  const openMenu = () => uiSheetButtonModal.current?.present()
+  const openGroupMenu = () => uiSheetLineGroupsModal.current?.present()
 
   const containerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor: variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
+      backgroundColor:
+        variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
       width: lineWidth,
       maxWidth: 800,
-    }), [getSchemeColorHex, lineWidth, variant])
+    }),
+    [getSchemeColorHex, lineWidth, variant],
+  )
 
-  const containerAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: withTiming(isVisible.value ? 1 : 0.4),
-  }), [])
+  const containerAnimatedStyle = useAnimatedStyle(
+    () => ({
+      opacity: withTiming(isVisible.value ? 1 : 0.4),
+    }),
+    [],
+  )
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
@@ -109,79 +102,60 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
     [getSchemeColorHex],
   )
 
-  const handleSwitchRoute = useCallback(() => {
-    changeRouteDirection(lineCode)
-  }, [lineCode])
-
   return (
-    <Animated.View
-      style={[containerStyle, containerAnimatedStyle, styles.container, props.containerStyle]}
-      key={lineCode}
-      {...props}
-    >
-      <View style={styles.titleContainer}>
-        <LineName
-          lineCode={lineCode}
-          variant={variant}
-        />
-
+    <ThemeContext.Provider value={lineTheme}>
+      <Animated.View
+        style={[containerStyle, containerAnimatedStyle, styles.container, props.containerStyle]}
+        key={lineCode}
+        {...props}
+      >
         <View style={styles.titleContainer}>
-          <UiButton
-            onPress={handleVisibility}
-            theme={lineTheme}
-            icon="eye-outline"
-          />
+          <LineName lineCode={lineCode} variant={variant} />
 
-          {selectedCity === 'istanbul' && (
-            <LineAnnouncementsMemoized lineCode={lineCode} style={buttonContainerStyle} />
-          )}
+          <View style={styles.titleContainer}>
+            <UiButton onPress={handleVisibility} icon="eye-outline" variant="soft" />
 
-          <UiButton
-            onPress={handleMenu}
-            icon="menu"
-            theme={lineTheme}
-          />
+            {selectedCity === 'istanbul' && (
+              <LineAnnouncements lineCode={lineCode} style={buttonContainerStyle} />
+            )}
 
-          <UiSheetModal cRef={uiSheetButtonModal}>
-            <BottomSheetView style={styles.menuSheetContainer}>
-              <UiButton
-                onPress={handleAddToGroup}
-                title={i18n.t('addToGroup')}
-                variant="soft"
-                icon="add-circle-outline"
-                square
-                align="left"
-              />
-              <UiButton
-                onPress={handleDelete}
-                title={i18n.t('deleteLine')}
-                variant="soft"
-                icon="trash-outline"
-                square
-                align="left"
-              />
-            </BottomSheetView>
-          </UiSheetModal>
+            <UiButton onPress={openMenu} icon="menu" variant="soft" />
 
-          <LineGroups
-            cRef={uiSheetLineGroupsModal}
-            lineCodeToAdd={lineCode}
-          />
+            <UiSheetModal cRef={uiSheetButtonModal}>
+              <BottomSheetView style={styles.menuSheetContainer}>
+                <UiButton
+                  onPress={openGroupMenu}
+                  title={i18n.t('addToGroup')}
+                  variant="soft"
+                  icon="add-circle-outline"
+                  square
+                  align="left"
+                />
+                <UiButton
+                  onPress={handleDelete}
+                  title={i18n.t('deleteLine')}
+                  variant="soft"
+                  icon="trash-outline"
+                  square
+                  align="left"
+                />
+              </BottomSheetView>
+            </UiSheetModal>
+
+            <LineGroups cRef={uiSheetLineGroupsModal} lineCodeToAdd={lineCode} />
+          </View>
         </View>
-      </View>
 
-      <LineBusStops lineCode={lineCode} variant={variant} />
+        <LineBusStops lineCode={lineCode} variant={variant} />
 
-      <View style={styles.lineButtonsContainer}>
-        <UiButton onPress={handleSwitchRoute} icon="repeat" theme={lineTheme} />
-        <LineRoutes lineCode={lineCode} />
-      </View>
+        <View style={styles.lineButtonsContainer}>
+          <UiButton onPress={handleRouteChange} icon="repeat" variant="soft" />
+          <LineRoutes lineCode={lineCode} />
+        </View>
 
-      <LineRouteDirection
-        lineCode={lineCode}
-        variant={variant}
-      />
-    </Animated.View>
+        <LineRouteDirection lineCode={lineCode} variant={variant} />
+      </Animated.View>
+    </ThemeContext.Provider>
   )
 }
 

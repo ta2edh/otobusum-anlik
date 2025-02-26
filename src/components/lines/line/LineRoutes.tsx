@@ -1,7 +1,6 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
-import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
 
@@ -11,7 +10,6 @@ import { UiButton } from '../../ui/UiButton'
 
 import { RouteCode } from '@/api/getAllRoutes'
 import { selectRoute } from '@/stores/filters'
-import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { Option } from '@/types/sheet'
 
@@ -22,7 +20,6 @@ interface Props {
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
-  const lineTheme = useLinesStore(useShallow(() => getTheme(props.lineCode)))
   const route = getRouteFromCode()
 
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -60,9 +57,9 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
       <UiButton
         title={route?.route_long_name}
         onPress={handleOnPress}
-        theme={lineTheme}
         containerStyle={styles.grow}
         icon="git-branch-outline"
+        variant="soft"
       />
 
       <UiSheetSelect

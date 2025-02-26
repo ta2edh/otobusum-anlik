@@ -19,7 +19,7 @@ export default {
   sunday: 'Sunday',
   routes: 'Routes',
   emptySearch: 'No results found',
-  searchSomething: 'Search something',
+  searchMessage: 'Search a bus line',
   doorNo: 'Door No',
   settings: 'Settings',
   showMyLocation: 'Show my location on the map',

@@ -1,8 +1,10 @@
-import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react'
-import { View } from 'react-native'
+import { ForwardedRef, useImperativeHandle, useRef } from 'react'
+import { Dimensions } from 'react-native'
 import MapView, { LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps'
+import Animated, { clamp, Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+import { useSheetModal } from '@/hooks/contexts/useSheetModal'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'
@@ -12,6 +14,7 @@ export interface TheMapProps {
   onMapReady?: () => void
   onMapRegionUpdate?: (region: Region) => void
   initialRegion?: Region
+  cRef?: ForwardedRef<TheMapRef>
 }
 
 export interface TheMapRef {
@@ -20,13 +23,16 @@ export interface TheMapRef {
   fitInsideCoordinates: (coordinates: LatLng[]) => void
 }
 
-export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps, ref: ForwardedRef<TheMapRef>) => {
+const screen = Dimensions.get('screen')
+
+export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...props }: TheMapProps) => {
   const map = useRef<MapView>(null)
 
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
+  const sheetContext = useSheetModal()
 
-  useImperativeHandle(ref, () => {
+  useImperativeHandle(cRef, () => {
     return {
       animateCamera: (region) => {
         let re = { ...region }
@@ -53,8 +59,33 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
     }
   })
 
+  const animatedStyle = useAnimatedStyle(() => {
+    let heightFrombottom = screen.height - ((sheetContext?.height.value || 0) + 49) - 49
+    heightFrombottom = clamp(heightFrombottom / 2, 0, screen.height)
+
+    if (!sheetContext) {
+      return {
+        flex: 1,
+      }
+    }
+
+    return {
+      flex: 1,
+      transform: [
+        {
+          translateY: interpolate(
+            sheetContext?.index.value!,
+            [-1, 0],
+            [0, -heightFrombottom],
+            Extrapolation.CLAMP,
+          ),
+        },
+      ],
+    }
+  }, [])
+
   return (
-    <View style={{ flex: 1 }}>
+    <Animated.View style={animatedStyle}>
       <MapView
         ref={map}
         provider={PROVIDER_GOOGLE}
@@ -70,8 +101,6 @@ export const _TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, ...props
       >
         {props.children}
       </MapView>
-    </View>
+    </Animated.View>
   )
 }
-
-export const TheMap = forwardRef<TheMapRef, TheMapProps>(_TheMap)

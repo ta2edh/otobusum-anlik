@@ -1,5 +1,5 @@
 import { Scheme, Theme, hexFromArgb } from '@material/material-color-utilities'
-import { useCallback, useMemo } from 'react'
+import { createContext, useCallback, useContext, useMemo } from 'react'
 import { useColorScheme } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -12,10 +12,14 @@ type SchemeKeys = {
 }[keyof Scheme]
 
 const defaultCreatedTheme = createTheme(colors.primary)
+export const ThemeContext = createContext<Theme | undefined>(undefined)
 
-export function useTheme(theme?: Theme) {
+export function useTheme(_theme?: Theme) {
   const storedTheme = useSettingsStore(useShallow(state => state.colorScheme))
   const systemScheme = useColorScheme()
+
+  const contextTheme = useContext(ThemeContext)
+  const theme = _theme || contextTheme
 
   const mode = useMemo(
     () => storedTheme ?? systemScheme ?? 'dark',
@@ -49,5 +53,6 @@ export function useTheme(theme?: Theme) {
     colorsTheme,
     bottomSheetStyle,
     getSchemeColorHex,
+    contextTheme,
   }
 }

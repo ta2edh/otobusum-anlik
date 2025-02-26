@@ -5,7 +5,7 @@ const config: ExpoConfig = {
   slug: 'otobusum-anlik',
   version: '1.2.3',
   orientation: 'portrait',
-  icon: './assets/icon.png',
+  icon: './src/assets/icon.png',
   scheme: 'otobusum-anlik',
   userInterfaceStyle: 'automatic',
   newArchEnabled: false,
@@ -41,7 +41,7 @@ const config: ExpoConfig = {
     },
     softwareKeyboardLayoutMode: 'pan',
     adaptiveIcon: {
-      foregroundImage: './assets/adaptive-icon.png',
+      foregroundImage: './src/assets/adaptive-icon.png',
       backgroundColor: '#0a0a0a',
     },
     package: 'com.anonymous.otobusumanlik',
@@ -53,13 +53,14 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        image: './assets/icon.png',
+        image: './src/assets/icon.png',
         backgroundColor: '#0a0a0a',
       },
     ],
   ],
   experiments: {
     typedRoutes: true,
+    reactCompiler: true,
   },
 }
 

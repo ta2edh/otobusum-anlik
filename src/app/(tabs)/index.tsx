@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native'
 import { Region } from 'react-native-maps'
 import { useSharedValue } from 'react-native-reanimated'
 
-import { LinesMomoizedFr } from '@/components/lines/Lines'
+import { Lines } from '@/components/lines/Lines'
 import { TheMap, TheMapRef } from '@/components/map/Map'
 import { MarkersLine } from '@/components/markers/line/MarkersLine'
 import { TheMapButtons } from '@/components/TheMapButtons'
@@ -21,6 +21,9 @@ import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
   const map = useRef<TheMapRef>(null)
+
+  // eslint-disable-next-line react-compiler/react-compiler
+  const settingsStoreState = useSettingsStore.getState()
 
   useEffect(() => {
     const unsub = useLinesStore.subscribe(
@@ -66,35 +69,33 @@ export const HomeScreen = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <MapContext.Provider value={map}>
-        <SheetContext.Provider value={sheetContext}>
-          <TheMap
-            ref={map}
-            onMapReady={SplashScreen.hide}
-            onMapRegionUpdate={handleRegionChangeComplete}
-            initialRegion={
-              useSettingsStore.getState().initialMapLocation || {
-                latitude: 39.66770141070046,
-                latitudeDelta: 4.746350767346861,
-                longitude: 28.17840663716197,
-                longitudeDelta: 2.978521026670929,
-              }
+    <MapContext.Provider value={map}>
+      <SheetContext.Provider value={sheetContext}>
+        <TheMap
+          cRef={map}
+          onMapReady={SplashScreen.hide}
+          onMapRegionUpdate={handleRegionChangeComplete}
+          initialRegion={
+            settingsStoreState.initialMapLocation || {
+              latitude: 39.66770141070046,
+              latitudeDelta: 4.746350767346861,
+              longitude: 28.17840663716197,
+              longitudeDelta: 2.978521026670929,
             }
-          >
-            <MarkersLine />
-          </TheMap>
+          }
+        >
+          <MarkersLine />
+        </TheMap>
 
-          <TheMapButtons />
+        <TheMapButtons />
 
-          <View style={styles.linesContainer}>
-            <LinesMomoizedFr />
-          </View>
+        <View style={styles.linesContainer}>
+          <Lines />
+        </View>
 
-          <TheStopInfo cRef={map} />
-        </SheetContext.Provider>
-      </MapContext.Provider>
-    </View>
+        <TheStopInfo cRef={map} />
+      </SheetContext.Provider>
+    </MapContext.Provider>
   )
 }
 

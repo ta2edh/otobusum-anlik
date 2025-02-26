@@ -19,7 +19,7 @@ export default {
   sunday: 'Pazar',
   routes: 'Güzergahlar',
   emptySearch: 'Herhangi bir sonuç bulunamadı',
-  searchSomething: 'Bir şey arayın',
+  searchMessage: 'Bir otobüs hattı arayın',
   doorNo: 'Kapı No',
   settings: 'Ayarlar',
   showMyLocation: 'Haritada konumumu göster',
