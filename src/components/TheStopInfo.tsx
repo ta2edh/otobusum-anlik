@@ -63,6 +63,19 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   })
 
   useEffect(() => {
+    const unsub = useMiscStore.subscribe(
+      state => state.selectedStopId,
+      () => {
+        bottomSheetModal.current?.present()
+      }, {
+        equalityFn: () => false,
+      },
+    )
+
+    return unsub
+  }, [])
+
+  useEffect(() => {
     savedRegion.current = useSettingsStore.getState().initialMapLocation
     bottomSheetModal.current?.present()
 
