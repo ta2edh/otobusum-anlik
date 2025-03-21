@@ -2,7 +2,7 @@ import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { router } from 'expo-router'
 import { memo, useCallback, useRef } from 'react'
-import { StyleSheet, TouchableOpacityProps, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { RectButton, RectButtonProps } from 'react-native-gesture-handler'
 
 import { useTheme } from '@/hooks/useTheme'

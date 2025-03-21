@@ -1,7 +1,7 @@
 import { Platform, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { MarkersBuses, MarkersBusesMemoized } from '../buses/MarkersBuses'
+import { MarkersBuses } from '../buses/MarkersBuses'
 import { MarkersStop } from '../stop/MarkersStop'
 import { MarkersStopClusteredMemoized } from '../stop/MarkersStopClustered'
 

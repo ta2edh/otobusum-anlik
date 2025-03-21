@@ -1,6 +1,8 @@
 import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet'
+import { BottomSheetModalMethods } from '@gorhom/bottom-sheet/lib/typescript/types'
 import { useQuery } from '@tanstack/react-query'
 import { useLocalSearchParams } from 'expo-router'
+import { router } from 'expo-router'
 import { RefObject, useEffect, useRef } from 'react'
 import { Linking, StyleSheet, View } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
@@ -50,7 +52,7 @@ const StopLine = ({ lineCode }: { lineCode: string }) => {
 
 export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   const { stopId } = useLocalSearchParams<{ stopId?: string }>()
-  const bottomSheetModal = useRef<BottomSheetModal>(null)
+  const bottomSheetModal = useRef<BottomSheetModalMethods>(null)
   const savedRegion = useRef<any | undefined>(undefined)
 
   const query = useQuery({
@@ -83,10 +85,6 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     )
   }
 
-  // if (bottomSheetModal.current && stopId) {
-  //   bottomSheetModal.current.present()
-  // }
-
   const openStopDirections = async () => {
     if (!query.data?.stop) return
 
@@ -100,7 +98,12 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
 
   const handleOnDismiss = () => {
     if (!savedRegion.current) return
+
     cRef.current?.animateCamera(savedRegion.current)
+    router.navigate({
+      pathname: '/(tabs)',
+      params: undefined,
+    })
   }
 
   return (
