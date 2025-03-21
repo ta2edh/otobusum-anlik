@@ -6,11 +6,6 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { i18n } from '@/translations/i18n'
 
-type Icons = ComponentProps<typeof Ionicons>['name']
-
-const getIconName = (icon: Icons, focused?: boolean) =>
-  (focused ? `${icon}` : `${icon}-outline`) as ComponentProps<typeof Ionicons>['name']
-
 const screens = [
   {
     name: 'index',
@@ -70,43 +65,6 @@ export const TabsLayout = () => {
           }}
         />
       ))}
-
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          tabBarLabel: i18n.t('map'),
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name={getIconName('map', focused)} size={24} color={colorsTheme.color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="search"
-        options={{
-          tabBarLabel: i18n.t('search'),
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name={getIconName('search', focused)} size={24} color={colorsTheme.color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="timetable"
-        options={{
-          tabBarLabel: i18n.t('timetable'),
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name={getIconName('time', focused)} size={24} color={colorsTheme.color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          tabBarLabel: i18n.t('settings'),
-          tabBarIcon: ({ focused }) => (
-            <Ionicons name={getIconName('settings', focused)} size={24} color={colorsTheme.color} />
-          ),
-        }}
-      /> */}
     </Tabs>
   )
 }
