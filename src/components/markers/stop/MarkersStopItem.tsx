@@ -1,4 +1,3 @@
-import { router } from 'expo-router'
 import { memo, useMemo } from 'react'
 import { StyleProp, ViewStyle, TextStyle, View, StyleSheet } from 'react-native'
 import { LatLng, MapMarkerProps, Marker } from 'react-native-maps'
@@ -10,6 +9,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { colors } from '@/constants/colors'
 import { getTheme, useLinesStore } from '@/stores/lines'
+import { useMiscStore } from '@/stores/misc'
 import { BusStop } from '@/types/bus'
 
 interface LineBusStopMarkersItemPropsBase extends Omit<MapMarkerProps, 'coordinate'> {
@@ -71,12 +71,9 @@ export const MarkersStopItem = ({
   const handleOnPress = () => {
     if (!stop) return
 
-    router.navigate({
-      pathname: '/(tabs)',
-      params: {
-        stopId: stop.stop_code,
-      },
-    })
+    useMiscStore.setState(() => ({
+      selectedStopId: stop.stop_code,
+    }))
   }
 
   const coords: LatLng

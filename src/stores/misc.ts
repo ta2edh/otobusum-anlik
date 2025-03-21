@@ -5,6 +5,7 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 export interface MiscStore {
   selectedLineScrollIndex: number
   invisibleLines: string[]
+  selectedStopId?: number
 }
 
 export const useMiscStore = create(
@@ -13,6 +14,7 @@ export const useMiscStore = create(
       () => ({
         selectedLineScrollIndex: 0,
         invisibleLines: [],
+        selectedStopId: undefined,
       }),
       {
         name: 'misc-storage',
