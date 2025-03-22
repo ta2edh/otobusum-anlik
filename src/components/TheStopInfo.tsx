@@ -65,8 +65,20 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   useEffect(() => {
     const unsub = useMiscStore.subscribe(
       state => state.selectedStopId,
-      () => {
+      (selectedId) => {
+        if (!selectedId) return
+
+        savedRegion.current = useSettingsStore.getState().initialMapLocation
         bottomSheetModal.current?.present()
+
+        if (query.data) {
+          cRef.current?.animateCamera({
+            latitude: query.data.stop.y_coord,
+            longitude: query.data.stop.x_coord,
+            latitudeDelta: 0.010,
+            longitudeDelta: 0.010,
+          })
+        }
       }, {
         equalityFn: () => false,
       },
@@ -76,21 +88,30 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   }, [])
 
   useEffect(() => {
-    savedRegion.current = useSettingsStore.getState().initialMapLocation
-    bottomSheetModal.current?.present()
-
     if (!query.data) return
+
     cRef.current?.animateCamera({
-      latitude: query.data.stop.y_coord,
+      latitude: query.data.stop.y_coord + 0.005,
       longitude: query.data.stop.x_coord,
       latitudeDelta: 0.010,
       longitudeDelta: 0.010,
     })
-  // eslint-disable-next-line react-compiler/react-compiler
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedStopId, cRef])
+  }, [query.data])
 
-  if (!selectedStopId) return null
+  // useEffect(() => {
+  //   savedRegion.current = useSettingsStore.getState().initialMapLocation
+  //   bottomSheetModal.current?.present()
+
+  //   if (!query.data) return
+  //   cRef.current?.animateCamera({
+  //     latitude: query.data.stop.y_coord,
+  //     longitude: query.data.stop.x_coord,
+  //     latitudeDelta: 0.010,
+  //     longitudeDelta: 0.010,
+  //   })
+  // // eslint-disable-next-line react-compiler/react-compiler
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [selectedStopId, cRef])
 
   const openStopDirections = async () => {
     if (!query.data?.stop) return
@@ -104,8 +125,11 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
   }
 
   const handleOnDismiss = () => {
-    if (!savedRegion.current) return
+    useMiscStore.setState(() => ({
+      selectedStopId: undefined
+    }))
 
+    // if (!savedRegion.current) return
     cRef.current?.animateCamera(savedRegion.current)
   }
 
@@ -113,8 +137,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     <UiSheetModal
       cRef={bottomSheetModal}
       onDismiss={handleOnDismiss}
-      snapPoints={['50%']}
-      enableDynamicSizing={false}
+      enableDynamicSizing={true}
     >
       <BottomSheetView style={styles.container}>
         {query.isPending
@@ -187,7 +210,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
   },
   map: {
     flex: 1,
