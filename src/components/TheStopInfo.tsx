@@ -98,21 +98,6 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     })
   }, [query.data])
 
-  // useEffect(() => {
-  //   savedRegion.current = useSettingsStore.getState().initialMapLocation
-  //   bottomSheetModal.current?.present()
-
-  //   if (!query.data) return
-  //   cRef.current?.animateCamera({
-  //     latitude: query.data.stop.y_coord,
-  //     longitude: query.data.stop.x_coord,
-  //     latitudeDelta: 0.010,
-  //     longitudeDelta: 0.010,
-  //   })
-  // // eslint-disable-next-line react-compiler/react-compiler
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [selectedStopId, cRef])
-
   const openStopDirections = async () => {
     if (!query.data?.stop) return
 
