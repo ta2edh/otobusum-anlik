@@ -41,7 +41,7 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
   const { getSchemeColorHex } = useTheme()
   const map = useMap()
 
-  const color = getSchemeColorHex('onPrimary')
+  const color = getSchemeColorHex('onSurface')
 
   const showBusIcon = busses.find(bus => bus.closest_stop_code === stop.stop_code)
 

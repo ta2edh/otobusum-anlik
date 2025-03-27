@@ -30,7 +30,7 @@ export interface LineProps {
   containerStyle?: StyleProp<ViewStyle>
 }
 
-const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
+const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
