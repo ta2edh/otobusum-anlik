@@ -1,4 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
+import Ionicons from '@react-native-vector-icons/ionicons'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -12,6 +13,8 @@ import { RouteCode } from '@/api/getAllRoutes'
 import { selectRoute } from '@/stores/filters'
 import { i18n } from '@/translations/i18n'
 import { Option } from '@/types/sheet'
+import { UiText } from '@/components/ui/UiText'
+import { useTheme } from '@/hooks/useTheme'
 
 interface Props {
   lineCode: string
@@ -19,6 +22,9 @@ interface Props {
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
+  const { getSchemeColorHex } = useTheme()
+
+  const color = getSchemeColorHex('onSecondaryContainer')
 
   const route = getRouteFromCode()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -56,12 +62,33 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   return (
     <>
       <UiButton
-        title={`${leftTitle} -> ${rightTitle}`}
         onPress={handleOnPress}
         containerStyle={styles.grow}
         icon='git-branch-outline'
         variant='soft'
-      />
+      >
+        <UiText
+          size="sm"
+          numberOfLines={1}
+          style={{ color }}
+        >
+          {leftTitle}
+        </UiText>
+        
+        <Ionicons
+          name="arrow-forward"
+          size={18}
+          color={color}
+        />
+
+        <UiText
+          size="sm"
+          numberOfLines={1}
+          style={{ color }}
+        >
+          {rightTitle}
+        </UiText>
+      </UiButton>
 
       <UiSheetSelect
         cRef={bottomSheetModal}
