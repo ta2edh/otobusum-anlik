@@ -114,7 +114,6 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
       selectedStopId: undefined
     }))
 
-    // if (!savedRegion.current) return
     cRef.current?.animateCamera(savedRegion.current)
   }
 

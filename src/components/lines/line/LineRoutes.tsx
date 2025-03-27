@@ -21,8 +21,9 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
 
   const route = getRouteFromCode()
-
   const bottomSheetModal = useRef<BottomSheetModal>(null)
+
+  const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
 
   const routes = useMemo(() => {
     if (!allRoutes.data) return []
@@ -55,11 +56,11 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
   return (
     <>
       <UiButton
-        title={route?.route_long_name}
+        title={`${leftTitle} -> ${rightTitle}`}
         onPress={handleOnPress}
         containerStyle={styles.grow}
-        icon="git-branch-outline"
-        variant="soft"
+        icon='git-branch-outline'
+        variant='soft'
       />
 
       <UiSheetSelect

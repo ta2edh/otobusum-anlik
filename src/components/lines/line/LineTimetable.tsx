@@ -200,7 +200,6 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
         <UiSegmentedButtons
           value={selectedDay}
           onValueChange={setSelectedDay}
-          // theme={lineTheme}
           buttons={options[selectedCity]}
         />
 

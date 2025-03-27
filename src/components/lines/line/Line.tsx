@@ -146,14 +146,14 @@ const Line = ({ lineCode, variant = 'solid', ...props }: LineProps) => {
           </View>
         </View>
 
-        <LineBusStops lineCode={lineCode} variant={variant} />
+        <LineBusStops lineCode={lineCode} />
 
         <View style={styles.lineButtonsContainer}>
           <UiButton onPress={handleRouteChange} icon="repeat" variant="soft" />
           <LineRoutes lineCode={lineCode} />
         </View>
 
-        <LineRouteDirection lineCode={lineCode} variant={variant} />
+        {/* <LineRouteDirection lineCode={lineCode} variant={variant} /> */}
       </Animated.View>
     </ThemeContext.Provider>
   )
