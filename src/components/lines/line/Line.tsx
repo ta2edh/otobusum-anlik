@@ -15,7 +15,6 @@ import { LineAnnouncements } from './LineAnnouncements'
 import { LineBusStops } from './LineBusStops'
 import { LineGroups } from './LineGroups'
 import { LineName } from './LineName'
-import { LineRouteDirection } from './LineRouteDirection'
 import { LineRoutes } from './LineRoutes'
 
 import { queryClient } from '@/api/client'
