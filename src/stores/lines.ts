@@ -8,6 +8,7 @@ import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middl
 import { useFiltersStore } from './filters'
 
 import { queryClient } from '@/api/client'
+import { lineUpdateInterval } from '@/constants/app'
 import { i18n } from '@/translations/i18n'
 import { Cities } from '@/types/cities'
 import { LineGroup } from '@/types/lineGroup'
@@ -337,7 +338,7 @@ const loop = (selectedGroup?: string) => {
     : linesStore.lines[filtersStore.selectedCity]
 
   updateLines(lines || [])
-  return setTimeout(loop, 50_000)
+  return setTimeout(loop, lineUpdateInterval)
 }
 
 let listener: NodeJS.Timeout
@@ -364,6 +365,6 @@ const startUpdateLoop = () => {
   )
 }
 
-if (!__DEV__) {
+if (__DEV__) {
   useLinesStore.persist.onFinishHydration(startUpdateLoop)
 }

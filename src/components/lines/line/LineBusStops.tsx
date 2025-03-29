@@ -115,10 +115,6 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
     }
   })
 
-  // if (stops.isPending) {
-  //   return <UiActivityIndicator color={getSchemeColorHex('onPrimary')} />
-  // }
-
   const handleScrollToBus = () => {
     const busInView = line.data?.find(bus =>
       currentViewableItems.current.find(item => item.item.stop_code === bus.closest_stop_code),

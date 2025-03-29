@@ -52,4 +52,5 @@ export default {
   addToGroup: 'Add to group',
   errorGettingBusLocations: 'Error getting bus locations.',
   errorGettingAnnouncements: 'Error getting announcements',
+  updateCount: 'update in %{count} seconds',
 }
