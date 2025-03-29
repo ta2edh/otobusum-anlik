@@ -1,61 +1,61 @@
-import Ionicons from '@react-native-vector-icons/ionicons'
-import { FlashList, ListRenderItem, ViewToken } from '@shopify/flash-list'
-import { useCallback, useMemo, useRef } from 'react'
-import { Platform, StyleSheet, View, ViewStyle } from 'react-native'
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { FlashList, ListRenderItem, ViewToken } from "@shopify/flash-list";
+import { useCallback, useMemo, useRef } from "react";
+import { Platform, StyleSheet, View, ViewStyle } from "react-native";
 import Animated, {
   withTiming,
   useSharedValue,
   useAnimatedStyle,
   runOnJS,
-} from 'react-native-reanimated'
+} from "react-native-reanimated";
 
-import { UiActivityIndicator } from '@/components/ui/UiActivityIndicator'
-import { UiButton } from '@/components/ui/UiButton'
-import { UiText } from '@/components/ui/UiText'
+import { UiActivityIndicator } from "@/components/ui/UiActivityIndicator";
+import { UiButton } from "@/components/ui/UiButton";
+import { UiText } from "@/components/ui/UiText";
 
-import { useMap } from '@/hooks/contexts/useMap'
-import { useLine } from '@/hooks/queries/useLine'
-import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
-import { useTheme } from '@/hooks/useTheme'
+import { useMap } from "@/hooks/contexts/useMap";
+import { useLine } from "@/hooks/queries/useLine";
+import { useLineBusStops } from "@/hooks/queries/useLineBusStops";
+import { useTheme } from "@/hooks/useTheme";
 
-import { BusLocation } from '@/api/getLineBusLocations'
-import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { BusStop } from '@/types/bus'
+import { BusLocation } from "@/api/getLineBusLocations";
+import { getSelectedRouteCode, useFiltersStore } from "@/stores/filters";
+import { BusStop } from "@/types/bus";
 
 interface LineBusStopsProps {
-  lineCode: string
+  lineCode: string;
 }
 
 interface LineBusStopsItemProps {
-  stop: BusStop
-  index: number
-  closestStop?: BusStop
-  busses: BusLocation[]
+  stop: BusStop;
+  index: number;
+  closestStop?: BusStop;
+  busses: BusLocation[];
 }
 
-const ITEM_SIZE = 46
-const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
-const EXPANDED = COLLAPSED * 2
+const ITEM_SIZE = 46;
+const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2;
+const EXPANDED = COLLAPSED * 2;
 
 const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
-  const { getSchemeColorHex } = useTheme()
-  const map = useMap()
+  const { getSchemeColorHex } = useTheme();
+  const map = useMap();
 
-  const color = getSchemeColorHex('onSurface')
+  const color = getSchemeColorHex("onSurface");
 
-  const showBusIcon = busses.find(bus => bus.closest_stop_code === stop.stop_code)
+  const showBusIcon = busses.find((bus) => bus.closest_stop_code === stop.stop_code);
 
   const colorStyle: ViewStyle = {
-    borderColor: getSchemeColorHex('primaryContainer'),
-    backgroundColor: showBusIcon ? getSchemeColorHex('primaryContainer') : undefined,
-  }
+    borderColor: getSchemeColorHex("primaryContainer"),
+    backgroundColor: showBusIcon ? getSchemeColorHex("primaryContainer") : undefined,
+  };
 
   const handleZoomBus = () => {
     map?.current?.moveTo({
       latitude: stop.y_coord,
       longitude: stop.x_coord,
-    })
-  }
+    });
+  };
 
   return (
     <View style={styles.item}>
@@ -66,7 +66,7 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
           {showBusIcon && (
             <Ionicons
               name="bus-outline"
-              color={getSchemeColorHex('onPrimaryContainer')}
+              color={getSchemeColorHex("onPrimaryContainer")}
               size={20}
             />
           )}
@@ -75,67 +75,67 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
         <UiText style={{ color }}>{stop.stop_name}</UiText>
       </View>
 
-      {showBusIcon && map && (
-        <UiButton
-          icon="locate"
-          onPress={handleZoomBus}
-        />
-      )}
+      {showBusIcon && map && <UiButton icon="locate" onPress={handleZoomBus} />}
     </View>
-  )
-}
+  );
+};
 
 export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
-  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
-  const containerHeight = useSharedValue(COLLAPSED)
-  const currentViewableItems = useRef<ViewToken[]>([])
-  const flashlistRef = useRef<FlashList<BusStop>>(null)
+  const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode));
+  const containerHeight = useSharedValue(COLLAPSED);
+  const currentViewableItems = useRef<ViewToken[]>([]);
+  const flashlistRef = useRef<FlashList<BusStop>>(null);
 
-  const { getSchemeColorHex } = useTheme()
-  const { query: stops, closestStop } = useLineBusStops(routeCode, true)
-  const { query: line } = useLine(lineCode)
+  const { getSchemeColorHex } = useTheme();
+  const { query: stops, closestStop } = useLineBusStops(routeCode, true);
+  const { query: line } = useLine(lineCode);
 
   const busses = useMemo(
-    () => line.data?.filter(bus => bus.route_code === routeCode) || [],
-    [line, routeCode],
-  )
+    () => line.data?.filter((bus) => bus.route_code === routeCode) || [],
+    [line, routeCode]
+  );
 
-  const renderItem: ListRenderItem<BusStop> = useCallback((props) => {
-    return (
-      <LineBusStopsItem
-        stop={props.item}
-        index={props.index}
-        closestStop={closestStop}
-        busses={busses}
-      />
-    )
-  }, [closestStop, busses])
+  const renderItem: ListRenderItem<BusStop> = useCallback(
+    (props) => {
+      return (
+        <LineBusStopsItem
+          stop={props.item}
+          index={props.index}
+          closestStop={closestStop}
+          busses={busses}
+        />
+      );
+    },
+    [closestStop, busses]
+  );
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
       height: containerHeight.value,
-    }
-  })
+    };
+  });
 
-  if (stops.isPending) {
-    return <UiActivityIndicator color={getSchemeColorHex('onPrimary')} />
-  }
+  // if (stops.isPending) {
+  //   return <UiActivityIndicator color={getSchemeColorHex('onPrimary')} />
+  // }
 
   const handleScrollToBus = () => {
-    const busInView = line.data?.find(
-      bus => currentViewableItems.current.find(item => item.item.stop_code === bus.closest_stop_code),
-    )
+    const busInView = line.data?.find((bus) =>
+      currentViewableItems.current.find((item) => item.item.stop_code === bus.closest_stop_code)
+    );
 
-    const stopIndex = stops.data?.findIndex(stop => stop.stop_code === busInView?.closest_stop_code)
+    const stopIndex = stops.data?.findIndex(
+      (stop) => stop.stop_code === busInView?.closest_stop_code
+    );
 
     if (stopIndex !== undefined) {
       flashlistRef.current?.scrollToIndex({
         animated: true,
         index: stopIndex,
         viewPosition: 0.5,
-      })
+      });
     }
-  }
+  };
 
   return (
     <Animated.View style={animatedStyle}>
@@ -145,44 +145,42 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
         renderItem={renderItem}
         estimatedItemSize={ITEM_SIZE}
         overrideItemLayout={(layout) => {
-          layout.size = ITEM_SIZE
+          layout.size = ITEM_SIZE;
         }}
         onScrollBeginDrag={() => {
-          // eslint-disable-next-line react-compiler/react-compiler
-          containerHeight.value = withTiming(EXPANDED)
+          containerHeight.value = withTiming(EXPANDED);
         }}
         onMomentumScrollEnd={() => {
           containerHeight.value = withTiming(COLLAPSED, undefined, () => {
-            runOnJS(handleScrollToBus)()
-          })
+            runOnJS(handleScrollToBus)();
+          });
         }}
         fadingEdgeLength={40}
         drawDistance={1}
-        {
-          ...Platform.OS !== 'web'
-            ? {
-                onViewableItemsChanged: ({ viewableItems }) => {
-                  currentViewableItems.current = viewableItems
-                },
-              }
-            : {}
-        }
+        ListEmptyComponent={<UiActivityIndicator color={getSchemeColorHex("onSurface")} />}
+        {...(Platform.OS !== "web"
+          ? {
+              onViewableItemsChanged: ({ viewableItems }) => {
+                currentViewableItems.current = viewableItems;
+              },
+            }
+          : {})}
       />
     </Animated.View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     gap: 4,
     paddingVertical: 4,
   },
   itemInner: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 4,
   },
   itemCircle: {
@@ -190,12 +188,12 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 999,
     borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   itemIndex: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     minWidth: 24,
-    textAlign: 'center',
+    textAlign: "center",
   },
-})
+});

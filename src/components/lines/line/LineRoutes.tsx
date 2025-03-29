@@ -1,112 +1,106 @@
-import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
-import { memo, useCallback, useMemo, useRef } from 'react'
-import { StyleSheet } from 'react-native'
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { memo, useCallback, useMemo, useRef } from "react";
+import { StyleSheet } from "react-native";
 
-import { UiSheetSelect } from '@/components/ui/sheet/UiSheetSelect'
+import { UiSheetSelect } from "@/components/ui/sheet/UiSheetSelect";
 
-import { useRoutes } from '@/hooks/queries/useRoutes'
+import { useRoutes } from "@/hooks/queries/useRoutes";
 
-import { UiButton } from '../../ui/UiButton'
+import { UiButton } from "../../ui/UiButton";
 
-import { RouteCode } from '@/api/getAllRoutes'
-import { selectRoute } from '@/stores/filters'
-import { i18n } from '@/translations/i18n'
-import { Option } from '@/types/sheet'
-import { UiText } from '@/components/ui/UiText'
-import { useTheme } from '@/hooks/useTheme'
+import { RouteCode } from "@/api/getAllRoutes";
+import { selectRoute } from "@/stores/filters";
+import { i18n } from "@/translations/i18n";
+import { Option } from "@/types/sheet";
+import { UiText } from "@/components/ui/UiText";
+import { useTheme } from "@/hooks/useTheme";
 
 interface Props {
-  lineCode: string
+  lineCode: string;
 }
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
-  const { query: allRoutes, getRouteFromCode } = useRoutes(props.lineCode)
-  const { getSchemeColorHex } = useTheme()
+  const { query, getRouteFromCode } = useRoutes(props.lineCode);
+  const { getSchemeColorHex } = useTheme();
 
-  const color = getSchemeColorHex('onSecondaryContainer')
+  const color = getSchemeColorHex("onSecondaryContainer");
 
-  const route = getRouteFromCode()
-  const bottomSheetModal = useRef<BottomSheetModal>(null)
+  const route = getRouteFromCode();
+  const bottomSheetModal = useRef<BottomSheetModal>(null);
 
-  const [leftTitle, rightTitle] = route?.route_long_name?.trim().split('-') ?? ['', ''] ?? ['', '']
+  const [leftTitle, rightTitle] = route?.route_long_name?.trim().split("-") ?? ["", ""] ?? ["", ""];
 
   const routes = useMemo(() => {
-    if (!allRoutes.data) return []
+    if (!query.data) return [];
 
-    const filtered: Option<RouteCode>[] = []
-    const defaults: Option<RouteCode>[] = []
+    const filtered: Option<RouteCode>[] = [];
+    const defaults: Option<RouteCode>[] = [];
 
-    for (let index = 0; index < allRoutes.data.length; index++) {
-      const element = allRoutes.data[index]
-      if (!element) continue
+    for (let index = 0; index < query.data.length; index++) {
+      const element = query.data[index];
+      if (!element) continue;
 
-      (element.route_code.endsWith('D0') ? defaults : filtered)
-        .push({
-          label: `${element.route_code} ${element.route_long_name}`,
-          value: element.route_code,
-        })
+      (element.route_code.endsWith("D0") ? defaults : filtered).push({
+        label: `${element.route_code} ${element.route_long_name}`,
+        value: element.route_code,
+      });
     }
 
-    return [...defaults, ...filtered]
-  }, [allRoutes.data])
+    return [...defaults, ...filtered];
+  }, [query.data]);
 
   const handleOnSelect = (value: RouteCode) => {
-    selectRoute(props.lineCode, value)
-  }
+    selectRoute(props.lineCode, value);
+  };
 
   const handleOnPress = useCallback(() => {
-    bottomSheetModal.current?.present()
-  }, [])
+    bottomSheetModal.current?.present();
+  }, []);
 
   return (
     <>
       <UiButton
         onPress={handleOnPress}
         containerStyle={styles.grow}
-        icon='git-branch-outline'
-        variant='soft'
+        icon="git-branch-outline"
+        variant="soft"
+        isLoading={query.isPending}
       >
-        <UiText
-          size="sm"
-          numberOfLines={1}
-          style={{ color }}
-        >
-          {leftTitle}
-        </UiText>
-        
-        <Ionicons
-          name="arrow-forward"
-          size={18}
-          color={color}
-        />
+        {query.isPending ? (
+          <UiText>{i18n.t('loading')}</UiText>
+        ) : (
+          <>
+            <UiText size="sm" numberOfLines={1} style={{ color }}>
+              {leftTitle}
+            </UiText>
 
-        <UiText
-          size="sm"
-          numberOfLines={1}
-          style={{ color }}
-        >
-          {rightTitle}
-        </UiText>
+            <Ionicons name="arrow-forward" size={18} color={color} />
+
+            <UiText size="sm" numberOfLines={1} style={{ color }}>
+              {rightTitle}
+            </UiText>
+          </>
+        )}
       </UiButton>
 
       <UiSheetSelect
         cRef={bottomSheetModal}
-        title={i18n.t('routes')}
+        title={i18n.t("routes")}
         options={routes}
         onValueChange={handleOnSelect}
         value={route?.route_code}
         list
       />
     </>
-  )
-})
+  );
+});
 
 const styles = StyleSheet.create({
   item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 12,
   },
   title: {
@@ -116,4 +110,4 @@ const styles = StyleSheet.create({
   grow: {
     flexGrow: 1,
   },
-})
+});

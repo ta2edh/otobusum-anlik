@@ -8,7 +8,6 @@ module.exports = {
   ],
   plugins: [
     '@stylistic',
-    'eslint-plugin-react-compiler',
   ],
   rules: {
     ...stylistic.configs['recommended-extends'].rules,
@@ -39,6 +38,5 @@ module.exports = {
       namedComponents: 'arrow-function',
       unnamedComponents: 'arrow-function',
     }],
-    'react-compiler/react-compiler': 'error',
   },
 }

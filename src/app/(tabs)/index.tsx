@@ -22,7 +22,6 @@ import { useSettingsStore } from '@/stores/settings'
 export const HomeScreen = () => {
   const map = useRef<TheMapRef>(null)
 
-  // eslint-disable-next-line react-compiler/react-compiler
   const settingsStoreState = useSettingsStore.getState()
 
   useEffect(() => {
