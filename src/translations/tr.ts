@@ -52,5 +52,5 @@ export default {
   addToGroup: 'Gruba ekle',
   errorGettingBusLocations: 'Otobüs konumlarını alırken bir hata oluştu.',
   errorGettingAnnouncements: 'Duyurulari alırken bir hata oluştu.',
-  updateCount: '${count} saniye içinde güncellenecek',
+  updateCount: '%{count} saniye içinde güncellenecek',
 }

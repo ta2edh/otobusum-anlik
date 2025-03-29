@@ -3,11 +3,13 @@ import { Dimensions } from 'react-native'
 import MapView, { LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import Animated, { clamp, Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { useShallow } from 'zustand/react/shallow'
 
 import { useSheetModal } from '@/hooks/contexts/useSheetModal'
 import { useTheme } from '@/hooks/useTheme'
 
 import { getMapStyle } from '@/constants/mapStyles'
+import { useSettingsStore } from '@/stores/settings'
 
 export interface TheMapProps {
   children?: React.ReactNode
@@ -27,6 +29,8 @@ const screen = Dimensions.get('screen')
 
 export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...props }: TheMapProps) => {
   const map = useRef<MapView>(null)
+  const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
+  const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
 
   const { mode } = useTheme()
   const insets = useSafeAreaInsets()
@@ -96,6 +100,8 @@ export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...
         mapPadding={{ top: insets.top, bottom: 10, left: 10, right: 10 }}
         initialRegion={initialRegion}
         customMapStyle={getMapStyle(mode)}
+        showsUserLocation={showMyLocation}
+        showsTraffic={showTraffic}
         style={{ flex: 1 }}
         moveOnMarkerPress={false}
       >
