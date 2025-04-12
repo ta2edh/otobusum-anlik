@@ -47,16 +47,11 @@ export const MarkersStopItem = ({
   const lineTheme = useLinesStore(useShallow(() => lineCode ? getTheme(lineCode) : undefined))
   const { getSchemeColorHex } = useTheme(lineTheme)
 
-  const backgroundStyle: StyleProp<ViewStyle> = useMemo(
+  const stopStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
       backgroundColor: getSchemeColorHex('onPrimary') || colors.primary,
-    }),
-    [getSchemeColorHex],
-  )
-
-  const borderStyle: StyleProp<ViewStyle> = useMemo(
-    () => ({
       borderColor: getSchemeColorHex('outlineVariant'),
+      color: getSchemeColorHex('primary'),
     }),
     [getSchemeColorHex],
   )
@@ -94,7 +89,7 @@ export const MarkersStopItem = ({
       zIndex={1}
       {...props}
     >
-      <View style={[styles.busStop, borderStyle, backgroundStyle, viewStyle]}>
+      <View style={[styles.busStop, stopStyle, viewStyle]}>
         {label && (
           <UiText style={textStyle} size="sm" info>
             {label}
