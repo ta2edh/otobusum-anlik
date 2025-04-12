@@ -90,7 +90,7 @@ export const MarkersStopItem = ({
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       onPress={handleOnPress}
-      anchor={{ x: 0.5, y: 0.5 }}
+      anchor={{ x: 0.2, y: 0.2 }}
       zIndex={1}
       {...props}
     >

@@ -5,7 +5,7 @@ import { useSettingsStore } from '@/stores/settings'
 
 interface VisibleMarkersProps<T> {
   data: T[]
-  renderItem: (item: T) => React.ReactNode
+  renderItem: (item: T, index: number) => React.ReactNode
 }
 
 export const MarkersFiltersInView = <T extends { coordinates: LatLng },>(props: VisibleMarkersProps<T>) => {
@@ -38,7 +38,7 @@ export const MarkersFiltersInView = <T extends { coordinates: LatLng },>(props: 
 
   return (
     <>
-      {filteredItems.map(item => props.renderItem(item))}
+      {filteredItems.map((item, index) => props.renderItem(item, index))}
     </>
   )
 }

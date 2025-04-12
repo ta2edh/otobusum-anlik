@@ -30,7 +30,7 @@ export const MarkersLinePolyline = ({ lineCode }: PolylineProps) => {
   return (
     <Polyline
       coordinates={transformed}
-      strokeWidth={6}
+      strokeWidth={8}
       strokeColor={getSchemeColorHex('primary')}
     />
   )

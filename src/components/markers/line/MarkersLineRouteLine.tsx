@@ -15,6 +15,8 @@ interface RouteLineProps {
   lineCode: string
 }
 
+const ARROW_STEP = 16
+
 export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
   const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
@@ -23,7 +25,7 @@ export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
 
   const route = getRouteFromCode()
 
-  const transformed: LatLng[] = useMemo(
+  const coordinates: LatLng[] = useMemo(
     () =>
       route?.route_path?.map(path => ({
         latitude: path.lat,
@@ -33,44 +35,32 @@ export const MarkersLineRouteLine = ({ lineCode }: RouteLineProps) => {
   )
 
   const arrows = useMemo(() => {
-    const chunkSize = transformed.length / (transformed.length / 20)
-    const arrows: { coordinates: LatLng, angle: number }[] = []
+    const arrowCoordinates: { coordinates: LatLng, angle: number }[] = []
 
-    for (let index = 0; index < transformed.length; index += chunkSize) {
-      const chunk = transformed.slice(index, index + chunkSize)
-      const first = chunk.at(0)
+    for (let index = 0; index < coordinates.length; index += ARROW_STEP) {
+      const from = coordinates.at(index)
+      const to = coordinates.at(index + ARROW_STEP)
 
-      if (!first) continue
+      if (!from || !to) continue
 
-      let totalX = 0
-      let totalY = 0
+      const [x, y] = radiansFromToLatLng(from, to)
+      let brng = Math.atan2(y, x)
 
-      for (let index = 1; index < chunk.length; index++) {
-        const chunkItem = chunk[index]
-        if (!chunkItem) continue
-
-        const [x, y] = radiansFromToLatLng(first, chunkItem)
-
-        totalX += x
-        totalY += y
-      }
-
-      const result = Math.atan2(totalY, totalX)
-      let degrees = (result * 180 / Math.PI + 360) % 360
-
-      // not sure why we need this
       if (selectedCity === 'istanbul') {
-        degrees = 360 - degrees
+        brng = (2 * Math.PI) - brng
       }
 
-      arrows.push({
-        coordinates: first,
-        angle: degrees,
+      const arrowCoordinate = coordinates.at(index)
+      if (!arrowCoordinate) continue
+
+      arrowCoordinates.push({
+        angle: brng,
+        coordinates: arrowCoordinate
       })
     }
 
-    return arrows
-  }, [transformed, selectedCity])
+    return arrowCoordinates
+  }, [coordinates, selectedCity])
 
   if (query.isPending || !route) return
 
