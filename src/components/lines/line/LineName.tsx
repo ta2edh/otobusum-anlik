@@ -59,6 +59,7 @@ export const LineName = ({ lineCode, variant = 'solid' }: LineNameProps) => {
             fontWeight: 'bold',
             fontSize: 24,
             color,
+            lineHeight: 24
           }}
         >
           {lineCode}
@@ -73,7 +74,6 @@ export const LineName = ({ lineCode, variant = 'solid' }: LineNameProps) => {
       </View>
 
       <UiText size="sm" info>{i18n.t('updateCount', { count })}</UiText>
-
     </View>
   )
 }
@@ -81,7 +81,7 @@ export const LineName = ({ lineCode, variant = 'solid' }: LineNameProps) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: 8,
   },
 })

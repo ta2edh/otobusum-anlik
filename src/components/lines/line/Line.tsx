@@ -151,8 +151,6 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
           <UiButton onPress={handleRouteChange} icon="repeat" variant="soft" />
           <LineRoutes lineCode={lineCode} />
         </View>
-
-        {/* <LineRouteDirection lineCode={lineCode} variant={variant} /> */}
       </Animated.View>
     </ThemeContext.Provider>
   )
@@ -170,7 +168,7 @@ const styles = StyleSheet.create({
   titleContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: 8,
   },
   lineButtonsContainer: {
