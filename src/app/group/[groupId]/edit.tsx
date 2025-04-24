@@ -17,10 +17,7 @@ export const GroupEditScreen = () => {
   const paddings = usePaddings(true)
   const title = useRef('')
 
-  const handleQueryChange = useCallback(
-    (text: string) => title.current = text,
-    [],
-  )
+  const handleQueryChange = useCallback((text: string) => (title.current = text), [])
 
   const handleOnPress = useCallback(() => {
     if (!groupId || typeof groupId !== 'string') return
@@ -37,26 +34,17 @@ export const GroupEditScreen = () => {
     navigation.goBack()
   }
 
-  useEffect(
-    () => {
-      navigation.setOptions({
-        headerRight: () => (
-          <UiButton
-            title={i18n.t('save')}
-            onPress={handleOnPress}
-            variant="ghost"
-          />
-        ),
-      })
-    },
-    [navigation, handleOnPress],
-  )
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <UiButton title={i18n.t('save')} onPress={handleOnPress} variant="soft" />,
+    })
+  }, [navigation, handleOnPress])
 
   return (
     <View style={[styles.container, paddings]}>
       <UiTextInput
-        // placeholder={group?.title}
         onChangeText={handleQueryChange}
+        placeholder={i18n.t('newGroupTitlePlaceholder')}
       />
 
       <UiButton
@@ -64,6 +52,7 @@ export const GroupEditScreen = () => {
         icon="trash-outline"
         variant="soft"
         onPress={handleDeleteGroup}
+        square
       />
     </View>
   )
@@ -72,7 +61,10 @@ export const GroupEditScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'space-between',
+    overflow: 'hidden',
   },
 })
 

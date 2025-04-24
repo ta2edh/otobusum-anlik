@@ -1,4 +1,4 @@
-import { Theme } from '@material/material-color-utilities'
+import { type Theme } from '@material/material-color-utilities'
 import {
   StyleProp,
   StyleSheet,

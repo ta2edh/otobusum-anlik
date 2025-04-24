@@ -1,27 +1,27 @@
-import { Theme } from "@material/material-color-utilities";
-import Ionicons from "@react-native-vector-icons/ionicons";
-import { LatLng, Marker } from "react-native-maps";
+import { type Theme } from '@material/material-color-utilities'
+import Ionicons from '@react-native-vector-icons/ionicons'
+import { LatLng, Marker } from 'react-native-maps'
 
-import { useTheme } from "@/hooks/useTheme";
+import { useTheme } from '@/hooks/useTheme'
 
-import { MarkersFiltersInView } from "../../filters/MarkersFiltersInView";
-import { MarkersFiltersZoom } from "../../filters/MarkersFiltersZoom";
+import { MarkersFiltersInView } from '../../filters/MarkersFiltersInView'
+import { MarkersFiltersZoom } from '../../filters/MarkersFiltersZoom'
 
 interface MarkersLineArrowsProps {
   arrows: {
-    coordinates: LatLng;
-    angle: number;
-  }[];
-  lineTheme?: Theme;
+    coordinates: LatLng
+    angle: number
+  }[]
+  lineTheme?: Theme
 }
 
 export const MarkersLineArrows = ({ arrows, lineTheme }: MarkersLineArrowsProps) => {
-  const { getSchemeColorHex } = useTheme(lineTheme);
+  const { getSchemeColorHex } = useTheme(lineTheme)
 
   return (
     <MarkersFiltersInView
       data={arrows}
-      renderItem={(item) => (
+      renderItem={item => (
         <MarkersFiltersZoom
           key={`${item.coordinates.latitude}-${item.coordinates.longitude}`}
           limit={14}
@@ -36,7 +36,7 @@ export const MarkersLineArrows = ({ arrows, lineTheme }: MarkersLineArrowsProps)
             <Ionicons
               name="arrow-up"
               size={12}
-              color={getSchemeColorHex("onPrimary")}
+              color={getSchemeColorHex('onPrimary')}
               style={{
                 transform: [
                   {
@@ -49,5 +49,5 @@ export const MarkersLineArrows = ({ arrows, lineTheme }: MarkersLineArrowsProps)
         </MarkersFiltersZoom>
       )}
     />
-  );
-};
+  )
+}
