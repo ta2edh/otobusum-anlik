@@ -86,7 +86,7 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
 
   const { schemeColor, storedTheme } = useTheme(lineCode)
 
-  const { query: announcementsQuery } = useAnnouncements()
+  const { query: announcementsQuery } = useAnnouncements(lineCode)
   const { routeCode, getRouteFromCode } = useRoutes(lineCode)
 
   const route = getRouteFromCode()

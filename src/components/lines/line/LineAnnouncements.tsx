@@ -16,7 +16,7 @@ interface LineAnnouncementsProps extends ViewProps {
 
 export const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
   const bottomSheetModal = useRef<BottomSheetModal>(null)
-  const { query } = useAnnouncements()
+  const { query } = useAnnouncements(lineCode)
 
   const announcements = query.data?.filter(ann => ann.HATKODU === lineCode)
 
@@ -27,7 +27,6 @@ export const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
         disabled={announcements === undefined || announcements.length === 0}
         icon="megaphone-outline"
         variant="soft"
-        accented
       />
 
       {announcements !== undefined && announcements.length > 0 && (
