@@ -18,6 +18,10 @@ import {
 import Animated, { FlatListPropsWithLayout, LinearTransition } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
+import { useTheme } from '@/hooks/useTheme'
+
+import { UiText } from '../ui/UiText'
+
 import { LineMemoized, LineProps } from './line/Line'
 
 import { useFiltersStore } from '@/stores/filters'
@@ -35,13 +39,17 @@ interface LinesProps {
 // TODO: Some rerender issues are here.
 export const Lines = ({ cRef, ...props }: LinesProps) => {
   const innerRef = useRef<FlatList>(null)
-
   useImperativeHandle(cRef, () => innerRef.current!, [])
+
   useFiltersStore(useShallow(state => state.selectedCity))
 
+  const { schemeDefault } = useTheme()
   const selectedGroup = useFiltersStore(useShallow(state => state.selectedGroup))
+  const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))!
+  const lineGroups = useLinesStore(useShallow(state => state.lineGroups))
   const lines = useLinesStore(() => getLines())
 
+  const group = selectedGroup ? lineGroups[selectedCity][selectedGroup] : undefined
   const previouslines = useRef<string[]>(lines)
 
   useEffect(() => {
@@ -76,6 +84,12 @@ export const Lines = ({ cRef, ...props }: LinesProps) => {
 
   return (
     <View style={props.containerStyle}>
+      {!!group && (
+        <View style={[styles.groupTitleContainer, { backgroundColor: schemeDefault.surfaceContainer }]}>
+          <UiText size="sm">{group?.title}</UiText>
+        </View>
+      )}
+
       <Animated.FlatList
         {...props.listProps}
         itemLayoutAnimation={LinearTransition}
@@ -110,5 +124,13 @@ const styles = StyleSheet.create({
     padding: 8,
     alignItems: 'flex-end',
     minWidth: Dimensions.get('screen').width,
+  },
+  groupTitleContainer: {
+    padding: 8,
+    paddingHorizontal: 14,
+    marginLeft: 8,
+    alignSelf: 'flex-start',
+    borderRadius: 999,
+    elevation: 2,
   },
 })

@@ -346,7 +346,6 @@ let expectedUpdateTime = Date.now() + lineUpdateInterval
 const updateLoop = () => {
   updateLines()
   expectedUpdateTime = Date.now() + lineUpdateInterval
-  console.log('updating lines')
 
   return setTimeout(updateLoop, lineUpdateInterval)
 }
@@ -361,7 +360,6 @@ const startUpdateLoop = () => {
         listener = updateLoop()
       }
     } else if (newAppState.match(/background|inactive/) && appState === 'active') {
-      console.log('screen to background')
       clearTimeout(listener)
     }
 
@@ -371,6 +369,6 @@ const startUpdateLoop = () => {
   listener = updateLoop()
 }
 
-if (__DEV__) {
+if (!__DEV__) {
   useLinesStore.persist.onFinishHydration(startUpdateLoop)
 }
