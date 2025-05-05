@@ -22,9 +22,9 @@ interface Props {
 
 export const LineRoutes = memo(function LineRoutes(props: Props) {
   const { query, getRouteFromCode } = useRoutes(props.lineCode)
-  const { getSchemeColorHex } = useTheme()
+  const { schemeColor } = useTheme()
 
-  const color = getSchemeColorHex('onSecondaryContainer')
+  const color = schemeColor.onSurface
 
   const route = getRouteFromCode()
   const bottomSheetModal = useRef<BottomSheetModal>(null)
@@ -66,6 +66,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
         icon="git-branch-outline"
         variant="soft"
         isLoading={query.isPending}
+        accented
       >
         {query.isPending
           ? (
@@ -89,6 +90,7 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
       <UiSheetSelect
         cRef={bottomSheetModal}
         title={i18n.t('routes')}
+        icon="git-branch-outline"
         options={routes}
         onValueChange={handleOnSelect}
         value={route?.route_code}

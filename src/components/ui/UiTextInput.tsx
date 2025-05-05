@@ -1,45 +1,51 @@
-import Icon from '@react-native-vector-icons/ionicons'
 import { Ref } from 'react'
 import { StyleProp, StyleSheet, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { IconSize, iconSizes } from '@/constants/uiSizes'
+import { UiButton } from './UiButton'
+
+import { IconSize } from '@/constants/uiSizes'
 import { IconValue } from '@/types/ui'
 
 interface UiTextInputProps extends TextInputProps {
   icon?: IconValue
   iconSize?: IconSize
+  iconPress?: () => void
   cRef?: Ref<TextInput>
   styleContainer?: StyleProp<ViewStyle>
 }
 
-export const UiTextInput = ({ iconSize = 'md', cRef, style, styleContainer, icon, ...props }: UiTextInputProps) => {
-  const { colorsTheme } = useTheme()
+export const UiTextInput = ({ iconSize = 'md', icon, iconPress, cRef, style, styleContainer, ...props }: UiTextInputProps) => {
+  const { schemeColor } = useTheme()
 
   const dynamicStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colorsTheme.surfaceContainerLow,
+    backgroundColor: schemeColor.surfaceContainer,
   }
 
   const inputStyle: StyleProp<TextStyle> = {
-    color: colorsTheme.color,
-    paddingLeft: icon ? 14 * 2 : 14,
+    color: schemeColor.onSurface,
     display: 'flex',
+    paddingHorizontal: icon ? 0 : 8 * 2.5,
+    flex: 1,
   }
 
   return (
     <View style={[styles.input, styleContainer, dynamicStyle]}>
-      <View style={styles.iconContainer}>
-        {icon && (
-          <Icon name={icon} color={colorsTheme.color} size={iconSizes[iconSize]} />
-        )}
-      </View>
-
+      {icon && (
+        <View style={styles.iconContainer}>
+          <UiButton
+            onPress={iconPress}
+            icon={icon}
+            variant={iconPress ? 'solid' : 'ghost'}
+          />
+        </View>
+      )}
       <TextInput
         ref={cRef}
         style={[style, inputStyle]}
-        placeholderTextColor={colorsTheme.surfaceContainerHigh}
+        placeholderTextColor={schemeColor.onSurface}
         {...props}
       />
     </View>
@@ -49,18 +55,12 @@ export const UiTextInput = ({ iconSize = 'md', cRef, style, styleContainer, icon
 const styles = StyleSheet.create({
   input: {
     borderRadius: 999,
-    paddingLeft: 14,
-    paddingRight: 14,
-    paddingVertical: 4,
-    position: 'relative',
-    display: 'flex',
+    flexDirection: 'row',
+    gap: 4,
   },
   iconContainer: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
     display: 'flex',
     justifyContent: 'center',
-    marginLeft: 14,
+    marginLeft: 8,
   },
 })

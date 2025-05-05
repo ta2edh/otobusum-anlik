@@ -9,11 +9,11 @@ interface UiChipProps {
 }
 
 export const UiChip = ({ children }: UiChipProps) => {
-  const { colorsTheme } = useTheme()
+  const { schemeColor } = useTheme()
 
   return (
-    <View style={[styles.container, { backgroundColor: colorsTheme.surfaceContainer }]}>
-      <UiText size="sm" info>
+    <View style={[styles.container, { backgroundColor: schemeColor.surfaceContainerHigh }]}>
+      <UiText size="sm">
         {children}
       </UiText>
     </View>

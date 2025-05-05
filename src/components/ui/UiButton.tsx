@@ -30,6 +30,7 @@ export interface UiButtonPropsBase {
   iconTrail?: IconValue
   children?: React.ReactNode
   align?: 'left'
+  error?: boolean
 }
 
 export interface UiButtonPropsWithIcon extends UiButtonPropsBase {
@@ -46,29 +47,30 @@ export type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
 
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
-export const UiButton = ({ iconSize = 'md', variant = 'solid', ...props }: UiButtonProps) => {
-  const { getSchemeColorHex, colorsTheme, contextTheme } = useTheme()
+export const UiButton = ({ iconSize = 'md', variant = 'solid', error, ...props }: UiButtonProps) => {
+  const { schemeColor } = useTheme()
 
-  const defaultBackground = contextTheme
-    ? getSchemeColorHex('secondaryContainer')
-    : variant === 'solid'
-      ? getSchemeColorHex('primary')
-      : variant === 'soft'
-        ? getSchemeColorHex('surface')
-        : undefined
+  const defaultBackground
+    = variant === 'solid'
+      ? schemeColor.primary
+      : variant === 'error'
+        ? schemeColor.error
+        : variant === 'soft'
+          ? schemeColor.surfaceContainer
+          : undefined
 
   const defaultTextColor
-    = contextTheme
-      ? getSchemeColorHex('onSecondaryContainer')
-      : variant === 'solid'
-        ? getSchemeColorHex('onPrimary')
+    = variant === 'solid'
+      ? schemeColor.onPrimary
+      : variant === 'error'
+        ? schemeColor.onError
         : variant === 'soft'
-          ? getSchemeColorHex('onSurface')
-          : colorsTheme.color
+          ? schemeColor.onSurface
+          : schemeColor.onSurface
 
   const dynamicContainer: StyleProp<ViewStyle> = {
     backgroundColor: defaultBackground,
-    opacity: props.disabled ? 0.75 : 1,
+    opacity: props.disabled ? 0.5 : 1,
   }
 
   const dynamicText: StyleProp<TextStyle> = {

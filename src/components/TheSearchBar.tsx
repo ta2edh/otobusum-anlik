@@ -2,7 +2,6 @@ import { useRouter } from 'expo-router'
 import { Pressable, StyleSheet, View } from 'react-native'
 
 import { usePaddings } from '@/hooks/usePaddings'
-import { useTheme } from '@/hooks/useTheme'
 
 import { TheMapButtons } from './TheMapButtons'
 import { UiTextInput } from './ui/UiTextInput'
@@ -10,12 +9,11 @@ import { UiTextInput } from './ui/UiTextInput'
 import { i18n } from '@/translations/i18n'
 
 export const TheSearchBar = () => {
-  const paddings = usePaddings()
+  const { tabRoutePaddings } = usePaddings()
   const router = useRouter()
-  const { colorsTheme } = useTheme()
 
   return (
-    <View style={[styles.container, paddings]}>
+    <View style={[styles.container, tabRoutePaddings]}>
       <View>
         <Pressable
           onPress={() => {
@@ -27,10 +25,7 @@ export const TheSearchBar = () => {
               icon="search"
               placeholder={i18n.t('searchPlaceholder')}
               readOnly
-              styleContainer={{
-                borderWidth: StyleSheet.hairlineWidth,
-                borderColor: colorsTheme.surfaceContainerHigh,
-              }}
+              styleContainer={{ elevation: 4 }}
             />
           </View>
         </Pressable>

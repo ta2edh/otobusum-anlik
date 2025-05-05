@@ -1,58 +1,35 @@
-import { Scheme, hexFromArgb, type Theme } from '@material/material-color-utilities'
-import { createContext, useCallback, useContext, useMemo } from 'react'
+import { createContext, use } from 'react'
 import { useColorScheme } from 'react-native'
 import { useShallow } from 'zustand/react/shallow'
 
-import { colors } from '@/constants/colors'
+import { ColorSchemes, defaultColorSchemes } from '@/constants/colors'
+import { getTheme, useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
-import { createTheme } from '@/utils/createTheme'
 
-type SchemeKeys = {
-  [K in keyof Scheme]: Scheme[K] extends number ? K : never
-}[keyof Scheme]
+export const ColorSchemesContext = createContext<ColorSchemes | undefined>(undefined)
 
-const defaultCreatedTheme = createTheme(colors.primary)
-export const ThemeContext = createContext<Theme | undefined>(undefined)
+export function useTheme(lineCode?: string) {
+  const storedColorScheme = useSettingsStore(useShallow(state => state.colorScheme))
+  const storedTheme = useLinesStore(useShallow(() => lineCode ? getTheme(lineCode) : undefined))
 
-export function useTheme(_theme?: Theme) {
-  const storedTheme = useSettingsStore(useShallow(state => state.colorScheme))
-  const systemScheme = useColorScheme()
+  const systemColorScheme = useColorScheme()
 
-  const contextTheme = useContext(ThemeContext)
-  const theme = _theme || contextTheme
+  const colorScheme = storedColorScheme ?? systemColorScheme ?? 'dark'
+  const schemeDefault = defaultColorSchemes[colorScheme]
 
-  const mode = useMemo(
-    () => storedTheme ?? systemScheme ?? 'dark',
-    [storedTheme, systemScheme],
-  )
+  const contextTheme = use(ColorSchemesContext) ?? defaultColorSchemes
 
-  const scheme = useMemo(
-    () => {
-      const th = theme ?? defaultCreatedTheme
-      return mode === 'dark' ? th?.schemes.dark : th?.schemes.light
-    },
-    [mode, theme],
-  )
-
-  const colorsTheme = colors[mode]
-
-  const bottomSheetStyle = useMemo(() => ({
-    handleStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
-    handleIndicatorStyle: { backgroundColor: colorsTheme.surfaceContainerHighest },
-    backgroundStyle: { backgroundColor: colorsTheme.surfaceContainerLow },
-  }), [colorsTheme])
-
-  const getSchemeColorHex = useCallback((key: SchemeKeys) => {
-    if (!scheme) return
-    return hexFromArgb(scheme[key])
-  }, [scheme])
+  const schemeColor = lineCode
+    ? storedTheme
+      ? storedTheme[colorScheme]
+      : schemeDefault
+    : contextTheme[colorScheme]
 
   return {
-    mode,
-    scheme,
-    colorsTheme,
-    bottomSheetStyle,
-    getSchemeColorHex,
+    colorScheme,
+    schemeDefault,
+    schemeColor,
+    storedTheme,
     contextTheme,
   }
 }

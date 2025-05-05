@@ -56,4 +56,7 @@ export default {
   searchPlaceholder: 'KM-12, KM-12...',
   selectedCity: 'Selected city: %{city}',
   newGroupTitlePlaceholder: 'New group name',
+  announcements: 'Announcements',
+  timetableEmptyRange: 'Timetable for this day is empty',
+  lineGroups: 'Line Groups',
 }

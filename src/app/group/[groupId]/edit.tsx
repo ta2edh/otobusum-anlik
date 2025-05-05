@@ -13,8 +13,8 @@ import { i18n } from '@/translations/i18n'
 
 export const GroupEditScreen = () => {
   const { groupId } = useLocalSearchParams()
+  const { stackRoutePaddings } = usePaddings()
   const navigation = useNavigation()
-  const paddings = usePaddings(true)
   const title = useRef('')
 
   const handleQueryChange = useCallback((text: string) => (title.current = text), [])
@@ -41,7 +41,7 @@ export const GroupEditScreen = () => {
   }, [navigation, handleOnPress])
 
   return (
-    <View style={[styles.container, paddings]}>
+    <View style={[styles.container, stackRoutePaddings]}>
       <UiTextInput
         onChangeText={handleQueryChange}
         placeholder={i18n.t('newGroupTitlePlaceholder')}
@@ -50,7 +50,7 @@ export const GroupEditScreen = () => {
       <UiButton
         title={i18n.t('deleteGroup')}
         icon="trash-outline"
-        variant="soft"
+        variant="error"
         onPress={handleDeleteGroup}
         square
       />

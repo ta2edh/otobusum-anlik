@@ -1,14 +1,9 @@
 import { type Theme } from '@material/material-color-utilities'
 import {
-  StyleProp,
   StyleSheet,
-  TextStyle,
   TouchableOpacityProps,
   View,
-  ViewStyle,
 } from 'react-native'
-
-import { useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from './UiButton'
 
@@ -25,20 +20,6 @@ interface UiSegmentedButtonsProps<T> extends TouchableOpacityProps {
 }
 
 export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange }: UiSegmentedButtonsProps<T>) => {
-  const { getSchemeColorHex } = useTheme()
-
-  const selectedStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('tertiaryContainer'),
-  }
-
-  const selectedTextStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onTertiaryContainer'),
-  }
-
-  const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onSecondaryContainer'),
-  }
-
   return (
     <View style={[styles.container, style]}>
       {buttons.map((button) => {
@@ -48,11 +29,11 @@ export const UiSegmentedButtons = <T,>({ buttons, value, style, onValueChange }:
           <UiButton
             key={button.label}
             title={button.label}
-            variant="ghost"
-            containerStyle={[styles.buttonContainer, selected ? selectedStyle : undefined]}
-            textStyle={selected ? selectedTextStyle : textStyle}
+            variant={selected ? 'solid' : 'soft'}
+            containerStyle={styles.buttonContainer}
             onPress={() => onValueChange?.(button.value)}
             square
+            accented
           />
         )
       })}

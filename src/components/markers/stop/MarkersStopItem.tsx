@@ -1,14 +1,11 @@
 import { memo, useMemo } from 'react'
 import { StyleProp, ViewStyle, TextStyle, View, StyleSheet } from 'react-native'
 import { LatLng, MapMarkerProps, Marker } from 'react-native-maps'
-import { useShallow } from 'zustand/react/shallow'
 
 import { UiText } from '@/components/ui/UiText'
 
 import { useTheme } from '@/hooks/useTheme'
 
-import { colors } from '@/constants/colors'
-import { getTheme, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { BusStop } from '@/types/bus'
 
@@ -44,23 +41,22 @@ export const MarkersStopItem = ({
   type,
   ...props
 }: LineBusStopMarkersItemProps) => {
-  const lineTheme = useLinesStore(useShallow(() => lineCode ? getTheme(lineCode) : undefined))
-  const { getSchemeColorHex } = useTheme(lineTheme)
+  const { schemeColor } = useTheme(lineCode)
 
   const stopStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor: getSchemeColorHex('onPrimary') || colors.primary,
-      borderColor: getSchemeColorHex('outlineVariant'),
-      color: getSchemeColorHex('primary'),
+      backgroundColor: schemeColor.primary,
+      borderColor: schemeColor.primaryContainer,
     }),
-    [getSchemeColorHex],
+    [schemeColor],
   )
 
   const textStyle: StyleProp<TextStyle> = useMemo(
     () => ({
-      color: getSchemeColorHex('primary'),
+      color: schemeColor.onPrimary,
+      lineHeight: 10,
     }),
-    [getSchemeColorHex],
+    [schemeColor],
   )
 
   const handleOnPress = () => {
@@ -85,13 +81,13 @@ export const MarkersStopItem = ({
       tracksInfoWindowChanges={false}
       tracksViewChanges={false}
       onPress={handleOnPress}
-      anchor={{ x: 0.2, y: 0.2 }}
+      anchor={{ x: 0.5, y: 0.5 }}
       zIndex={1}
       {...props}
     >
       <View style={[styles.busStop, stopStyle, viewStyle]}>
         {label && (
-          <UiText style={textStyle} size="sm" info>
+          <UiText style={textStyle} size="xs">
             {label}
           </UiText>
         )}

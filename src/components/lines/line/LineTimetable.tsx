@@ -9,11 +9,10 @@ import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { useLine } from '@/hooks/queries/useLine'
 import { useRoutes } from '@/hooks/queries/useRoutes'
 import { useTimetable } from '@/hooks/queries/useTimetable'
-import { ThemeContext, useTheme } from '@/hooks/useTheme'
+import { ColorSchemesContext, useTheme } from '@/hooks/useTheme'
 
 import { Time } from '@/api/getPlannedDepartures'
 import { useFiltersStore } from '@/stores/filters'
-import { getTheme, useLinesStore } from '@/stores/lines'
 import { i18n } from '@/translations/i18n'
 import { Cities } from '@/types/cities'
 import { charactersToAscii } from '@/utils/charactersToAscii'
@@ -83,11 +82,9 @@ interface LineTimetableProps {
 
 export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   const [selectedDay, setSelectedDay] = useState(() => 1 << (day + 1))
-
-  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
-  const { getSchemeColorHex } = useTheme(lineTheme)
+  const { schemeColor, storedTheme } = useTheme(lineCode)
 
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(lineCode)
@@ -169,21 +166,21 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   const hours = Object.keys(groupedByHour).sort()
 
   const containerStyle: StyleProp<ViewStyle> = {
-    backgroundColor: getSchemeColorHex('surface'),
+    backgroundColor: schemeColor.surface,
     width: lineWidth,
   }
 
   const textStyle: StyleProp<TextStyle> = {
-    color: getSchemeColorHex('onSurface'),
+    color: schemeColor.onSurface,
   }
 
   const cellStyle: StyleProp<TextStyle> = {
-    backgroundColor: getSchemeColorHex('primaryContainer'),
-    color: getSchemeColorHex('onPrimaryContainer'),
+    backgroundColor: schemeColor.primaryContainer,
+    color: schemeColor.onPrimaryContainer,
   }
 
   return (
-    <ThemeContext.Provider value={lineTheme}>
+    <ColorSchemesContext value={storedTheme}>
       <View style={[styles.wrapper, containerStyle]}>
         <View style={styles.info}>
           <UiText style={textStyle}>
@@ -203,44 +200,53 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
           buttons={options[selectedCity]}
         />
 
-        <View style={styles.container}>
-          <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
-            <View style={styles.fixed}>
-              {hours.map(hour => (
-                <UiText key={hour} style={[styles.cell, cellStyle]}>
-                  {hour}
-                </UiText>
-              ))}
-            </View>
+        {hours.length > 1
+          ? (
+              <View style={styles.container}>
+                <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
+                  <View style={styles.fixed}>
+                    {hours.map(hour => (
+                      <UiText key={hour} style={[styles.cell, cellStyle]}>
+                        {hour}
+                      </UiText>
+                    ))}
+                  </View>
 
-            <ScrollView
-              contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
-              horizontal
-            >
-              {hours.map(hour => (
-                <View key={hour} style={styles.row}>
-                  {groupedByHour[hour]?.map(time => (
-                    <UiText
-                      key={`${lineCode}-${time}-${routeCode}`}
-                      style={[
-                        styles.cell,
-                        textStyle,
-                        cancelledTimes.includes(`${hour}:${time}`) && {
-                          textDecorationLine: 'line-through',
-                          opacity: 0.5,
-                        },
-                      ]}
-                    >
-                      {time}
-                    </UiText>
-                  ))}
-                </View>
-              ))}
-            </ScrollView>
-          </ScrollView>
-        </View>
+                  <ScrollView
+                    contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
+                    horizontal
+                  >
+                    {hours.map(hour => (
+                      <View key={hour} style={styles.row}>
+                        {groupedByHour[hour]?.map(time => (
+                          <UiText
+                            key={`${lineCode}-${time}-${routeCode}`}
+                            style={[
+                              styles.cell,
+                              textStyle,
+                              cancelledTimes.includes(`${hour}:${time}`) && {
+                                textDecorationLine: 'line-through',
+                                opacity: 0.5,
+                              },
+                            ]}
+                          >
+                            {time}
+                          </UiText>
+                        ))}
+                      </View>
+                    ))}
+                  </ScrollView>
+                </ScrollView>
+              </View>
+            )
+          : (
+              <View style={styles.containerEmpty}>
+                <UiText>{i18n.t('timetableEmptyRange')}</UiText>
+              </View>
+            )}
+
       </View>
-    </ThemeContext.Provider>
+    </ColorSchemesContext>
   )
 }
 
@@ -250,12 +256,18 @@ const styles = StyleSheet.create({
   wrapper: {
     borderRadius: 8,
     flexShrink: 1,
+    elevation: 2,
   },
   info: {
     padding: 8,
   },
   container: {
     flexShrink: 1,
+  },
+  containerEmpty: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
   },
   innerScroll: {
     flexDirection: 'row',

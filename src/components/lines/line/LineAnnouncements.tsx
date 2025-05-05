@@ -1,4 +1,4 @@
-import { BottomSheetModal, BottomSheetScrollView } from '@gorhom/bottom-sheet'
+import { BottomSheetModal } from '@gorhom/bottom-sheet'
 import { useRef } from 'react'
 import { StyleSheet, View, ViewProps } from 'react-native'
 
@@ -7,6 +7,8 @@ import { useAnnouncements } from '@/hooks/queries/useAnnouncements'
 import { UiSheetModal } from '../../ui/sheet/UiSheetModal'
 import { UiButton } from '../../ui/UiButton'
 import { UiText } from '../../ui/UiText'
+
+import { i18n } from '@/translations/i18n'
 
 interface LineAnnouncementsProps extends ViewProps {
   lineCode: string
@@ -25,6 +27,7 @@ export const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
         disabled={announcements === undefined || announcements.length === 0}
         icon="megaphone-outline"
         variant="soft"
+        accented
       />
 
       {announcements !== undefined && announcements.length > 0 && (
@@ -32,15 +35,16 @@ export const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
           cRef={bottomSheetModal}
           snapPoints={['50%']}
           enableDynamicSizing={false}
+          list
+          title={i18n.t('announcements')}
+          icon="megaphone-outline"
         >
-          <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
-            {announcements.map(ann => (
-              <View key={`${ann.GUNCELLEME_SAATI}-${ann.MESAJ}`} style={styles.announcementContainer}>
-                <UiText>{ann.GUNCELLEME_SAATI}</UiText>
-                <UiText>{ann.MESAJ}</UiText>
-              </View>
-            ))}
-          </BottomSheetScrollView>
+          {announcements.map(ann => (
+            <View key={`${ann.GUNCELLEME_SAATI}-${ann.MESAJ}`} style={styles.announcementContainer}>
+              <UiText>{ann.GUNCELLEME_SAATI}</UiText>
+              <UiText>{ann.MESAJ}</UiText>
+            </View>
+          ))}
         </UiSheetModal>
       )}
     </>
@@ -48,11 +52,8 @@ export const LineAnnouncements = ({ lineCode }: LineAnnouncementsProps) => {
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
-    padding: 8,
-  },
   announcementContainer: {
-    padding: 8,
+    padding: 12,
     flex: 1,
   },
 })

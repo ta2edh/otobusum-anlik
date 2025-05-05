@@ -1,5 +1,6 @@
 import { FlashList } from '@shopify/flash-list'
 import { useMutation } from '@tanstack/react-query'
+import { router } from 'expo-router'
 import { useCallback, useMemo } from 'react'
 import { NativeSyntheticEvent, StyleSheet, TextInputChangeEventData, View } from 'react-native'
 import { useDebouncedCallback } from 'use-debounce'
@@ -19,7 +20,7 @@ import { i18n } from '@/translations/i18n'
 import { BusLine, BusStop } from '@/types/bus'
 
 export const ModalScreen = () => {
-  const paddings = usePaddings()
+  const { modalRoutePaddings } = usePaddings()
   const selectedCity = useFiltersStore(state => state.selectedCity)
 
   const mutation = useMutation({
@@ -49,7 +50,7 @@ export const ModalScreen = () => {
             )
           : mutation.data
             ? (
-                <UiText info style={styles.empty}>
+                <UiText style={styles.empty}>
                   {i18n.t('emptySearch')}
                 </UiText>
               )
@@ -58,7 +59,7 @@ export const ModalScreen = () => {
                   <UiActivityIndicator size="large" />
                 )
               : (
-                  <UiText info style={styles.empty}>
+                  <UiText style={styles.empty}>
                     {i18n.t('searchMessage')}
                   </UiText>
                 )}
@@ -78,33 +79,33 @@ export const ModalScreen = () => {
   )
 
   return (
-    <View style={[paddings, styles.container]}>
+    <View style={[modalRoutePaddings, styles.container]}>
+      <UiTextInput
+        placeholder={i18n.t('searchPlaceholder')}
+        icon="arrow-back"
+        iconPress={() => router.back()}
+        styleContainer={{ elevation: 5 }}
+        autoFocus
+        onChange={handleQueryChange}
+      />
+
       <UiChip>{i18n.t('selectedCity', { city: selectedCity })}</UiChip>
 
-      <View style={{ flex: 1 }}>
-        <UiTextInput
-          placeholder={i18n.t('searchPlaceholder')}
-          icon="search"
-          autoFocus
-          onChange={handleQueryChange}
-        />
-
-        <View style={styles.list}>
-          {data.length < 1
-            ? (
-                EmptyItem
-              )
-            : (
-                <FlashList
-                  data={data}
-                  renderItem={renderItem}
-                  estimatedItemSize={45}
-                  fadingEdgeLength={20}
-                  contentContainerStyle={styles.contentStyle}
-                  keyboardDismissMode="on-drag"
-                />
-              )}
-        </View>
+      <View style={styles.list}>
+        {data.length < 1
+          ? (
+              EmptyItem
+            )
+          : (
+              <FlashList
+                data={data}
+                renderItem={renderItem}
+                estimatedItemSize={45}
+                fadingEdgeLength={20}
+                contentContainerStyle={styles.contentStyle}
+                keyboardDismissMode="on-drag"
+              />
+            )}
       </View>
     </View>
   )

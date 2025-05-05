@@ -1,16 +1,14 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
 
 import { UiSheetOptions } from '@/components/ui/sheet/UiSheetOptions'
-import { UiText } from '@/components/ui/UiText'
 
 import { useMap } from '@/hooks/contexts/useMap'
 import { useLine } from '@/hooks/queries/useLine'
-import { ThemeContext, useTheme } from '@/hooks/useTheme'
+import { ColorSchemesContext, useTheme } from '@/hooks/useTheme'
 
 import { UiButton } from '../../ui/UiButton'
 
@@ -22,9 +20,8 @@ import { LineRoutes } from './LineRoutes'
 
 import { queryClient } from '@/api/client'
 import { getLineBusStops } from '@/api/getLineBusStops'
-import { iconSizes } from '@/constants/uiSizes'
 import { changeRouteDirection, getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
-import { deleteLine, getTheme, useLinesStore } from '@/stores/lines'
+import { deleteLine } from '@/stores/lines'
 import { toggleLineVisibility, useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
@@ -35,10 +32,9 @@ export interface LineProps {
 }
 
 const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
-  const lineTheme = useLinesStore(useShallow(() => getTheme(lineCode)))
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
-  const { getSchemeColorHex, colorsTheme } = useTheme(lineTheme)
+  const { schemeColor, storedTheme } = useTheme(lineCode)
   const { lineWidth } = useLine(lineCode)
 
   const map = useMap()
@@ -83,12 +79,11 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
 
   const containerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor:
-        variant === 'soft' ? getSchemeColorHex('surface') : getSchemeColorHex('primary'),
+      backgroundColor: variant === 'soft' ? schemeColor.surface : schemeColor.primary,
       width: lineWidth,
       maxWidth: 800,
     }),
-    [getSchemeColorHex, lineWidth, variant],
+    [lineWidth, schemeColor.primary, schemeColor.surface, variant],
   )
 
   const containerAnimatedStyle = useAnimatedStyle(
@@ -100,13 +95,13 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
 
   const buttonContainerStyle: StyleProp<ViewStyle> = useMemo(
     () => ({
-      backgroundColor: getSchemeColorHex('secondaryContainer'),
+      backgroundColor: schemeColor.surfaceContainerHigh,
     }),
-    [getSchemeColorHex],
+    [schemeColor],
   )
 
   return (
-    <ThemeContext.Provider value={lineTheme}>
+    <ColorSchemesContext value={storedTheme}>
       <Animated.View
         style={[containerStyle, containerAnimatedStyle, styles.container, props.containerStyle]}
         key={lineCode}
@@ -138,14 +133,8 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
                   onPress: handleDelete,
                 },
               ]}
-              top={() => (
-                <>
-                  <Ionicons name="bus" size={iconSizes['lg']} color={colorsTheme.color} />
-                  <UiText size="md" style={{ fontWeight: 'bold' }}>
-                    {lineCode}
-                  </UiText>
-                </>
-              )}
+              title={lineCode}
+              icon="bus"
             />
 
             <LineGroups cRef={uiSheetLineGroupsModal} lineCodeToAdd={lineCode} />
@@ -159,7 +148,7 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
           <LineRoutes lineCode={lineCode} />
         </View>
       </Animated.View>
-    </ThemeContext.Provider>
+    </ColorSchemesContext>
   )
 }
 
@@ -171,6 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     gap: 8,
     flexShrink: 0,
+    elevation: 2,
   },
   titleContainer: {
     flexDirection: 'row',
