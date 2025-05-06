@@ -369,6 +369,6 @@ const startUpdateLoop = () => {
   listener = updateLoop()
 }
 
-if (__DEV__) {
+if (!__DEV__) {
   useLinesStore.persist.onFinishHydration(startUpdateLoop)
 }
