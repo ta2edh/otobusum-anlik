@@ -66,7 +66,6 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
         icon="git-branch-outline"
         variant="soft"
         isLoading={query.isPending}
-        accented
       >
         {query.isPending
           ? (
