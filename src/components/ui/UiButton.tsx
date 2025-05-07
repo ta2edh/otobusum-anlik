@@ -47,7 +47,12 @@ export type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
 
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
-export const UiButton = ({ iconSize = 'md', variant = 'solid', error, ...props }: UiButtonProps) => {
+export const UiButton = ({
+  iconSize = 'md',
+  variant = 'solid',
+  error,
+  ...props
+}: UiButtonProps) => {
   const { schemeColor } = useTheme()
 
   const defaultBackground
@@ -75,59 +80,54 @@ export const UiButton = ({ iconSize = 'md', variant = 'solid', error, ...props }
 
   const dynamicText: StyleProp<TextStyle> = {
     color: defaultTextColor,
-    ...(
-      props.align === 'left'
-        ? { flexGrow: 1, textAlign: 'left' }
-        : {}
-    ),
+    ...(props.align === 'left' ? { flexGrow: 1, textAlign: 'left' } : {}),
   }
 
   const iconColor = dynamicText.color ?? props.iconColor
 
-  const Icon = useCallback(({ icon }: { icon: IconValue }) => {
-    if (props.isLoading) {
-      return (
-        <UiActivityIndicator
-          size="small"
-          color={iconColor}
-        />
-      )
-    }
+  const Icon = useCallback(
+    ({ icon }: { icon: IconValue }) => {
+      if (props.isLoading) {
+        return <UiActivityIndicator size="small" color={iconColor} />
+      }
 
-    if (props.animatedIconProps) {
-      return (
-        <AnimatedIonIcons
-          name={icon}
-          size={iconSizes[iconSize]}
-          animatedProps={props.animatedIconProps}
-        />
-      )
-    }
+      if (props.animatedIconProps) {
+        return (
+          <AnimatedIonIcons
+            name={icon}
+            size={iconSizes[iconSize]}
+            animatedProps={props.animatedIconProps}
+          />
+        )
+      }
 
-    return (
-      <Ionicons
-        name={icon}
-        size={iconSizes[iconSize]}
-        color={iconColor}
-      />
-    )
-  }, [iconColor, iconSize, props.animatedIconProps, props.isLoading])
+      return <Ionicons name={icon} size={iconSizes[iconSize]} color={iconColor} />
+    },
+    [iconColor, iconSize, props.animatedIconProps, props.isLoading],
+  )
 
   return (
     <BaseButton
-      style={[styles.container, dynamicContainer, props.containerStyle, props.square ? styles.square : undefined]}
+      style={[
+        styles.container,
+        dynamicContainer,
+        props.containerStyle,
+        props.square ? styles.square : undefined,
+      ]}
       onPress={props.onPress}
       onLongPress={props.onLongPress}
       rippleColor="black"
+      enabled={!props.disabled}
     >
-      <View style={[styles.innerContainer, props.innerContainerStyle]}>
+      <View
+        accessible
+        accessibilityRole="button"
+        style={[styles.innerContainer, props.innerContainerStyle]}
+      >
         {props.icon && <Icon icon={props.icon} />}
 
         {props.title && (
-          <UiText
-            style={[styles.title, dynamicText, props.textStyle]}
-            numberOfLines={1}
-          >
+          <UiText style={[styles.title, dynamicText, props.textStyle]} numberOfLines={1}>
             {props.title}
           </UiText>
         )}
