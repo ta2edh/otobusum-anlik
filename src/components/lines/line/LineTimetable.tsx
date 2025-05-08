@@ -269,6 +269,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    textAlign: 'center',
+    textAlignVertical: 'center',
     borderRadius: 4,
   },
   title: {
