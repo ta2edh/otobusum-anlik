@@ -276,8 +276,9 @@ const styles = StyleSheet.create({
   cell: {
     width: 30,
     height: 30,
-    textAlign: 'center',
-    textAlignVertical: 'center',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 4,
   },
   title: {
