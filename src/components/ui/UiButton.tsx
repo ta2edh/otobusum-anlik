@@ -1,7 +1,7 @@
 import { type Theme } from '@material/material-color-utilities'
 import Ionicons from '@react-native-vector-icons/ionicons'
 import React, { useCallback } from 'react'
-import { StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
+import { Platform, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { BaseButton } from 'react-native-gesture-handler'
 import Animated, { AnimatedProps } from 'react-native-reanimated'
 
@@ -120,8 +120,15 @@ export const UiButton = ({
       enabled={!props.disabled}
     >
       <View
-        accessible
-        accessibilityRole="button"
+        {
+          ...Platform.OS !== 'web'
+            ? {
+                accessible: true,
+                accessibilityRole: 'button',
+              }
+            : {}
+        }
+
         style={[styles.innerContainer, props.innerContainerStyle]}
       >
         {props.icon && <Icon icon={props.icon} />}
