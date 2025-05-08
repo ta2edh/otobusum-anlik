@@ -81,7 +81,7 @@ const Line = ({ lineCode, variant = 'soft', ...props }: LineProps) => {
     () => ({
       backgroundColor: variant === 'soft' ? schemeColor.surface : schemeColor.primary,
       width: lineWidth,
-      maxWidth: 800,
+      // maxWidth: 800,
     }),
     [lineWidth, schemeColor.primary, schemeColor.surface, variant],
   )

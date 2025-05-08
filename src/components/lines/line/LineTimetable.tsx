@@ -95,57 +95,49 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   const { lineWidth } = useLine(lineCode)
   const { query } = useTimetable(lineCode)
 
-  const filteredData = useMemo(
-    () => {
-      if (!query.data) return []
+  const filteredData = useMemo(() => {
+    if (!query.data) return []
 
-      const times: Time[] = []
+    const times: Time[] = []
 
-      if (selectedDay & sunday) {
-        times.push(...query.data.sunday)
-      }
+    if (selectedDay & sunday) {
+      times.push(...query.data.sunday)
+    }
 
-      if (selectedDay & monday) {
-        times.push(...query.data.monday)
-      }
+    if (selectedDay & monday) {
+      times.push(...query.data.monday)
+    }
 
-      if (selectedDay & tuesday) {
-        times.push(...query.data.tuesday)
-      }
+    if (selectedDay & tuesday) {
+      times.push(...query.data.tuesday)
+    }
 
-      if (selectedDay & wednesday) {
-        times.push(...query.data.wednesday)
-      }
+    if (selectedDay & wednesday) {
+      times.push(...query.data.wednesday)
+    }
 
-      if (selectedDay & thursday) {
-        times.push(...query.data.thursday)
-      }
+    if (selectedDay & thursday) {
+      times.push(...query.data.thursday)
+    }
 
-      if (selectedDay & friday) {
-        times.push(...query.data.friday)
-      }
+    if (selectedDay & friday) {
+      times.push(...query.data.friday)
+    }
 
-      if (selectedDay & saturday) {
-        times.push(...query.data.saturday)
-      }
+    if (selectedDay & saturday) {
+      times.push(...query.data.saturday)
+    }
 
-      return Array.from(new Set(times))
-    },
-    [query.data, selectedDay],
-  )
+    return Array.from(new Set(times))
+  }, [query.data, selectedDay])
 
-  const announcements = useMemo(
-    () => {
-      return announcementsQuery.data?.filter(
-        ann => ann.HATKODU = lineCode,
-      ) || []
-    },
-    [announcementsQuery.data, lineCode],
-  )
+  const announcements = useMemo(() => {
+    return announcementsQuery.data?.filter(ann => (ann.HATKODU = lineCode)) || []
+  }, [announcementsQuery.data, lineCode])
 
   const cancelledTimes = useMemo(
-    () => announcements.map(
-      (ann) => {
+    () =>
+      announcements.map((ann) => {
         if (!ann.MESAJ.includes('dan Saat')) return
 
         const msgSplit = ann.MESAJ.split('dan Saat')
@@ -157,8 +149,7 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
 
         const time = msgSplit.at(1)?.split('de hareket etmesi planlanan').at(0)?.trim()
         return time
-      },
-    ),
+      }),
     [announcements, leftTitle],
   )
 
@@ -189,9 +180,7 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
             -
             {lineCode}
           </UiText>
-          <UiText style={[styles.title, textStyle]}>
-            {route?.route_long_name.trim()}
-          </UiText>
+          <UiText style={[styles.title, textStyle]}>{route?.route_long_name.trim()}</UiText>
         </View>
 
         <UiSegmentedButtons
@@ -202,49 +191,43 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
 
         {hours.length > 1
           ? (
-              <View style={styles.container}>
-                <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
-                  <View style={styles.fixed}>
-                    {hours.map(hour => (
-                      <UiText key={hour} style={[styles.cell, cellStyle]}>
-                        {hour}
-                      </UiText>
-                    ))}
-                  </View>
+              <ScrollView contentContainerStyle={styles.innerScroll} fadingEdgeLength={40}>
+                <View style={styles.fixed}>
+                  {hours.map(hour => (
+                    <UiText key={hour} style={[styles.cell, cellStyle]}>
+                      {hour}
+                    </UiText>
+                  ))}
+                </View>
 
-                  <ScrollView
-                    contentContainerStyle={{ flexDirection: 'column', gap: 4 }}
-                    horizontal
-                  >
-                    {hours.map(hour => (
-                      <View key={hour} style={styles.row}>
-                        {groupedByHour[hour]?.map(time => (
-                          <UiText
-                            key={`${lineCode}-${time}-${routeCode}`}
-                            style={[
-                              styles.cell,
-                              textStyle,
-                              cancelledTimes.includes(`${hour}:${time}`) && {
-                                textDecorationLine: 'line-through',
-                                opacity: 0.5,
-                              },
-                            ]}
-                          >
-                            {time}
-                          </UiText>
-                        ))}
-                      </View>
-                    ))}
-                  </ScrollView>
+                <ScrollView contentContainerStyle={styles.innerScrollContent} horizontal>
+                  {hours.map(hour => (
+                    <View key={hour} style={styles.row}>
+                      {groupedByHour[hour]?.map(time => (
+                        <UiText
+                          key={`${lineCode}-${time}-${routeCode}`}
+                          style={[
+                            styles.cell,
+                            textStyle,
+                            cancelledTimes.includes(`${hour}:${time}`) && {
+                              textDecorationLine: 'line-through',
+                              opacity: 0.5,
+                            },
+                          ]}
+                        >
+                          {time}
+                        </UiText>
+                      ))}
+                    </View>
+                  ))}
                 </ScrollView>
-              </View>
+              </ScrollView>
             )
           : (
               <View style={styles.containerEmpty}>
                 <UiText>{i18n.t('timetableEmptyRange')}</UiText>
               </View>
             )}
-
       </View>
     </ColorSchemesContext>
   )
@@ -257,11 +240,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexShrink: 1,
     elevation: 2,
+    flex: 1,
+    overflow: 'hidden',
+    backgroundColor: 'red',
   },
   info: {
     padding: 8,
   },
-  container: {
+  outerContainer: {
     flexShrink: 1,
   },
   containerEmpty: {
@@ -272,6 +258,10 @@ const styles = StyleSheet.create({
   innerScroll: {
     flexDirection: 'row',
     padding: 8,
+  },
+  innerScrollContent: {
+    flexDirection: 'column',
+    gap: 4,
   },
   cell: {
     width: 30,

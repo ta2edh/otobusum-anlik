@@ -1,8 +1,9 @@
-import { useCallback, useEffect } from 'react'
+import { ComponentProps, useCallback, useEffect } from 'react'
 import {
   FlatList,
   LayoutChangeEvent,
   ListRenderItem,
+  Platform,
   StyleProp,
   StyleSheet,
   View,
@@ -29,6 +30,8 @@ import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { i18n } from '@/translations/i18n'
 
+const FlatListComponent = Platform.OS === 'web' ? FlatList : Animated.FlatList
+
 export const TimetableScreen = () => {
   const { tabRoutePaddings } = usePaddings(0)
 
@@ -50,13 +53,7 @@ export const TimetableScreen = () => {
 
   useEffect(() => {
     setTimeout(() => {
-      const mx = Math.max(
-        0,
-        Math.min(
-          useMiscStore.getState().scrolledLineIndex,
-          lines.length - 1,
-        ),
-      )
+      const mx = Math.max(0, Math.min(useMiscStore.getState().scrolledLineIndex, lines.length - 1))
 
       linesRef.current?.scrollToIndex({
         index: mx,
@@ -75,26 +72,14 @@ export const TimetableScreen = () => {
     scrollTo(timetablesRef, contentOffset.x, 0, false)
   })
 
-  const renderItem: ListRenderItem<string> = useCallback(
-    ({ item: lineCode }) => {
-      return (
-        <LineTimetableMemoized lineCode={lineCode} />
-      )
-    },
-    [],
-  )
+  const renderItem: ListRenderItem<string> = useCallback(({ item: lineCode }) => {
+    return <LineTimetableMemoized lineCode={lineCode} />
+  }, [])
 
-  const keyExtractor = useCallback(
-    (item: string) => item,
-    [],
-  )
+  const keyExtractor = useCallback((item: string) => item, [])
 
   if (lines.length < 1) {
-    return (
-      <UiText style={styles.center}>
-        {i18n.t('timetableEmpty')}
-      </UiText>
-    )
+    return <UiText style={styles.center}>{i18n.t('timetableEmpty')}</UiText>
   }
 
   return (
@@ -103,24 +88,32 @@ export const TimetableScreen = () => {
         cRef={linesRef}
         listProps={{
           onLayout,
-          onScroll: handleOnScroll,
+          onScroll: Platform.OS !== 'web' ? handleOnScroll : undefined,
         }}
         lineProps={{
           variant: 'soft',
         }}
       />
 
-      <Animated.FlatList
+      <FlatListComponent
         ref={timetablesRef}
         data={lines}
         renderItem={renderItem}
-        style={styles.list}
         keyExtractor={keyExtractor}
+        style={styles.list}
         contentContainerStyle={styles.listContent}
-        onScroll={handleOnScroll}
+        onScroll={Platform.OS !== 'web' ? handleOnScroll : undefined}
         pagingEnabled
         snapToAlignment="center"
         horizontal
+        removeClippedSubviews={false}
+        {...(Platform.OS === 'web'
+          ? ({
+              CellRendererComponent: ({ children }) => {
+                return <View style={{ flex: 1 }}>{children}</View>
+              },
+            } as Pick<ComponentProps<typeof FlatList<string>>, 'CellRendererComponent'>)
+          : ({} as any))}
       />
     </View>
   )
@@ -133,17 +126,12 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   list: {
-    flexGrow: 1,
-    flexShrink: 1,
-    maxHeight: '100%',
+    flex: 1,
   },
   listContent: {
     gap: 8,
     padding: 8,
     paddingTop: 0,
-  },
-  childrenContainer: {
-    flexShrink: 1,
   },
 })
 
