@@ -1,5 +1,5 @@
 import { Ref } from 'react'
-import { StyleProp, StyleSheet, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
+import { Platform, StyleProp, StyleSheet, TextInputProps, TextStyle, View, ViewStyle } from 'react-native'
 import { TextInput } from 'react-native-gesture-handler'
 
 import { useTheme } from '@/hooks/useTheme'
@@ -28,7 +28,6 @@ export const UiTextInput = ({ iconSize = 'md', icon, iconPress, cRef, style, sty
     color: schemeColor.onSurface,
     display: 'flex',
     paddingHorizontal: icon ? 0 : 8 * 2.5,
-    paddingVertical: 12,
     flex: 1,
   }
 
@@ -57,7 +56,8 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 999,
     flexDirection: 'row',
-    gap: 4,
+    paddingVertical: Platform.OS === 'web' ? 8 : 0,
+    gap: 8,
   },
   iconContainer: {
     display: 'flex',

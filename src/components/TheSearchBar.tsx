@@ -20,13 +20,14 @@ export const TheSearchBar = () => {
             router.navigate('/modal')
           }}
         >
-          <UiTextInput
-            icon="search"
-            placeholder={i18n.t('searchPlaceholder')}
-            readOnly
-            style={{ pointerEvents: 'none' }}
-            styleContainer={{ elevation: 4 }}
-          />
+          <View style={{ pointerEvents: 'none' }}>
+            <UiTextInput
+              icon="search"
+              placeholder={i18n.t('searchPlaceholder')}
+              readOnly
+              styleContainer={{ elevation: 4 }}
+            />
+          </View>
         </Pressable>
       </View>
 

@@ -28,7 +28,6 @@ export interface TheMapRef {
 const screen = Dimensions.get('screen')
 
 export const TheMap = ({ ref, onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps) => {
-  console.log(ref)
   const map = useRef<MapView>(null)
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
