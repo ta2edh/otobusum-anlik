@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
+import { BaseButton } from 'react-native-gesture-handler'
 
 import { usePaddings } from '@/hooks/usePaddings'
 
@@ -14,22 +15,20 @@ export const TheSearchBar = () => {
 
   return (
     <View style={[styles.container, tabRoutePaddings]}>
-      <View>
-        <Pressable
-          onPress={() => {
-            router.navigate('/modal')
-          }}
-        >
-          <View style={{ pointerEvents: 'none' }}>
-            <UiTextInput
-              icon="search"
-              placeholder={i18n.t('searchPlaceholder')}
-              readOnly
-              styleContainer={{ elevation: 4 }}
-            />
-          </View>
-        </Pressable>
-      </View>
+      <BaseButton
+        onPress={() => {
+          router.navigate('/modal')
+        }}
+      >
+        <View style={{ pointerEvents: 'none' }}>
+          <UiTextInput
+            icon="search"
+            placeholder={i18n.t('searchPlaceholder')}
+            readOnly
+            styleContainer={{ elevation: 4 }}
+          />
+        </View>
+      </BaseButton>
 
       <TheMapButtons />
     </View>
