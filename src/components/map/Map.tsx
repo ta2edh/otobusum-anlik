@@ -1,4 +1,4 @@
-import { ForwardedRef, useImperativeHandle, useRef } from 'react'
+import { RefObject, useImperativeHandle, useRef } from 'react'
 import { Dimensions } from 'react-native'
 import MapView, { LatLng, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import Animated, { clamp, Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
@@ -16,7 +16,7 @@ export interface TheMapProps {
   onMapReady?: () => void
   onMapRegionUpdate?: (region: Region) => void
   initialRegion?: Region
-  cRef?: ForwardedRef<TheMapRef>
+  ref?: RefObject<TheMapRef | null>
 }
 
 export interface TheMapRef {
@@ -27,7 +27,8 @@ export interface TheMapRef {
 
 const screen = Dimensions.get('screen')
 
-export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...props }: TheMapProps) => {
+export const TheMap = ({ ref, onMapReady, onMapRegionUpdate, initialRegion, ...props }: TheMapProps) => {
+  console.log(ref)
   const map = useRef<MapView>(null)
   const showTraffic = useSettingsStore(useShallow(state => state.showTraffic))
   const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
@@ -36,7 +37,7 @@ export const TheMap = ({ onMapReady, onMapRegionUpdate, initialRegion, cRef, ...
   const insets = useSafeAreaInsets()
   const sheetContext = useSheetModal()
 
-  useImperativeHandle(cRef, () => {
+  useImperativeHandle(ref, () => {
     return {
       animateCamera: (region) => {
         let re = { ...region }

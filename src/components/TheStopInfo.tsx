@@ -20,7 +20,7 @@ import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
 
 interface TheStopInfoProps {
-  cRef: RefObject<TheMapRef | null>
+  ref: RefObject<TheMapRef | null>
 }
 
 const StopLine = ({ lineCode }: { lineCode: string }) => {
@@ -47,7 +47,7 @@ const StopLine = ({ lineCode }: { lineCode: string }) => {
   )
 }
 
-export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
+export const TheStopInfo = ({ ref }: TheStopInfoProps) => {
   const selectedStopId = useMiscStore(useShallow(state => state.selectedStopId))
 
   const bottomSheetModal = useRef<BottomSheetModalMethods>(null)
@@ -73,12 +73,12 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     )
 
     return unsub
-  }, [cRef])
+  }, [ref])
 
   useEffect(() => {
     if (!query.data) return
 
-    cRef.current?.animateCamera({
+    ref.current?.animateCamera({
       latitude: query.data.stop.y_coord + 0.005,
       longitude: query.data.stop.x_coord,
       latitudeDelta: 0.010,
@@ -86,7 +86,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
     })
 
     bottomSheetModal.current?.present()
-  }, [cRef, query.data])
+  }, [ref, query.data])
 
   useEffect(() => {
     if (!query.data) return
@@ -108,7 +108,7 @@ export const TheStopInfo = ({ cRef }: TheStopInfoProps) => {
       selectedStopId: undefined,
     }))
 
-    cRef.current?.animateCamera(savedRegion.current)
+    ref.current?.animateCamera(savedRegion.current)
   }
 
   return (

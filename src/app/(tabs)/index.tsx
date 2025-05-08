@@ -20,7 +20,7 @@ import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
 
 export const HomeScreen = () => {
-  const map = useRef<TheMapRef>(null)
+  const map = useRef<TheMapRef | null>(null)
 
   const settingsStoreState = useSettingsStore.getState()
 
@@ -71,7 +71,7 @@ export const HomeScreen = () => {
     <MapContext value={map}>
       <SheetContext.Provider value={sheetContext}>
         <TheMap
-          cRef={map}
+          ref={map}
           onMapReady={SplashScreen.hide}
           onMapRegionUpdate={handleRegionChangeComplete}
           initialRegion={
@@ -92,7 +92,7 @@ export const HomeScreen = () => {
           <Lines />
         </View>
 
-        <TheStopInfo cRef={map} />
+        <TheStopInfo ref={map} />
       </SheetContext.Provider>
     </MapContext>
   )

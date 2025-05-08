@@ -171,6 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     gap: 4,
     paddingVertical: 4,
+    paddingRight: 8,
   },
   itemInner: {
     flexDirection: 'row',
