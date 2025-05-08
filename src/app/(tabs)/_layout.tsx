@@ -1,7 +1,7 @@
 import Ionicons from '@react-native-vector-icons/ionicons'
 import { Tabs } from 'expo-router'
 import { ComponentProps } from 'react'
-import { View } from 'react-native'
+import { Platform, View } from 'react-native'
 
 import { useTheme } from '@/hooks/useTheme'
 
@@ -35,6 +35,8 @@ export const TabsLayout = () => {
         tabBarIconStyle: {
           flex: 1,
         },
+        tabBarShowLabel: Platform.OS !== 'web',
+        tabBarLabelPosition: 'below-icon',
         tabBarLabelStyle: {
           color: schemeDefault.onSurface,
         },
