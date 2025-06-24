@@ -29,6 +29,7 @@ import { iconSizes } from '@/constants/uiSizes'
 import { useFiltersStore } from '@/stores/filters'
 import { getLines, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
+import { i18n } from '@/translations/i18n'
 
 interface LinesProps {
   cRef?: ForwardedRef<FlatList>
@@ -90,6 +91,11 @@ export const Lines = ({ cRef, ...props }: LinesProps) => {
         <View style={[styles.groupTitleContainer, { backgroundColor: schemeDefault.surfaceContainer }]}>
           <Ionicons name="albums" size={iconSizes['sm']} />
           <UiText size="sm">{group?.title}</UiText>
+          <UiText size="sm" dimmed>
+            (
+            {i18n.t('empty')}
+            )
+          </UiText>
         </View>
       )}
 
