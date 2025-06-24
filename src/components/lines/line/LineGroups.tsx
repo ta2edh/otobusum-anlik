@@ -23,8 +23,6 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))!
   const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups[selectedCity])))
 
-  console.log('line groups', groups)
-
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
   }, [])
