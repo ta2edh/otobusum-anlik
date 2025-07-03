@@ -101,10 +101,10 @@ This migration removed:
 
 <div align="center">
 <img src="preview/en-1.png" width="250" title=""/>
-<img src="preview/en-2.png" width="250" title=""/>
 <img src="preview/en-3.png" width="250" title=""/>
-<img src="preview/en-4.png" width="250" title=""/>
 <img src="preview/en-5.png" width="250" title=""/>
+<img src="preview/en-2.png" width="250" title=""/>
+<img src="preview/en-4.png" width="250" title=""/>
 </div>
 
 *Native iOS app with Apple Maps integration, real-time bus tracking, and seamless language switching*
