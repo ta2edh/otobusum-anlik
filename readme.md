@@ -48,7 +48,6 @@ A production-ready real-time public transportation app built specifically for iO
 - **Live schedules** - Real-time departure information
 - **Route planning** - Find best routes between stops
 - **Notifications** - Get alerts for your buses
-- **Offline support** - Basic functionality without internet
 - **Multi-language** - Turkish and English support with seamless switching
 - **Persistent state** - Language and settings survive app restarts
 
