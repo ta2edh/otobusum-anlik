@@ -3,7 +3,7 @@ import { ExpoConfig } from 'expo/config'
 const config: ExpoConfig = {
   name: 'Otobüsüm Anlık',
   slug: 'otobusum-anlik',
-  version: '1.2.9',
+  version: '1.0.0',
   orientation: 'portrait',
   icon: './src/assets/icon.png',
   scheme: 'otobusum-anlik',
@@ -11,17 +11,45 @@ const config: ExpoConfig = {
   newArchEnabled: false,
   extra: {
     eas: {
-      projectId: '2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
+      projectId: '13cc0847-9f39-4aab-90d9-375e12df5087',
     },
-  },
-  web: {
-    favicon: './assets/icon.png',
   },
   ios: {
     supportsTablet: true,
+    bundleIdentifier: 'com.otobusum.anlik',
+    buildNumber: '1',
+    icon: './src/assets/icon.png',
+    requireFullScreen: false,
+    userInterfaceStyle: 'automatic',
+    infoPlist: {
+      NSLocationWhenInUseUsageDescription: 'Bu uygulama konumunuzu otobüs duraklarını ve rotalarını göstermek için kullanır.',
+      NSLocationAlwaysAndWhenInUseUsageDescription: 'Bu uygulama konumunuzu otobüs duraklarını ve rotalarını göstermek için kullanır.',
+      CFBundleDisplayName: 'Otobüsüm Anlık',
+      LSApplicationQueriesSchemes: ['maps', 'http', 'https'],
+      ITSAppUsesNonExemptEncryption: false,
+      UILaunchStoryboardName: 'SplashScreen',
+      UIRequiredDeviceCapabilities: ['arm64'],
+      UISupportedInterfaceOrientations: ['UIInterfaceOrientationPortrait'],
+      UISupportedInterfaceOrientations_iPad: [
+        'UIInterfaceOrientationPortrait',
+        'UIInterfaceOrientationPortraitUpsideDown',
+        'UIInterfaceOrientationLandscapeLeft',
+        'UIInterfaceOrientationLandscapeRight'
+      ],
+      UIViewControllerBasedStatusBarAppearance: false,
+      UIStatusBarStyle: 'UIStatusBarStyleDefault'
+    },
+    associatedDomains: ['applinks:otobusum-anlik.app'],
+    splash: {
+      image: './src/assets/splash.png',
+      backgroundColor: '#0a0a0a',
+      resizeMode: 'contain',
+      hideOnLaunch: false
+    },
+    usesAppleSignIn: false
   },
   updates: {
-    url: 'https://u.expo.dev/2c43cbc3-221c-4ca7-ac8c-ebfcc102426c',
+    url: '',
     requestHeaders: {
       'expo-channel-name': 'production',
     },
@@ -29,33 +57,17 @@ const config: ExpoConfig = {
   runtimeVersion: {
     policy: 'appVersion',
   },
-  androidStatusBar: {
-    barStyle: 'light-content',
-    translucent: true,
-  },
-  android: {
-    edgeToEdgeEnabled: true,
-    config: {
-      googleMaps: {
-        apiKey: process.env.EXPO_PUBLIC_MAP_API,
-      },
-    },
-    softwareKeyboardLayoutMode: 'pan',
-    adaptiveIcon: {
-      foregroundImage: './src/assets/adaptive-icon.png',
-      backgroundColor: '#0a0a0a',
-    },
-    package: 'com.anonymous.otobusumanlik',
-  },
   plugins: [
+    'expo-dev-client',
     'expo-router',
     'expo-localization',
     'expo-location',
     [
       'expo-splash-screen',
       {
-        image: './src/assets/icon.png',
-        backgroundColor: '#0a0a0a',
+        image: './src/assets/splash.png',
+        backgroundColor: '#d8d8d8',
+        resizeMode: 'contain'
       },
     ],
   ],

@@ -1,6 +1,6 @@
-import { Platform, ToastAndroid } from 'react-native'
+import { useToastStore } from '@/stores/toast'
 
-export const notify = (message: string) => {
-  if (Platform.OS !== 'android') return
-  ToastAndroid.show(message, ToastAndroid.SHORT)
+export const notify = (message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') => {
+  // Use in-app toast instead of system notifications
+  useToastStore.getState().addToast(message, type)
 }

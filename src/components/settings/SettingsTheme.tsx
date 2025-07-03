@@ -11,15 +11,15 @@ const options: {
   value: ColorSchemeName
 }[] = [
   {
-    label: i18n.t('dark'),
+    label: i18n.t('dark') || 'Dark',
     value: 'dark',
   },
   {
-    label: i18n.t('light'),
+    label: i18n.t('light') || 'Light',
     value: 'light',
   },
   {
-    label: i18n.t('system'),
+    label: i18n.t('system') || 'System',
     value: undefined,
   },
 ]
@@ -35,7 +35,7 @@ export const SettingsTheme = () => {
 
   return (
     <SettingsContainer
-      title={i18n.t('changeTheme')}
+      title={i18n.t('changeTheme') || 'Change Theme'}
       options={options}
       type="select"
       value={colorScheme}

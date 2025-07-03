@@ -26,53 +26,6 @@ const thursday = 1 << 5
 const friday = 1 << 6
 const saturday = 1 << 7
 
-const options: Record<Cities, any> = {
-  istanbul: [
-    {
-      value: monday | tuesday | wednesday | thursday | friday,
-      label: i18n.t('workday'),
-    },
-    {
-      value: saturday,
-      label: i18n.t('saturday'),
-    },
-    {
-      value: sunday,
-      label: i18n.t('sunday'),
-    },
-  ],
-  izmir: [
-    {
-      value: saturday,
-      label: i18n.t('saturday'),
-    },
-    {
-      value: monday,
-      label: i18n.t('monday'),
-    },
-    {
-      value: tuesday,
-      label: i18n.t('tuesday'),
-    },
-    {
-      value: wednesday,
-      label: i18n.t('wednesday'),
-    },
-    {
-      value: thursday,
-      label: i18n.t('thursday'),
-    },
-    {
-      value: friday,
-      label: i18n.t('friday'),
-    },
-    {
-      value: sunday,
-      label: i18n.t('sunday'),
-    },
-  ],
-}
-
 const now = new Date()
 const day = now.getDay()
 
@@ -85,6 +38,54 @@ export const LineTimetable = ({ lineCode }: LineTimetableProps) => {
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
 
   const { schemeColor, storedTheme } = useTheme(lineCode)
+
+  // Options'ı component içinde tanımlayarak i18n'in doğru çalışmasını sağlıyoruz
+  const options: Record<Cities, any> = useMemo(() => ({
+    istanbul: [
+      {
+        value: monday | tuesday | wednesday | thursday | friday,
+        label: i18n.t('workday'),
+      },
+      {
+        value: saturday,
+        label: i18n.t('saturday'),
+      },
+      {
+        value: sunday,
+        label: i18n.t('sunday'),
+      },
+    ],
+    izmir: [
+      {
+        value: saturday,
+        label: i18n.t('saturday'),
+      },
+      {
+        value: monday,
+        label: i18n.t('monday'),
+      },
+      {
+        value: tuesday,
+        label: i18n.t('tuesday'),
+      },
+      {
+        value: wednesday,
+        label: i18n.t('wednesday'),
+      },
+      {
+        value: thursday,
+        label: i18n.t('thursday'),
+      },
+      {
+        value: friday,
+        label: i18n.t('friday'),
+      },
+      {
+        value: sunday,
+        label: i18n.t('sunday'),
+      },
+    ],
+  }), []) // Boş dependency array - sadece component mount'ta çalışır
 
   const { query: announcementsQuery } = useAnnouncements()
   const { routeCode, getRouteFromCode } = useRoutes(lineCode)

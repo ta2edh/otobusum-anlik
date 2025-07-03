@@ -17,7 +17,7 @@ export const SettingsTraffic = () => {
   return (
     <SettingsContainer
       type="switch"
-      title={i18n.t('showTraffic')}
+      title={i18n.t('showTraffic') || 'Show Traffic'}
       onChange={handleTrafficInformation}
       value={showTraffic}
     />

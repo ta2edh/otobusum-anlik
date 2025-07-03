@@ -17,6 +17,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { useShallow } from 'zustand/react/shallow'
 
 import { LineTimetableMemoized } from '@/components/lines/line/LineTimetable'
@@ -34,6 +35,7 @@ const FlatListComponent = Platform.OS === 'web' ? FlatList : Animated.FlatList
 
 export const TimetableScreen = () => {
   const { tabRoutePaddings } = usePaddings(0)
+  const insets = useSafeAreaInsets()
 
   const linesHeight = useSharedValue(0)
   const linesRef = useAnimatedRef<FlatList>()
@@ -79,42 +81,53 @@ export const TimetableScreen = () => {
   const keyExtractor = useCallback((item: string) => item, [])
 
   if (lines.length < 1) {
-    return <UiText style={styles.center}>{i18n.t('timetableEmpty')}</UiText>
+    return (
+      <View style={[styles.emptyContainer, { paddingBottom: insets.bottom + 20 }]}>
+        <UiText style={styles.emptyText}>{i18n.t('timetableEmpty')}</UiText>
+      </View>
+    )
   }
 
   return (
     <View style={containerStyle}>
-      <Lines
-        cRef={linesRef}
-        listProps={{
-          onLayout,
-          onScroll: Platform.OS !== 'web' ? handleOnScroll : undefined,
-        }}
-        lineProps={{
-          variant: 'soft',
-        }}
-      />
+      {/* Zaman tarifeleri üstte - tam yükseklik */}
+      <View style={styles.timetablesContainer}>
+        <FlatListComponent
+          ref={timetablesRef}
+          data={lines}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          style={styles.timetablesList}
+          contentContainerStyle={styles.timetablesContent}
+          onScroll={Platform.OS !== 'web' ? handleOnScroll : undefined}
+          pagingEnabled
+          snapToAlignment="center"
+          horizontal
+          removeClippedSubviews={false}
+          {...(Platform.OS === 'web'
+            ? ({
+                CellRendererComponent: ({ children }) => {
+                  return <View style={{ flex: 1 }}>{children}</View>
+                },
+              } as Pick<ComponentProps<typeof FlatList<string>>, 'CellRendererComponent'>)
+            : ({} as any))}
+        />
+      </View>
 
-      <FlatListComponent
-        ref={timetablesRef}
-        data={lines}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
-        style={styles.list}
-        contentContainerStyle={styles.listContent}
-        onScroll={Platform.OS !== 'web' ? handleOnScroll : undefined}
-        pagingEnabled
-        snapToAlignment="center"
-        horizontal
-        removeClippedSubviews={false}
-        {...(Platform.OS === 'web'
-          ? ({
-              CellRendererComponent: ({ children }) => {
-                return <View style={{ flex: 1 }}>{children}</View>
-              },
-            } as Pick<ComponentProps<typeof FlatList<string>>, 'CellRendererComponent'>)
-          : ({} as any))}
-      />
+      {/* Hatlar aşağıda - tam yükseklik */}
+      <View style={styles.linesContainer}>
+        <Lines
+          cRef={linesRef}
+          listProps={{
+            onLayout,
+            onScroll: Platform.OS !== 'web' ? handleOnScroll : undefined,
+          }}
+          lineProps={{
+            variant: 'soft',
+            forTimetable: true, // Special timetable version
+          }}
+        />
+      </View>
     </View>
   )
 }
@@ -124,6 +137,30 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'center',
     textAlignVertical: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  emptyText: {
+    textAlign: 'center',
+    opacity: 0.6,
+  },
+  timetablesContainer: {
+    flex: 1, // Üst yarı - tam yükseklik
+  },
+  timetablesList: {
+    flex: 1,
+  },
+  timetablesContent: {
+    gap: 8,
+    padding: 8,
+  },
+  linesContainer: {
+    flex: 1, // Alt yarı - tam yükseklik
   },
   list: {
     flex: 1,

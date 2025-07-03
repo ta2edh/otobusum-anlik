@@ -13,10 +13,15 @@ export function useRoutes(lineCode: string) {
     queryFn: () => getAllRoutes(lineCode),
     staleTime: 60_000 * 30,
     meta: { persist: true },
+    enabled: !!lineCode, // lineCode varsa çalışsın
   })
 
   const getRouteFromCode = useCallback(() => {
-    return query.data?.find(item => item.route_code === routeCode)
+    if (!query.data || !Array.isArray(query.data)) {
+      console.warn('🚨 query.data is not an array:', query.data)
+      return null
+    }
+    return query.data.find(item => item.route_code === routeCode) || null
   }, [query.data, routeCode])
 
   const getRouteDirection = useCallback(() => {

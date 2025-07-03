@@ -1,7 +1,7 @@
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { FlashList, ListRenderItem, ViewToken } from '@shopify/flash-list'
-import { useCallback, useMemo, useRef } from 'react'
-import { Platform, StyleSheet, View, ViewStyle } from 'react-native'
+import { useCallback, useMemo, useRef, useEffect } from 'react'
+import { Platform, StyleSheet, View, ViewStyle, useWindowDimensions } from 'react-native'
 import Animated, {
   withTiming,
   useSharedValue,
@@ -20,6 +20,7 @@ import { useTheme } from '@/hooks/useTheme'
 
 import { BusLocation } from '@/api/getLineBusLocations'
 import { getSelectedRouteCode, useFiltersStore } from '@/stores/filters'
+import { setLineExpanded, useMiscStore } from '@/stores/misc'
 import { BusStop } from '@/types/bus'
 
 interface LineBusStopsProps {
@@ -34,8 +35,8 @@ interface LineBusStopsItemProps {
 }
 
 const ITEM_SIZE = 46
-const COLLAPSED = ITEM_SIZE * 3 - (ITEM_SIZE / 2) * 2
-const EXPANDED = COLLAPSED * 2
+const COLLAPSED = ITEM_SIZE * 2 // Tam olarak 2 durak
+const EXPANDED = ITEM_SIZE * 5 // 5 durak kadar
 
 const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
   const { schemeColor } = useTheme()
@@ -70,7 +71,13 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
           )}
         </View>
 
-        <UiText style={{ color: schemeColor.onSurface }}>{stop.stop_name}</UiText>
+        <UiText 
+          style={{ color: schemeColor.onSurface, flex: 1 }} 
+          size="sm"
+          numberOfLines={1}
+        >
+          {stop.stop_name}
+        </UiText>
       </View>
 
       {showBusIcon && map && <UiButton icon="locate" onPress={handleZoomBus} />}
@@ -79,10 +86,22 @@ const LineBusStopsItem = ({ stop, index, busses }: LineBusStopsItemProps) => {
 }
 
 export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
+  const { height } = useWindowDimensions()
   const routeCode = useFiltersStore(() => getSelectedRouteCode(lineCode))
-  const containerHeight = useSharedValue(COLLAPSED)
+  
+  const containerHeight = useSharedValue(COLLAPSED) // Always start collapsed (2 stops)
   const currentViewableItems = useRef<ViewToken[]>([])
   const flashlistRef = useRef<FlashList<BusStop>>(null)
+
+  // Listen to global expanded state
+  const expandedLines = useMiscStore(state => state.expandedLines)
+  const isExpanded = expandedLines.includes(lineCode)
+
+  // Update height when expanded state changes
+  useEffect(() => {
+    const targetHeight = isExpanded ? EXPANDED : COLLAPSED
+    containerHeight.value = withTiming(targetHeight, { duration: 300 })
+  }, [isExpanded])
 
   const { schemeColor } = useTheme()
   const { query: stops, closestStop } = useLineBusStops(routeCode, true)
@@ -122,7 +141,7 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
       stop => stop.stop_code === busInView?.closest_stop_code,
     )
 
-    if (stopIndex !== undefined) {
+    if (stopIndex !== undefined && stopIndex !== -1) {
       flashlistRef.current?.scrollToIndex({
         animated: true,
         index: stopIndex,
@@ -142,12 +161,12 @@ export const LineBusStops = ({ lineCode }: LineBusStopsProps) => {
           layout.size = ITEM_SIZE
         }}
         onScrollBeginDrag={() => {
-          containerHeight.value = withTiming(EXPANDED)
+          // When user starts scrolling, expand this line card
+          setLineExpanded(lineCode, true)
         }}
         onMomentumScrollEnd={() => {
-          containerHeight.value = withTiming(COLLAPSED, undefined, () => {
-            runOnJS(handleScrollToBus)()
-          })
+          // Center the bus when scrolling ends
+          runOnJS(handleScrollToBus)()
         }}
         fadingEdgeLength={40}
         drawDistance={1}
@@ -177,6 +196,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    flex: 1,
   },
   itemCircle: {
     width: 38,

@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import React, { useCallback, useMemo, useRef } from 'react'
 import { StyleSheet, Switch, View } from 'react-native'
 
@@ -19,7 +19,7 @@ interface GroupContainerProps {
 export const SettingsGroupContainer = (props: GroupContainerProps) => {
   return (
     <View style={styles.outerContainer}>
-      <UiText style={styles.title}>{props.title}</UiText>
+      <UiText style={styles.title}>{props.title || ''}</UiText>
 
       {props.children}
     </View>

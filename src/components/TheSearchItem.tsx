@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import { memo, useCallback, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'

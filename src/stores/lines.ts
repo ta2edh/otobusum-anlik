@@ -1,11 +1,12 @@
 import { type Theme } from '@material/material-color-utilities'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { randomUUID } from 'expo-crypto'
-import { AppState, AppStateStatus, ToastAndroid } from 'react-native'
+import { AppState, AppStateStatus } from 'react-native'
 import { create } from 'zustand'
 import { createJSONStorage, persist, subscribeWithSelector } from 'zustand/middleware'
 
 import { useFiltersStore } from './filters'
+import { useMiscStore } from './misc'
 
 import { queryClient } from '@/api/client'
 import { lineUpdateInterval } from '@/constants/app'
@@ -30,12 +31,15 @@ export interface LinesStore {
   lines: Record<Cities, string[]>
   lineTheme: Record<Cities, Record<string, ColorSchemes>>
   lineGroups: Record<Cities, Record<string, LineGroup>>
+  _hasHydrated: boolean
+  clearAllLines: () => void
+  clearAllGroups: () => void
 }
 
 export const useLinesStore = create(
   subscribeWithSelector(
     persist<LinesStore>(
-      () => ({
+      (set, get) => ({
         lines: {
           istanbul: [],
           izmir: [],
@@ -48,11 +52,96 @@ export const useLinesStore = create(
           istanbul: {},
           izmir: {},
         },
+        _hasHydrated: false,
+        clearAllLines: () => {
+          const { lines, lineTheme } = get()
+          const filtersStore = useFiltersStore.getState()
+          const currentCity = filtersStore.selectedCity
+          const linesToClear = lines[currentCity]
+          
+          if (linesToClear.length === 0) return
+          
+          // Batch query removal for better performance
+          const queriesToRemove = linesToClear.flatMap(lineCode => [
+            ['line', lineCode],
+            ['stop-locations', lineCode],
+            ['line-routes', lineCode]
+          ])
+          
+          queriesToRemove.forEach(queryKey => {
+            queryClient.removeQueries({ queryKey })
+          })
+          
+          // Clear invisible lines for current city lines in one operation
+          const miscStore = useMiscStore.getState()
+          const newInvisibleLines = miscStore.invisibleLines.filter(
+            lineCode => !linesToClear.includes(lineCode)
+          )
+          useMiscStore.setState({ invisibleLines: newInvisibleLines })
+          
+          set((state) => ({
+            lines: {
+              ...state.lines,
+              [currentCity]: [],
+            },
+            lineTheme: {
+              ...state.lineTheme,
+              [currentCity]: {},
+            },
+          }))
+        },
+        clearAllGroups: () => {
+          const { lineGroups } = get()
+          const filtersStore = useFiltersStore.getState()
+          const currentCity = filtersStore.selectedCity
+          const groupsToRemove = lineGroups[currentCity]
+          
+          if (Object.keys(groupsToRemove).length === 0) return
+          
+          // Batch query removal for better performance
+          const allGroupLineCodes = Object.values(groupsToRemove)
+            .flatMap(group => group.lineCodes)
+          
+          const queriesToRemove = allGroupLineCodes.flatMap(lineCode => [
+            ['line', lineCode],
+            ['stop-locations', lineCode],
+            ['line-routes', lineCode]
+          ])
+          
+          queriesToRemove.forEach(queryKey => {
+            queryClient.removeQueries({ queryKey })
+          })
+          
+          // Clear invisible lines for group lines in one operation
+          const miscStore = useMiscStore.getState()
+          const newInvisibleLines = miscStore.invisibleLines.filter(
+            lineCode => !allGroupLineCodes.includes(lineCode)
+          )
+          useMiscStore.setState({ invisibleLines: newInvisibleLines })
+          
+          // Reset selected group if it exists
+          if (filtersStore.selectedGroup) {
+            useFiltersStore.setState({ selectedGroup: null })
+          }
+          
+          set((state) => ({
+            lineGroups: {
+              ...state.lineGroups,
+              [currentCity]: {},
+            },
+          }))
+        },
       }),
       {
         name: 'line-storage',
         storage: createJSONStorage(() => AsyncStorage),
         version: 3,
+        onRehydrateStorage: () => (state) => {
+          console.log('Lines store rehydration complete', state)
+          if (state) {
+            state._hasHydrated = true
+          }
+        },
         migrate: (persistedStore, version) => {
           const store = persistedStore as LinesStore
 
@@ -94,7 +183,7 @@ export const getLines = () => {
 }
 
 // Line stuff
-export const deleteLine = (lineCode: string) =>
+export const deleteLine = (lineCode: string) => {
   useLinesStore.setState((state) => {
     const filtersStore = useFiltersStore.getState()
     const defaultLinesIndex = state.lines[filtersStore.selectedCity].indexOf(lineCode)
@@ -116,19 +205,55 @@ export const deleteLine = (lineCode: string) =>
     }
   })
 
+  // Also remove from invisible lines if present
+  const miscStore = useMiscStore.getState()
+  const invisibleIndex = miscStore.invisibleLines.indexOf(lineCode)
+  if (invisibleIndex !== -1) {
+    useMiscStore.setState((miscState) => {
+      const newInvisibleLines = [...miscState.invisibleLines]
+      newInvisibleLines.splice(invisibleIndex, 1)
+      return {
+        invisibleLines: newInvisibleLines,
+      }
+    })
+  }
+
+  // Clear specific queries for this line to remove markers from map
+  console.log(`🗑️ Removing queries for line: ${lineCode}`)
+  queryClient.removeQueries({ queryKey: ['line', lineCode] })
+  queryClient.removeQueries({ queryKey: ['stop-locations', lineCode] })
+  queryClient.removeQueries({ queryKey: ['line-routes', lineCode] })
+  
+  // Don't invalidate other queries to prevent flickering
+  console.log(`✅ Line ${lineCode} removed without invalidating other queries`)
+}
+
 export const addLine = (lineCode: string) =>
   useLinesStore.setState((state) => {
     const filtersStore = useFiltersStore.getState()
 
-    if (state.lines[filtersStore.selectedCity].length > 3) {
-      ToastAndroid.show(i18n.t('lineLimitExceeded'), ToastAndroid.SHORT)
+    if (state.lines[filtersStore.selectedCity].includes(lineCode)) {
       return state
     }
 
-    if (state.lines[filtersStore.selectedCity].includes(lineCode)) return state
-
     addTheme(lineCode)
-    notify(i18n.t('added', { lineCode: lineCode }))
+    notify(i18n.t('added', { lineCode: lineCode }), 'success')
+
+    // Ensure the line is visible when added
+    const miscStore = useMiscStore.getState()
+    const invisibleIndex = miscStore.invisibleLines.indexOf(lineCode)
+    if (invisibleIndex !== -1) {
+      useMiscStore.setState((miscState) => {
+        const newInvisibleLines = [...miscState.invisibleLines]
+        newInvisibleLines.splice(invisibleIndex, 1)
+        return {
+          invisibleLines: newInvisibleLines,
+        }
+      })
+    }
+
+    // Invalidate bus locations query to refresh data
+    queryClient.invalidateQueries({ queryKey: ['line', lineCode] })
 
     return {
       lines: {
@@ -154,7 +279,7 @@ export const addTheme = (lineCode: string) =>
         ...state.lineTheme,
         [filtersStore.selectedCity]: {
           ...state.lineTheme[filtersStore.selectedCity],
-          [lineCode]: createTheme(),
+          [lineCode]: createTheme(undefined, lineCode), // Pass lineCode for deterministic colors
         },
       },
     }
@@ -173,8 +298,6 @@ export const deleteTheme = (lineCode: string) =>
     const shouldDeleteTheme
       = !groupAllLineCodes.includes(lineCode)
         && state.lines[filtersStore.selectedCity].indexOf(lineCode) === -1
-
-    console.log(groupAllLineCodes, shouldDeleteTheme)
 
     if (shouldDeleteTheme) {
       delete state.lineTheme[filtersStore.selectedCity][lineCode]
@@ -202,9 +325,6 @@ export const createNewGroup = () =>
     const filtersStore = useFiltersStore.getState()
     const id = randomUUID()
 
-    const cityGroups = state.lineGroups[filtersStore.selectedCity]
-    const cityGroupsCount = Object.entries(cityGroups).length + 1
-
     return {
       lineGroups: {
         ...state.lineGroups,
@@ -212,7 +332,7 @@ export const createNewGroup = () =>
           ...state.lineGroups[filtersStore.selectedCity],
           [id]: {
             id,
-            title: `new group ${cityGroupsCount}`,
+            title: `new group ${Object.keys(state.lineGroups).length + 1}`,
             lineCodes: [],
           },
         },
@@ -227,17 +347,28 @@ export const addLineToGroup = (groupId: string, lineCode: string) =>
     if (!group) return state
 
     if (group.lineCodes.includes(lineCode)) {
-      notify(i18n.t('lineAlreadyInGroup'))
+      notify(i18n.t('lineAlreadyInGroup'), 'warning')
       return state
     }
 
-    if (group.lineCodes.length > 3) {
-      notify(i18n.t('lineLimitExceeded'))
-      return state
-    }
-
-    notify(i18n.t('addedToGroup', { lineCode: lineCode }))
+    notify(i18n.t('addedToGroup', { lineCode: lineCode }), 'success')
     addTheme(lineCode)
+
+    // Ensure the line is visible when added to group
+    const miscStore = useMiscStore.getState()
+    const invisibleIndex = miscStore.invisibleLines.indexOf(lineCode)
+    if (invisibleIndex !== -1) {
+      useMiscStore.setState((miscState) => {
+        const newInvisibleLines = [...miscState.invisibleLines]
+        newInvisibleLines.splice(invisibleIndex, 1)
+        return {
+          invisibleLines: newInvisibleLines,
+        }
+      })
+    }
+
+    // Invalidate bus locations query to refresh data
+    queryClient.invalidateQueries({ queryKey: ['line', lineCode] })
 
     return {
       lineGroups: {
@@ -282,17 +413,14 @@ export const deleteGroup = (groupId: string) =>
     const group = state.lineGroups[filtersStore.selectedCity][groupId]
     if (!group) return state
 
-    group.lineCodes.forEach(lineCode => deleteLineFromGroup(groupId, filtersStore.selectedCity, lineCode))
+    group.lineCodes.forEach(lineCode =>
+      deleteLineFromGroup(groupId, filtersStore.selectedCity, lineCode),
+    )
     delete state.lineGroups[filtersStore.selectedCity][groupId]
-
-    console.log(state.lineGroups)
 
     return {
       lineGroups: {
         ...state.lineGroups,
-        [filtersStore.selectedCity]: {
-          ...state.lineGroups[filtersStore.selectedCity],
-        },
       },
     }
   })
@@ -300,12 +428,30 @@ export const deleteGroup = (groupId: string) =>
 export const deleteLineFromGroup = (groupId: string, city: Cities, lineCode: string) =>
   useLinesStore.setState((state) => {
     const lineIndex = state.lineGroups[city][groupId]?.lineCodes.indexOf(lineCode)
+    const filtersStore = useFiltersStore.getState()
     if (lineIndex === undefined || lineIndex === -1) return state
 
     state.lineGroups[city][groupId]!.lineCodes.splice(lineIndex, 1)
     deleteTheme(lineCode)
 
-    const filtersStore = useFiltersStore.getState()
+    // Also remove from invisible lines if present
+    const miscStore = useMiscStore.getState()
+    const invisibleIndex = miscStore.invisibleLines.indexOf(lineCode)
+    if (invisibleIndex !== -1) {
+      useMiscStore.setState((miscState) => {
+        const newInvisibleLines = [...miscState.invisibleLines]
+        newInvisibleLines.splice(invisibleIndex, 1)
+        return {
+          invisibleLines: newInvisibleLines,
+        }
+      })
+    }
+
+    // Clear queries for this line - no invalidation to prevent flickering
+    console.log(`🗑️ Removing group line queries for: ${lineCode}`)
+    queryClient.removeQueries({ queryKey: ['line', lineCode] })
+    queryClient.removeQueries({ queryKey: ['stop-locations', lineCode] })
+    queryClient.removeQueries({ queryKey: ['line-routes', lineCode] })
 
     return {
       lineGroups: {
@@ -380,4 +526,72 @@ const startUpdateLoop = () => {
 
 if (!__DEV__) {
   useLinesStore.persist.onFinishHydration(startUpdateLoop)
+}
+
+// Regenerate all line themes with new distinct colors
+export const regenerateAllLineColors = () => {
+  useLinesStore.setState((state) => {
+    const filtersStore = useFiltersStore.getState()
+    const currentLineThemes = state.lineTheme[filtersStore.selectedCity]
+    const newLineThemes: Record<string, ColorSchemes> = {}
+    
+    // Regenerate themes for all existing lines
+    Object.keys(currentLineThemes).forEach((lineCode) => {
+      newLineThemes[lineCode] = createTheme(undefined, lineCode)
+    })
+    
+    return {
+      lineTheme: {
+        ...state.lineTheme,
+        [filtersStore.selectedCity]: newLineThemes,
+      },
+    }
+  })
+}
+
+// Clear all lines and groups
+export const clearAllLines = () => {
+  useLinesStore.setState((state) => {
+    const filtersStore = useFiltersStore.getState()
+
+    // Clear lines
+    const newLines = {
+      ...state.lines,
+      [filtersStore.selectedCity]: [],
+    }
+
+    // Clear line themes
+    const newLineTheme = {
+      ...state.lineTheme,
+      [filtersStore.selectedCity]: {},
+    }
+
+    // Clear line groups
+    const newLineGroups = {
+      ...state.lineGroups,
+      [filtersStore.selectedCity]: {},
+    }
+
+    return {
+      lines: newLines,
+      lineTheme: newLineTheme,
+      lineGroups: newLineGroups,
+    }
+  })
+}
+
+export const clearAllGroups = () => {
+  useLinesStore.setState((state) => {
+    const filtersStore = useFiltersStore.getState()
+
+    // Clear line groups
+    const newLineGroups = {
+      ...state.lineGroups,
+      [filtersStore.selectedCity]: {},
+    }
+
+    return {
+      lineGroups: newLineGroups,
+    }
+  })
 }

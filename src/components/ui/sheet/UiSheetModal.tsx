@@ -6,7 +6,7 @@ import {
   type BottomSheetBackdropProps,
   type BottomSheetModalProps,
 } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { ReactNode, RefObject } from 'react'
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native'
 import { Easing } from 'react-native-reanimated'

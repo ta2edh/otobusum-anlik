@@ -1,4 +1,4 @@
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { LatLng, Marker } from 'react-native-maps'
 
 import { useTheme } from '@/hooks/useTheme'

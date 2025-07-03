@@ -21,7 +21,8 @@ interface LineGroupsProps extends ViewProps {
 
 export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroupsProps) => {
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))!
-  const groups = useLinesStore(useShallow(state => Object.values(state.lineGroups[selectedCity])))
+  const lineGroups = useLinesStore(useShallow(state => state.lineGroups))
+  const groups = Object.values(lineGroups[selectedCity])
 
   const handlePressNewGroup = useCallback(() => {
     createNewGroup()
@@ -49,7 +50,7 @@ export const LineGroups = ({ onPressGroup, lineCodeToAdd, ...props }: LineGroups
         icon="albums"
         enableDynamicSizing={false}
         footer={() => (
-          <UiButton icon="add" title={i18n.t('createNewGroup')} onPress={handlePressNewGroup} />
+          <UiButton icon="add" title={i18n.t('createNewGroup')} onPress={handlePressNewGroup} square />
         )}
         list
       >

@@ -18,6 +18,7 @@ import { addLine } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { useSettingsStore } from '@/stores/settings'
 import { i18n } from '@/translations/i18n'
+import { openDirectionsFromCurrentLocation } from '@/utils/navigation'
 
 interface TheStopInfoProps {
   ref: RefObject<TheMapRef | null>
@@ -93,13 +94,22 @@ export const TheStopInfo = ({ ref }: TheStopInfoProps) => {
   }, [query.data])
 
   const openStopDirections = async () => {
-    if (!query.data?.stop) return
+    if (!query.data?.stop) {
+      console.log('❌ No stop data for directions')
+      return
+    }
 
-    const scheme = `geo:0,0?q=${query.data.stop.y_coord},${query.data.stop.x_coord}&label=${query.data.stop.stop_name}`
+    console.log('🗺️ Opening directions to stop:', query.data.stop.stop_name)
+    
     try {
-      await Linking.openURL(scheme)
+      await openDirectionsFromCurrentLocation({
+        latitude: query.data.stop.y_coord,
+        longitude: query.data.stop.x_coord,
+        label: query.data.stop.stop_name,
+        address: query.data.stop.stop_name
+      })
     } catch (error) {
-      console.log(error)
+      console.error('🚨 Error opening stop directions:', error)
     }
   }
 
@@ -148,6 +158,12 @@ export const TheStopInfo = ({ ref }: TheStopInfoProps) => {
                 onPress={openStopDirections}
                 variant="solid"
                 icon="location-outline"
+                square
+                containerStyle={{
+                  minHeight: 48,
+                  paddingVertical: 12,
+                  paddingHorizontal: 16,
+                }}
               />
 
               {query.data && (

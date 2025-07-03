@@ -7,30 +7,57 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "channel": "development",
       "env": {
-        "EXPO_PUBLIC_MAP_API": "EXPO_PUBLIC_MAP_API"
+        "NODE_ENV": "development"
       },
-      "channel": "development"
+      "ios": {
+        "simulator": false,
+        "buildConfiguration": "Debug",
+        "autoIncrement": false
+      }
+    },
+    "adhoc": {
+      "distribution": "internal",
+      "channel": "adhoc",
+      "ios": {
+        "buildConfiguration": "Release",
+        "enterpriseProvisioning": "adhoc"
+      }
     },
     "preview": {
       "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      },
       "env": {
-        "EXPO_PUBLIC_MAP_API": "EXPO_PUBLIC_MAP_API"
+        "NODE_ENV": "production"
+      },
+      "ios": {
+        "buildConfiguration": "Release"
       },
       "channel": "preview"
     },
     "production": {
       "autoIncrement": true,
+      "channel": "production",
       "env": {
-        "EXPO_PUBLIC_MAP_API": "EXPO_PUBLIC_MAP_API"
+        "NODE_ENV": "production",
+        "EXPO_DEBUG": "false"
       },
-      "channel": "production"
+      "ios": {
+        "buildConfiguration": "Release",
+        "cache": {
+          "disabled": false
+        },
+        "simulator": false
+      }
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "",
+        "ascAppId": "",
+        "appleTeamId": ""
+      }
+    }
   }
 }

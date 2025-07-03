@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { useCallback, useEffect, useRef } from 'react'
 import { StyleSheet, View } from 'react-native'
 import Animated, {
@@ -10,8 +10,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import { useShallow } from 'zustand/react/shallow'
+import * as Location from 'expo-location'
 
 import { useTheme } from '@/hooks/useTheme'
+import { useMap } from '@/hooks/contexts/useMap'
 
 import { LineGroups } from './lines/line/LineGroups'
 import { UiButton } from './ui/UiButton'
@@ -19,11 +21,14 @@ import { UiButton } from './ui/UiButton'
 import { changeRouteDirection, selectGroup, unSelectGroup, useFiltersStore } from '@/stores/filters'
 import { getLines, getTheme, useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
+import { useSettingsStore } from '@/stores/settings'
 import { LineGroup } from '@/types/lineGroup'
 
 export const TheMapButtons = () => {
   const selectedCity = useFiltersStore(useShallow(state => state.selectedCity))
   const selectedGroup = useFiltersStore(state => state.selectedGroup)
+  const showMyLocation = useSettingsStore(useShallow(state => state.showMyLocation))
+  const mapRef = useMap()
 
   const lineGroups = useLinesStore(useShallow(state => Object.keys(state.lineGroups[selectedCity])))
   const lines = useLinesStore(useShallow(() => getLines()))
@@ -33,6 +38,19 @@ export const TheMapButtons = () => {
   const bgColor = useSharedValue(schemeDefault.surface)
   const txtColor = useSharedValue(schemeDefault.onSurface)
   const bottomSheetModalGroups = useRef<BottomSheetModal>(null)
+
+  // Simple and reliable user location centering
+  const centerOnUserLocation = async () => {
+    console.log('🎯 Center button pressed')
+    
+    if (!mapRef?.current) {
+      console.log('❌ Map ref not available')
+      return
+    }
+    
+    // Just use the map's built-in method
+    mapRef.current.animateToUserLocation()
+  }
 
   const updateColors = useCallback(
     (index: number) => {
@@ -144,6 +162,18 @@ export const TheMapButtons = () => {
 
           <LineGroups cRef={bottomSheetModalGroups} onPressGroup={handlePressGroup} />
         </>
+      )}
+
+      {showMyLocation && (
+        <Animated.View style={animatedContainerStyle}>
+          <UiButton
+            icon="locate"
+            onPress={centerOnUserLocation}
+            animatedIconProps={animatedIconProps}
+            variant="ghost"
+            square
+          />
+        </Animated.View>
       )}
     </View>
   )

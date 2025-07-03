@@ -29,7 +29,7 @@ export const SettingCity = () => {
 
   return (
     <SettingsContainer
-      title={i18n.t('city')}
+      title={i18n.t('city') || 'City'}
       type="select"
       options={options}
       value={selectedCity}

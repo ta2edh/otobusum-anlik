@@ -15,7 +15,7 @@ export const SettingsCluster = () => {
   return (
     <SettingsContainer
       type="switch"
-      title={i18n.t('clusterBusStops')}
+      title={i18n.t('clusterBusStops') || 'Cluster Bus Stops'}
       value={clusterStops}
       onChange={handleClusterStops}
     />

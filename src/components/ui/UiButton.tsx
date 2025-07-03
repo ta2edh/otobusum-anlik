@@ -1,5 +1,6 @@
 import { type Theme } from '@material/material-color-utilities'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
+import * as Haptics from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { Platform, StyleProp, StyleSheet, TextStyle, View, ViewStyle } from 'react-native'
 import { BaseButton } from 'react-native-gesture-handler'
@@ -10,7 +11,7 @@ import { useTheme } from '@/hooks/useTheme'
 import { UiActivityIndicator } from './UiActivityIndicator'
 import { UiText } from './UiText'
 
-import { ButtonVariants, iconSizes, size } from '@/constants/uiSizes'
+import { ButtonVariants, IconSize, iconSizes } from '@/constants/uiSizes'
 import { IconValue } from '@/types/ui'
 
 export interface UiButtonPropsBase {
@@ -19,7 +20,7 @@ export interface UiButtonPropsBase {
   square?: boolean
   onPress?: () => void
   onLongPress?: () => void
-  size?: size
+  iconSize?: IconSize
   disabled?: boolean
   containerStyle?: StyleProp<ViewStyle>
   innerContainerStyle?: StyleProp<ViewStyle>
@@ -48,7 +49,7 @@ export type UiButtonProps = UiButtonPropsWithTitle | UiButtonPropsWithIcon
 const AnimatedIonIcons = Animated.createAnimatedComponent(Ionicons)
 
 export const UiButton = ({
-  size = 'md',
+  iconSize = 'md',
   variant = 'solid',
   error,
   ...props
@@ -85,6 +86,20 @@ export const UiButton = ({
 
   const iconColor = dynamicText.color ?? props.iconColor
 
+  const handlePress = useCallback(() => {
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+    }
+    props.onPress?.()
+  }, [props])
+
+  const handleLongPress = useCallback(() => {
+    if (Platform.OS === 'ios') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)
+    }
+    props.onLongPress?.()
+  }, [props])
+
   const Icon = useCallback(
     ({ icon }: { icon: IconValue }) => {
       if (props.isLoading) {
@@ -95,15 +110,16 @@ export const UiButton = ({
         return (
           <AnimatedIonIcons
             name={icon}
-            size={iconSizes[size]}
+            size={iconSizes[iconSize]}
+            color={iconColor}
             animatedProps={props.animatedIconProps}
           />
         )
       }
 
-      return <Ionicons name={icon} size={iconSizes[size]} color={iconColor} />
+      return <Ionicons name={icon} size={iconSizes[iconSize]} color={iconColor} />
     },
-    [iconColor, size, props.animatedIconProps, props.isLoading],
+    [iconColor, iconSize, props.animatedIconProps, props.isLoading],
   )
 
   return (
@@ -114,27 +130,21 @@ export const UiButton = ({
         props.containerStyle,
         props.square ? styles.square : undefined,
       ]}
-      onPress={props.onPress}
-      onLongPress={props.onLongPress}
+      onPress={handlePress}
+      onLongPress={handleLongPress}
       rippleColor="black"
       enabled={!props.disabled}
     >
       <View
-        {
-          ...Platform.OS !== 'web'
-            ? {
-                accessible: true,
-                accessibilityRole: 'button',
-              }
-            : {}
-        }
+        accessible={true}
+        accessibilityRole={'button'}
 
         style={[styles.innerContainer, props.innerContainerStyle]}
       >
         {props.icon && <Icon icon={props.icon} />}
 
         {props.title && (
-          <UiText style={[styles.title, dynamicText, props.textStyle]} size={size} numberOfLines={1}>
+          <UiText style={[styles.title, dynamicText, props.textStyle]} numberOfLines={2}>
             {props.title}
           </UiText>
         )}
@@ -160,10 +170,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
+    flexShrink: 1,
   },
   title: {
     textAlign: 'center',
     textAlignVertical: 'center',
+    lineHeight: 18,
+    flexShrink: 1,
   },
   square: {
     borderRadius: 14,

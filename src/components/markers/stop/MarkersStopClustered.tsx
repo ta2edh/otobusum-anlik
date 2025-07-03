@@ -9,7 +9,9 @@ import { useLineBusStops } from '@/hooks/queries/useLineBusStops'
 import { MarkersStopItemMemoized } from './MarkersStopItem'
 
 import { useFiltersStore, getSelectedRouteCode } from '@/stores/filters'
+import { useLinesStore } from '@/stores/lines'
 import { useSettingsStore } from '@/stores/settings'
+import { useMiscStore } from '@/stores/misc'
 
 interface Props {
   lineCode: string
@@ -18,9 +20,24 @@ interface Props {
 export const MarkersStopClustered = (props: Props) => {
   const initialLocation = useSettingsStore(state => state.initialMapLocation)
   const routeCode = useFiltersStore(() => getSelectedRouteCode(props.lineCode))
+  const selectedCity = useFiltersStore(state => state.selectedCity)
+  const selectedGroup = useFiltersStore(state => state.selectedGroup)
   const { width, height } = useWindowDimensions()
-
+  const invisibleLines = useMiscStore(state => state.invisibleLines)
+  const linesStore = useLinesStore()
+  
+  // Check if line still exists in store
+  const lineStillExists = selectedGroup
+    ? linesStore.lineGroups[selectedCity][selectedGroup]?.lineCodes.includes(props.lineCode)
+    : linesStore.lines[selectedCity].includes(props.lineCode)
+  
+  // ALWAYS call useLineBusStops hook - hooks must be called in the same order
   const { query } = useLineBusStops(routeCode)
+  
+  // Don't render if line no longer exists or is invisible
+  if (!lineStillExists || invisibleLines.includes(props.lineCode)) {
+    return null
+  }
   const data = query.data || []
 
   const filteredParsed: supercluster.PointFeature<any>[] = data.map((item, index) => ({

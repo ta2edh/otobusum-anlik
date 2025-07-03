@@ -1,5 +1,5 @@
 import { BottomSheetModal } from '@gorhom/bottom-sheet'
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { StyleSheet } from 'react-native'
 
@@ -73,13 +73,13 @@ export const LineRoutes = memo(function LineRoutes(props: Props) {
             )
           : (
               <>
-                <UiText size="sm" numberOfLines={1} style={{ color }}>
+                <UiText size="sm" numberOfLines={1} style={{ color, flex: 1 }}>
                   {leftTitle}
                 </UiText>
 
-                <Ionicons name="arrow-forward" size={18} color={color} />
+                <Ionicons name="arrow-forward" size={18} color={color} style={{ marginHorizontal: 4 }} />
 
-                <UiText size="sm" numberOfLines={1} style={{ color }}>
+                <UiText size="sm" numberOfLines={1} style={{ color, flex: 1 }}>
                   {rightTitle}
                 </UiText>
               </>
@@ -112,5 +112,6 @@ const styles = StyleSheet.create({
   },
   grow: {
     flexGrow: 1,
+    flexShrink: 1,
   },
 })

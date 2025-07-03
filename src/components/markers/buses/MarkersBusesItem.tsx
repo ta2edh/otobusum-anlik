@@ -1,4 +1,4 @@
-import Ionicons from '@react-native-vector-icons/ionicons'
+import { Ionicons } from '@expo/vector-icons'
 import { memo } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { MapMarkerProps } from 'react-native-maps'
@@ -30,9 +30,10 @@ export const MarkersBusesItem = ({ location, lineCode }: MarkersBusesItemProps) 
           longitude: location.lng,
         },
         tracksInfoWindowChanges: false,
-        tracksViewChanges: false,
+        tracksViewChanges: false, // Changed to false for better performance
         anchor: { x: 0.5, y: 0.5 },
         zIndex: 2,
+        hitSlop: { top: 20, bottom: 20, left: 20, right: 20 }, // Makul hitSlop
       }}
     >
       <View style={[styles.iconContainer, { backgroundColor: schemeColor.primaryContainer }]}>
@@ -49,6 +50,6 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
+    padding: 8, // Eski padding
   },
 })

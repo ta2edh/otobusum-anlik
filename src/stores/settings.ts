@@ -10,6 +10,7 @@ export interface SettingsStore {
   showTraffic: boolean
   colorScheme?: ColorSchemeName
   clusterStops: boolean
+  useAppleMaps: boolean
 }
 
 export const useSettingsStore = create(
@@ -17,10 +18,11 @@ export const useSettingsStore = create(
     persist<SettingsStore>(
       () => ({
         initialMapLocation: undefined,
-        showMyLocation: false,
+        showMyLocation: true,
         showTraffic: true,
         colorScheme: undefined,
         clusterStops: false,
+        useAppleMaps: false,
       }),
       {
         name: 'settings-storage',

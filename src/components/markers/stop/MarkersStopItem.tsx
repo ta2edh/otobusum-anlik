@@ -83,14 +83,18 @@ export const MarkersStopItem = ({
       onPress={handleOnPress}
       anchor={{ x: 0.5, y: 0.5 }}
       zIndex={1}
+      hitSlop={{ top: 25, bottom: 25, left: 25, right: 25 }} // Çok daha büyük hitSlop
       {...props}
     >
-      <View style={[styles.busStop, stopStyle, viewStyle]}>
-        {label && (
-          <UiText style={textStyle} size="xs">
-            {label}
-          </UiText>
-        )}
+      {/* Invisible larger touch area */}
+      <View style={styles.touchArea}>
+        <View style={[styles.busStop, stopStyle, viewStyle]}>
+          {label && (
+            <UiText style={textStyle} size="xs">
+              {label}
+            </UiText>
+          )}
+        </View>
       </View>
     </Marker>
   )
@@ -99,9 +103,15 @@ export const MarkersStopItem = ({
 export const MarkersStopItemMemoized = memo(MarkersStopItem)
 
 const styles = StyleSheet.create({
+  touchArea: {
+    width: 50, // Çok daha büyük tıklama alanı
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   busStop: {
-    width: 14,
-    height: 14,
+    width: 18, // Biraz daha büyük görsel
+    height: 18,
     borderWidth: 2,
     borderRadius: 1000,
     alignItems: 'center',

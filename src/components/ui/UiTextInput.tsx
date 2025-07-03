@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   input: {
     borderRadius: 999,
     flexDirection: 'row',
-    paddingVertical: Platform.OS === 'web' ? 8 : 0,
+    paddingVertical: Platform.OS === 'ios' ? 12 : 8,
     gap: 8,
   },
   iconContainer: {

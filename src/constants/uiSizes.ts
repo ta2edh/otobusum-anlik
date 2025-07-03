@@ -2,7 +2,6 @@ type Sizes = 'sm' | 'md' | 'lg'
 
 export type FontSize = Sizes | 'xl' | 'xs'
 export type IconSize = Sizes
-export type size = Sizes
 
 export type ButtonVariants = 'solid' | 'soft' | 'ghost' | 'error'
 
