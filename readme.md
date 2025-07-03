@@ -101,18 +101,11 @@ This migration removed:
 ## 📸 Screenshots
 
 <div align="center">
-
-### 🗺️ Apple Maps Integration
-<img src="preview/en-1.png" width="250" title="Real-time bus tracking with Apple Maps"/>
-<img src="preview/en-2.png" width="250" title="Bus stops and route visualization"/>
-
-### 🚍 Transit Features  
-<img src="preview/en-3.png" width="250" title="Live schedules and departures"/>
-<img src="preview/en-4.png" width="250" title="Route planning and navigation"/>
-
-### ⚙️ Settings & Language Support
-<img src="preview/en-5.png" width="250" title="Multi-language settings and preferences"/>
-
+<img src="preview/en-1.png" width="250" title=""/>
+<img src="preview/en-2.png" width="250" title=""/>
+<img src="preview/en-3.png" width="250" title=""/>
+<img src="preview/en-4.png" width="250" title=""/>
+<img src="preview/en-5.png" width="250" title=""/>
 </div>
 
 *Native iOS app with Apple Maps integration, real-time bus tracking, and seamless language switching*
