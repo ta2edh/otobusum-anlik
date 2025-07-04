@@ -23,7 +23,6 @@ import { useIOSAppLifecycle, useIOSDeepLinks } from '@/hooks/useIOSLifecycle'
 import { persister, queryClient } from '@/api/client'
 import { fontSizes } from '@/constants/uiSizes'
 import { i18n } from '@/translations/i18n'
-import { useLanguageStore } from '@/stores/language'
 import { useLinesStore } from '@/stores/lines'
 import { useMiscStore } from '@/stores/misc'
 import { checkAllPermissions } from '@/utils/iOSPermissions'
@@ -42,10 +41,9 @@ enableScreens(true)
 
 export const RootLayout = () => {
   const { schemeColor, colorScheme } = useTheme()
-  const languageHydrated = useLanguageStore(state => state._hasHydrated)
   const linesHydrated = useLinesStore(state => state._hasHydrated)
   const miscHydrated = useMiscStore(state => state._hasHydrated)
-  const allStoresHydrated = languageHydrated && linesHydrated && miscHydrated
+  const allStoresHydrated = linesHydrated && miscHydrated
   const hydrationTimeoutRef = useRef<number | null>(null)
   const splashTimeoutRef = useRef<number | null>(null)
 
@@ -77,7 +75,7 @@ export const RootLayout = () => {
   // Store hydration'ını bekle
   useEffect(() => {
     if (!allStoresHydrated) {
-      console.log(`Store hydration status: language=${languageHydrated}, lines=${linesHydrated}, misc=${miscHydrated}`)
+      console.log(`Store hydration status: lines=${linesHydrated}, misc=${miscHydrated}`)
       // 2.5 saniye sonra yine de splash screen'i kapat (timeout'tan önce)
       hydrationTimeoutRef.current = setTimeout(() => {
         console.log('Force hiding splash screen due to hydration timeout')
@@ -90,7 +88,7 @@ export const RootLayout = () => {
     if (hydrationTimeoutRef.current) clearTimeout(hydrationTimeoutRef.current)
     console.log('All stores hydrated, hiding splash screen')
     SplashScreen.hideAsync().catch(() => {})
-  }, [allStoresHydrated, languageHydrated, linesHydrated, miscHydrated])
+  }, [allStoresHydrated, linesHydrated, miscHydrated])
 
   // iOS permission check on app start
   useEffect(() => {

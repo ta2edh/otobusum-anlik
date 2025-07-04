@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "This app uses your location to show nearby bus stops and routes.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses your location to show nearby bus stops and routes."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

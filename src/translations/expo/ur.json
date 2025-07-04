@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "یہ ایپ قریبی بس سٹاپس اور راستے دکھانے کے لیے آپ کی لوکیشن استعمال کرتی ہے۔",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "یہ ایپ قریبی بس سٹاپس اور راستے دکھانے کے لیے آپ کی لوکیشن استعمال کرتی ہے۔"
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

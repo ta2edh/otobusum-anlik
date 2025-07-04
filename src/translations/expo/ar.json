@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Avtobusum Anlıq",
+    "CFBundleName": "Avtobusum Anlıq",
+    "NSLocationWhenInUseUsageDescription": "Tətbiqetmə, sizin və ətrafınızdakı avtobus dayanacaqlarını və marşrutları göstərmək üçün yerləşməyinizi istifadə edir.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Tətbiqetmə, sizin və ətrafınızdakı avtobus dayanacaqlarını və marşrutları göstərmək üçün yerləşməyinizi istifadə edir."
+  },
+  "android": {
+    "app_name": "Avtobusum Anlıq"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "यह ऐप आसपास के बस स्टॉप्स और रूट्स दिखाने के लिए आपकी लोकेशन का उपयोग करता है।",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "यह ऐप आसपास के बस स्टॉप्स और रूट्स दिखाने के लिए आपकी लोकेशन का उपयोग करता है।"
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

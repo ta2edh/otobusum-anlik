@@ -47,7 +47,8 @@ export default {
   stopDirections: 'Richtungen zu dieser Haltestelle',
   license: 'Lizenz %{city}',
   other: 'Andere',
-  city: 'Stadt',  deleteLine: 'Linie löschen',
+  city: 'Stadt',
+  deleteLine: 'Linie löschen',
   addToGroup: 'Zur Gruppe hinzufügen',
   minimizeLine: 'Linienkarte minimieren',
   maximizeLine: 'Linienkarte maximieren',
@@ -60,9 +61,12 @@ export default {
   announcements: 'Ankündigungen',
   timetableEmptyRange: 'Fahrplan für diesen Tag ist leer',
   lineGroups: 'Liniengruppen',
-  useAppleMaps: 'Apple Maps verwenden',  language: 'Sprache',
+  useAppleMaps: 'Apple Maps verwenden',
+  language: 'Sprache',
   changeLanguage: 'Sprache ändern',
-  systemDefault: 'Systemstandard',  openIOSSettings: 'iOS-Einstellungen öffnen',
+  changeLanguageInSettings: 'Sprache in Einstellungen ändern',
+  systemDefault: 'Systemstandard',
+  openIOSSettings: 'iOS-Einstellungen öffnen',
   languageWillChangeOnRestart: 'Die Sprachänderung wird nach dem Neustart der App wirksam',
   regenerateLineColors: 'Linienfarben regenerieren',
   regenerateLineColorsDescription: 'Farben regenerieren, um Linien besser unterscheidbar zu machen',
@@ -75,4 +79,25 @@ export default {
   cancel: 'Abbrechen',
   clear: 'Löschen',
   data: 'Daten',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Standortberechtigung erforderlich',
+      message: 'Wir benötigen Ihre Standortberechtigung, um Busse und Haltestellen in der Nähe anzuzeigen. Bitte erteilen Sie die Berechtigung in den Einstellungen.',
+      goToSettings: 'Zu den Einstellungen'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'Abbrechen',
+    ok: 'OK',
+    yes: 'Ja',
+    no: 'Nein'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'Im App Store bewerten',
+  iOSSettings: 'iOS-Einstellungen'
 }

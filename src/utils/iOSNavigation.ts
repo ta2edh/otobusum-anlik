@@ -58,7 +58,7 @@ export const openAppStore = () => {
   if (Platform.OS !== 'ios') return
   
   // App Store URL'i - gerçek App Store ID'si eklenecek
-  const appStoreUrl = 'https://apps.apple.com/app/id123456789' // Placeholder
+  const appStoreUrl = 'https://apps.apple.com/us/app/otob%C3%BCs%C3%BCm-anl%C4%B1k/id6747687530' // Placeholder
   Linking.openURL(appStoreUrl)
 }
 

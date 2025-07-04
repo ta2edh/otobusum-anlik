@@ -64,6 +64,7 @@ export default {
   useAppleMaps: 'Apple Haritalar kullan',
   language: 'Dil',
   changeLanguage: 'Dil Değiştir',
+  changeLanguageInSettings: 'Ayarlar\'da Dil Değiştir',
   systemDefault: 'Sistem Varsayılanı',
   openIOSSettings: 'iOS Ayarlarını Aç',
   languageWillChangeOnRestart: 'Dil değişikliği uygulamanın yeniden başlatılmasından sonra geçerli olacak',
@@ -78,4 +79,25 @@ export default {
   cancel: 'İptal',
   clear: 'Temizle',
   data: 'Veri',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Konum İzni Gerekli',
+      message: 'Yakınınzdaki otobüsleri ve durakları gösterebilmemiz için konum iznine ihtiyacımız var. Lütfen ayarlardan izin verin.',
+      goToSettings: 'Ayarlara Git'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'İptal',
+    ok: 'Tamam',
+    yes: 'Evet',
+    no: 'Hayır'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'App Store\'da Değerlendir',
+  iOSSettings: 'iOS Ayarları'
 }

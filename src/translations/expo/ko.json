@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "앱은 사용자의 위치를 사용하여 근처 버스 정류장과 경로를 표시합니다.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "앱은 사용자의 위치를 사용하여 근처 버스 정류장과 경로를 표시합니다."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

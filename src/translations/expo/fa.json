@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "این برنامه از موقعیت شما برای نمایش نزدیک‌ترین ایستگاه‌های اتوبوس و ارائه ناوبری دقیق استفاده می‌کند.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "این برنامه از موقعیت شما برای نمایش نزدیک‌ترین ایستگاه‌های اتوبوس و ارائه ناوبری دقیق استفاده می‌کند."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

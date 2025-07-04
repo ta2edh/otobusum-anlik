@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Bu programma ýerleşýän awtobus duralgalaryny we ýollaryny görkez üçin ýer maglumatyňyzy ulanýar.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Bu programma ýerleşýän awtobus duralgalaryny we ýollaryny görkez üçin ýer maglumatyňyzy ulanýar."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "འདི་ཉེར་སྤྱོད་འདིས་ཁྱེད་རང་གི་གནས་ས་ཁ་སྤྱད་དེ་ཉེ་འཁོར་གྱི་སྤྱི་འཁོར་འཚུར་གནས་དང་འགྲུལ་ལམ་སྟོན་གི་རེད།",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "འདི་ཉེར་སྤྱོད་འདིས་ཁྱེད་རང་གི་གནས་ས་ཁ་སྤྱད་དེ་ཉེ་འཁོར་གྱི་སྤྱི་འཁོར་འཚུར་གནས་དང་འགྲུལ་ལམ་སྟོན་གི་རེད།"
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

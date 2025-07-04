@@ -94,12 +94,12 @@ export const SettingsScreen = () => {
           <>
             <SettingsContainer
               type="link"
-              title="App Store'da Değerlendir"
+              title={i18n.t('rateOnAppStore') || 'Rate on App Store'}
               onPress={openAppStore}
             />
             <SettingsContainer
               type="link"
-              title="iOS Ayarları"
+              title={i18n.t('iOSSettings') || 'iOS Settings'}
               onPress={openSettings}
             />
           </>

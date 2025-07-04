@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "此应用使用您的位置来显示附近的公交站点和路线。",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "此应用使用您的位置来显示附近的公交站点和路线。"
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

@@ -47,7 +47,8 @@ export default {
   stopDirections: 'Directions vers cet arrêt',
   license: 'Licence %{city}',
   other: 'Autre',
-  city: 'Ville',  deleteLine: 'Supprimer la ligne',
+  city: 'Ville',
+  deleteLine: 'Supprimer la ligne',
   addToGroup: 'Ajouter au groupe',
   minimizeLine: 'Réduire la carte de ligne',
   maximizeLine: 'Agrandir la carte de ligne',
@@ -60,9 +61,12 @@ export default {
   announcements: 'Annonces',
   timetableEmptyRange: 'L\'horaire de cette journée est vide',
   lineGroups: 'Groupes de lignes',
-  useAppleMaps: 'Utiliser Apple Maps',  language: 'Langue',
+  useAppleMaps: 'Utiliser Apple Maps',
+  language: 'Langue',
   changeLanguage: 'Changer la langue',
-  systemDefault: 'Défaut du système',  openIOSSettings: 'Ouvrir les paramètres iOS',
+  changeLanguageInSettings: 'Changer la langue dans les paramètres',
+  systemDefault: 'Défaut du système',
+  openIOSSettings: 'Ouvrir les paramètres iOS',
   languageWillChangeOnRestart: 'Le changement de langue prendra effet après le redémarrage de l\'app',
   regenerateLineColors: 'Régénérer les couleurs des lignes',
   regenerateLineColorsDescription: 'Régénérer les couleurs pour rendre les lignes plus distinctes',
@@ -75,4 +79,25 @@ export default {
   cancel: 'Annuler',
   clear: 'Effacer',
   data: 'Données',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Autorisation de localisation requise',
+      message: 'Nous avons besoin de votre autorisation de localisation pour afficher les bus et arrêts à proximité. Veuillez accorder l\'autorisation dans les paramètres.',
+      goToSettings: 'Aller aux paramètres'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'Annuler',
+    ok: 'OK',
+    yes: 'Oui',
+    no: 'Non'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'Évaluer sur l\'App Store',
+  iOSSettings: 'Paramètres iOS'
 }

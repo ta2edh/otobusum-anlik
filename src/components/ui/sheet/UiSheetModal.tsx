@@ -66,9 +66,9 @@ export const UiSheetModal = ({ cRef, icon, title, footer, containerStyle, ...pro
     >
       {props.list
         ? (
-            <>
+            <BottomSheetView style={{ flex: 1 }}>
               {(icon || title) && (
-                <BottomSheetView style={[styles.top, {
+                <View style={[styles.top, {
                   borderColor: schemeColor.surfaceContainerHigh,
                 }]}
                 >
@@ -83,17 +83,17 @@ export const UiSheetModal = ({ cRef, icon, title, footer, containerStyle, ...pro
                   {title && (
                     <UiText>{title}</UiText>
                   )}
-                </BottomSheetView>
+                </View>
               )}
 
-              <BottomSheetScrollView>
+              <BottomSheetScrollView style={{ flex: 1 }} contentContainerStyle={{ flexGrow: 1 }}>
                 {props.children as ReactNode | ReactNode[]}
               </BottomSheetScrollView>
 
               <View style={styles.bottom}>
                 {footer?.()}
               </View>
-            </>
+            </BottomSheetView>
           )
         : (
             <BottomSheetView style={{ paddingBottom: insets.bottom }}>
@@ -133,11 +133,14 @@ const styles = StyleSheet.create({
   },
   top: {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    padding: 12,
+    padding: 16,
+    minHeight: 56,
     display: 'flex',
     flexDirection: 'row',
-    gap: 4,
+    gap: 8,
     alignItems: 'center',
+    position: 'relative',
+    zIndex: 1,
   },
   bottom: {
     padding: 12,

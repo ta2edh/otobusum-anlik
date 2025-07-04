@@ -1,5 +1,6 @@
 import * as Location from 'expo-location'
-import { Platform, Alert } from 'react-native'
+import { Platform, Alert, Linking } from 'react-native'
+import { safeTranslate } from '@/translations/i18n'
 
 export interface PermissionStatus {
   granted: boolean
@@ -23,11 +24,14 @@ export const requestLocationPermission = async (): Promise<PermissionStatus> => 
 
     if (status === 'denied') {
       Alert.alert(
-        'Konum İzni Gerekli',
-        'Otobüs duraklarını ve rotalarını görebilmek için konum iznine ihtiyacımız var. Lütfen ayarlardan izin verin.',
+        safeTranslate('permissions.location.title'),
+        safeTranslate('permissions.location.message'),
         [
-          { text: 'İptal', style: 'cancel' },
-          { text: 'Ayarlara Git', onPress: () => Location.requestForegroundPermissionsAsync() }
+          { text: safeTranslate('common.cancel'), style: 'cancel' },
+          { 
+            text: safeTranslate('permissions.location.goToSettings'), 
+            onPress: () => Linking.openURL('app-settings:') 
+          }
         ]
       )
       return { granted: false, canAskAgain: false }

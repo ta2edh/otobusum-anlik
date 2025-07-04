@@ -48,9 +48,9 @@ export const UiSheetSelect = <T,>({ cRef, list, options, value, onValueChange, .
   return (
     <UiSheetModal
       cRef={cRef}
-      enableDynamicSizing={!list}
-      snapPoints={['50%']}
-      containerStyle={{ padding: 0 }}
+      enableDynamicSizing={true}
+      snapPoints={['30%', '60%']}
+      containerStyle={{ padding: 0, paddingTop: 0 }}
       list={list}
       {...modalProps}
     >
@@ -63,7 +63,8 @@ export const UiSheetSelect = <T,>({ cRef, list, options, value, onValueChange, .
 
 const styles = StyleSheet.create({
   item: {
-    padding: 12,
+    padding: 16,
+    minHeight: 56,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

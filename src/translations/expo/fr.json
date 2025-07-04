@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "L'application utilise votre position pour afficher votre emplacement ainsi que les arrêts de bus et itinéraires à proximité.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "L'application utilise votre position pour afficher votre emplacement ainsi que les arrêts de bus et itinéraires à proximité."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

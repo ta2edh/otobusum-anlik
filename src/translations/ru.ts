@@ -1,6 +1,12 @@
 export default {
   search: 'Поиск',
   loading: 'Загрузка',
+  useAppleMaps: 'Использовать Apple Maps',
+  language: 'Язык',
+  changeLanguage: 'Изменить язык',
+  changeLanguageInSettings: 'Изменить язык в настройках',
+  systemDefault: 'Системный по умолчанию',
+  openIOSSettings: 'Открыть настройки iOS',
   timetableEmpty: 'Расписание выбранных маршрутов будет показано здесь',
   direction: 'Направление',
   lastUpdate: 'Последнее обновление',
@@ -47,7 +53,8 @@ export default {
   stopDirections: 'Направления к этой остановке',
   license: 'Лицензия %{city}',
   other: 'Другое',
-  city: 'Город',  deleteLine: 'Удалить маршрут',
+  city: 'Город',
+  deleteLine: 'Удалить маршрут',
   addToGroup: 'Добавить в группу',
   minimizeLine: 'Свернуть карточку маршрута',
   maximizeLine: 'Развернуть карточку маршрута',
@@ -60,9 +67,6 @@ export default {
   announcements: 'Объявления',
   timetableEmptyRange: 'Расписание на этот день пусто',
   lineGroups: 'Группы маршрутов',
-  useAppleMaps: 'Использовать Apple Maps',  language: 'Язык',
-  changeLanguage: 'Изменить язык',
-  systemDefault: 'По умолчанию',  openIOSSettings: 'Открыть настройки iOS',
   languageWillChangeOnRestart: 'Изменение языка вступит в силу после перезапуска приложения',
   regenerateLineColors: 'Обновить цвета маршрутов',
   regenerateLineColorsDescription: 'Обновить цвета для лучшего различения маршрутов',
@@ -75,4 +79,25 @@ export default {
   cancel: 'Отмена',
   clear: 'Очистить',
   data: 'Данные',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Требуется разрешение на геолокацию',
+      message: 'Нам нужно разрешение на использование геолокации для отображения ближайших автобусов и остановок. Пожалуйста, предоставьте разрешение в настройках.',
+      goToSettings: 'Перейти в настройки'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'Отмена',
+    ok: 'ОК',
+    yes: 'Да',
+    no: 'Нет'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'Оценить в App Store',
+  iOSSettings: 'Настройки iOS'
 }

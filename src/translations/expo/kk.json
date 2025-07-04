@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Бұл қолданба жақындағы автобус аялдамалары мен жолдарды көрсету үшін сіздің орналасуыңызды пайдаланады.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Бұл қолданба жақындағы автобус аялдамалары мен жолдарды көрсету үшін сіздің орналасуыңызды пайдаланады."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

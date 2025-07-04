@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "بۇ ئەپ يېقىندىكى ئاپتوبۇس توختاش پۇنكتى ۋە يوللىرىنى كۆرسىتىش ئۈچۈن ئورۇن ئۇچۇرىڭىزنى ئىشلىتىدۇ.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "بۇ ئەپ يېقىندىكى ئاپتوبۇس توختاش پۇنكتى ۋە يوللىرىنى كۆرسىتىش ئۈچۈن ئورۇن ئۇچۇرىڭىزنى ئىشلىتىدۇ."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

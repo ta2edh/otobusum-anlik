@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Denne appen bruker din plassering for å vise nærliggende bussholdeplasser og ruter.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Denne appen bruker din plassering for å vise nærliggende bussholdeplasser og ruter."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

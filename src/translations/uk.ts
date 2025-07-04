@@ -1,6 +1,12 @@
 export default {
   search: 'Пошук',
   loading: 'Завантаження',
+  useAppleMaps: 'Використовувати Apple Maps',
+  language: 'Мова',
+  changeLanguage: 'Змінити мову',
+  changeLanguageInSettings: 'Змінити мову в налаштуваннях',
+  systemDefault: 'Системний за замовчуванням',
+  openIOSSettings: 'Відкрити налаштування iOS',
   timetableEmpty: 'Розклади обраних маршрутів будуть показані тут',
   direction: 'Напрямок',
   lastUpdate: 'Останнє оновлення',
@@ -47,23 +53,51 @@ export default {
   stopDirections: 'Напрямки до цієї зупинки',
   license: 'Ліцензія %{city}',
   other: 'Інше',
-  city: 'Місто',  deleteLine: 'Видалити маршрут',
+  city: 'Місто',
+  deleteLine: 'Видалити маршрут',
   addToGroup: 'Додати до групи',
   minimizeLine: 'Згорнути картку маршруту',
   maximizeLine: 'Розгорнути картку маршруту',
   errorGettingBusLocations: 'Помилка отримання місцезнаходжень автобусів.',
   errorGettingAnnouncements: 'Помилка отримання оголошень',
   updateCount: 'оновлення через %{count} секунд',
-  searchPlaceholder: '500TT,522BB...',
+  searchPlaceholder: '500T, 522B...',
   selectedCity: 'Обране місто: %{city}',
   newGroupTitlePlaceholder: 'Назва нової групи',
   announcements: 'Оголошення',
   timetableEmptyRange: 'Розклад на цей день порожній',
   lineGroups: 'Групи маршрутів',
-  useAppleMaps: 'Використовувати Apple Maps',  language: 'Мова',
-  changeLanguage: 'Змінити мову',
-  systemDefault: 'За замовчуванням',  openIOSSettings: 'Відкрити налаштування iOS',
   languageWillChangeOnRestart: 'Зміна мови набуде чинності після перезапуску програми',
   regenerateLineColors: 'Оновити кольори маршрутів',
   regenerateLineColorsDescription: 'Оновити кольори для кращого розрізнення маршрутів',
+  clearAllLines: 'Очистити всі маршрути',
+  clearAllGroups: 'Очистити всі групи',
+  clearAllLinesConfirm: 'Ви впевнені, що хочете видалити всі маршрути у вибраному місті?',
+  clearAllGroupsConfirm: 'Ви впевнені, що хочете видалити всі групи у вибраному місті?',
+  allLinesCleared: 'Всі маршрути очищено',
+  allGroupsCleared: 'Всі групи очищено',
+  cancel: 'Скасувати',
+  clear: 'Очистити',
+  data: 'Дані',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Потрібен дозвіл на геолокацію',
+      message: 'Нам потрібен дозвіл на використання геолокації для відображення найближчих автобусів та зупинок. Будь ласка, надайте дозвіл у налаштуваннях.',
+      goToSettings: 'Перейти до налаштувань'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'Скасувати',
+    ok: 'OK',
+    yes: 'Так',
+    no: 'Ні'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'Оцінити в App Store',
+  iOSSettings: 'Налаштування iOS'
 }

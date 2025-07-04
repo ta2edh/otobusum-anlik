@@ -47,7 +47,8 @@ export default {
   stopDirections: 'الاتجاهات إلى هذه المحطة',
   license: 'رخصة %{city}',
   other: 'أخرى',
-  city: 'المدينة',  deleteLine: 'حذف الخط',
+  city: 'المدينة',
+  deleteLine: 'حذف الخط',
   addToGroup: 'إضافة إلى المجموعة',
   minimizeLine: 'تصغير بطاقة الخط',
   maximizeLine: 'تكبير بطاقة الخط',
@@ -60,10 +61,43 @@ export default {
   announcements: 'الإعلانات',
   timetableEmptyRange: 'الجدول الزمني لهذا اليوم فارغ',
   lineGroups: 'مجموعات الخطوط',
-  useAppleMaps: 'استخدام خرائط أبل',  language: 'اللغة',
+  useAppleMaps: 'استخدام خرائط أبل',
+  language: 'اللغة',
   changeLanguage: 'تغيير اللغة',
-  systemDefault: 'افتراضي النظام',  openIOSSettings: 'فتح إعدادات iOS',
+  changeLanguageInSettings: 'تغيير اللغة في الإعدادات',
+  systemDefault: 'افتراضي النظام',
+  openIOSSettings: 'فتح إعدادات iOS',
   languageWillChangeOnRestart: 'سيصبح تغيير اللغة ساري المفعول بعد إعادة تشغيل التطبيق',
   regenerateLineColors: 'إعادة توليد ألوان الخطوط',
   regenerateLineColorsDescription: 'إعادة توليد الألوان لجعل الخطوط أكثر وضوحاً',
+  clearAllLines: 'مسح جميع الخطوط',
+  clearAllGroups: 'مسح جميع المجموعات',
+  clearAllLinesConfirm: 'هل أنت متأكد من أنك تريد حذف جميع الخطوط في المدينة المحددة؟',
+  clearAllGroupsConfirm: 'هل أنت متأكد من أنك تريد حذف جميع المجموعات في المدينة المحددة؟',
+  allLinesCleared: 'تم مسح جميع الخطوط',
+  allGroupsCleared: 'تم مسح جميع المجموعات',
+  cancel: 'إلغاء',
+  clear: 'مسح',
+  data: 'البيانات',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'مطلوب إذن الموقع',
+      message: 'نحتاج إلى إذن موقعك لإظهار الحافلات والمحطات القريبة. يرجى منح الإذن في الإعدادات.',
+      goToSettings: 'الذهاب إلى الإعدادات'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'إلغاء',
+    ok: 'موافق',
+    yes: 'نعم',
+    no: 'لا'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'تقييم في متجر التطبيقات',
+  iOSSettings: 'إعدادات iOS'
 }

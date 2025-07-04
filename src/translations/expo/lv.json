@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Šī lietotne izmanto jūsu atrašanās vietu, lai rādītu tuvākās autobusa pieturas un nodrošinātu precīzu navigāciju.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Šī lietotne izmanto jūsu atrašanās vietu, lai rādītu tuvākās autobusa pieturas un nodrošinātu precīzu navigāciju."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

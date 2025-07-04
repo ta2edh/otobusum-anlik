@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Táto aplikácia používa vašu polohu na zobrazenie blízkych autobusových zastávok a trás.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Táto aplikácia používa vašu polohu na zobrazenie blízkych autobusových zastávok a trás."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

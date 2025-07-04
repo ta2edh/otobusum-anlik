@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Þetta forrit notar staðsetningu þína til að sýna nálægar strætóstöðvar og veita nákvæma leiðsögn.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Þetta forrit notar staðsetningu þína til að sýna nálægar strætóstöðvar og veita nákvæma leiðsögn."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

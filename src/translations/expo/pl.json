@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Ta aplikacja używa Twojej lokalizacji, aby pokazać pobliskie przystanki autobusowe i trasy.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Ta aplikacja używa Twojej lokalizacji, aby pokazać pobliskie przystanki autobusowe i trasy."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

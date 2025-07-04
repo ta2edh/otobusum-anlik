@@ -64,6 +64,7 @@ export default {
   useAppleMaps: 'Use Apple Maps',
   language: 'Language',
   changeLanguage: 'Change Language',
+  changeLanguageInSettings: 'Change Language in Settings',
   systemDefault: 'System Default',
   openIOSSettings: 'Open iOS Settings',
   languageWillChangeOnRestart: 'Language changes will take effect when the app is restarted',
@@ -78,4 +79,25 @@ export default {
   cancel: 'Cancel',
   clear: 'Clear',
   data: 'Data',
+  
+  // Permissions
+  permissions: {
+    location: {
+      title: 'Location Permission Required',
+      message: 'We need location permission to show nearby buses and stops. Please grant permission in settings.',
+      goToSettings: 'Go to Settings'
+    }
+  },
+  
+  // Common
+  common: {
+    cancel: 'Cancel',
+    ok: 'OK',
+    yes: 'Yes',
+    no: 'No'
+  },
+  
+  // iOS Settings
+  rateOnAppStore: 'Rate on App Store',
+  iOSSettings: 'iOS Settings'
 }

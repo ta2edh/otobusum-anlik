@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Aplikasi ini menggunakan lokasi anda untuk menunjukkan perhentian bas dan laluan berdekatan.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Aplikasi ini menggunakan lokasi anda untuk menunjukkan perhentian bas dan laluan berdekatan."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Úsáideann an aip seo do shuíomh chun staideanna bus in aice láimhe a thaispeáint agus nascleanúint chruinn a sholáthar.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Úsáideann an aip seo do shuíomh chun staideanna bus in aice láimhe a thaispeáint agus nascleanúint chruinn a sholáthar."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}

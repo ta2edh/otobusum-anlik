@@ -1,0 +1,11 @@
+{
+  "ios": {
+    "CFBundleDisplayName": "Otobüsüm Anlık",
+    "CFBundleName": "Otobüsüm Anlık",
+    "NSLocationWhenInUseUsageDescription": "Tämä sovellus käyttää sijaintiasi näyttääkseen lähellä olevat bussipysäkit ja reitit.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Tämä sovellus käyttää sijaintiasi näyttääkseen lähellä olevat bussipysäkit ja reitit."
+  },
+  "android": {
+    "app_name": "Otobüsüm Anlık"
+  }
+}
