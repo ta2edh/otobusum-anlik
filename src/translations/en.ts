@@ -1,8 +1,9 @@
 export default {
   search: 'Search',
   loading: 'Loading',
-  timetableEmpty: 'Timetables of selected lines will be shown here',
+  timetableEmpty: 'Selected lines timetables will appear here',
   direction: 'Direction',
+  ty: 'Timetables of selected lines will be shown here',
   lastUpdate: 'Last Update',
   selectedLines: 'Selected Lines',
   map: 'Map',
@@ -70,6 +71,11 @@ export default {
   languageWillChangeOnRestart: 'Language changes will take effect when the app is restarted',
   regenerateLineColors: 'Regenerate Line Colors',
   regenerateLineColorsDescription: 'Regenerate colors to make lines more distinguishable',
+  regenerateLineColorsWarning: 'This action cannot be undone.',
+  regenerateLineColorsSuccess: 'Success',
+  regenerateLineColorsSuccessMessage: 'Line colors have been successfully regenerated! Reload the lines to see the changes.',
+  regenerate: 'Regenerate',
+  ok: 'OK',
   clearAllLines: 'Clear All Lines',
   clearAllGroups: 'Clear All Groups',
   clearAllLinesConfirm: 'Are you sure you want to delete all lines in the selected city?',
@@ -99,5 +105,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Rate on App Store',
-  iOSSettings: 'iOS Settings'
+  iOSSettings: 'iOS Settings',
+  
+  // Navigation
+  navigation: {
+    error: 'Error',
+    appleMapsNotAvailable: 'Apple Maps application not found.',
+    mapAppNotAvailable: 'Could not open map application.',
+    locationPermissionRequired: 'Location Permission',
+    locationPermissionMessage: 'Location permission is required for directions.',
+    directionsError: 'Could not open directions.',
+    directionsTitle: 'Directions',
+    directionsMessage: 'Select a map application for directions to %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Cancel',
+    appleMapsOpenError: 'Could not open Apple Maps',
+    navigationError: 'Could not start Apple Maps navigation'
+  }
 }

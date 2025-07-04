@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store에서 평가',
-  iOSSettings: 'iOS 설정'
+  iOSSettings: 'iOS 설정',
+  
+  // Navigation
+  navigation: {
+    error: '오류',
+    appleMapsNotAvailable: 'Apple 지도 앱을 찾을 수 없습니다.',
+    mapAppNotAvailable: '지도 앱을 열 수 없습니다.',
+    locationPermissionRequired: '위치 권한',
+    locationPermissionMessage: '길 안내를 위해서는 위치 권한이 필요합니다.',
+    directionsError: '길 안내를 열 수 없습니다.',
+    directionsTitle: '길 안내',
+    directionsMessage: '%{label}까지의 길 안내를 위한 지도 앱을 선택하세요:',
+    appleMaps: 'Apple 지도',
+    cancel: '취소',
+    appleMapsOpenError: 'Apple 지도를 열 수 없습니다',
+    navigationError: 'Apple 지도 내비게이션을 시작할 수 없습니다'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: '이 작업은 되돌릴 수 없습니다.',
+  regenerateLineColorsSuccess: '성공',
+  regenerateLineColorsSuccessMessage: '노선 색상이 성공적으로 재생성되었습니다! 변경 사항을 보려면 노선을 다시 로드하세요.',
+  regenerate: '재생성'
 }

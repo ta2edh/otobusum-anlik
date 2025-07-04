@@ -8,7 +8,7 @@ export class ExpoLocalization {
   private supportedLanguages: string[]
 
   private constructor() {
-    this.supportedLanguages = ['en', 'tr', 'ar', 'de', 'fr', 'ru', 'uk']
+    this.supportedLanguages = ['en', 'tr', 'ar', 'de', 'fr', 'ru', 'uk', 'az', 'it', 'el', 'ja', 'ko', 'es', 'cs', 'da', 'nl', 'fi', 'hi', 'zh-Hans', 'hu', 'nb', 'pl', 'pt', 'sk', 'sv', 'hr', 'zh-Hant', 'ca', 'ms', 'id', 'vi', 'th', 'zh-HK', 'ro', 'tk', 'ug', 'ur', 'uz', 'sr', 'mn', 'lb', 'lt', 'ky', 'kk', 'ka', 'et', 'bg', 'bs', 'sq', 'tt', 'bo', 'lv', 'lo', 'mk', 'fa', 'ga', 'is', 'he']
     this.i18n = new I18n()
     this.initialize()
   }

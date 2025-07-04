@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'ენის შეცვლა გაითვალისწინება აპლიკაციის ხელახლა გაშვების შემდეგ',
   regenerateLineColors: 'ხაზების ფერების რეგენერაცია',
   regenerateLineColorsDescription: 'ფერების რეგენერაცია ხაზების უკეთ განსხვავებისთვის',
+  regenerateLineColorsWarning: 'ამ მოქმედების გაუქმება შეუძლებელია.',
+  regenerateLineColorsSuccess: 'წარმატებული',
+  regenerateLineColorsSuccessMessage: 'ხაზების ფერები წარმატებით რეგენერირდა! ცვლილებების სანახავად განაახლეთ ხაზები.',
+  regenerate: 'რეგენერაცია',
   clearAllLines: 'ყველა ხაზის გაწმენდა',
   clearAllGroups: 'ყველა ჯგუფის გაწმენდა',
   clearAllLinesConfirm: 'დარწმუნებული ხართ, რომ გსურთ შერჩეული ქალაქის ყველა ხაზის წაშლა?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store-ზე შეფასება',
-  iOSSettings: 'iOS პარამეტრები'
+  iOSSettings: 'iOS პარამეტრები',
+  
+  // Navigation
+  navigation: {
+    error: 'შეცდომა',
+    appleMapsNotAvailable: 'Apple Maps აპლიკაცია ვერ მოიძებნა.',
+    mapAppNotAvailable: 'რუკის აპლიკაციის გახსნა ვერ მოხერხდა.',
+    locationPermissionRequired: 'ლოკაციის ნებართვა',
+    locationPermissionMessage: 'მიმართულებებისთვის საჭიროა ლოკაციის ნებართვა.',
+    directionsError: 'მიმართულებების გახსნა ვერ მოხერხდა.',
+    directionsTitle: 'მიმართულებები',
+    directionsMessage: 'აირჩიეთ რუკის აპლიკაცია %{label}-სკენ მიმართულებებისთვის:',
+    appleMaps: 'Apple Maps',
+    cancel: 'გაუქმება',
+    appleMapsOpenError: 'Apple Maps-ის გახსნა ვერ მოხერხდა',
+    navigationError: 'Apple Maps ნავიგაციის დაწყება ვერ მოხერხდა'
+  }
 }

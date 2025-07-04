@@ -19,12 +19,18 @@ const config: ExpoConfig = {
     supportsTablet: true,
     bundleIdentifier: 'com.otobusum.anlik',
     buildNumber: '1',
-    icon: './src/assets/icon.png',
+    //icon: './src/assets/icon.png',
+    icon: {
+      dark: './src/assets/icon-dark.png',
+      light: './src/assets/icon.png',
+      tinted: './src/assets/icon-tinted.png',
+
+    },
     requireFullScreen: false,
     userInterfaceStyle: 'automatic',
     infoPlist: {
       CFBundleDevelopmentRegion: 'en',
-      CFBundleLocalizations: ['en', 'tr', 'ar', 'de', 'fr', 'ru', 'uk', 'az', 'it', 'el', 'ja', 'ko', 'es', 'cs', 'da', 'nl', 'fi', 'hi', 'zh-Hans', 'hu', 'nb', 'pl', 'pt', 'sk', 'sv', 'hr', 'zh-Hant', 'ca', 'ms', 'id', 'vi', 'th', 'zh-HK', 'ro', 'tk', 'ug', 'ur', 'uz', 'sr', 'mn', 'lb', 'lt', 'ky', 'kk', 'ka', 'et', 'bg', 'bs', 'sq', 'tt', 'bo', 'lv', 'lo', 'mk', 'fa', 'ga', 'is'],
+      CFBundleLocalizations: ['en', 'tr', 'ar', 'de', 'fr', 'ru', 'uk', 'az', 'it', 'el', 'ja', 'ko', 'es', 'cs', 'da', 'nl', 'fi', 'hi', 'zh-Hans', 'hu', 'nb', 'pl', 'pt', 'sk', 'sv', 'hr', 'zh-Hant', 'ca', 'ms', 'id', 'vi', 'th', 'zh-HK', 'ro', 'tk', 'ug', 'ur', 'uz', 'sr', 'mn', 'lb', 'lt', 'ky', 'kk', 'ka', 'et', 'bg', 'bs', 'sq', 'tt', 'bo', 'lv', 'lo', 'mk', 'fa', 'ga', 'is', 'he'],
       CFBundleAllowMixedLocalizations: true,
       LSApplicationQueriesSchemes: ['maps', 'http', 'https'],
       ITSAppUsesNonExemptEncryption: false,
@@ -130,6 +136,7 @@ const config: ExpoConfig = {
     fa: './src/translations/expo/fa.json',
     ga: './src/translations/expo/ga.json',
     is: './src/translations/expo/is.json',
+    he: './src/translations/expo/he.json',
   },
   experiments: {
     typedRoutes: true,

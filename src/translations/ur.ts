@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'زبان کی تبدیلی ایپ دوبارہ شروع کرنے پر مؤثر ہوگی',
   regenerateLineColors: 'لائن رنگ دوبارہ بنائیں',
   regenerateLineColorsDescription: 'لائنوں کو زیادہ الگ کرنے کے لیے رنگ دوبارہ بنائیں',
+  regenerateLineColorsWarning: 'اس عمل کو واپس نہیں کیا جا سکتا۔',
+  regenerateLineColorsSuccess: 'کامیابی',
+  regenerateLineColorsSuccessMessage: 'لائن کے رنگ کامیابی سے دوبارہ بنائے گئے ہیں! تبدیلیاں دیکھنے کے لیے لائنوں کو ریلوڈ کریں۔',
+  regenerate: 'دوبارہ بنائیں',
+  ok: 'ٹھیک ہے',
   clearAllLines: 'تمام لائنیں صاف کریں',
   clearAllGroups: 'تمام گروپس صاف کریں',
   clearAllLinesConfirm: 'کیا آپ منتخب شہر کی تمام لائنیں حذف کرنا چاہتے ہیں؟',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store پر ریٹ کریں',
-  iOSSettings: 'iOS سیٹنگز'
+  iOSSettings: 'iOS سیٹنگز',
+  
+  // Navigation
+  navigation: {
+    error: 'خرابی',
+    appleMapsNotAvailable: 'Apple Maps ایپلیکیشن نہیں ملی۔',
+    mapAppNotAvailable: 'نقشہ ایپلیکیشن کھول نہیں سکی۔',
+    locationPermissionRequired: 'لوکیشن کی اجازت',
+    locationPermissionMessage: 'سمت کے لیے لوکیشن کی اجازت ضروری ہے۔',
+    directionsError: 'سمت کھول نہیں سکی۔',
+    directionsTitle: 'سمت',
+    directionsMessage: '%{label} کی سمت کے لیے نقشہ ایپلیکیشن منتخب کریں:',
+    appleMaps: 'Apple Maps',
+    cancel: 'منسوخ',
+    appleMapsOpenError: 'Apple Maps کھول نہیں سکی',
+    navigationError: 'Apple Maps نیویگیشن شروع نہیں کر سکی'
+  }
 }

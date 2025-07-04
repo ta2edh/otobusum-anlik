@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Beri rating di App Store',
-  iOSSettings: 'Pengaturan iOS'
+  iOSSettings: 'Pengaturan iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Kesalahan',
+    appleMapsNotAvailable: 'Aplikasi Apple Maps tidak ditemukan.',
+    mapAppNotAvailable: 'Tidak dapat membuka aplikasi peta.',
+    locationPermissionRequired: 'Izin Lokasi',
+    locationPermissionMessage: 'Izin lokasi diperlukan untuk petunjuk arah.',
+    directionsError: 'Tidak dapat membuka petunjuk arah.',
+    directionsTitle: 'Petunjuk Arah',
+    directionsMessage: 'Pilih aplikasi peta untuk petunjuk arah ke %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Batal',
+    appleMapsOpenError: 'Tidak dapat membuka Apple Maps',
+    navigationError: 'Tidak dapat memulai navigasi Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Tindakan ini tidak dapat dibatalkan.',
+  regenerateLineColorsSuccess: 'Berhasil',
+  regenerateLineColorsSuccessMessage: 'Warna jalur berhasil dibuat ulang! Muat ulang jalur untuk melihat perubahan.',
+  regenerate: 'Buat Ulang'
 }

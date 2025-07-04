@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Értékelés az App Store-ban',
-  iOSSettings: 'iOS beállítások'
+  iOSSettings: 'iOS beállítások',
+  
+  // Navigation
+  navigation: {
+    error: 'Hiba',
+    appleMapsNotAvailable: 'Az Apple Maps alkalmazás nem található.',
+    mapAppNotAvailable: 'Nem sikerült megnyitni a térkép alkalmazást.',
+    locationPermissionRequired: 'Helymeghatározási engedély',
+    locationPermissionMessage: 'Az útvonaltervezéshez helymeghatározási engedély szükséges.',
+    directionsError: 'Nem sikerült megnyitni az útvonalat.',
+    directionsTitle: 'Útvonal',
+    directionsMessage: 'Válasszon térképalkalmazást az útvonaltervezéshez ide: %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Mégse',
+    appleMapsOpenError: 'Nem sikerült megnyitni az Apple Maps alkalmazást',
+    navigationError: 'Nem sikerült elindítani az Apple Maps navigációt'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Ezt a műveletet nem lehet visszavonni.',
+  regenerateLineColorsSuccess: 'Sikeres',
+  regenerateLineColorsSuccessMessage: 'A vonalak színei sikeresen újra lettek generálva! Töltse újra a vonalakat a változtatások megtekintéséhez.',
+  regenerate: 'Újragenerálás'
 }

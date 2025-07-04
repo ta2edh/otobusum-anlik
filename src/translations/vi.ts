@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Đánh giá trên App Store',
-  iOSSettings: 'Cài đặt iOS'
+  iOSSettings: 'Cài đặt iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Lỗi',
+    appleMapsNotAvailable: 'Không tìm thấy ứng dụng Apple Maps.',
+    mapAppNotAvailable: 'Không thể mở ứng dụng bản đồ.',
+    locationPermissionRequired: 'Quyền vị trí',
+    locationPermissionMessage: 'Cần quyền vị trí cho chỉ đường.',
+    directionsError: 'Không thể mở chỉ đường.',
+    directionsTitle: 'Chỉ đường',
+    directionsMessage: 'Chọn ứng dụng bản đồ để nhận chỉ đường đến %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Hủy',
+    appleMapsOpenError: 'Không thể mở Apple Maps',
+    navigationError: 'Không thể bắt đầu điều hướng Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Hành động này không thể hoàn tác.',
+  regenerateLineColorsSuccess: 'Thành công',
+  regenerateLineColorsSuccessMessage: 'Màu tuyến đã được tạo lại thành công! Tải lại các tuyến để xem thay đổi.',
+  regenerate: 'Tạo lại'
 }

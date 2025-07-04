@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'تىل ئۆزگىرىشى ئەپ قايتا قوزغىتىلغاندا كۈچكە كىرىدۇ',
   regenerateLineColors: 'لىنىيە رەڭلىرىنى قايتا ھاسىل قىلىش',
   regenerateLineColorsDescription: 'لىنىيەلەرنى تېخىمۇ پەرقلەندۈرۈش ئۈچۈن رەڭلەرنى قايتا ھاسىل قىلىش',
+  regenerateLineColorsWarning: 'بۇ مەشغۇلاتنى قايتۇرغىلى بولمايدۇ.',
+  regenerateLineColorsSuccess: 'مۇۋەپپەقىيەتلىك',
+  regenerateLineColorsSuccessMessage: 'لىنىيە رەڭلىرى مۇۋەپپەقىيەتلىك قايتا ھاسىل قىلىندى! ئۆزگىرىشلەرنى كۆرۈش ئۈچۈن لىنىيەلەرنى قايتا يۈكلەڭ.',
+  regenerate: 'قايتا ھاسىل قىلىش',
+  ok: 'ماقۇل',
   clearAllLines: 'بارلىق لىنىيەلەرنى تازىلاش',
   clearAllGroups: 'بارلىق گۇرۇپپىلارنى تازىلاش',
   clearAllLinesConfirm: 'تاللانغان شەھەردىكى بارلىق لىنىيەلەرنى ئۆچۈرمەكچىمۇ؟',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store دا باھا بېرىش',
-  iOSSettings: 'iOS تەڭشەكلىرى'
+  iOSSettings: 'iOS تەڭشەكلىرى',
+  
+  // Navigation
+  navigation: {
+    error: 'خاتالىق',
+    appleMapsNotAvailable: 'Apple Maps ئەپنى تاپالمىدى.',
+    mapAppNotAvailable: 'خەرىتە ئەپنى ئاچالمىدى.',
+    locationPermissionRequired: 'ئورۇن ئىجازىتى',
+    locationPermissionMessage: 'يول كۆرسىتىش ئۈچۈن ئورۇن ئىجازىتى كېرەك.',
+    directionsError: 'يول كۆرسىتىشنى ئاچالمىدى.',
+    directionsTitle: 'يول كۆرسىتىش',
+    directionsMessage: '%{label} گە بارىدىغان يول كۆرسىتىش ئۈچۈن خەرىتە ئەپنى تاللاڭ:',
+    appleMaps: 'Apple Maps',
+    cancel: 'بىكار قىلىش',
+    appleMapsOpenError: 'Apple Maps نى ئاچالمىدى',
+    navigationError: 'Apple Maps يول باشلاشنى قوزغىتالمىدى'
+  }
 }

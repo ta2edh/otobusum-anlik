@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Tungumálabreytingar taka gildi þegar forritið er endurræst',
   regenerateLineColors: 'Endurskapa Línuliti',
   regenerateLineColorsDescription: 'Endurskapa liti til að gera línur greiðari',
+  regenerateLineColorsWarning: 'Ekki er hægt að afturkalla þessa aðgerð.',
+  regenerateLineColorsSuccess: 'Árangur',
+  regenerateLineColorsSuccessMessage: 'Línulitir hafa verið endurskapaðir með góðum árangri! Endurhladdu línurnar til að sjá breytingarnar.',
+  regenerate: 'Endurskapa',
   clearAllLines: 'Hreinsa Allar Línur',
   clearAllGroups: 'Hreinsa Alla Hópa',
   clearAllLinesConfirm: 'Ertu viss um að þú viljir eyða öllum línum í valinni borg?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Gefa einkunn á App Store',
-  iOSSettings: 'iOS Stillingar'
+  iOSSettings: 'iOS Stillingar',
+  
+  // Navigation
+  navigation: {
+    error: 'Villa',
+    appleMapsNotAvailable: 'Apple Maps forritið fannst ekki.',
+    mapAppNotAvailable: 'Ekki tókst að opna kortagrunninn.',
+    locationPermissionRequired: 'Staðsetningarleyfi',
+    locationPermissionMessage: 'Staðsetningarleyfi er nauðsynlegt fyrir leiðarlýsingar.',
+    directionsError: 'Ekki tókst að opna leiðbeiningar.',
+    directionsTitle: 'Leiðbeiningar',
+    directionsMessage: 'Veldu kortagrunn fyrir leiðbeiningar til %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Hætta við',
+    appleMapsOpenError: 'Ekki tókst að opna Apple Maps',
+    navigationError: 'Ekki tókst að hefja Apple Maps leiðsögn'
+  }
 }

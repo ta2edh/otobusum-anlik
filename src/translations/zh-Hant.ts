@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: '在 App Store 中評分',
-  iOSSettings: 'iOS 設定'
+  iOSSettings: 'iOS 設定',
+  
+  // Navigation
+  navigation: {
+    error: '錯誤',
+    appleMapsNotAvailable: '找不到 Apple 地圖應用程式。',
+    mapAppNotAvailable: '無法開啟地圖應用程式。',
+    locationPermissionRequired: '位置權限',
+    locationPermissionMessage: '導航需要位置權限。',
+    directionsError: '無法開啟導航。',
+    directionsTitle: '導航',
+    directionsMessage: '選擇地圖應用程式以獲取前往 %{label} 的路線：',
+    appleMaps: 'Apple 地圖',
+    cancel: '取消',
+    appleMapsOpenError: '無法開啟 Apple 地圖',
+    navigationError: '無法啟動 Apple 地圖導航'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: '此操作無法復原。',
+  regenerateLineColorsSuccess: '成功',
+  regenerateLineColorsSuccessMessage: '路線顏色已成功重新生成！重新載入路線以查看變更。',
+  regenerate: '重新生成'
 }

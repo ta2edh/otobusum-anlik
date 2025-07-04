@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Tiocfaidh athruithe teanga i bhfeidhm nuair a atosófar an aip',
   regenerateLineColors: 'Athghineadh Dathanna Líne',
   regenerateLineColorsDescription: 'Athghineadh dathanna chun línte a dhéanamh níos inidealaithe',
+  regenerateLineColorsWarning: 'Ní féidir an gníomh seo a chur ar ceal.',
+  regenerateLineColorsSuccess: 'Éirí leis',
+  regenerateLineColorsSuccessMessage: 'Tá dathanna líne athghinte go rathúil! Athlódáil na línte chun na hathruithe a fheiceáil.',
+  regenerate: 'Athghineadh',
   clearAllLines: 'Glan Gach Líne',
   clearAllGroups: 'Glan Gach Grúpa',
   clearAllLinesConfirm: 'An bhfuil tú cinnte gur mian leat gach líne sa chathair roghnaithe a scriosadh?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Rátáil ar an App Store',
-  iOSSettings: 'Socruithe iOS'
+  iOSSettings: 'Socruithe iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Earráid',
+    appleMapsNotAvailable: 'Níor aimsíodh feidhmchlár Apple Maps.',
+    mapAppNotAvailable: 'Níorbh fhéidir feidhmchlár léarscáile a oscailt.',
+    locationPermissionRequired: 'Cead Suímh',
+    locationPermissionMessage: 'Tá cead suímh riachtanach chun treoracha a fháil.',
+    directionsError: 'Níorbh fhéidir treoracha a oscailt.',
+    directionsTitle: 'Treoracha',
+    directionsMessage: 'Roghnaigh feidhmchlár léarscáile le haghaidh treoracha chuig %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Cealaigh',
+    appleMapsOpenError: 'Níorbh fhéidir Apple Maps a oscailt',
+    navigationError: 'Níorbh fhéidir loingseoireacht Apple Maps a thosú'
+  }
 }

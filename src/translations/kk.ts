@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Тіл өзгерісі қолданба қайта іске қосылғанда әсер етеді',
   regenerateLineColors: 'Желі түстерін қайта құру',
   regenerateLineColorsDescription: 'Желілерді одан әрі ажырату үшін түстерді қайта құру',
+  regenerateLineColorsWarning: 'Бұл әрекетті кері қайтару мүмкін емес.',
+  regenerateLineColorsSuccess: 'Сәтті',
+  regenerateLineColorsSuccessMessage: 'Желі түстері сәтті қайта құрылды! Өзгерістерді көру үшін желілерді қайта жүктеңіз.',
+  regenerate: 'Қайта құру',
   clearAllLines: 'Барлық желілерді тазалау',
   clearAllGroups: 'Барлық топтарды тазалау',
   clearAllLinesConfirm: 'Таңдалған қаланың барлық желілерін жойғыңыз келе ме?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store-де бағалау',
-  iOSSettings: 'iOS баптаулары'
+  iOSSettings: 'iOS баптаулары',
+  
+  // Navigation
+  navigation: {
+    error: 'Қате',
+    appleMapsNotAvailable: 'Apple Maps қолданбасы табылмады.',
+    mapAppNotAvailable: 'Карта қолданбасын ашу мүмкін емес.',
+    locationPermissionRequired: 'Орналасу рұқсаты',
+    locationPermissionMessage: 'Бағыт алу үшін орналасу рұқсаты қажет.',
+    directionsError: 'Бағыттарды ашу мүмкін емес.',
+    directionsTitle: 'Бағыттар',
+    directionsMessage: '%{label} дейінгі бағыт үшін карта қолданбасын таңдаңыз:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Бас тарту',
+    appleMapsOpenError: 'Apple Maps ашу мүмкін емес',
+    navigationError: 'Apple Maps навигациясын бастау мүмкін емес'
+  }
 }

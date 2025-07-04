@@ -1,7 +1,7 @@
 export default {
   search: 'ຄົ້ນຫາ',
   loading: 'ກຳລັງໂຫລດ',
-  timetableEmpty: 'ຕາຕະລາງເວລາຂອງເສັ້ນທາງທີ່ເລືອກຈະສະແດງຢູ່ນີ້',
+  timetableEmpty: 'ຕາຕະລາງເວລາຂອງເສັ້ນທາງທີເລືອກຈະສະແດງຢູ່ນີ້',
   direction: 'ທິດທາງ',
   lastUpdate: 'ອັບເດດຄັ້ງສຸດທ້າຍ',
   selectedLines: 'ເສັ້ນທາງທີ່ເລືອກ',
@@ -70,10 +70,15 @@ export default {
   languageWillChangeOnRestart: 'ການປ່ຽນພາສາຈະມີຜົນເມື່ອແອັບຖືກເປີດໃໝ່',
   regenerateLineColors: 'ສ້າງສີເສັ້ນທາງໃໝ່',
   regenerateLineColorsDescription: 'ສ້າງສີໃໝ່ເພື່ອເຮັດໃຫ້ເສັ້ນທາງແຕກຕ່າງຫຼາຍຂຶ້ນ',
+  regenerateLineColorsWarning: 'ການກະທຳນີ້ບໍ່ສາມາດຍົກເລີກໄດ້.',
+  regenerateLineColorsSuccess: 'ສຳເລັດ',
+  regenerateLineColorsSuccessMessage: 'ສີເສັ້ນທາງໄດ້ຖືກສ້າງຄືນໃໝ່ສຳເລັດແລ້ວ! ໂຫລດເສັ້ນທາງຄືນໃໝ່ເພື່ອເບິ່ງການປ່ຽນແປງ.',
+  regenerate: 'ສ້າງໃໝ່',
+  ok: 'ຕົກລົງ',
   clearAllLines: 'ລົບເສັ້ນທາງທັງໝົດ',
   clearAllGroups: 'ລົບກຸ່ມທັງໝົດ',
-  clearAllLinesConfirm: 'ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລົບເສັ້ນທາງທັງໝົດໃນເມືອງທີ່ເລືອກ?',
-  clearAllGroupsConfirm: 'ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລົບກຸ່ມທັງໝົດໃນເມືອງທີ່ເລືອກ?',
+  clearAllLinesConfirm: 'ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລົບເສັ້ນທາງທັງໝົດໃນເມືອງທີເລືອກ?',
+  clearAllGroupsConfirm: 'ທ່ານແນ່ໃຈຫຼືບໍ່ວ່າຕ້ອງການລົບກຸ່ມທັງໝົດໃນເມືອງທີເລືອກ?',
   allLinesCleared: 'ເສັ້ນທາງທັງໝົດຖືກລົບແລ້ວ',
   allGroupsCleared: 'ກຸ່ມທັງໝົດຖືກລົບແລ້ວ',
   cancel: 'ຍົກເລີກ',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'ໃຫ້ຄະແນນໃນ App Store',
-  iOSSettings: 'ການຕັ້ງຄ່າ iOS'
+  iOSSettings: 'ການຕັ້ງຄ່າ iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'ຂໍ້ຜິດພາດ',
+    appleMapsNotAvailable: 'ບໍ່ພົບແອັບ Apple Maps.',
+    mapAppNotAvailable: 'ບໍ່ສາມາດເປີດແອັບແຜນທີ່ໄດ້.',
+    locationPermissionRequired: 'ອະນຸຍາດທີ່ຕັ້ງ',
+    locationPermissionMessage: 'ຕ້ອງການອະນຸຍາດທີ່ຕັ້ງສຳລັບທິດທາງ.',
+    directionsError: 'ບໍ່ສາມາດເປີດທິດທາງໄດ້.',
+    directionsTitle: 'ທິດທາງ',
+    directionsMessage: 'ເລືອກແອັບແຜນທີ່ສຳລັບທິດທາງໄປ %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'ຍົກເລີກ',
+    appleMapsOpenError: 'ບໍ່ສາມາດເປີດ Apple Maps ໄດ້',
+    navigationError: 'ບໍ່ສາມາດເລີ່ມການນຳທາງ Apple Maps ໄດ້'
+  }
 }

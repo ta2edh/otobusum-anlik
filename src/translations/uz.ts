@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store da baholash',
-  iOSSettings: 'iOS sozlamalari'
+  iOSSettings: 'iOS sozlamalari',
+  
+  // Navigation
+  navigation: {
+    error: 'Xato',
+    appleMapsNotAvailable: 'Apple Maps ilovasi topilmadi.',
+    mapAppNotAvailable: 'Xarita ilovasini ochib bo\'lmadi.',
+    locationPermissionRequired: 'Joylashuv ruxsati',
+    locationPermissionMessage: 'Yo\'nalishlar uchun joylashuv ruxsati kerak.',
+    directionsError: 'Yo\'nalishlarni ochib bo\'lmadi.',
+    directionsTitle: 'Yo\'nalishlar',
+    directionsMessage: '%{label} uchun yo\'nalishlar olish uchun xarita ilovasini tanlang:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Bekor qilish',
+    appleMapsOpenError: 'Apple Maps ni ochib bo\'lmadi',
+    navigationError: 'Apple Maps navigatsiyasini ishga tushirib bo\'lmadi'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Bu amalni qaytarib bo\'lmaydi.',
+  regenerateLineColorsSuccess: 'Muvaffaqiyatli',
+  regenerateLineColorsSuccessMessage: 'Chiziq ranglari muvaffaqiyatli qayta yaratildi! O\'zgarishlarni ko\'rish uchun chiziqlarni qayta yuklang.',
+  regenerate: 'Qayta yaratish'
 }

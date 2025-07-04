@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Évaluer sur l\'App Store',
-  iOSSettings: 'Paramètres iOS'
+  iOSSettings: 'Paramètres iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Erreur',
+    appleMapsNotAvailable: 'Application Apple Maps introuvable.',
+    mapAppNotAvailable: 'Impossible d\'ouvrir l\'application de carte.',
+    locationPermissionRequired: 'Permission de localisation',
+    locationPermissionMessage: 'La permission de localisation est requise pour les itinéraires.',
+    directionsError: 'Impossible d\'ouvrir les itinéraires.',
+    directionsTitle: 'Itinéraires',
+    directionsMessage: 'Sélectionnez une application de carte pour les itinéraires vers %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Annuler',
+    appleMapsOpenError: 'Impossible d\'ouvrir Apple Maps',
+    navigationError: 'Impossible de démarrer la navigation Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Cette action ne peut pas être annulée.',
+  regenerateLineColorsSuccess: 'Succès',
+  regenerateLineColorsSuccessMessage: 'Les couleurs des lignes ont été régénérées avec succès! Rechargez les lignes pour voir les changements.',
+  regenerate: 'Régénérer'
 }

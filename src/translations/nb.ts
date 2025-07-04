@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Språkendringer trer i kraft når appen startes på nytt',
   regenerateLineColors: 'Regenerer linjefarger',
   regenerateLineColorsDescription: 'Regenerer farger for å gjøre linjer mer synlige',
+  regenerateLineColorsWarning: 'Denne handlingen kan ikke angres.',
+  regenerateLineColorsSuccess: 'Suksess',
+  regenerateLineColorsSuccessMessage: 'Linjefargene er nå regenerert! Last inn linjene på nytt for å se endringene.',
+  regenerate: 'Regenerer',
   clearAllLines: 'Fjern alle linjer',
   clearAllGroups: 'Fjern alle grupper',
   clearAllLinesConfirm: 'Er du sikker på at du vil slette alle linjer i den valgte byen?',
@@ -79,6 +83,7 @@ export default {
   cancel: 'Avbryt',
   clear: 'Fjern',
   data: 'Data',
+  ok: 'OK',
   
   // Permissions
   permissions: {
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Vurder i App Store',
-  iOSSettings: 'iOS-innstillinger'
+  iOSSettings: 'iOS-innstillinger',
+  
+  // Navigation
+  navigation: {
+    error: 'Feil',
+    appleMapsNotAvailable: 'Apple Maps-applikasjonen ble ikke funnet.',
+    mapAppNotAvailable: 'Kunne ikke åpne kartapplikasjonen.',
+    locationPermissionRequired: 'Stedstillatelse',
+    locationPermissionMessage: 'Stedstillatelse kreves for veibeskrivelser.',
+    directionsError: 'Kunne ikke åpne veibeskrivelser.',
+    directionsTitle: 'Veibeskrivelser',
+    directionsMessage: 'Velg en kartapplikasjon for veibeskrivelser til %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Avbryt',
+    appleMapsOpenError: 'Kunne ikke åpne Apple Maps',
+    navigationError: 'Kunne ikke starte Apple Maps-navigasjon'
+  }
 }

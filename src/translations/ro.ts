@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Evaluează în App Store',
-  iOSSettings: 'Setări iOS'
+  iOSSettings: 'Setări iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Eroare',
+    appleMapsNotAvailable: 'Aplicația Apple Maps nu a fost găsită.',
+    mapAppNotAvailable: 'Nu s-a putut deschide aplicația de hărți.',
+    locationPermissionRequired: 'Permisiune de localizare',
+    locationPermissionMessage: 'Permisiunea de localizare este necesară pentru indicații.',
+    directionsError: 'Nu s-au putut deschide indicațiile.',
+    directionsTitle: 'Indicații',
+    directionsMessage: 'Selectați o aplicație de hărți pentru indicații către %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Anulează',
+    appleMapsOpenError: 'Nu s-a putut deschide Apple Maps',
+    navigationError: 'Nu s-a putut porni navigarea Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Această acțiune nu poate fi anulată.',
+  regenerateLineColorsSuccess: 'Succes',
+  regenerateLineColorsSuccessMessage: 'Culorile liniilor au fost regenerate cu succes! Reîncărcați liniile pentru a vedea modificările.',
+  regenerate: 'Regenerează'
 }

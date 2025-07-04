@@ -20,7 +20,7 @@ export default {
   routes: 'Ýollar',
   emptySearch: 'Netije tapylmady',
   searchMessage: 'Awtobus liniýasyny gözläň',
-  doorNo: 'Gapı belgisi',
+  doorNo: 'Gapý belgisi',
   settings: 'Sazlamalar',
   showMyLocation: 'Meniň ýerimi kartada görkez',
   closeToThisStop: 'Häzirki wagtda bu duraga iň ýakyn',
@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'Dil üýtgetmeleri programma gaýtadan işe salynanda täsirli bolar',
   regenerateLineColors: 'Liniýa reňklerini gaýtadan döretmek',
   regenerateLineColorsDescription: 'Liniýalary has tapawutly etmek üçin reňkleri gaýtadan döretmek',
+  regenerateLineColorsWarning: 'Bu hereketi yzyna almak bolmaýar.',
+  regenerateLineColorsSuccess: 'Üstünlik',
+  regenerateLineColorsSuccessMessage: 'Liniýa reňkleri üstünlikli gaýtadan döredildi! Üýtgeşmeleri görmek üçin liniýalary täzeden ýükläň.',
+  regenerate: 'Gaýtadan dörediň',
+  ok: 'Bolýar',
   clearAllLines: 'Ähli liniýalary arassalamak',
   clearAllGroups: 'Ähli toparlary arassalamak',
   clearAllLinesConfirm: 'Saýlanan şäherde ähli liniýalary pozmak isleýärsiňizmi?',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store-da baha bermek',
-  iOSSettings: 'iOS sazlamalary'
+  iOSSettings: 'iOS sazlamalary',
+  
+  // Navigation
+  navigation: {
+    error: 'Ýalňyşlyk',
+    appleMapsNotAvailable: 'Apple Maps programmasy tapylmady.',
+    mapAppNotAvailable: 'Karta programmasyny açyp bolmady.',
+    locationPermissionRequired: 'Ýer rugsat',
+    locationPermissionMessage: 'Ugur görkezmek üçin ýer rugsat gerek.',
+    directionsError: 'Ugur açyp bolmady.',
+    directionsTitle: 'Ugurlar',
+    directionsMessage: '%{label} ýerine ugur üçin karta programmasyny saýlaň:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Ýatyr',
+    appleMapsOpenError: 'Apple Maps açyp bolmady',
+    navigationError: 'Apple Maps nawigasiýasyny başlap bolmady'
+  }
 }

@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'Zmeny jazyka sa prejavia po reštarte aplikácie',
   regenerateLineColors: 'Regenerovať farby liniek',
   regenerateLineColorsDescription: 'Regenerovať farby pre lepšie rozlíšenie liniek',
+  regenerateLineColorsWarning: 'Túto akciu nie je možné vrátiť späť.',
+  regenerateLineColorsSuccess: 'Úspech',
+  regenerateLineColorsSuccessMessage: 'Farby liniek boli úspešne regenerované! Pre zobrazenie zmien obnovte linky.',
+  regenerate: 'Regenerovať',
+  ok: 'OK',
   clearAllLines: 'Vymazať všetky linky',
   clearAllGroups: 'Vymazať všetky skupiny',
   clearAllLinesConfirm: 'Skutočne chcete odstrániť všetky linky vo vybranom meste?',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Hodnotiť v App Store',
-  iOSSettings: 'Nastavenia iOS'
+  iOSSettings: 'Nastavenia iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Chyba',
+    appleMapsNotAvailable: 'Aplikácia Apple Maps sa nenašla.',
+    mapAppNotAvailable: 'Nepodarilo sa otvoriť mapovú aplikáciu.',
+    locationPermissionRequired: 'Povolenie polohy',
+    locationPermissionMessage: 'Pre navigáciu sa vyžaduje povolenie polohy.',
+    directionsError: 'Nepodarilo sa otvoriť navigáciu.',
+    directionsTitle: 'Navigácia',
+    directionsMessage: 'Vyberte mapovú aplikáciu pre navigáciu na %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Zrušiť',
+    appleMapsOpenError: 'Nepodarilo sa otvoriť Apple Maps',
+    navigationError: 'Nepodarilo sa spustiť navigáciu Apple Maps'
+  }
 }

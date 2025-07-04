@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'امتیاز در App Store',
-  iOSSettings: 'تنظیمات iOS'
+  iOSSettings: 'تنظیمات iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'خطا',
+    appleMapsNotAvailable: 'برنامه Apple Maps پیدا نشد.',
+    mapAppNotAvailable: 'نمی‌توان برنامه نقشه را باز کرد.',
+    locationPermissionRequired: 'مجوز موقعیت مکانی',
+    locationPermissionMessage: 'برای مسیریابی به مجوز موقعیت مکانی نیاز است.',
+    directionsError: 'نمی‌توان مسیریابی را باز کرد.',
+    directionsTitle: 'مسیریابی',
+    directionsMessage: 'یک برنامه نقشه برای مسیریابی به %{label} انتخاب کنید:',
+    appleMaps: 'Apple Maps',
+    cancel: 'لغو',
+    appleMapsOpenError: 'نمی‌توان Apple Maps را باز کرد',
+    navigationError: 'نمی‌توان ناوبری Apple Maps را شروع کرد'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'این عمل قابل بازگشت نیست.',
+  regenerateLineColorsSuccess: 'موفقیت',
+  regenerateLineColorsSuccessMessage: 'رنگ‌های خط با موفقیت بازسازی شدند! برای مشاهده تغییرات، خطوط را مجدداً بارگذاری کنید.',
+  regenerate: 'بازسازی'
 }

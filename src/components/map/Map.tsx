@@ -1,5 +1,5 @@
 import { RefObject, useImperativeHandle, useRef, useEffect, useState } from 'react'
-import { Dimensions, TouchableOpacity, StyleSheet, Text } from 'react-native'
+import { Dimensions, TouchableOpacity, StyleSheet, Text, useColorScheme } from 'react-native'
 import MapView, { LatLng, Region } from 'react-native-maps'
 import Animated, { clamp, Extrapolation, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -45,12 +45,15 @@ export const TheMap = ({ ref, onMapReady, onMapRegionUpdate, initialRegion, ...p
   const [hasLocationPermission, setHasLocationPermission] = useState(false)
   const [currentUserLocation, setCurrentUserLocation] = useState<LatLng | null>(null)
 
+  // Get system theme for fallback
+  const systemColorScheme = useColorScheme()
+  
   // Use theme hook for complete theme logic
   const { colorScheme: hookColorScheme } = useTheme()
   
-  // For map, use stored color scheme if explicitly set, otherwise use hook's resolved scheme
-  // This ensures that when user sets app theme to light/dark, map follows it regardless of device theme
-  const mapColorScheme = storedColorScheme !== undefined ? storedColorScheme : hookColorScheme
+  // For map, use the app's resolved theme (which includes user preference + system fallback)
+  // This ensures Apple Maps follows the app's theme logic exactly
+  const mapColorScheme = hookColorScheme
   
   const insets = useSafeAreaInsets()
   const sheetContext = useSheetModal()
@@ -59,10 +62,12 @@ export const TheMap = ({ ref, onMapReady, onMapRegionUpdate, initialRegion, ...p
   useEffect(() => {
     console.log('🎨 Map theme debug:', {
       storedColorScheme,
+      systemColorScheme,
       hookColorScheme,
       mapColorScheme,
+      explanation: storedColorScheme === undefined ? 'Using system theme' : 'Using stored app theme'
     })
-  }, [storedColorScheme, hookColorScheme, mapColorScheme])
+  }, [storedColorScheme, systemColorScheme, hookColorScheme, mapColorScheme])
 
   // Request location permission and get current location
   useEffect(() => {
@@ -213,6 +218,7 @@ export const TheMap = ({ ref, onMapReady, onMapRegionUpdate, initialRegion, ...p
         onPress={handleMapPress}
         toolbarEnabled={false}
         showsIndoors={false}
+        userInterfaceStyle={mapColorScheme} // Force Apple Maps to use app theme
         mapPadding={{
           top: insets.top,
           bottom: 20,

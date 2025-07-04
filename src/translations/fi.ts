@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Arvostele App Storessa',
-  iOSSettings: 'iOS-asetukset'
+  iOSSettings: 'iOS-asetukset',
+  
+  // Navigation
+  navigation: {
+    error: 'Virhe',
+    appleMapsNotAvailable: 'Apple Maps -sovellusta ei löydy.',
+    mapAppNotAvailable: 'Karttasovellusta ei voitu avata.',
+    locationPermissionRequired: 'Sijaintilupa',
+    locationPermissionMessage: 'Reittiohjeet vaativat sijaintiluvan.',
+    directionsError: 'Reittiohjeita ei voitu avata.',
+    directionsTitle: 'Reittiohjeet',
+    directionsMessage: 'Valitse karttasovellus reittiohjeille kohteeseen %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Peruuta',
+    appleMapsOpenError: 'Apple Mapsia ei voitu avata',
+    navigationError: 'Apple Maps -navigointia ei voitu käynnistää'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Tätä toimintoa ei voi kumota.',
+  regenerateLineColorsSuccess: 'Onnistui',
+  regenerateLineColorsSuccessMessage: 'Linjojen värit on onnistuneesti luotu uudelleen! Lataa linjat uudelleen nähdäksesi muutokset.',
+  regenerate: 'Luo uudelleen'
 }

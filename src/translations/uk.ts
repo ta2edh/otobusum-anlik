@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Оцінити в App Store',
-  iOSSettings: 'Налаштування iOS'
+  iOSSettings: 'Налаштування iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Помилка',
+    appleMapsNotAvailable: 'Додаток Apple Maps не знайдено.',
+    mapAppNotAvailable: 'Не вдалося відкрити додаток карти.',
+    locationPermissionRequired: 'Дозвіл на місцезнаходження',
+    locationPermissionMessage: 'Для маршрутів потрібен дозвіл на місцезнаходження.',
+    directionsError: 'Не вдалося відкрити маршрути.',
+    directionsTitle: 'Маршрути',
+    directionsMessage: 'Виберіть додаток карт для маршруту до %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Скасувати',
+    appleMapsOpenError: 'Не вдалося відкрити Apple Maps',
+    navigationError: 'Не вдалося запустити навігацію Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Цю дію не можна скасувати.',
+  regenerateLineColorsSuccess: 'Успіх',
+  regenerateLineColorsSuccessMessage: 'Кольори маршрутів успішно оновлено! Перезавантажте маршрути, щоб побачити зміни.',
+  regenerate: 'Оновити'
 }

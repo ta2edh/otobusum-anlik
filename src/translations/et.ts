@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Keele muutus jõustub rakenduse taaskäivitamisel',
   regenerateLineColors: 'Genereeri liinide värvid uuesti',
   regenerateLineColorsDescription: 'Genereeri värvid uuesti, et liinid oleksid eristuvamatd',
+  regenerateLineColorsWarning: 'Seda toimingut ei saa tagasi võtta.',
+  regenerateLineColorsSuccess: 'Õnnestus',
+  regenerateLineColorsSuccessMessage: 'Liinide värvid on edukalt uuesti genereeritud! Muudatuste nägemiseks laadige liinid uuesti.',
+  regenerate: 'Genereeri uuesti',
   clearAllLines: 'Kustuta kõik liinid',
   clearAllGroups: 'Kustuta kõik grupid',
   clearAllLinesConfirm: 'Kas olete kindel, et soovite kustutada kõik valitud linna liinid?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Hinda App Store\'is',
-  iOSSettings: 'iOS seaded'
+  iOSSettings: 'iOS seaded',
+  
+  // Navigation
+  navigation: {
+    error: 'Viga',
+    appleMapsNotAvailable: 'Apple Maps rakendust ei leitud.',
+    mapAppNotAvailable: 'Kaardirakendust ei õnnestunud avada.',
+    locationPermissionRequired: 'Asukoha luba',
+    locationPermissionMessage: 'Suundade jaoks on vaja asukoha luba.',
+    directionsError: 'Suundi ei õnnestunud avada.',
+    directionsTitle: 'Suunad',
+    directionsMessage: 'Vali kaardirakendus suundade saamiseks kohta %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Tühista',
+    appleMapsOpenError: 'Apple Maps-i ei õnnestunud avada',
+    navigationError: 'Apple Maps-i navigatsiooni ei õnnestunud käivitada'
+  }
 }

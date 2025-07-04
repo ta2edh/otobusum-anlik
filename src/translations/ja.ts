@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Storeで評価',
-  iOSSettings: 'iOS設定'
+  iOSSettings: 'iOS設定',
+  
+  // Navigation
+  navigation: {
+    error: 'エラー',
+    appleMapsNotAvailable: 'Apple Mapsアプリが見つかりません。',
+    mapAppNotAvailable: 'マップアプリを開けませんでした。',
+    locationPermissionRequired: '位置情報の許可',
+    locationPermissionMessage: 'ルート案内には位置情報の許可が必要です。',
+    directionsError: 'ルート案内を開けませんでした。',
+    directionsTitle: 'ルート案内',
+    directionsMessage: '%{label}へのルート案内用のマップアプリを選択してください：',
+    appleMaps: 'Apple Maps',
+    cancel: 'キャンセル',
+    appleMapsOpenError: 'Apple Mapsを開けませんでした',
+    navigationError: 'Apple Mapsナビゲーションを開始できませんでした'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'この操作は元に戻せません。',
+  regenerateLineColorsSuccess: '成功',
+  regenerateLineColorsSuccessMessage: '路線の色が正常に再生成されました！変更を確認するには路線を再読み込みしてください。',
+  regenerate: '再生成'
 }

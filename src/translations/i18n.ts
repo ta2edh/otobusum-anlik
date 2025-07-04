@@ -18,6 +18,7 @@ import fa from '@/translations/fa'
 import fi from '@/translations/fi'
 import fr from '@/translations/fr'
 import ga from '@/translations/ga'
+import he from '@/translations/he'
 import hi from '@/translations/hi'
 import hr from '@/translations/hr'
 import hu from '@/translations/hu'
@@ -77,6 +78,7 @@ export const i18n = new I18n({
   fi,
   fr,
   ga,
+  he,
   hi,
   hr,
   hu,

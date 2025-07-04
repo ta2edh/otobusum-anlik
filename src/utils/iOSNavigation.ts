@@ -1,5 +1,6 @@
 import { Platform, Linking, Alert } from 'react-native'
 import * as Location from 'expo-location'
+import { safeTranslate } from '@/translations/i18n'
 
 export interface MapOptions {
   latitude: number
@@ -24,7 +25,7 @@ export const openMapsApp = async (options: MapOptions) => {
     await Linking.openURL(appleMapsUrl)
   } catch (error) {
     console.error('Maps app error:', error)
-    Alert.alert('Hata', 'Apple Maps açılamadı')
+    Alert.alert(safeTranslate('navigation.error'), safeTranslate('navigation.appleMapsOpenError'))
   }
 }
 
@@ -47,7 +48,7 @@ export const startNavigation = async (destination: MapOptions) => {
     await Linking.openURL(appleMapsNavUrl)
   } catch (error) {
     console.error('Navigation error:', error)
-    Alert.alert('Hata', 'Apple Maps navigasyonu başlatılamadı')
+    Alert.alert(safeTranslate('navigation.error'), safeTranslate('navigation.navigationError'))
   }
 }
 

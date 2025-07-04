@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Beoordeel in App Store',
-  iOSSettings: 'iOS-instellingen'
+  iOSSettings: 'iOS-instellingen',
+  
+  // Navigation
+  navigation: {
+    error: 'Fout',
+    appleMapsNotAvailable: 'Apple Maps-applicatie niet gevonden.',
+    mapAppNotAvailable: 'Kan de kaartapplicatie niet openen.',
+    locationPermissionRequired: 'Locatietoestemming',
+    locationPermissionMessage: 'Locatietoestemming is vereist voor routebeschrijving.',
+    directionsError: 'Kan de routebeschrijving niet openen.',
+    directionsTitle: 'Routebeschrijving',
+    directionsMessage: 'Selecteer een kaartapplicatie voor routebeschrijving naar %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Annuleren',
+    appleMapsOpenError: 'Kan Apple Maps niet openen',
+    navigationError: 'Kan Apple Maps-navigatie niet starten'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Deze actie kan niet ongedaan worden gemaakt.',
+  regenerateLineColorsSuccess: 'Succes',
+  regenerateLineColorsSuccessMessage: 'Lijnkleuren zijn succesvol opnieuw gegenereerd! Laad de lijnen opnieuw om de wijzigingen te zien.',
+  regenerate: 'Opnieuw genereren'
 }

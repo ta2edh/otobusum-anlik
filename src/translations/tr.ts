@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Dil değişikliği uygulamanın yeniden başlatılmasından sonra geçerli olacak',
   regenerateLineColors: 'Hat Renklerini Yenile',
   regenerateLineColorsDescription: 'Hatları daha ayırt edilebilir yapmak için renkleri yeniden oluştur',
+  regenerateLineColorsWarning: 'Bu işlem geri alınamaz.',
+  regenerateLineColorsSuccess: 'Başarılı',
+  regenerateLineColorsSuccessMessage: 'Hat renkleri başarıyla yenilendi! Değişiklikleri görmek için hatları yeniden yükleyin.',
+  regenerate: 'Yenile',
   clearAllLines: 'Tüm Hatları Temizle',
   clearAllGroups: 'Tüm Grupları Temizle',
   clearAllLinesConfirm: 'Seçili şehirdeki tüm hatları silmek istediğinizden emin misiniz?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store\'da Değerlendir',
-  iOSSettings: 'iOS Ayarları'
+  iOSSettings: 'iOS Ayarları',
+  
+  // Navigation
+  navigation: {
+    error: 'Hata',
+    appleMapsNotAvailable: 'Apple Maps uygulaması bulunamadı.',
+    mapAppNotAvailable: 'Harita uygulaması açılamadı.',
+    locationPermissionRequired: 'Konum İzni',
+    locationPermissionMessage: 'Yol tarifi için konum izni gereklidir.',
+    directionsError: 'Yol tarifi açılamadı.',
+    directionsTitle: 'Yol Tarifi',
+    directionsMessage: '%{label} konumuna yol tarifi almak için harita uygulamasını seçin:',
+    appleMaps: 'Apple Maps',
+    cancel: 'İptal',
+    appleMapsOpenError: 'Apple Maps açılamadı',
+    navigationError: 'Apple Maps navigasyonu başlatılamadı'
+  }
 }

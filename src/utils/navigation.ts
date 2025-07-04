@@ -1,5 +1,6 @@
 import { Platform, Linking, Alert } from 'react-native'
 import * as Location from 'expo-location'
+import { safeTranslate } from '@/translations/i18n'
 
 export interface NavigationOptions {
   latitude: number
@@ -29,12 +30,18 @@ export const openDirectionsInAppleMaps = async (destination: NavigationOptions) 
       return true
     } else {
       console.error('❌ Apple Maps not available')
-      Alert.alert('Hata', 'Apple Maps uygulaması bulunamadı.')
+      Alert.alert(
+        safeTranslate('navigation.error'), 
+        safeTranslate('navigation.appleMapsNotAvailable')
+      )
       return false
     }
   } catch (error) {
     console.error('🚨 Error opening Apple Maps:', error)
-    Alert.alert('Hata', 'Harita uygulaması açılamadı.')
+    Alert.alert(
+      safeTranslate('navigation.error'), 
+      safeTranslate('navigation.mapAppNotAvailable')
+    )
     return false
   }
 }
@@ -50,7 +57,10 @@ export const openDirectionsFromCurrentLocation = async (destination: NavigationO
     const { status } = await Location.getForegroundPermissionsAsync()
     if (status !== 'granted') {
       console.log('❌ No location permission for directions')
-      Alert.alert('Konum İzni', 'Yol tarifi için konum izni gereklidir.')
+      Alert.alert(
+        safeTranslate('navigation.locationPermissionRequired'), 
+        safeTranslate('navigation.locationPermissionMessage')
+      )
       return false
     }
     
@@ -79,12 +89,18 @@ export const openDirectionsFromCurrentLocation = async (destination: NavigationO
       return true
     } else {
       console.error('❌ Apple Maps not available')
-      Alert.alert('Hata', 'Apple Maps uygulaması bulunamadı.')
+      Alert.alert(
+        safeTranslate('navigation.error'), 
+        safeTranslate('navigation.appleMapsNotAvailable')
+      )
       return false
     }
   } catch (error) {
     console.error('🚨 Error opening directions:', error)
-    Alert.alert('Hata', 'Yol tarifi açılamadı.')
+    Alert.alert(
+      safeTranslate('navigation.error'), 
+      safeTranslate('navigation.directionsError')
+    )
     return false
   }
 }
@@ -96,15 +112,15 @@ export const showNavigationOptions = (destination: NavigationOptions) => {
   const { latitude, longitude, label = 'Hedef' } = destination
   
   Alert.alert(
-    'Yol Tarifi',
-    `${label} konumuna yol tarifi almak için harita uygulamasını seçin:`,
+    safeTranslate('navigation.directionsTitle'),
+    safeTranslate('navigation.directionsMessage', { label }),
     [
       {
-        text: 'Apple Maps',
+        text: safeTranslate('navigation.appleMaps'),
         onPress: () => openDirectionsFromCurrentLocation(destination),
       },
       {
-        text: 'İptal',
+        text: safeTranslate('navigation.cancel'),
         style: 'cancel',
       },
     ]

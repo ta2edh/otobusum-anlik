@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store पर रेटिंग दें',
-  iOSSettings: 'iOS सेटिंग्स'
+  iOSSettings: 'iOS सेटिंग्स',
+  
+  // Navigation
+  navigation: {
+    error: 'त्रुटि',
+    appleMapsNotAvailable: 'Apple Maps एप्लिकेशन नहीं मिला।',
+    mapAppNotAvailable: 'मैप एप्लिकेशन नहीं खोल सका।',
+    locationPermissionRequired: 'स्थान की अनुमति',
+    locationPermissionMessage: 'दिशानिर्देशों के लिए स्थान की अनुमति आवश्यक है।',
+    directionsError: 'दिशानिर्देश नहीं खोल सके।',
+    directionsTitle: 'दिशानिर्देश',
+    directionsMessage: '%{label} के लिए दिशानिर्देश प्राप्त करने के लिए एक मैप एप्लिकेशन चुनें:',
+    appleMaps: 'Apple Maps',
+    cancel: 'रद्द करें',
+    appleMapsOpenError: 'Apple Maps नहीं खोल सका',
+    navigationError: 'Apple Maps नेविगेशन शुरू नहीं कर सका'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'इस क्रिया को वापस नहीं किया जा सकता।',
+  regenerateLineColorsSuccess: 'सफलता',
+  regenerateLineColorsSuccessMessage: 'लाइन रंगों को सफलतापूर्वक फिर से बनाया गया! परिवर्तन देखने के लिए लाइनों को फिर से लोड करें।',
+  regenerate: 'पुनः उत्पन्न करें'
 }

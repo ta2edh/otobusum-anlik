@@ -99,5 +99,27 @@ export default {
 
   // iOS Settings
   rateOnAppStore: 'Αξιολογήστε στο App Store',
-  iOSSettings: 'Ρυθμίσεις iOS'
+  iOSSettings: 'Ρυθμίσεις iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Σφάλμα',
+    appleMapsNotAvailable: 'Η εφαρμογή Apple Maps δεν βρέθηκε.',
+    mapAppNotAvailable: 'Αδυναμία ανοίγματος της εφαρμογής χάρτη.',
+    locationPermissionRequired: 'Άδεια τοποθεσίας',
+    locationPermissionMessage: 'Απαιτείται άδεια τοποθεσίας για οδηγίες.',
+    directionsError: 'Αδυναμία ανοίγματος οδηγιών.',
+    directionsTitle: 'Οδηγίες',
+    directionsMessage: 'Επιλέξτε μια εφαρμογή χάρτη για οδηγίες προς %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Ακύρωση',
+    appleMapsOpenError: 'Αδυναμία ανοίγματος του Apple Maps',
+    navigationError: 'Αδυναμία έναρξης πλοήγησης Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.',
+  regenerateLineColorsSuccess: 'Επιτυχία',
+  regenerateLineColorsSuccessMessage: 'Τα χρώματα των γραμμών έχουν αναδημιουργηθεί με επιτυχία! Επαναφορτώστε τις γραμμές για να δείτε τις αλλαγές.',
+  regenerate: 'Αναδημιουργία'
 }

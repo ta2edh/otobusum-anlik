@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'Ndryshimi i gjuhës do të hyjë në fuqi kur aplikacioni të riniset',
   regenerateLineColors: 'Rigjeneroj ngjyrat e linjave',
   regenerateLineColorsDescription: 'Rigjeneroj ngjyrat për të bërë linjat më të dallueshme',
+  regenerateLineColorsWarning: 'Ky veprim nuk mund të kthehet mbrapa.',
+  regenerateLineColorsSuccess: 'Sukses',
+  regenerateLineColorsSuccessMessage: 'Ngjyrat e linjave janë rigjenereruar me sukses! Ringarkoni linjat për të parë ndryshimet.',
+  regenerate: 'Rigjeneroj',
+  ok: 'Në rregull',
   clearAllLines: 'Fshi të gjitha linjat',
   clearAllGroups: 'Fshi të gjitha grupet',
   clearAllLinesConfirm: 'Jeni i sigurt që doni të fshini të gjitha linjat në qytetin e zgjedhur?',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Vlerëso në App Store',
-  iOSSettings: 'Cilësimet iOS'
+  iOSSettings: 'Cilësimet iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Gabim',
+    appleMapsNotAvailable: 'Aplikacioni Apple Maps nuk u gjet.',
+    mapAppNotAvailable: 'Nuk mund të hapet aplikacioni i hartës.',
+    locationPermissionRequired: 'Leje për vendndodhjen',
+    locationPermissionMessage: 'Leja për vendndodhjen nevojitet për drejtime.',
+    directionsError: 'Nuk mund të hapeshin drejtimet.',
+    directionsTitle: 'Drejtime',
+    directionsMessage: 'Zgjidhni një aplikacion harte për drejtime për në %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Anulo',
+    appleMapsOpenError: 'Nuk mund të hapej Apple Maps',
+    navigationError: 'Nuk mund të fillonte navigimi në Apple Maps'
+  }
 }

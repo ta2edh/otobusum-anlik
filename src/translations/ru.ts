@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Оценить в App Store',
-  iOSSettings: 'Настройки iOS'
+  iOSSettings: 'Настройки iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Ошибка',
+    appleMapsNotAvailable: 'Приложение Apple Maps не найдено.',
+    mapAppNotAvailable: 'Не удалось открыть приложение карты.',
+    locationPermissionRequired: 'Разрешение на местоположение',
+    locationPermissionMessage: 'Для маршрутов требуется разрешение на местоположение.',
+    directionsError: 'Не удалось открыть маршруты.',
+    directionsTitle: 'Маршруты',
+    directionsMessage: 'Выберите приложение карты для маршрутов к %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Отмена',
+    appleMapsOpenError: 'Не удалось открыть Apple Maps',
+    navigationError: 'Не удалось запустить навигацию Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Это действие нельзя отменить.',
+  regenerateLineColorsSuccess: 'Успешно',
+  regenerateLineColorsSuccessMessage: 'Цвета маршрутов успешно обновлены! Перезагрузите маршруты, чтобы увидеть изменения.',
+  regenerate: 'Обновить'
 }

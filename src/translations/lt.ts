@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Kalbos pakeitimas įsigalios programai iš naujo paleidus',
   regenerateLineColors: 'Atkurti linijų spalvas',
   regenerateLineColorsDescription: 'Atkurti spalvas, kad linijos būtų labiau skiriamos',
+  regenerateLineColorsWarning: 'Šio veiksmo negalima atšaukti.',
+  regenerateLineColorsSuccess: 'Sėkmingai',
+  regenerateLineColorsSuccessMessage: 'Linijų spalvos buvo sėkmingai atkurtos! Atnaujinkite linijas, kad matytumėte pakeitimus.',
+  regenerate: 'Atkurti',
   clearAllLines: 'Išvalyti visas linijas',
   clearAllGroups: 'Išvalyti visas grupes',
   clearAllLinesConfirm: 'Ar tikrai norite ištrinti visas pasirinkto miesto linijas?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Įvertinti App Store',
-  iOSSettings: 'iOS nustatymai'
+  iOSSettings: 'iOS nustatymai',
+  
+  // Navigation
+  navigation: {
+    error: 'Klaida',
+    appleMapsNotAvailable: 'Apple Maps programa nerasta.',
+    mapAppNotAvailable: 'Nepavyko atidaryti žemėlapio programos.',
+    locationPermissionRequired: 'Vietovės leidimas',
+    locationPermissionMessage: 'Vietovės leidimas reikalingas krypčių nurodymui.',
+    directionsError: 'Nepavyko atidaryti krypčių.',
+    directionsTitle: 'Kryptys',
+    directionsMessage: 'Pasirinkite žemėlapio programą kryptims į %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Atšaukti',
+    appleMapsOpenError: 'Nepavyko atidaryti Apple Maps',
+    navigationError: 'Nepavyko pradėti Apple Maps navigacijos'
+  }
 }

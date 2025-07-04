@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Bedøm i App Store',
-  iOSSettings: 'iOS-indstillinger'
+  iOSSettings: 'iOS-indstillinger',
+  
+  // Navigation
+  navigation: {
+    error: 'Fejl',
+    appleMapsNotAvailable: 'Apple Maps-applikationen blev ikke fundet.',
+    mapAppNotAvailable: 'Kunne ikke åbne kortapplikationen.',
+    locationPermissionRequired: 'Placeringstilladelse',
+    locationPermissionMessage: 'Placeringstilladelse er nødvendig for rutevejledning.',
+    directionsError: 'Kunne ikke åbne rutevejledning.',
+    directionsTitle: 'Rutevejledning',
+    directionsMessage: 'Vælg en kortapplikation til rutevejledning til %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Annuller',
+    appleMapsOpenError: 'Kunne ikke åbne Apple Maps',
+    navigationError: 'Kunne ikke starte Apple Maps-navigation'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Denne handling kan ikke fortrydes.',
+  regenerateLineColorsSuccess: 'Succes',
+  regenerateLineColorsSuccessMessage: 'Linjefarver er blevet regenereret med succes! Genindlæs linjerne for at se ændringerne.',
+  regenerate: 'Regenerer'
 }

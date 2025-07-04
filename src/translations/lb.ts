@@ -3,6 +3,7 @@ export default {
   loading: 'Lueden',
   timetableEmpty: 'Horaires vum gewielte Linnen ginn hei gewisen',
   direction: 'Richtung',
+  ty: 'Horaires vum gewielte Linnen ginn hei gewisen',
   lastUpdate: 'Lescht Aktualisatioun',
   selectedLines: 'Gewielte Linnen',
   map: 'Kaart',
@@ -70,6 +71,11 @@ export default {
   languageWillChangeOnRestart: 'Sproochänneren trëtt a Kraaft wann d\'App nei gestart gëtt',
   regenerateLineColors: 'Linnfaarwen nei generéieren',
   regenerateLineColorsDescription: 'Faarwen nei generéieren fir d\'Linnen méi ënnerscheedlech ze maachen',
+  regenerateLineColorsWarning: 'Dës Aktioun kann net réckgängeg gemaach ginn.',
+  regenerateLineColorsSuccess: 'Erfolleg',
+  regenerateLineColorsSuccessMessage: 'Linnfaarwen goufen erfollegräich nei generéiert! Luet d\'Linnen nei fir d\'Ännerungen ze gesinn.',
+  regenerate: 'Nei generéieren',
+  ok: 'OK',
   clearAllLines: 'All Linnen läschen',
   clearAllGroups: 'All Gruppen läschen',
   clearAllLinesConfirm: 'Sidd Dir sécher, datt Dir all Linnen an der gewielter Stad läsche wëllt?',
@@ -99,5 +105,22 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Op App Store bewäerten',
-  iOSSettings: 'iOS Astellungen'
+  iOSSettings: 'iOS Astellungen',
+  
+  // Navigation
+  navigation: {
+    error: 'Feeler',
+    appleMapsNotAvailable: 'Apple Maps Applikatioun net fonnt.',
+    mapAppNotAvailable: 'Konnt Kaarten Applikatioun net opmaachen.',
+    locationPermissionRequired: 'Positiounserlaabnis',
+    locationPermissionMessage: 'Positiounserlaabnis ass néideg fir Weeër.',
+    directionsError: 'Konnt Weeër net opmaachen.',
+    directionsTitle: 'Weeër',
+    directionsMessage: 'Wielt eng Kaarten Applikatioun fir Weeër zu %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Ofbriechen',
+    appleMapsOpenError: 'Konnt Apple Maps net opmaachen',
+    navigationError: 'Konnt Apple Maps Navigatioun net starten'
+  }
 }
+

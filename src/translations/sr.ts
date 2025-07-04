@@ -70,6 +70,11 @@ export default {
   languageWillChangeOnRestart: 'Промена језика ће ступити на снагу када се апликација поново покрене',
   regenerateLineColors: 'Регенериши боје линија',
   regenerateLineColorsDescription: 'Регенериши боје да би линије биле разликовније',
+  regenerateLineColorsWarning: 'Ова акција не може бити поништена.',
+  regenerateLineColorsSuccess: 'Успешно',
+  regenerateLineColorsSuccessMessage: 'Боје линија су успешно регенерисане! Учитајте линије поново да бисте видели промене.',
+  regenerate: 'Регенериши',
+  ok: 'У реду',
   clearAllLines: 'Обриши све линије',
   clearAllGroups: 'Обриши све групе',
   clearAllLinesConfirm: 'Да ли сте сигурни да желите да обришете све линије у изабраном граду?',
@@ -99,5 +104,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Оцени на App Store',
-  iOSSettings: 'iOS подешавања'
+  iOSSettings: 'iOS подешавања',
+  
+  // Navigation
+  navigation: {
+    error: 'Грешка',
+    appleMapsNotAvailable: 'Апликација Apple Maps није пронађена.',
+    mapAppNotAvailable: 'Није могуће отворити апликацију за мапе.',
+    locationPermissionRequired: 'Дозвола за локацију',
+    locationPermissionMessage: 'Дозвола за локацију је потребна за навигацију.',
+    directionsError: 'Није могуће отворити упутства за пут.',
+    directionsTitle: 'Упутства за пут',
+    directionsMessage: 'Изаберите апликацију за мапе за упутства до %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Откажи',
+    appleMapsOpenError: 'Није могуће отворити Apple Maps',
+    navigationError: 'Није могуће покренути Apple Maps навигацију'
+  }
 }

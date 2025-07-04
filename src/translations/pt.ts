@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Avaliar na App Store',
-  iOSSettings: 'Configurações do iOS'
+  iOSSettings: 'Configurações do iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Erro',
+    appleMapsNotAvailable: 'Aplicativo Apple Maps não encontrado.',
+    mapAppNotAvailable: 'Não foi possível abrir o aplicativo de mapas.',
+    locationPermissionRequired: 'Permissão de localização',
+    locationPermissionMessage: 'A permissão de localização é necessária para as direções.',
+    directionsError: 'Não foi possível abrir as direções.',
+    directionsTitle: 'Direções',
+    directionsMessage: 'Selecione um aplicativo de mapas para direções para %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Cancelar',
+    appleMapsOpenError: 'Não foi possível abrir o Apple Maps',
+    navigationError: 'Não foi possível iniciar a navegação do Apple Maps'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Esta ação não pode ser desfeita.',
+  regenerateLineColorsSuccess: 'Sucesso',
+  regenerateLineColorsSuccessMessage: 'As cores das linhas foram regeneradas com sucesso! Recarregue as linhas para ver as alterações.',
+  regenerate: 'Regenerar'
 }

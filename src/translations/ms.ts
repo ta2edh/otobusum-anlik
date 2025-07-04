@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Perubahan bahasa akan berkuat kuasa apabila aplikasi dimulakan semula',
   regenerateLineColors: 'Jana semula warna laluan',
   regenerateLineColorsDescription: 'Jana semula warna untuk membuat laluan lebih mudah dibezakan',
+  regenerateLineColorsWarning: 'Tindakan ini tidak boleh dibatalkan.',
+  regenerateLineColorsSuccess: 'Berjaya',
+  regenerateLineColorsSuccessMessage: 'Warna laluan telah berjaya dijana semula! Muat semula laluan untuk melihat perubahan.',
+  regenerate: 'Jana semula',
   clearAllLines: 'Kosongkan semua laluan',
   clearAllGroups: 'Kosongkan semua kumpulan',
   clearAllLinesConfirm: 'Adakah anda pasti mahu memadam semua laluan di bandar yang dipilih?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Beri penilaian di App Store',
-  iOSSettings: 'Tetapan iOS'
+  iOSSettings: 'Tetapan iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Ralat',
+    appleMapsNotAvailable: 'Aplikasi Apple Maps tidak ditemui.',
+    mapAppNotAvailable: 'Tidak dapat membuka aplikasi peta.',
+    locationPermissionRequired: 'Kebenaran Lokasi',
+    locationPermissionMessage: 'Kebenaran lokasi diperlukan untuk arah.',
+    directionsError: 'Tidak dapat membuka arah.',
+    directionsTitle: 'Arah',
+    directionsMessage: 'Pilih aplikasi peta untuk arah ke %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Batal',
+    appleMapsOpenError: 'Tidak dapat membuka Apple Maps',
+    navigationError: 'Tidak dapat memulakan navigasi Apple Maps'
+  }
 }

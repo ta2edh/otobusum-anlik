@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Dil dəyişməsi tətbiq yenidən başladıldıqdan sonra qüvvəyə minəcək',
   regenerateLineColors: 'Xətt Rənglərini Yenilə',
   regenerateLineColorsDescription: 'Xətlərin fərqlənməsi üçün rəngləri yenidən yarat',
+  regenerateLineColorsWarning: 'Bu əməliyyat geri qaytarıla bilməz.',
+  regenerateLineColorsSuccess: 'Uğurlu',
+  regenerateLineColorsSuccessMessage: 'Xətt rəngləri uğurla yenidən yaradıldı! Dəyişiklikləri görmək üçün xətləri yenidən yükləyin.',
+  regenerate: 'Yenidən yarat',
   clearAllLines: 'Bütün xətləri sil',
   clearAllGroups: 'Bütün qrupları sil',
   clearAllLinesConfirm: 'Seçilmiş şəhərdəki bütün xətləri silmək istədiyinizə əminsiniz?',
@@ -99,5 +103,21 @@ export default {
 
   // iOS Settings
   rateOnAppStore: 'App Store-da qiymətləndir',
-  iOSSettings: 'iOS Tənzimləmələri'
+  iOSSettings: 'iOS Tənzimləmələri',
+  
+  // Navigation
+  navigation: {
+    error: 'Xəta',
+    appleMapsNotAvailable: 'Apple Maps tətbiqi tapılmadı.',
+    mapAppNotAvailable: 'Xəritə tətbiqi açıla bilmədi.',
+    locationPermissionRequired: 'Məkan İcazəsi',
+    locationPermissionMessage: 'Yol göstərişi üçün məkan icazəsi tələb olunur.',
+    directionsError: 'Yol göstərişi açıla bilmədi.',
+    directionsTitle: 'Yol Göstərişi',
+    directionsMessage: '%{label} məkanına yol göstərişi üçün xəritə tətbiqini seçin:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Ləğv et',
+    appleMapsOpenError: 'Apple Maps açıla bilmədi',
+    navigationError: 'Apple Maps naviqasiyası başladıla bilmədi'
+  }
 }

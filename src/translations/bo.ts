@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'སྐད་ཡིག་བསྒྱུར་བ་ཉེར་སྤྱོད་བསྐྱར་འགོ་བཙུགས་པའི་སྐབས་ལ་ནུས་པ་འབྱུང་',
   regenerateLineColors: 'འགྲུལ་ལམ་ཁ་དོག་བསྐྱར་སྐྲུན་',
   regenerateLineColorsDescription: 'འགྲུལ་ལམ་གསལ་ཁ་པོར་གཏོང་བའི་དོན་དུ་ཁ་དོག་བསྐྱར་སྐྲུན་',
+  regenerateLineColorsWarning: 'བྱ་བ་འདི་ཕྱིར་འཐེན་བྱེད་ཐབས་མེད།',
+  regenerateLineColorsSuccess: 'ལེགས་གྲུབ།',
+  regenerateLineColorsSuccessMessage: 'འགྲུལ་ལམ་ཁ་དོག་ལེགས་པར་བསྐྱར་སྐྲུན་བྱས་ཟིན། འགྱུར་བ་མཐོང་བར་འགྲུལ་ལམ་བསྐྱར་དུ་འཇུག་རོགས།',
+  regenerate: 'བསྐྱར་སྐྲུན་',
   clearAllLines: 'འགྲུལ་ལམ་ཡོངས་རྫོགས་གཙང་བྱེད་',
   clearAllGroups: 'ཚོགས་པ་ཡོངས་རྫོགས་གཙང་བྱེད་',
   clearAllLinesConfirm: 'འདེམས་ཟིན་པའི་གྲོང་ཁྱེར་གྱི་འགྲུལ་ལམ་ཡོངས་རྫོགས་སུབ་རྒྱུ་གཏན་འཁེལ་ལམ་?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store ནང་མཐོང་ཚུལ་',
-  iOSSettings: 'iOS སྒྲིག་འགོད་'
+  iOSSettings: 'iOS སྒྲིག་འགོད་',
+  
+  // Navigation
+  navigation: {
+    error: 'ནོར་འཁྲུལ་',
+    appleMapsNotAvailable: 'Apple Maps ཉེར་སྤྱོད་རྙེད་མ་བྱུང་།',
+    mapAppNotAvailable: 'ས་ཁྲ་ཉེར་སྤྱོད་ཁ་ཕྱེ་ཐུབ་མ་བྱུང་།',
+    locationPermissionRequired: 'གནས་ས་དབང་ཆ་',
+    locationPermissionMessage: 'ཕྱོགས་སྟོན་ཆེད་གནས་ས་དབང་ཆ་དགོས།',
+    directionsError: 'ཕྱོགས་སྟོན་ཁ་ཕྱེ་ཐུབ་མ་བྱུང་།',
+    directionsTitle: 'ཕྱོགས་སྟོན་',
+    directionsMessage: '%{label} བར་དུ་ཕྱོགས་སྟོན་ཆེད་ས་ཁྲ་ཉེར་སྤྱོད་འདེམས་རོགས:',
+    appleMaps: 'Apple Maps',
+    cancel: 'འདོར་བ་',
+    appleMapsOpenError: 'Apple Maps ཁ་ཕྱེ་ཐུབ་མ་བྱུང་',
+    navigationError: 'Apple Maps འགྲུལ་བཤུད་འགོ་འཛུགས་ཐུབ་མ་བྱུང་'
+  }
 }

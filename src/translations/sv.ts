@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Betygsätt i App Store',
-  iOSSettings: 'iOS-inställningar'
+  iOSSettings: 'iOS-inställningar',
+  
+  // Navigation
+  navigation: {
+    error: 'Fel',
+    appleMapsNotAvailable: 'Apple Maps-applikation hittades inte.',
+    mapAppNotAvailable: 'Kunde inte öppna kartapplikationen.',
+    locationPermissionRequired: 'Platsbehörighet',
+    locationPermissionMessage: 'Platsbehörighet krävs för vägbeskrivningar.',
+    directionsError: 'Kunde inte öppna vägbeskrivningar.',
+    directionsTitle: 'Vägbeskrivning',
+    directionsMessage: 'Välj en kartapplikation för vägbeskrivning till %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Avbryt',
+    appleMapsOpenError: 'Kunde inte öppna Apple Maps',
+    navigationError: 'Kunde inte starta Apple Maps-navigering'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Denna åtgärd kan inte ångras.',
+  regenerateLineColorsSuccess: 'Framgång',
+  regenerateLineColorsSuccessMessage: 'Linjefärger har framgångsrikt regenererats! Ladda om linjerna för att se ändringarna.',
+  regenerate: 'Regenerera'
 }

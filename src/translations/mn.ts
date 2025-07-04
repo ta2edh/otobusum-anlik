@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Хэлний өөрчлөлт апп дахин эхлэхэд хүчин төгөлдөр болно',
   regenerateLineColors: 'Шугамын өнгө дахин үүсгэх',
   regenerateLineColorsDescription: 'Шугамыг илүү ялгаатай болгохын тулд өнгө дахин үүсгэх',
+  regenerateLineColorsWarning: 'Энэ үйлдлийг буцаах боломжгүй.',
+  regenerateLineColorsSuccess: 'Амжилттай',
+  regenerateLineColorsSuccessMessage: 'Шугамын өнгө амжилттай дахин үүсгэгдлээ! Өөрчлөлтийг харахын тулд шугамуудыг дахин ачаална уу.',
+  regenerate: 'Дахин үүсгэх',
   clearAllLines: 'Бүх шугамыг арилгах',
   clearAllGroups: 'Бүх бүлгийг арилгах',
   clearAllLinesConfirm: 'Сонгосон хотын бүх шугамыг устгахыг хүсч байна уу?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store дээр үнэлэх',
-  iOSSettings: 'iOS тохиргоо'
+  iOSSettings: 'iOS тохиргоо',
+  
+  // Navigation
+  navigation: {
+    error: 'Алдаа',
+    appleMapsNotAvailable: 'Apple Maps програм олдсонгүй.',
+    mapAppNotAvailable: 'Газрын зургийн програм нээж чадсангүй.',
+    locationPermissionRequired: 'Байршлын зөвшөөрөл',
+    locationPermissionMessage: 'Чиглэл заахын тулд байршлын зөвшөөрөл хэрэгтэй.',
+    directionsError: 'Чиглэл нээж чадсангүй.',
+    directionsTitle: 'Чиглэлүүд',
+    directionsMessage: '%{label} руу чиглэл авахын тулд газрын зургийн програм сонгоно уу:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Цуцлах',
+    appleMapsOpenError: 'Apple Maps нээж чадсангүй',
+    navigationError: 'Apple Maps навигацийг эхлүүлж чадсангүй'
+  }
 }

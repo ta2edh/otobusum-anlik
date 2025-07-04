@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: '在App Store中评分',
-  iOSSettings: 'iOS设置'
+  iOSSettings: 'iOS设置',
+  
+  // Navigation
+  navigation: {
+    error: '错误',
+    appleMapsNotAvailable: '未找到Apple Maps应用程序。',
+    mapAppNotAvailable: '无法打开地图应用程序。',
+    locationPermissionRequired: '位置权限',
+    locationPermissionMessage: '获取路线需要位置权限。',
+    directionsError: '无法打开路线。',
+    directionsTitle: '路线',
+    directionsMessage: '选择地图应用以获取前往%{label}的路线：',
+    appleMaps: 'Apple Maps',
+    cancel: '取消',
+    appleMapsOpenError: '无法打开Apple Maps',
+    navigationError: '无法启动Apple Maps导航'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: '此操作无法撤消。',
+  regenerateLineColorsSuccess: '成功',
+  regenerateLineColorsSuccessMessage: '线路颜色已成功重新生成！重新加载线路以查看更改。',
+  regenerate: '重新生成'
 }

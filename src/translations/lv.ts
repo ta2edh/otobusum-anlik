@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Valodas izmaiņas stāsies spēkā, kad lietotne tiks restartēta',
   regenerateLineColors: 'Reģenerēt līniju krāsas',
   regenerateLineColorsDescription: 'Reģenerēt krāsas, lai līnijas būtu atšķirīgākas',
+  regenerateLineColorsWarning: 'Šo darbību nevar atsaukt.',
+  regenerateLineColorsSuccess: 'Veiksmīgi',
+  regenerateLineColorsSuccessMessage: 'Līniju krāsas ir veiksmīgi reģenerētas! Pārlādējiet līnijas, lai redzētu izmaiņas.',
+  regenerate: 'Reģenerēt',
   clearAllLines: 'Notīrīt visas līnijas',
   clearAllGroups: 'Notīrīt visas grupas',
   clearAllLinesConfirm: 'Vai tiešām vēlaties dzēst visas līnijas izvēlētajā pilsētā?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Novērtēt App Store',
-  iOSSettings: 'iOS iestatījumi'
+  iOSSettings: 'iOS iestatījumi',
+  
+  // Navigation
+  navigation: {
+    error: 'Kļūda',
+    appleMapsNotAvailable: 'Apple Maps lietotne nav atrasta.',
+    mapAppNotAvailable: 'Nevarēja atvērt kartes lietotni.',
+    locationPermissionRequired: 'Atrašanās vietas atļauja',
+    locationPermissionMessage: 'Atrašanās vietas atļauja ir nepieciešama virzienu norādēm.',
+    directionsError: 'Nevarēja atvērt norādes.',
+    directionsTitle: 'Norādes',
+    directionsMessage: 'Izvēlieties kartes lietotni, lai saņemtu norādes uz %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Atcelt',
+    appleMapsOpenError: 'Nevarēja atvērt Apple Maps',
+    navigationError: 'Nevarēja sākt Apple Maps navigāciju'
+  }
 }

@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'تقييم في متجر التطبيقات',
-  iOSSettings: 'إعدادات iOS'
+  iOSSettings: 'إعدادات iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'خطأ',
+    appleMapsNotAvailable: 'تطبيق خرائط آبل غير موجود.',
+    mapAppNotAvailable: 'لا يمكن فتح تطبيق الخرائط.',
+    locationPermissionRequired: 'إذن الموقع',
+    locationPermissionMessage: 'إذن الموقع مطلوب للاتجاهات.',
+    directionsError: 'لا يمكن فتح الاتجاهات.',
+    directionsTitle: 'الاتجاهات',
+    directionsMessage: 'اختر تطبيق خرائط للاتجاهات إلى %{label}:',
+    appleMaps: 'خرائط آبل',
+    cancel: 'إلغاء',
+    appleMapsOpenError: 'لا يمكن فتح خرائط آبل',
+    navigationError: 'لا يمكن بدء الملاحة في خرائط آبل'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'لا يمكن التراجع عن هذا الإجراء.',
+  regenerateLineColorsSuccess: 'نجاح',
+  regenerateLineColorsSuccessMessage: 'تمت إعادة إنشاء ألوان الخطوط بنجاح! أعد تحميل الخطوط لرؤية التغييرات.',
+  regenerate: 'إعادة إنشاء'
 }

@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'App Store дә бәяләү',
-  iOSSettings: 'iOS көйләүләре'
+  iOSSettings: 'iOS көйләүләре',
+  
+  // Navigation
+  navigation: {
+    error: 'Хата',
+    appleMapsNotAvailable: 'Apple Maps кушымтасы табылмады.',
+    mapAppNotAvailable: 'Карта кушымтасын ачып булмады.',
+    locationPermissionRequired: 'Урын рөхсәте',
+    locationPermissionMessage: 'Юнәлешләр өчен урын рөхсәте кирәк.',
+    directionsError: 'Юнәлешләрне ачып булмады.',
+    directionsTitle: 'Юнәлешләр',
+    directionsMessage: '%{label} урынына юнәлешләр өчен карта кушымтасын сайлагыз:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Баш тарту',
+    appleMapsOpenError: 'Apple Maps ачып булмады',
+    navigationError: 'Apple Maps навигациясен башлап булмады'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'Бу гамәл кире кайтарыла алмый.',
+  regenerateLineColorsSuccess: 'Уңыш',
+  regenerateLineColorsSuccessMessage: 'Юл төсләре уңышлы яңартылды! Үзгәрешләрне күрү өчен юлларны яңадан йөкләгез.',
+  regenerate: 'Яңарту'
 }

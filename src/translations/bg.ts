@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Промяната на езика ще влезе в сила при рестартиране на приложението',
   regenerateLineColors: 'Регенериране на цветовете на линиите',
   regenerateLineColorsDescription: 'Регенериране на цветовете, за да се различават по-добре линиите',
+  regenerateLineColorsWarning: 'Това действие не може да бъде отменено.',
+  regenerateLineColorsSuccess: 'Успешно',
+  regenerateLineColorsSuccessMessage: 'Цветовете на линиите са регенерирани успешно! Презаредете линиите, за да видите промените.',
+  regenerate: 'Регенериране',
   clearAllLines: 'Изчистване на всички линии',
   clearAllGroups: 'Изчистване на всички групи',
   clearAllLinesConfirm: 'Сигурни ли сте, че искате да изтриете всички линии в избрания град?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Оценяване в App Store',
-  iOSSettings: 'iOS настройки'
+  iOSSettings: 'iOS настройки',
+  
+  // Navigation
+  navigation: {
+    error: 'Грешка',
+    appleMapsNotAvailable: 'Приложението Apple Maps не е намерено.',
+    mapAppNotAvailable: 'Не може да се отвори приложение за карти.',
+    locationPermissionRequired: 'Разрешение за местоположение',
+    locationPermissionMessage: 'За посоките е необходимо разрешение за местоположение.',
+    directionsError: 'Не могат да се отворят посоки.',
+    directionsTitle: 'Посоки',
+    directionsMessage: 'Изберете приложение за карти за посоки до %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Отказ',
+    appleMapsOpenError: 'Не може да се отвори Apple Maps',
+    navigationError: 'Не може да се стартира навигацията на Apple Maps'
+  }
 }

@@ -70,6 +70,10 @@ export default {
   languageWillChangeOnRestart: 'Els canvis d\'idioma tindran efecte quan es reiniciï l\'aplicació',
   regenerateLineColors: 'Regenerar colors de línies',
   regenerateLineColorsDescription: 'Regenerar colors per fer les línies més distingibles',
+  regenerateLineColorsWarning: 'Aquesta acció no es pot desfer.',
+  regenerateLineColorsSuccess: 'Èxit',
+  regenerateLineColorsSuccessMessage: 'Els colors de les línies s\'han regenerat amb èxit! Torna a carregar les línies per veure els canvis.',
+  regenerate: 'Regenerar',
   clearAllLines: 'Esborrar totes les línies',
   clearAllGroups: 'Esborrar tots els grups',
   clearAllLinesConfirm: 'Estàs segur que vols eliminar totes les línies de la ciutat seleccionada?',
@@ -99,5 +103,21 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'Valorar a l\'App Store',
-  iOSSettings: 'Configuració d\'iOS'
+  iOSSettings: 'Configuració d\'iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'Error',
+    appleMapsNotAvailable: 'No s\'ha trobat l\'aplicació Apple Maps.',
+    mapAppNotAvailable: 'No s\'ha pogut obrir l\'aplicació de mapes.',
+    locationPermissionRequired: 'Permís d\'ubicació',
+    locationPermissionMessage: 'Es requereix permís d\'ubicació per a les direccions.',
+    directionsError: 'No s\'han pogut obrir les direccions.',
+    directionsTitle: 'Direccions',
+    directionsMessage: 'Selecciona una aplicació de mapes per a les direccions a %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'Cancel·lar',
+    appleMapsOpenError: 'No s\'ha pogut obrir Apple Maps',
+    navigationError: 'No s\'ha pogut iniciar la navegació d\'Apple Maps'
+  }
 }

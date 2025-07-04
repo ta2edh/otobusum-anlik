@@ -99,5 +99,27 @@ export default {
   
   // iOS Settings
   rateOnAppStore: 'ให้คะแนนใน App Store',
-  iOSSettings: 'การตั้งค่า iOS'
+  iOSSettings: 'การตั้งค่า iOS',
+  
+  // Navigation
+  navigation: {
+    error: 'ข้อผิดพลาด',
+    appleMapsNotAvailable: 'ไม่พบแอปพลิเคชัน Apple Maps',
+    mapAppNotAvailable: 'ไม่สามารถเปิดแอปพลิเคชันแผนที่ได้',
+    locationPermissionRequired: 'ต้องการสิทธิ์ตำแหน่ง',
+    locationPermissionMessage: 'ต้องการสิทธิ์ตำแหน่งสำหรับเส้นทาง',
+    directionsError: 'ไม่สามารถเปิดเส้นทางได้',
+    directionsTitle: 'เส้นทาง',
+    directionsMessage: 'เลือกแอปพลิเคชันแผนที่สำหรับเส้นทางไปยัง %{label}:',
+    appleMaps: 'Apple Maps',
+    cancel: 'ยกเลิก',
+    appleMapsOpenError: 'ไม่สามารถเปิด Apple Maps ได้',
+    navigationError: 'ไม่สามารถเริ่มการนำทาง Apple Maps ได้'
+  },
+  
+  // Line Colors
+  regenerateLineColorsWarning: 'การกระทำนี้ไม่สามารถเลิกทำได้',
+  regenerateLineColorsSuccess: 'สำเร็จ',
+  regenerateLineColorsSuccessMessage: 'สร้างสีเส้นทางใหม่สำเร็จแล้ว! โหลดเส้นทางใหม่เพื่อดูการเปลี่ยนแปลง',
+  regenerate: 'สร้างใหม่'
 }
