@@ -1,5 +1,9 @@
 # Otobüsüm Anlık – iOS Edition 🍎
 
+[<img src="https://raw.githubusercontent.com/jitsi/jitsi-meet/refs/heads/master/resources/img/appstore-badge.png" height="50">](https://apps.apple.com/us/app/otob%C3%BCs%C3%BCm-anl%C4%B1k/id6747687530)
+
+---
+
 Gerçek zamanlı otobüs takibi, Apple Maps entegrasyonu ve çoklu dil desteğiyle iOS için hazırlanmış bir uygulama.
 
 ---
